@@ -1,0 +1,143 @@
+/* Custom animations for Buy Drops page */
+
+@keyframes coinBounce {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-8px) scale(1.1); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.animate-coin-bounce {
+  animation: coinBounce 400ms ease-in-out;
+}
+
+@keyframes spin-once {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin-once {
+  animation: spin-once 400ms ease-in-out forwards;
+}
+
+@keyframes slideDownFade {
+  0% { 
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down-fade {
+  animation: slideDownFade 300ms ease-out forwards;
+}
+
+/* Strikethrough drawing animation using ::after */
+.draw-strikethrough {
+  position: relative;
+  display: inline-block;
+}
+
+.draw-strikethrough::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  background-color: currentColor;
+  width: 0;
+  animation: drawLine 300ms ease-out forwards;
+}
+
+@keyframes drawLine {
+  to { width: 100%; }
+}
+
+/* Base styles for the burst coins */
+.burst-coin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -12px; /* half of 24px width */
+  margin-top: -12px;
+  opacity: 1;
+  transform: translate(0, 0) scale(0);
+  pointer-events: none;
+}
+
+/* Will generate these dynamically in JS via style injection to randomize, 
+   or just define a few presets here if it's simpler. I will define a few presets to keep it pure CSS where possible,
+   or generate them in JS. */
+
+@keyframes badgeSlideIn {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-badge-slide {
+  animation: badgeSlideIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes fadeInPrice {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-price {
+  animation: fadeInPrice 300ms ease-out forwards;
+  /* Start invisible before animation runs if we use animation-delay */
+  opacity: 0; 
+}
+
+@keyframes celebrateScaleIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-celebrate-scale {
+  animation: celebrateScaleIn 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Highlighting newly added rows */
+@keyframes rowHighlight {
+  0% { background-color: rgba(249, 115, 22, 0.15); }
+  100% { background-color: transparent; }
+}
+
+.animate-row-highlight {
+  animation: rowHighlight 1500ms ease-out forwards;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .burst-coin {
+    display: none !important;
+  }
+}

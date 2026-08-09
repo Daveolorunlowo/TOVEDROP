@@ -1,0 +1,13 @@
+{
+  "name": "TOVEDROP",
+  "short_name": "TOVEDROP",
+  "description": "Your campus ride, your trusted driver",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#8B5CF6",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
