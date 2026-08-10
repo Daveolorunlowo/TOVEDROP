@@ -94,6 +94,7 @@ export default function ApplyPage() {
               password: formData.password,
               phone: formData.phone,
               area: selectedAreas.join(', '),
+              availability: selectedDays.join(', '),
               bio: formData.bio,
               licenseNumber: formData.license,
               vehicleMake: formData.make,

@@ -6,7 +6,7 @@ import { sendEmail } from "@/lib/email"
 export async function POST(req: Request) {
   try {
     const data = await req.json()
-    const { name, email, password, phone, area, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate } = data
+    const { name, email, password, phone, area, availability, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate } = data
 
     if (!name || !email || !password || !licenseNumber || !vehiclePlate) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
@@ -41,6 +41,7 @@ export async function POST(req: Request) {
           userId: newUser.id,
           phone,
           area,
+          availability,
           bio,
           licenseNumber,
           vehicleMake,
@@ -66,6 +67,7 @@ export async function POST(req: Request) {
       autoApproved: process.env.AUTO_APPROVE_DRIVERS === 'true' 
     }, { status: 201 })
   } catch (error: any) {
+    console.error("Driver application error:", error)
     return NextResponse.json({ message: "Error submitting application", error: error.message }, { status: 500 })
   }
 }
