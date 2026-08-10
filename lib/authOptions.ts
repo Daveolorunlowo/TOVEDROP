@@ -7,6 +7,7 @@ import { cookies } from "next/headers"
 import { sendWelcomeEmail } from "./email"
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || "fallback_secret_key_tovedrop_2026",
   // @ts-ignore
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
