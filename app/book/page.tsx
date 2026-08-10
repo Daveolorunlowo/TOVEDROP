@@ -10,8 +10,11 @@ import { Label } from '@/components/ui/label'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { BookingProgress } from '@/components/booking-progress'
-import { CAMPUS_LANDMARKS, type MapPoint } from '@/components/map-picker'
+import type { MapPoint } from '@/components/map-picker'
 import { LocationSearchInput } from '@/components/shared/LocationSearchInput'
+import { getCampusLandmarks } from '@/lib/campus-landmarks'
+
+const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 import { useDropsBalance } from '@/hooks/useDropsBalance'
 
 const MapPicker = dynamic(() => import('@/components/map-picker'), {

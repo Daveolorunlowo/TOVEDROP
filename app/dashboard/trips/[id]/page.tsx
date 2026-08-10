@@ -14,8 +14,8 @@ export default async function TripDetailPage({ params }: { params: { id: string 
   const trip = await prisma.trip.findUnique({
     where: { id: tripId },
     include: {
-      rider: { select: { id: true, name: true, phone: true } },
-      driver: { select: { id: true, name: true, phone: true } },
+      rider: { select: { id: true, name: true } },
+      driver: { select: { id: true, name: true, driverProfile: { select: { phone: true } } } },
       messages: {
         include: { sender: { select: { id: true, name: true } } },
         orderBy: { createdAt: 'asc' }
@@ -84,8 +84,8 @@ export default async function TripDetailPage({ params }: { params: { id: string 
                 <div>
                   <p className="font-semibold text-foreground">{otherUser.name}</p>
                   {/* Phone should only be visible when trip is confirmed, which it usually is if chat is open */}
-                  {(trip.status === 'CONFIRMED' || trip.status === 'COMPLETED') && otherUser.phone && (
-                    <p className="text-sm text-muted-foreground mt-1">{otherUser.phone}</p>
+                  {(trip.status === 'CONFIRMED' || trip.status === 'COMPLETED') && (otherUser as any).driverProfile?.phone && (
+                    <p className="text-sm text-muted-foreground mt-1">{(otherUser as any).driverProfile.phone}</p>
                   )}
                 </div>
               ) : (

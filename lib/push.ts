@@ -1,11 +1,15 @@
 import webpush from 'web-push'
 import prisma from './prisma'
 
-webpush.setVapidDetails(
-  process.env.VAPID_SUBJECT || 'mailto:test@example.com',
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '',
-  process.env.VAPID_PRIVATE_KEY || ''
-)
+const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:test@example.com'
+const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || ''
+
+if (vapidPublicKey && vapidPrivateKey) {
+  webpush.setVapidDetails(vapidSubject, vapidPublicKey, vapidPrivateKey)
+} else {
+  console.warn('VAPID keys are missing. Push notifications will not work.')
+}
 
 export async function sendPushNotification(userId: string, payload: { title: string, body: string, icon?: string, url?: string }) {
   try {

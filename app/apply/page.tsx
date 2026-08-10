@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { Check, User, FileText, CalendarDays, Upload, ChevronRight, ChevronLeft, Shield, Zap } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -141,9 +141,9 @@ export default function ApplyPage() {
                 ? "Your driver account is active. Log in with your email and password to start accepting rides immediately." 
                 : "Thank you for applying to join our trusted driver community. Our team will review your documents within 2–3 business days and contact you via email with next steps."}
             </p>
-            <Button asChild className="bg-primary hover:bg-primary/90 text-white font-semibold">
-              <a href={autoApproved ? "/driver" : "/"}>{autoApproved ? "Log in & go to Dashboard" : "Back to Home"}</a>
-            </Button>
+            <a href={autoApproved ? "/driver" : "/"} className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-white font-semibold" })}>
+              {autoApproved ? "Log in & go to Dashboard" : "Back to Home"}
+            </a>
           </div>
         </main>
         <Footer />

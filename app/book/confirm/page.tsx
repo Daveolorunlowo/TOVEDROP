@@ -13,7 +13,7 @@ import {
   AlertCircle,
   ArrowLeft,
 } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
@@ -61,12 +61,12 @@ export default function ConfirmPage() {
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Button asChild className="bg-primary hover:bg-primary/90 text-white font-semibold">
-                <Link href="/dashboard">View in My Trips</Link>
-              </Button>
-              <Button asChild variant="outline" className="border-secondary text-secondary hover:bg-secondary hover:text-white">
-                <Link href="/">Back to Home</Link>
-              </Button>
+              <Link href="/dashboard" className={buttonVariants({ variant: "default", className: "bg-primary hover:bg-primary/90 text-white font-semibold" })}>
+                View in My Trips
+              </Link>
+              <Link href="/" className={buttonVariants({ variant: "outline", className: "border-secondary text-secondary hover:bg-secondary hover:text-white" })}>
+                Back to Home
+              </Link>
             </div>
           </div>
         </main>
@@ -174,15 +174,15 @@ export default function ConfirmPage() {
 
           {/* Actions */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
-            <Button
-              asChild
-              variant="outline"
-              className="border-border-default text-text-secondary hover:border-purple-brand/40 hover:text-white bg-surface-card sm:w-auto"
+            <Link 
+              href="/book/drivers" 
+              className={buttonVariants({ 
+                variant: "outline", 
+                className: "border-border-default text-text-secondary hover:border-purple-brand/40 hover:text-white bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
+              })}
             >
-              <Link href="/book/drivers" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" /> Change Driver
-              </Link>
-            </Button>
+              <ArrowLeft className="w-4 h-4" /> Change Driver
+            </Link>
             <Button
               onClick={() => setConfirmed(true)}
               size="lg"

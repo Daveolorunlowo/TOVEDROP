@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Star, Send, ThumbsUp, Loader2, CheckCircle } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Navbar } from '@/components/navbar'
@@ -121,9 +121,9 @@ export default function RatePage() {
             <p className="text-sm font-semibold text-secondary mb-6">
               You rated {trip.driver?.name || 'your driver'} {rating} star{rating !== 1 ? 's' : ''} — {LABELS[rating]}
             </p>
-            <Button asChild className="bg-primary hover:bg-primary/90 text-white font-semibold w-full">
-              <a href="/dashboard">Back to My Trips</a>
-            </Button>
+            <a href="/dashboard" className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-white font-semibold w-full" })}>
+              Back to My Trips
+            </a>
           </div>
         </main>
         <Footer />

@@ -15,9 +15,7 @@ export async function GET(req: Request) {
       include: {
         trip: {
           include: {
-            driver: {
-              include: { user: true }
-            },
+            driver: true,
             walletTransactions: true
           }
         }

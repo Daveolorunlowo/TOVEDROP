@@ -5,7 +5,8 @@ import prisma from '@/lib/prisma'
 import { pusherServer } from '@/lib/pusher'
 import { sendPushNotification } from '@/lib/push'
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session || !session.user) {

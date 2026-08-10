@@ -2,7 +2,7 @@ import prisma from './lib/prisma'
 
 async function main() {
   const users = await prisma.user.findMany({
-    include: { driver: true, accounts: true, sessions: true }
+    include: { driverProfile: true, accounts: true, sessions: true }
   })
   console.log(JSON.stringify(users, null, 2))
 }

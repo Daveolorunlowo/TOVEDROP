@@ -314,8 +314,7 @@ export default function DriverDashboardPage() {
             </Link>
             <SignOutButton
               variant="outline"
-              className="text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5"
-              style={{ color: '#555' } as any}
+              className="text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5 !text-[#555]"
             />
           </div>
         </div>

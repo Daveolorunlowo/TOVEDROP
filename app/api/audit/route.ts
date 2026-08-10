@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma'
 
 export async function GET() {
   const users = await prisma.user.findMany({
-    include: { driver: true, accounts: true, sessions: true }
+    include: { driverProfile: true, accounts: true, sessions: true }
   })
   return NextResponse.json(users)
 }

@@ -198,7 +198,7 @@ export default function BuyDropsPage() {
       const res = await fetch('/api/drops/purchase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ packageId: pkg.id, amount: pkg.price })
+        body: JSON.stringify({ packageId: pkg.id, amount: pkg.naira })
       })
 
       if (!res.ok) throw new Error("API failed")

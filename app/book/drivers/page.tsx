@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Star, Car, CheckCircle, SlidersHorizontal } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -54,7 +54,7 @@ export default function DriversPage() {
             </div>
             <div className="flex items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 text-muted-foreground" />
-              <Select value={sort} onValueChange={setSort}>
+              <Select value={sort} onValueChange={(val) => val && setSort(val)}>
                 <SelectTrigger className="w-44">
                   <SelectValue placeholder="Sort by..." />
                 </SelectTrigger>
@@ -138,13 +138,15 @@ export default function DriversPage() {
                         1 Drop Booking Fee
                       </p>
                       {selected === driver.id ? (
-                        <Button
-                          size="sm"
-                          className="bg-purple-brand hover:bg-purple-brand/90 text-white font-semibold rounded-lg h-8 px-4"
-                          asChild
+                        <Link 
+                          href="/book/confirm"
+                          className={buttonVariants({ 
+                            size: "sm", 
+                            className: "bg-purple-brand hover:bg-purple-brand/90 text-white font-semibold rounded-lg h-8 px-4" 
+                          })}
                         >
-                          <Link href="/book/confirm">Continue →</Link>
-                        </Button>
+                          Continue →
+                        </Link>
                       ) : (
                         <Button
                           size="sm"
@@ -168,9 +170,14 @@ export default function DriversPage() {
               <p className="text-sm text-muted-foreground mt-1">
                 Try a different date or time — new drivers join daily.
               </p>
-              <Button asChild className="mt-5 bg-primary hover:bg-primary/90 text-white">
-                <Link href="/book">Change Trip Details</Link>
-              </Button>
+              <Link 
+                href="/book" 
+                className={buttonVariants({ 
+                  className: "mt-5 bg-primary hover:bg-primary/90 text-white" 
+                })}
+              >
+                Change Trip Details
+              </Link>
             </div>
           )}
         </div>

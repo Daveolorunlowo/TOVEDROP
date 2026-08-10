@@ -103,7 +103,7 @@ export const authOptions: NextAuthOptions = {
         token.dropsBalance = user.dropsBalance
         
         if (user.role === 'DRIVER') {
-          const driver = await prisma.driver.findUnique({
+          const driver = await prisma.driverProfile.findUnique({
             where: { userId: user.id },
             select: { status: true }
           })
@@ -118,7 +118,7 @@ export const authOptions: NextAuthOptions = {
         if (session?.role) token.role = session.role
         
         if (token.role === 'DRIVER') {
-          const driver = await prisma.driver.findUnique({
+          const driver = await prisma.driverProfile.findUnique({
             where: { userId: token.id as string },
             select: { status: true }
           })
