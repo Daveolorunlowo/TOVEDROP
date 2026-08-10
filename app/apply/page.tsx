@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Progress } from '@/components/ui/progress'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
+import { PasswordInput } from '@/components/shared/PasswordInput'
 import { cn } from '@/lib/utils'
 import { signIn } from 'next-auth/react'
 
@@ -233,7 +234,7 @@ export default function ApplyPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Password</Label>
-                    <Input id="password" name="password" value={formData.password} onChange={handleInputChange} type="password" placeholder="Min 8 characters" className={errors.password ? 'border-red-500' : ''} />
+                    <PasswordInput id="password" name="password" value={formData.password} onChange={handleInputChange} placeholder="Min 8 characters" className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''} showIcon={false} />
                     {errors.password && <p className="text-xs text-red-600">{errors.password}</p>}
                   </div>
                   <div className="space-y-1.5">

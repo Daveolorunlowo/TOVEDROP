@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
-import { Eye, EyeOff, Loader2, ShieldAlert, RotateCcw } from 'lucide-react'
+import { Loader2, ShieldAlert, RotateCcw } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { PasswordInput } from '@/components/shared/PasswordInput'
 
 type Step = 'credentials' | 'code'
 
@@ -14,8 +15,6 @@ export default function PortalGatewayPage() {
   // Step 1 state
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-
   // Step 2 state
   const [code, setCode] = useState('')
   const [step, setStep] = useState<Step>('credentials')
@@ -216,34 +215,21 @@ export default function PortalGatewayPage() {
               >
                 Password
               </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  className="w-full rounded-lg px-3 py-2.5 pr-10 text-sm outline-none transition-colors"
-                  style={{
-                    background: 'var(--surface-elevated)',
-                    border: '1px solid var(--border-default)',
-                    color: 'var(--text-primary)',
-                  }}
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-70 transition-opacity"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword
-                    ? <EyeOff className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
-                    : <Eye className="w-4 h-4" style={{ color: 'var(--text-muted)' }} />
-                  }
-                </button>
-              </div>
+              <PasswordInput
+                id="password"
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                className="w-full rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
+                style={{
+                  background: 'var(--surface-elevated)',
+                  border: '1px solid var(--border-default)',
+                  color: 'var(--text-primary)',
+                }}
+                placeholder="••••••••"
+                showIcon={false}
+              />
             </div>
 
             {error && (

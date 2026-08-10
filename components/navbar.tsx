@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { useSession, signOut } from 'next-auth/react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useDropsBalance } from '@/hooks/useDropsBalance'
+import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 
 function initials(name?: string | null) {
   if (!name) return '?'
@@ -25,11 +26,12 @@ function DropCoin({ className }: { className?: string }) {
 }
 
 const navLinks = [
-  { href: '/dashboard', label: 'Book a Ride' },
+  { href: '/dashboard', label: 'Book a Ride', isBookRide: true },
   { href: '/apply', label: 'Become a Driver' },
 ]
 
 export function Navbar() {
+  const handleBookRideClick = useBookRideNavigation()
   const { data: session, status } = useSession()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -71,6 +73,7 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  onClick={link.isBookRide ? handleBookRideClick : undefined}
                   className="text-[13.5px] font-medium text-white/60 hover:text-white transition-colors duration-200 tracking-wide"
                 >
                   {link.label}
@@ -170,7 +173,12 @@ export function Navbar() {
         </div>
         <nav className="flex flex-col p-5 gap-1" aria-label="Mobile navigation">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="px-4 py-3 rounded-xl text-sm font-medium text-white/65 hover:text-white hover:bg-white/5 transition-all">
+            <Link key={link.href} href={link.href} onClick={(e) => { 
+                if (link.isBookRide) {
+                  handleBookRideClick(e);
+                }
+                setMobileOpen(false);
+              }} className="px-4 py-3 rounded-xl text-sm font-medium text-white/65 hover:text-white hover:bg-white/5 transition-all">
               {link.label}
             </Link>
           ))}

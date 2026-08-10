@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { X, Star, Car, TrendingUp } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
+import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
@@ -52,6 +53,7 @@ export function TripList({
   const [upcomingTrips, setUpcomingTrips] = useState(initialUpcoming)
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
+  const handleBookRideClick = useBookRideNavigation()
   
   // Custom styled Toast/Alert fallback if we don't have a toast library available
   // In a real app we'd use sonner or similar.
@@ -125,13 +127,13 @@ export function TripList({
             <Car className="w-4 h-4 mb-2" style={{ color: '#333' }} />
             <p className="text-sm font-medium" style={{ color: '#888' }}>No upcoming trips</p>
             <p className="text-xs mt-0.5 mb-4" style={{ color: '#555' }}>Book your next campus ride.</p>
-            <Link
-              href="/book"
+            <button
+              onClick={handleBookRideClick}
               className="text-xs font-semibold px-3 py-1.5 rounded-md text-black"
               style={{ background: 'var(--orange-brand)' }}
             >
               Book a Ride
-            </Link>
+            </button>
           </div>
         ) : (
           <div

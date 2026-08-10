@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
+import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 import { cn } from '@/lib/utils'
 
 /* ─────────────────────────────────────────────
@@ -220,6 +221,7 @@ function PhoneMockup() {
 ───────────────────────────────────────────── */
 function HeroSection() {
   const [btnHover, setBtnHover] = useState(false)
+  const handleBookRideClick = useBookRideNavigation()
 
   return (
     <section
@@ -320,8 +322,8 @@ function HeroSection() {
 
             {/* CTAs */}
             <div className="mt-8 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-              <Link
-                href="/book"
+              <button
+                onClick={handleBookRideClick}
                 className="relative inline-flex items-center gap-2.5 font-bold text-[14px] text-white px-7 py-3.5 rounded-full overflow-hidden group transition-all duration-200 hover:scale-[1.03]"
                 style={{
                   background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
@@ -336,7 +338,7 @@ function HeroSection() {
                 </span>
                 Book a Ride · 1 Drop
                 <ArrowRight className="w-4 h-4 transition-transform duration-200" style={{ transform: btnHover ? 'translateX(4px)' : 'translateX(0)' }} />
-              </Link>
+              </button>
 
               <Link
                 href="/apply"

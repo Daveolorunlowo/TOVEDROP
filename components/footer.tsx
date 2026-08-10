@@ -1,9 +1,10 @@
 "use client"
 import Link from 'next/link'
 import { Globe, Mail, ExternalLink, Link2 } from 'lucide-react'
+import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 
 const platformLinks = [
-  { href: '/book', label: 'Book a Ride' },
+  { href: '/dashboard', label: 'Book a Ride', isBookRide: true },
   { href: '/apply', label: 'Become a Driver' },
   { href: '/dashboard', label: 'My Trips' },
   { href: '/driver', label: 'Driver Portal' },
@@ -25,6 +26,8 @@ const socials = [
 ]
 
 export function Footer() {
+  const handleBookRideClick = useBookRideNavigation()
+
   return (
     <footer className="bg-[#060611] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6">
@@ -61,8 +64,8 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-5">Platform</h3>
             <ul className="flex flex-col gap-3">
               {platformLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-sm text-white/60 hover:text-white transition-colors">
+                <li key={link.label}>
+                  <Link href={link.href} onClick={link.isBookRide ? handleBookRideClick : undefined} className="text-sm text-white/60 hover:text-white transition-colors">
                     {link.label}
                   </Link>
                 </li>
