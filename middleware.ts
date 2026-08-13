@@ -8,7 +8,7 @@ export async function middleware(request: any) {
 
   const protectedPrefixes = ['/dashboard', '/book', '/driver', '/admin', '/rate']
   const isProtected = protectedPrefixes.some(p => path.startsWith(p))
-  const isAuthPage = path.startsWith('/auth/login') || path.startsWith('/auth/signup')
+  const isGuestOnlyPage = path.startsWith('/auth') || path === '/'
 
   // No session, trying to access protected area
   if (!token && isProtected) {
@@ -16,7 +16,7 @@ export async function middleware(request: any) {
   }
 
   // Has session, on a page meant for logged-out users
-  if (token && isAuthPage) {
+  if (token && isGuestOnlyPage) {
     const redirectPath = getRoleRedirectPath(token.role as string, token.driverStatus as string | null)
     return NextResponse.redirect(new URL(redirectPath, request.url))
   }
@@ -43,7 +43,8 @@ export async function middleware(request: any) {
 
 export const config = {
   matcher: [
+    '/',
     '/dashboard/:path*', '/book/:path*', '/driver/:path*', 
-    '/admin/:path*', '/rate/:path*', '/auth/login', '/auth/signup'
+    '/admin/:path*', '/rate/:path*', '/auth/:path*'
   ],
 }
