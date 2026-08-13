@@ -223,16 +223,28 @@ export default function BookPage() {
                     <div className="h-full rounded-full transition-all duration-300" style={{ width: drops > 0 ? `${(1 / drops) * 100}%` : '0%', backgroundColor: 'var(--orange-brand)' }} />
                   </div>
                 </div>
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={submitting}
-                  className="w-full text-white font-semibold mt-2"
-                  style={{ backgroundColor: 'var(--orange-brand)' }}
-                >
-                  <Search className="w-4 h-4 mr-2" />
-                  {submitting ? 'Requesting...' : 'Find Drivers'}
-                </Button>
+                {(!loading && drops < 1) ? (
+                  <Button
+                    type="button"
+                    size="lg"
+                    onClick={() => router.push('/dashboard/buy-drops')}
+                    className="w-full text-white font-semibold mt-2"
+                    style={{ backgroundColor: 'var(--orange-brand)' }}
+                  >
+                    Buy Drops
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={submitting || loading}
+                    className="w-full text-white font-semibold mt-2"
+                    style={{ backgroundColor: 'var(--orange-brand)' }}
+                  >
+                    <Search className="w-4 h-4 mr-2" />
+                    {submitting ? 'Requesting...' : (loading ? 'Loading...' : 'Find Drivers')}
+                  </Button>
+                )}
               </form>
             </div>
 

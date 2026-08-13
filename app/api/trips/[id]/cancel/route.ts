@@ -39,8 +39,10 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         data: { status: "CANCELLED" }
       })
 
-      // Refund the drop if dropLotId is set
-      if (trip.dropLotId) {
+      let refunded = false
+      // Refund the drop if dropLotId is set and the trip hasn't been accepted yet
+      if (trip.dropLotId && trip.status === "PENDING") {
+        refunded = true
         await tx.dropLot.update({
           where: { id: trip.dropLotId },
           data: { remainingDrops: { increment: 1 } }
@@ -62,7 +64,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         })
       }
 
-      return updatedTrip
+      return { updatedTrip, refunded }
     })
 
     // Notify Rider and Driver via Web Push
@@ -72,7 +74,9 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     })
     
     if (fullTrip) {
-      const dropRefundStatus = fullTrip.dropLotId ? "Your 1 Drop has been refunded." : "No refund applies."
+      const dropRefundStatus = result.refunded 
+        ? "Your 1 Drop has been refunded." 
+        : (fullTrip.dropLotId ? "No refund applies because the trip was already accepted by a driver." : "No refund applies.")
       const title = 'Trip Cancelled'
       const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${dropRefundStatus}`
       const url = '/dashboard/trips'
@@ -88,7 +92,10 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
       }
     }
 
-    return NextResponse.json({ message: "Trip cancelled and drops refunded", trip: result }, { status: 200 })
+    return NextResponse.json({ 
+      message: result.refunded ? "Trip cancelled and drops refunded" : "Trip cancelled (no drop refund)", 
+      trip: result.updatedTrip 
+    }, { status: 200 })
   } catch (error: any) {
     if (error.message === "Trip not found" || error.message.startsWith("Cannot cancel") || error.message === "Unauthorized to cancel this trip") {
        return NextResponse.json({ message: error.message }, { status: 400 })
