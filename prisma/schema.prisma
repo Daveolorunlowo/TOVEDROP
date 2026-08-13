@@ -104,6 +104,7 @@ model DriverProfile {
   walletBalance Float    @default(0)
   
   walletTransactions WalletTransaction[]
+  withdrawalRequests WithdrawalRequest[]
 }
 
 model Trip {

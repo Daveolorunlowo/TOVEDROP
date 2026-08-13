@@ -67,6 +67,7 @@ export const ModelName = {
   DropTransaction: 'DropTransaction',
   DropLot: 'DropLot',
   WalletTransaction: 'WalletTransaction',
+  WithdrawalRequest: 'WithdrawalRequest',
   PlatformRevenue: 'PlatformRevenue',
   AdminRevenue: 'AdminRevenue',
   SystemSettings: 'SystemSettings'
@@ -309,6 +310,18 @@ export const WalletTransactionScalarFieldEnum = {
 } as const
 
 export type WalletTransactionScalarFieldEnum = (typeof WalletTransactionScalarFieldEnum)[keyof typeof WalletTransactionScalarFieldEnum]
+
+
+export const WithdrawalRequestScalarFieldEnum = {
+  id: 'id',
+  driverId: 'driverId',
+  amount: 'amount',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WithdrawalRequestScalarFieldEnum = (typeof WithdrawalRequestScalarFieldEnum)[keyof typeof WithdrawalRequestScalarFieldEnum]
 
 
 export const PlatformRevenueScalarFieldEnum = {

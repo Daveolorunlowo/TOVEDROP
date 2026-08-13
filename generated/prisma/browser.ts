@@ -98,6 +98,11 @@ export type DropLot = Prisma.DropLotModel
  */
 export type WalletTransaction = Prisma.WalletTransactionModel
 /**
+ * Model WithdrawalRequest
+ * 
+ */
+export type WithdrawalRequest = Prisma.WithdrawalRequestModel
+/**
  * Model PlatformRevenue
  * 
  */

@@ -346,6 +346,7 @@ export type DriverProfileWhereInput = {
   walletBalance?: Prisma.FloatFilter<"DriverProfile"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
+  withdrawalRequests?: Prisma.WithdrawalRequestListRelationFilter
 }
 
 export type DriverProfileOrderByWithRelationInput = {
@@ -371,6 +372,7 @@ export type DriverProfileOrderByWithRelationInput = {
   walletBalance?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   walletTransactions?: Prisma.WalletTransactionOrderByRelationAggregateInput
+  withdrawalRequests?: Prisma.WithdrawalRequestOrderByRelationAggregateInput
 }
 
 export type DriverProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -399,6 +401,7 @@ export type DriverProfileWhereUniqueInput = Prisma.AtLeast<{
   walletBalance?: Prisma.FloatFilter<"DriverProfile"> | number
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
+  withdrawalRequests?: Prisma.WithdrawalRequestListRelationFilter
 }, "id" | "userId">
 
 export type DriverProfileOrderByWithAggregationInput = {
@@ -477,6 +480,7 @@ export type DriverProfileCreateInput = {
   walletBalance?: number
   user: Prisma.UserCreateNestedOneWithoutDriverProfileInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutDriverInput
+  withdrawalRequests?: Prisma.WithdrawalRequestCreateNestedManyWithoutDriverInput
 }
 
 export type DriverProfileUncheckedCreateInput = {
@@ -501,6 +505,7 @@ export type DriverProfileUncheckedCreateInput = {
   rating?: number
   walletBalance?: number
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutDriverInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type DriverProfileUpdateInput = {
@@ -525,6 +530,7 @@ export type DriverProfileUpdateInput = {
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutDriverProfileNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutDriverNestedInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUpdateManyWithoutDriverNestedInput
 }
 
 export type DriverProfileUncheckedUpdateInput = {
@@ -549,6 +555,7 @@ export type DriverProfileUncheckedUpdateInput = {
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutDriverNestedInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type DriverProfileCreateManyInput = {
@@ -764,6 +771,20 @@ export type DriverProfileUpdateOneRequiredWithoutWalletTransactionsNestedInput =
   update?: Prisma.XOR<Prisma.XOR<Prisma.DriverProfileUpdateToOneWithWhereWithoutWalletTransactionsInput, Prisma.DriverProfileUpdateWithoutWalletTransactionsInput>, Prisma.DriverProfileUncheckedUpdateWithoutWalletTransactionsInput>
 }
 
+export type DriverProfileCreateNestedOneWithoutWithdrawalRequestsInput = {
+  create?: Prisma.XOR<Prisma.DriverProfileCreateWithoutWithdrawalRequestsInput, Prisma.DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput>
+  connectOrCreate?: Prisma.DriverProfileCreateOrConnectWithoutWithdrawalRequestsInput
+  connect?: Prisma.DriverProfileWhereUniqueInput
+}
+
+export type DriverProfileUpdateOneRequiredWithoutWithdrawalRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.DriverProfileCreateWithoutWithdrawalRequestsInput, Prisma.DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput>
+  connectOrCreate?: Prisma.DriverProfileCreateOrConnectWithoutWithdrawalRequestsInput
+  upsert?: Prisma.DriverProfileUpsertWithoutWithdrawalRequestsInput
+  connect?: Prisma.DriverProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.DriverProfileUpdateToOneWithWhereWithoutWithdrawalRequestsInput, Prisma.DriverProfileUpdateWithoutWithdrawalRequestsInput>, Prisma.DriverProfileUncheckedUpdateWithoutWithdrawalRequestsInput>
+}
+
 export type DriverProfileCreateWithoutUserInput = {
   id?: string
   phone?: string | null
@@ -785,6 +806,7 @@ export type DriverProfileCreateWithoutUserInput = {
   rating?: number
   walletBalance?: number
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutDriverInput
+  withdrawalRequests?: Prisma.WithdrawalRequestCreateNestedManyWithoutDriverInput
 }
 
 export type DriverProfileUncheckedCreateWithoutUserInput = {
@@ -808,6 +830,7 @@ export type DriverProfileUncheckedCreateWithoutUserInput = {
   rating?: number
   walletBalance?: number
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutDriverInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type DriverProfileCreateOrConnectWithoutUserInput = {
@@ -847,6 +870,7 @@ export type DriverProfileUpdateWithoutUserInput = {
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutDriverNestedInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUpdateManyWithoutDriverNestedInput
 }
 
 export type DriverProfileUncheckedUpdateWithoutUserInput = {
@@ -870,6 +894,7 @@ export type DriverProfileUncheckedUpdateWithoutUserInput = {
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutDriverNestedInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type DriverProfileCreateWithoutWalletTransactionsInput = {
@@ -893,6 +918,7 @@ export type DriverProfileCreateWithoutWalletTransactionsInput = {
   rating?: number
   walletBalance?: number
   user: Prisma.UserCreateNestedOneWithoutDriverProfileInput
+  withdrawalRequests?: Prisma.WithdrawalRequestCreateNestedManyWithoutDriverInput
 }
 
 export type DriverProfileUncheckedCreateWithoutWalletTransactionsInput = {
@@ -916,6 +942,7 @@ export type DriverProfileUncheckedCreateWithoutWalletTransactionsInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  withdrawalRequests?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type DriverProfileCreateOrConnectWithoutWalletTransactionsInput = {
@@ -955,6 +982,7 @@ export type DriverProfileUpdateWithoutWalletTransactionsInput = {
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
   user?: Prisma.UserUpdateOneRequiredWithoutDriverProfileNestedInput
+  withdrawalRequests?: Prisma.WithdrawalRequestUpdateManyWithoutDriverNestedInput
 }
 
 export type DriverProfileUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -978,6 +1006,119 @@ export type DriverProfileUncheckedUpdateWithoutWalletTransactionsInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  withdrawalRequests?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput
+}
+
+export type DriverProfileCreateWithoutWithdrawalRequestsInput = {
+  id?: string
+  phone?: string | null
+  area?: string | null
+  bio?: string | null
+  licenseNumber?: string | null
+  vehicleMake?: string | null
+  vehicleModel?: string | null
+  vehicleColor?: string | null
+  vehicleType?: string | null
+  vehiclePlate?: string | null
+  availability?: string | null
+  preferredAreas?: string | null
+  bankName?: string | null
+  accountNumber?: string | null
+  accountName?: string | null
+  status?: string
+  totalTrips?: number
+  rating?: number
+  walletBalance?: number
+  user: Prisma.UserCreateNestedOneWithoutDriverProfileInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutDriverInput
+}
+
+export type DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput = {
+  id?: string
+  userId: string
+  phone?: string | null
+  area?: string | null
+  bio?: string | null
+  licenseNumber?: string | null
+  vehicleMake?: string | null
+  vehicleModel?: string | null
+  vehicleColor?: string | null
+  vehicleType?: string | null
+  vehiclePlate?: string | null
+  availability?: string | null
+  preferredAreas?: string | null
+  bankName?: string | null
+  accountNumber?: string | null
+  accountName?: string | null
+  status?: string
+  totalTrips?: number
+  rating?: number
+  walletBalance?: number
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutDriverInput
+}
+
+export type DriverProfileCreateOrConnectWithoutWithdrawalRequestsInput = {
+  where: Prisma.DriverProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.DriverProfileCreateWithoutWithdrawalRequestsInput, Prisma.DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput>
+}
+
+export type DriverProfileUpsertWithoutWithdrawalRequestsInput = {
+  update: Prisma.XOR<Prisma.DriverProfileUpdateWithoutWithdrawalRequestsInput, Prisma.DriverProfileUncheckedUpdateWithoutWithdrawalRequestsInput>
+  create: Prisma.XOR<Prisma.DriverProfileCreateWithoutWithdrawalRequestsInput, Prisma.DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput>
+  where?: Prisma.DriverProfileWhereInput
+}
+
+export type DriverProfileUpdateToOneWithWhereWithoutWithdrawalRequestsInput = {
+  where?: Prisma.DriverProfileWhereInput
+  data: Prisma.XOR<Prisma.DriverProfileUpdateWithoutWithdrawalRequestsInput, Prisma.DriverProfileUncheckedUpdateWithoutWithdrawalRequestsInput>
+}
+
+export type DriverProfileUpdateWithoutWithdrawalRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  area?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleMake?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehiclePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferredAreas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  user?: Prisma.UserUpdateOneRequiredWithoutDriverProfileNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutDriverNestedInput
+}
+
+export type DriverProfileUncheckedUpdateWithoutWithdrawalRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  area?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  licenseNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleMake?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleColor?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehicleType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  vehiclePlate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  preferredAreas?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  accountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
+  rating?: Prisma.FloatFieldUpdateOperationsInput | number
+  walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 
@@ -987,10 +1128,12 @@ export type DriverProfileUncheckedUpdateWithoutWalletTransactionsInput = {
 
 export type DriverProfileCountOutputType = {
   walletTransactions: number
+  withdrawalRequests: number
 }
 
 export type DriverProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   walletTransactions?: boolean | DriverProfileCountOutputTypeCountWalletTransactionsArgs
+  withdrawalRequests?: boolean | DriverProfileCountOutputTypeCountWithdrawalRequestsArgs
 }
 
 /**
@@ -1008,6 +1151,13 @@ export type DriverProfileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Type
  */
 export type DriverProfileCountOutputTypeCountWalletTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WalletTransactionWhereInput
+}
+
+/**
+ * DriverProfileCountOutputType without action
+ */
+export type DriverProfileCountOutputTypeCountWithdrawalRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WithdrawalRequestWhereInput
 }
 
 
@@ -1034,6 +1184,7 @@ export type DriverProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   walletBalance?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.DriverProfile$walletTransactionsArgs<ExtArgs>
+  withdrawalRequests?: boolean | Prisma.DriverProfile$withdrawalRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.DriverProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["driverProfile"]>
 
@@ -1112,6 +1263,7 @@ export type DriverProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalA
 export type DriverProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.DriverProfile$walletTransactionsArgs<ExtArgs>
+  withdrawalRequests?: boolean | Prisma.DriverProfile$withdrawalRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.DriverProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type DriverProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1126,6 +1278,7 @@ export type $DriverProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     walletTransactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
+    withdrawalRequests: Prisma.$WithdrawalRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1544,6 +1697,7 @@ export interface Prisma__DriverProfileClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   walletTransactions<T extends Prisma.DriverProfile$walletTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DriverProfile$walletTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  withdrawalRequests<T extends Prisma.DriverProfile$withdrawalRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DriverProfile$withdrawalRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2015,6 +2169,30 @@ export type DriverProfile$walletTransactionsArgs<ExtArgs extends runtime.Types.E
   take?: number
   skip?: number
   distinct?: Prisma.WalletTransactionScalarFieldEnum | Prisma.WalletTransactionScalarFieldEnum[]
+}
+
+/**
+ * DriverProfile.withdrawalRequests
+ */
+export type DriverProfile$withdrawalRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WithdrawalRequest
+   */
+  select?: Prisma.WithdrawalRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WithdrawalRequest
+   */
+  omit?: Prisma.WithdrawalRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WithdrawalRequestInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalRequestWhereInput
+  orderBy?: Prisma.WithdrawalRequestOrderByWithRelationInput | Prisma.WithdrawalRequestOrderByWithRelationInput[]
+  cursor?: Prisma.WithdrawalRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WithdrawalRequestScalarFieldEnum | Prisma.WithdrawalRequestScalarFieldEnum[]
 }
 
 /**
