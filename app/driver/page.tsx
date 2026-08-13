@@ -13,6 +13,7 @@ import { DriverTripListener } from '@/components/driver-trip-listener'
 import { ChatModal } from '@/components/chat-modal'
 import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
+import { SignOutButton } from '@/components/sign-out-button'
 import { cn } from '@/lib/utils'
 
 // ─── Design tokens ─────────────────────────────────────
