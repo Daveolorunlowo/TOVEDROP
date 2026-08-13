@@ -409,8 +409,8 @@ export default function DriverDashboardPage() {
       <div className="max-w-5xl mx-auto px-5 py-8">
 
         {/* ── Header ── */}
-        <div className="flex items-start justify-between mb-8">
-          <div className="flex items-start gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
+          <div className="flex items-start gap-4 min-w-0 max-w-full">
             {/* Avatar with badge overlap */}
             <div className="relative shrink-0">
               <Avatar className="w-11 h-11">
@@ -428,17 +428,17 @@ export default function DriverDashboardPage() {
                 <Check className="w-2 h-2 text-white" />
               </span>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-0.5" style={{ color: '#555' }}>
                 Driver Dashboard
               </p>
-              <h1 className="text-2xl font-bold" style={{ color: '#f5f5f5', letterSpacing: '-0.01em' }}>
+              <h1 className="text-2xl font-bold break-words" style={{ color: '#f5f5f5', letterSpacing: '-0.01em' }}>
                 {firstName}
               </h1>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex flex-wrap items-center gap-2 mt-1">
                 <StatusChip status={driverProfile.status} />
                 {driverProfile.rating > 0 && (
-                  <span className="flex items-center gap-1 text-[11px]" style={{ color: '#555' }}>
+                  <span className="flex items-center gap-1 text-[11px] whitespace-nowrap" style={{ color: '#555' }}>
                     <Star className="w-3 h-3" style={{ color: 'var(--orange-brand)' }} />
                     {driverProfile.rating.toFixed(1)}
                   </span>
@@ -446,7 +446,7 @@ export default function DriverDashboardPage() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/driver/settings"
               className="text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors"
