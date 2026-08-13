@@ -858,7 +858,7 @@ export default function AdminPage() {
                       <StatusChip status="suspended" />
                       <button
                         disabled={processing === driver.userId}
-                        onClick={() => handleAction(driver.userId, 'approve')}
+                        onClick={() => handleAction(driver.userId, 'unsuspend')}
                         className="text-[11px] font-semibold px-2.5 py-1"
                         style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
                       >
@@ -954,14 +954,14 @@ export default function AdminPage() {
                       </span>
                       <StatusChip status={user.detailStatus ?? 'approved'} />
                       <div className="text-right">
-                        {user.type === 'Driver' && user.detailStatus === 'approved' && (
+                        {user.type === 'Driver' && (user.detailStatus === 'approved' || user.detailStatus === 'suspended') && (
                           <button
                             disabled={processing === user.id}
-                            onClick={() => handleAction(user.id, 'suspend')}
+                            onClick={() => handleAction(user.id, user.detailStatus === 'suspended' ? 'unsuspend' : 'suspend')}
                             className="text-[11px] font-semibold hover:underline"
-                            style={{ color: '#444' }}
+                            style={{ color: user.detailStatus === 'suspended' ? '#22c55e' : '#444' }}
                           >
-                            Suspend
+                            {user.detailStatus === 'suspended' ? 'Unsuspend' : 'Suspend'}
                           </button>
                         )}
                       </div>

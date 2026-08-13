@@ -19,7 +19,8 @@ export async function POST(req: Request) {
 
     const statusMap: any = {
       approve: "APPROVED",
-      suspend: "SUSPENDED"
+      suspend: "SUSPENDED",
+      unsuspend: "APPROVED"
     }
 
     if (!statusMap[action]) {
@@ -31,7 +32,13 @@ export async function POST(req: Request) {
       data: { status: statusMap[action] }
     })
 
-    return NextResponse.json({ message: `Driver ${action}d successfully`, profile: updatedProfile }, { status: 200 })
+    const actionPastTense: any = {
+      approve: "approved",
+      suspend: "suspended",
+      unsuspend: "unsuspended"
+    }
+
+    return NextResponse.json({ message: `Driver ${actionPastTense[action]} successfully`, profile: updatedProfile }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error updating driver", error: error.message }, { status: 500 })
   }
