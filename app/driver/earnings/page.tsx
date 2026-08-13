@@ -19,7 +19,10 @@ export default function EarningsPage() {
 
   useEffect(() => {
     fetch('/api/driver/profile')
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch profile')
+        return res.json()
+      })
       .then(d => {
         if (d.driverProfile) {
           setData(d.driverProfile)
@@ -27,8 +30,9 @@ export default function EarningsPage() {
           setAccountNumber(d.driverProfile.accountNumber || '')
           setAccountName(d.driverProfile.accountName || '')
         }
-        setLoading(false)
       })
+      .catch(err => console.error("Error fetching driver profile:", err))
+      .finally(() => setLoading(false))
   }, [])
 
   const handleSaveBankDetails = async (e: React.FormEvent) => {
