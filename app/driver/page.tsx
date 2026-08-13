@@ -5,10 +5,9 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, CheckCircle2, ChevronRight
+  CheckCircle, XCircle, Loader2, Check, CheckCircle2, ChevronRight, MessageSquare
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { CheckCircle2, ChevronRight, XCircle, Clock, MessageSquare } from 'lucide-react'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
 import { DriverTripListener } from '@/components/driver-trip-listener'
 import { ChatModal } from '@/components/chat-modal'
