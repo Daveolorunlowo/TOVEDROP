@@ -141,9 +141,9 @@ export default function AdminPage() {
   }
 
   const saveRevenueSettings = async () => {
-    const total = revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage
+    const total = revenueSettings.adminPercentage + revenueSettings.companyPercentage
     if (total !== 100) {
-      alert(`Percentages must sum to 100%. Current sum: ${total}%`)
+      alert(`Admin and Company percentages must sum to 100%. Current sum: ${total}%`)
       return
     }
 
@@ -683,21 +683,10 @@ export default function AdminPage() {
               ) : (
                 <div className="rounded-lg p-5" style={{ background: '#171717', border: '1px solid #222' }}>
                   <p className="text-sm mb-6" style={{ color: '#888' }}>
-                    Configure the percentage split of the drops (booking fee) for completed rides. The total must equal 100%.
+                    Drivers automatically receive a flat <strong>₦12</strong> fee per completed ride. Configure how the <em>remaining</em> balance of the booking fee is split between the Admin and the Company. The total must equal 100%.
                   </p>
 
                   <div className="space-y-4 max-w-md">
-                    <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Driver Percentage (%)</label>
-                      <input 
-                        type="number"
-                        min="0" max="100"
-                        className="w-full px-3 py-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-[var(--orange-brand)]"
-                        style={{ background: '#111111', border: '1px solid #222', color: '#f5f5f5' }}
-                        value={revenueSettings.driverPercentage}
-                        onChange={e => setRevenueSettings({...revenueSettings, driverPercentage: Number(e.target.value)})}
-                      />
-                    </div>
                     <div>
                       <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Admin Percentage (%)</label>
                       <input 
@@ -726,8 +715,8 @@ export default function AdminPage() {
                     <div className="flex items-center justify-between">
                       <div className="text-sm">
                         <span style={{ color: '#555' }}>Total: </span>
-                        <span className="font-bold" style={{ color: (revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage) === 100 ? '#22c55e' : '#ef4444' }}>
-                          {revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage}%
+                        <span className="font-bold" style={{ color: (revenueSettings.adminPercentage + revenueSettings.companyPercentage) === 100 ? '#22c55e' : '#ef4444' }}>
+                          {revenueSettings.adminPercentage + revenueSettings.companyPercentage}%
                         </span>
                       </div>
                       

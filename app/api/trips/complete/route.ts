@@ -48,10 +48,28 @@ export async function POST(req: Request) {
         data: { status: "COMPLETED" }
       })
 
-      const bookingFee = trip.bookingFeeNaira || 0
-      const driverShare = (bookingFee * settings.driverPercentage) / 100
-      const adminShare = (bookingFee * settings.adminPercentage) / 100
-      const platformShare = (bookingFee * settings.companyPercentage) / 100
+      let bookingFee = trip.bookingFeeNaira || 0
+      const isFreeDrop = bookingFee === 0
+      
+      if (isFreeDrop) {
+        bookingFee = 45 // Assumed base value for promotional/free drops
+      }
+
+      const driverShare = 12 // Flat fee for driver on every ride
+
+      let adminShare = 0
+      let platformShare = 0
+
+      // Only calculate admin and platform share on paid drops
+      if (!isFreeDrop) {
+        const remaining = Math.max(0, bookingFee - driverShare)
+        const totalCompanyAdminPercent = settings.adminPercentage + settings.companyPercentage
+        
+        if (totalCompanyAdminPercent > 0) {
+          adminShare = (remaining * settings.adminPercentage) / totalCompanyAdminPercent
+          platformShare = (remaining * settings.companyPercentage) / totalCompanyAdminPercent
+        }
+      }
 
       const updatedDriverProfile = await tx.driverProfile.update({
         where: { userId: session.user.id },

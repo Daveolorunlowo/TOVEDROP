@@ -39,30 +39,29 @@ export async function PUT(req: Request) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
-    const { driverPercentage, adminPercentage, companyPercentage } = await req.json()
+    const { adminPercentage, companyPercentage } = await req.json()
 
     if (
-      typeof driverPercentage !== 'number' ||
       typeof adminPercentage !== 'number' ||
       typeof companyPercentage !== 'number'
     ) {
       return NextResponse.json({ message: 'Invalid data types' }, { status: 400 })
     }
 
-    if (driverPercentage + adminPercentage + companyPercentage !== 100) {
-      return NextResponse.json({ message: 'Percentages must add up to 100' }, { status: 400 })
+    if (adminPercentage + companyPercentage !== 100) {
+      return NextResponse.json({ message: 'Admin and Company percentages must add up to 100' }, { status: 400 })
     }
 
     const settings = await prisma.systemSettings.upsert({
       where: { id: 'default' },
       update: {
-        driverPercentage,
+        driverPercentage: 0,
         adminPercentage,
         companyPercentage
       },
       create: {
         id: 'default',
-        driverPercentage,
+        driverPercentage: 0,
         adminPercentage,
         companyPercentage
       }
