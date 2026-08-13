@@ -138,7 +138,13 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string
         session.user.id = token.id as string
         session.user.university = token.university as string | null
-        session.user.dropsBalance = token.dropsBalance as number
+        
+        if (token.role === 'ADMIN' || token.role === 'DRIVER') {
+          session.user.dropsBalance = 0
+        } else {
+          session.user.dropsBalance = token.dropsBalance as number
+        }
+
         session.user.driverStatus = token.driverStatus as string | null
       }
       return session

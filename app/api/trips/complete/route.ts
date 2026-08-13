@@ -100,12 +100,12 @@ export async function POST(req: Request) {
         })
 
         if (referral && referral.status === "PENDING") {
-          await tx.user.update({
-            where: { id: referral.referrerId },
+          await tx.user.updateMany({
+            where: { id: referral.referrerId, role: 'RIDER' },
             data: { dropsBalance: { increment: 3 } } // Give 3 drops to referrer
           })
-          await tx.user.update({
-            where: { id: trip.riderId },
+          await tx.user.updateMany({
+            where: { id: trip.riderId, role: 'RIDER' },
             data: { dropsBalance: { increment: 2 } } // Give 2 drops to rider
           })
           await tx.referral.update({

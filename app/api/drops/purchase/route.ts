@@ -27,6 +27,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 })
     }
 
+    if (user.role === 'ADMIN' || user.role === 'DRIVER') {
+      return NextResponse.json({ message: "Admins and Drivers cannot possess drops" }, { status: 403 })
+    }
+
     let finalAmount = pkg.naira
     let isFirstTimeDiscountApplied = false
 

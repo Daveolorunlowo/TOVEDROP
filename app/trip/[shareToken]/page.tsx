@@ -120,12 +120,12 @@ export default async function TripSharePage({ params }: { params: { shareToken: 
                 <div className="flex-1 min-w-0 flex items-center justify-between">
                   <div className="truncate pr-2">
                     <p className="text-xs font-semibold truncate" style={{ color: '#f5f5f5' }}>
-                      {driverProfile.carColor} {driverProfile.carMake} {driverProfile.carModel}
+                      {driverProfile.vehicleColor} {driverProfile.vehicleMake} {driverProfile.vehicleModel}
                     </p>
                   </div>
                   <div className="shrink-0 px-2.5 py-1 rounded-md" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
                     <p className="text-xs font-mono font-bold tracking-widest uppercase" style={{ color: '#f5f5f5' }}>
-                      {driverProfile.licensePlate}
+                      {driverProfile.vehiclePlate}
                     </p>
                   </div>
                 </div>

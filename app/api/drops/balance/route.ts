@@ -20,7 +20,9 @@ export async function GET(req: Request) {
       return NextResponse.json({ message: "User not found" }, { status: 404 })
     }
 
-    return NextResponse.json({ balance: user.dropsBalance }, { status: 200 })
+    const balance = (session.user.role === 'ADMIN' || session.user.role === 'DRIVER') ? 0 : user.dropsBalance
+
+    return NextResponse.json({ balance }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error fetching drops balance", error: error.message }, { status: 500 })
   }

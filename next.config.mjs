@@ -10,6 +10,15 @@ const nextConfig = {
     unoptimized: true,
   },
   turbopack: {},
+  async redirects() {
+    return [
+      {
+        source: '/track/:path*',
+        destination: '/trip/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 const withPWA = withPWAInit({
