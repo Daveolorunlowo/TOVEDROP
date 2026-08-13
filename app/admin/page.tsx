@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import {
   CheckCircle, Search, Users, Car, TrendingUp,
   Flag, FileText, LayoutDashboard, Menu, X,
-  Loader2, Check, ShieldAlert
+  Loader2, Check, ShieldAlert, PieChart, Save
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/SkeletonVariants'
@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils'
 const NAV_ITEMS = [
   { id: 'overview',  label: 'Overview',         icon: LayoutDashboard },
   { id: 'revenue',   label: 'Revenue',          icon: TrendingUp },
+  { id: 'revenue_split', label: 'Revenue Split', icon: PieChart },
   { id: 'approvals', label: 'Driver Approvals',  icon: Car },
   { id: 'reports',   label: 'Reports',           icon: Flag },
   { id: 'users',     label: 'Users',             icon: Users },
@@ -81,6 +82,9 @@ export default function AdminPage() {
   const [securityLoading, setSecurityLoading] = useState(false)
   const [revenueData, setRevenueData] = useState<any[]>([])
   const [revenueLoading, setRevenueLoading] = useState(false)
+  const [revenueSettings, setRevenueSettings] = useState({ driverPercentage: 70, adminPercentage: 10, companyPercentage: 20 })
+  const [settingsLoading, setSettingsLoading] = useState(false)
+  const [settingsSaving, setSettingsSaving] = useState(false)
 
   const fetchData = async () => {
     const start = Date.now()
@@ -117,7 +121,51 @@ export default function AdminPage() {
   useEffect(() => {
     if (activeTab === 'security') fetchSecurityLogs()
     if (activeTab === 'revenue') fetchRevenue()
+    if (activeTab === 'revenue_split') fetchRevenueSettings()
   }, [activeTab])
+
+  const fetchRevenueSettings = async () => {
+    setSettingsLoading(true)
+    try {
+      const res = await fetch('/api/admin/settings')
+      if (res.ok) {
+        const json = await res.json()
+        setRevenueSettings({
+          driverPercentage: json.driverPercentage,
+          adminPercentage: json.adminPercentage,
+          companyPercentage: json.companyPercentage
+        })
+      }
+    } catch (e) { console.error(e) }
+    finally { setSettingsLoading(false) }
+  }
+
+  const saveRevenueSettings = async () => {
+    const total = revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage
+    if (total !== 100) {
+      alert(`Percentages must sum to 100%. Current sum: ${total}%`)
+      return
+    }
+
+    setSettingsSaving(true)
+    try {
+      const res = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(revenueSettings),
+      })
+      if (res.ok) {
+        alert('Revenue split updated successfully!')
+      } else {
+        const error = await res.json()
+        alert(`Failed to update: ${error.message}`)
+      }
+    } catch (e) { 
+      console.error(e) 
+      alert('Failed to save settings.')
+    }
+    finally { setSettingsSaving(false) }
+  }
 
   const fetchRevenue = async () => {
     setRevenueLoading(true)
@@ -449,6 +497,82 @@ export default function AdminPage() {
                         ))}
                       </tbody>
                     </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Revenue Split Settings ── */}
+          {!loading && activeTab === 'revenue_split' && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+                Revenue Split Configuration
+              </p>
+              
+              {settingsLoading ? (
+                <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+              ) : (
+                <div className="rounded-lg p-5" style={{ background: '#171717', border: '1px solid #222' }}>
+                  <p className="text-sm mb-6" style={{ color: '#888' }}>
+                    Configure the percentage split of the drops (booking fee) for completed rides. The total must equal 100%.
+                  </p>
+
+                  <div className="space-y-4 max-w-md">
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Driver Percentage (%)</label>
+                      <input 
+                        type="number"
+                        min="0" max="100"
+                        className="w-full px-3 py-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-[var(--orange-brand)]"
+                        style={{ background: '#111111', border: '1px solid #222', color: '#f5f5f5' }}
+                        value={revenueSettings.driverPercentage}
+                        onChange={e => setRevenueSettings({...revenueSettings, driverPercentage: Number(e.target.value)})}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Admin Percentage (%)</label>
+                      <input 
+                        type="number"
+                        min="0" max="100"
+                        className="w-full px-3 py-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-[var(--orange-brand)]"
+                        style={{ background: '#111111', border: '1px solid #222', color: '#f5f5f5' }}
+                        value={revenueSettings.adminPercentage}
+                        onChange={e => setRevenueSettings({...revenueSettings, adminPercentage: Number(e.target.value)})}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Company (Platform) Percentage (%)</label>
+                      <input 
+                        type="number"
+                        min="0" max="100"
+                        className="w-full px-3 py-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-[var(--orange-brand)]"
+                        style={{ background: '#111111', border: '1px solid #222', color: '#f5f5f5' }}
+                        value={revenueSettings.companyPercentage}
+                        onChange={e => setRevenueSettings({...revenueSettings, companyPercentage: Number(e.target.value)})}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-5" style={{ borderTop: '1px solid #1e1e1e' }}>
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm">
+                        <span style={{ color: '#555' }}>Total: </span>
+                        <span className="font-bold" style={{ color: (revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage) === 100 ? '#22c55e' : '#ef4444' }}>
+                          {revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage}%
+                        </span>
+                      </div>
+                      
+                      <button
+                        onClick={saveRevenueSettings}
+                        disabled={settingsSaving || (revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage) !== 100}
+                        className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-md transition-colors disabled:opacity-50"
+                        style={{ background: 'var(--orange-brand)', color: '#000' }}
+                      >
+                        {settingsSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                        Save Changes
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}

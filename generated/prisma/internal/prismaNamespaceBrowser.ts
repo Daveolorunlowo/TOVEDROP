@@ -67,7 +67,9 @@ export const ModelName = {
   DropTransaction: 'DropTransaction',
   DropLot: 'DropLot',
   WalletTransaction: 'WalletTransaction',
-  PlatformRevenue: 'PlatformRevenue'
+  PlatformRevenue: 'PlatformRevenue',
+  AdminRevenue: 'AdminRevenue',
+  SystemSettings: 'SystemSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -314,6 +316,27 @@ export const PlatformRevenueScalarFieldEnum = {
 } as const
 
 export type PlatformRevenueScalarFieldEnum = (typeof PlatformRevenueScalarFieldEnum)[keyof typeof PlatformRevenueScalarFieldEnum]
+
+
+export const AdminRevenueScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  amount: 'amount',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminRevenueScalarFieldEnum = (typeof AdminRevenueScalarFieldEnum)[keyof typeof AdminRevenueScalarFieldEnum]
+
+
+export const SystemSettingsScalarFieldEnum = {
+  id: 'id',
+  driverPercentage: 'driverPercentage',
+  adminPercentage: 'adminPercentage',
+  companyPercentage: 'companyPercentage',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemSettingsScalarFieldEnum = (typeof SystemSettingsScalarFieldEnum)[keyof typeof SystemSettingsScalarFieldEnum]
 
 
 export const SortOrder = {

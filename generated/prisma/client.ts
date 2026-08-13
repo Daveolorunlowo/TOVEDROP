@@ -126,3 +126,13 @@ export type WalletTransaction = Prisma.WalletTransactionModel
  * 
  */
 export type PlatformRevenue = Prisma.PlatformRevenueModel
+/**
+ * Model AdminRevenue
+ * 
+ */
+export type AdminRevenue = Prisma.AdminRevenueModel
+/**
+ * Model SystemSettings
+ * 
+ */
+export type SystemSettings = Prisma.SystemSettingsModel

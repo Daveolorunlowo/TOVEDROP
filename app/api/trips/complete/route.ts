@@ -18,7 +18,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Missing trip ID" }, { status: 400 })
     }
 
-    // Wrap in transaction: update trip, update driver stats
+    // Fetch system settings for revenue split
+    let settings = await prisma.systemSettings.findUnique({
+      where: { id: 'default' }
+    })
+    if (!settings) {
+      settings = {
+        id: 'default',
+        driverPercentage: 70,
+        adminPercentage: 10,
+        companyPercentage: 20,
+        updatedAt: new Date()
+      }
+    }
+
+    // Wrap in transaction: update trip, update driver stats, distribute revenue
     const result = await prisma.$transaction(async (tx) => {
       const trip = await tx.trip.findUnique({
         where: { id: tripId }
@@ -33,7 +47,10 @@ export async function POST(req: Request) {
         data: { status: "COMPLETED" }
       })
 
-      const driverShare = DRIVER_COMPLETION_INCENTIVE
+      const bookingFee = trip.bookingFeeNaira || 0
+      const driverShare = (bookingFee * settings.driverPercentage) / 100
+      const adminShare = (bookingFee * settings.adminPercentage) / 100
+      const platformShare = (bookingFee * settings.companyPercentage) / 100
 
       const updatedDriverProfile = await tx.driverProfile.update({
         where: { userId: session.user.id },
@@ -79,25 +96,23 @@ export async function POST(req: Request) {
         }
       }
 
-      return updatedTrip
-    })
+      // Record Admin Revenue
+      await tx.adminRevenue.create({
+        data: { tripId: trip.id, amount: adminShare }
+      })
 
-    // Calculate Platform Revenue
-    const driverShare = DRIVER_COMPLETION_INCENTIVE
-    let platformShare = 0
+      // Record Platform Revenue
+      await tx.platformRevenue.create({
+        data: { tripId: trip.id, amount: platformShare }
+      })
 
-    if (result.bookingFeeNaira !== null) {
-      platformShare = Math.max(0, result.bookingFeeNaira - driverShare)
-    }
-
-    await prisma.platformRevenue.create({
-      data: { tripId: result.id, amount: platformShare }
+      return { trip: updatedTrip, driverShare }
     })
 
     // (Mock) Send the driver an earnings email
-    console.log(`Email sent to driver: You earned ₦${driverShare} for completing a ride via TOVEDROP! This is separate from the transport fare your rider already paid you directly.`)
+    console.log(`Email sent to driver: You earned ₦${result.driverShare} for completing a ride via TOVEDROP! This is separate from the transport fare your rider already paid you directly.`)
 
-    return NextResponse.json({ message: "Trip completed successfully", trip: result }, { status: 200 })
+    return NextResponse.json({ message: "Trip completed successfully", trip: result.trip }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error completing trip", error: error.message }, { status: 500 })
   }

@@ -133,6 +133,7 @@ model Trip {
   messages      Message[]
   walletTransactions WalletTransaction[]
   platformRevenue    PlatformRevenue?
+  adminRevenue       AdminRevenue?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -248,4 +249,20 @@ model PlatformRevenue {
   amount    Float    // Naira, TOVEDROP's cut for this ride
   createdAt DateTime @default(now())
   trip      Trip     @relation(fields: [tripId], references: [id])
+}
+
+model AdminRevenue {
+  id        String   @id @default(cuid())
+  tripId    String   @unique
+  amount    Float    // Naira, Admin's cut for this ride
+  createdAt DateTime @default(now())
+  trip      Trip     @relation(fields: [tripId], references: [id])
+}
+
+model SystemSettings {
+  id                String   @id @default("default")
+  driverPercentage  Int      @default(70)
+  adminPercentage   Int      @default(10)
+  companyPercentage Int      @default(20)
+  updatedAt         DateTime @updatedAt
 }

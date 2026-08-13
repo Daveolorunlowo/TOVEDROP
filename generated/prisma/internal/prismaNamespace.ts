@@ -413,7 +413,9 @@ export const ModelName = {
   DropTransaction: 'DropTransaction',
   DropLot: 'DropLot',
   WalletTransaction: 'WalletTransaction',
-  PlatformRevenue: 'PlatformRevenue'
+  PlatformRevenue: 'PlatformRevenue',
+  AdminRevenue: 'AdminRevenue',
+  SystemSettings: 'SystemSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -429,7 +431,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "dropLot" | "walletTransaction" | "platformRevenue"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "dropLot" | "walletTransaction" | "platformRevenue" | "adminRevenue" | "systemSettings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1691,6 +1693,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AdminRevenue: {
+      payload: Prisma.$AdminRevenuePayload<ExtArgs>
+      fields: Prisma.AdminRevenueFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AdminRevenueFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AdminRevenueFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>
+        }
+        findFirst: {
+          args: Prisma.AdminRevenueFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AdminRevenueFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>
+        }
+        findMany: {
+          args: Prisma.AdminRevenueFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>[]
+        }
+        create: {
+          args: Prisma.AdminRevenueCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>
+        }
+        createMany: {
+          args: Prisma.AdminRevenueCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AdminRevenueCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>[]
+        }
+        delete: {
+          args: Prisma.AdminRevenueDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>
+        }
+        update: {
+          args: Prisma.AdminRevenueUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>
+        }
+        deleteMany: {
+          args: Prisma.AdminRevenueDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AdminRevenueUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AdminRevenueUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>[]
+        }
+        upsert: {
+          args: Prisma.AdminRevenueUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AdminRevenuePayload>
+        }
+        aggregate: {
+          args: Prisma.AdminRevenueAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAdminRevenue>
+        }
+        groupBy: {
+          args: Prisma.AdminRevenueGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminRevenueGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AdminRevenueCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AdminRevenueCountAggregateOutputType> | number
+        }
+      }
+    }
+    SystemSettings: {
+      payload: Prisma.$SystemSettingsPayload<ExtArgs>
+      fields: Prisma.SystemSettingsFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SystemSettingsFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SystemSettingsFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>
+        }
+        findFirst: {
+          args: Prisma.SystemSettingsFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SystemSettingsFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>
+        }
+        findMany: {
+          args: Prisma.SystemSettingsFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>[]
+        }
+        create: {
+          args: Prisma.SystemSettingsCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>
+        }
+        createMany: {
+          args: Prisma.SystemSettingsCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SystemSettingsCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>[]
+        }
+        delete: {
+          args: Prisma.SystemSettingsDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>
+        }
+        update: {
+          args: Prisma.SystemSettingsUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>
+        }
+        deleteMany: {
+          args: Prisma.SystemSettingsDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SystemSettingsUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SystemSettingsUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>[]
+        }
+        upsert: {
+          args: Prisma.SystemSettingsUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SystemSettingsPayload>
+        }
+        aggregate: {
+          args: Prisma.SystemSettingsAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSystemSettings>
+        }
+        groupBy: {
+          args: Prisma.SystemSettingsGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemSettingsGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SystemSettingsCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SystemSettingsCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1960,6 +2110,27 @@ export const PlatformRevenueScalarFieldEnum = {
 export type PlatformRevenueScalarFieldEnum = (typeof PlatformRevenueScalarFieldEnum)[keyof typeof PlatformRevenueScalarFieldEnum]
 
 
+export const AdminRevenueScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  amount: 'amount',
+  createdAt: 'createdAt'
+} as const
+
+export type AdminRevenueScalarFieldEnum = (typeof AdminRevenueScalarFieldEnum)[keyof typeof AdminRevenueScalarFieldEnum]
+
+
+export const SystemSettingsScalarFieldEnum = {
+  id: 'id',
+  driverPercentage: 'driverPercentage',
+  adminPercentage: 'adminPercentage',
+  companyPercentage: 'companyPercentage',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SystemSettingsScalarFieldEnum = (typeof SystemSettingsScalarFieldEnum)[keyof typeof SystemSettingsScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2220,6 +2391,8 @@ export type GlobalOmitConfig = {
   dropLot?: Prisma.DropLotOmit
   walletTransaction?: Prisma.WalletTransactionOmit
   platformRevenue?: Prisma.PlatformRevenueOmit
+  adminRevenue?: Prisma.AdminRevenueOmit
+  systemSettings?: Prisma.SystemSettingsOmit
 }
 
 /* Types for Logging */
