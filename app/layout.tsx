@@ -16,7 +16,19 @@ export const metadata: Metadata = {
   description:
     'TOVEDROP connects university students to pre-vetted, trustworthy drivers for pre-scheduled trips. Safe, reliable, student-first.',
   generator: 'Next.js',
+  applicationName: 'TOVEDROP',
   manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'TOVEDROP',
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    apple: '/apple-icon.png',
+  },
   openGraph: {
     title: 'TOVEDROP — Campus Rideshare',
     description: 'Safe, reliable, student-first rides. Get 3 FREE Drops when you join!',
@@ -42,6 +54,10 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   colorScheme: 'light',
   themeColor: '#8B5CF6',
 }
