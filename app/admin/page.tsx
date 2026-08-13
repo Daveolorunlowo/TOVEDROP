@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import {
   CheckCircle, Search, Users, Car, TrendingUp,
   Flag, FileText, LayoutDashboard, Menu, X,
-  Loader2, Check, ShieldAlert, PieChart, Save
+  Loader2, Check, ShieldAlert, PieChart, Save, Banknote
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/SkeletonVariants'
@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { id: 'finances',  label: 'Finances',         icon: TrendingUp },
   { id: 'revenue_split', label: 'Revenue Split', icon: PieChart },
   { id: 'approvals', label: 'Driver Approvals',  icon: Car },
+  { id: 'payouts',   label: 'Payouts',           icon: Banknote },
   { id: 'reports',   label: 'Reports',           icon: Flag },
   { id: 'users',     label: 'Users',             icon: Users },
   { id: 'security',  label: 'Security',          icon: ShieldAlert },
@@ -225,11 +226,27 @@ export default function AdminPage() {
     finally { setProcessing(null) }
   }
 
+  const handlePayoutAction = async (requestId: string, action: string) => {
+    if (!confirm(`Are you sure you want to ${action} this payout?`)) return
+    setProcessing(requestId)
+    try {
+      const res = await fetch('/api/admin/withdrawals/manage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestId, action }),
+      })
+      if (res.ok) await fetchData()
+      else alert((await res.json()).message ?? 'Action failed')
+    } catch { alert('Error processing payout') }
+    finally { setProcessing(null) }
+  }
+
   if (!data && !loading) return null
 
-  const { stats, drivers, users } = data || { stats: {}, drivers: [], users: [] }
+  const { stats, drivers, users, withdrawalRequests = [] } = data || { stats: {}, drivers: [], users: [], withdrawalRequests: [] }
   const pendingDrivers  = drivers.filter((d: any) => d.status === 'PENDING')
   const suspendedDrivers = drivers.filter((d: any) => d.status === 'SUSPENDED')
+  const pendingPayouts = withdrawalRequests.filter((r: any) => r.status === 'PENDING')
 
   const allUsersList = [
     ...users.map((u: any) => ({ ...u, type: 'Rider', detailStatus: 'approved' })),
@@ -813,6 +830,77 @@ export default function AdminPage() {
                         >
                           Reject
                         </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Payouts ── */}
+          {!loading && activeTab === 'payouts' && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+                Pending Payouts · {pendingPayouts.length}
+              </p>
+
+              {withdrawalRequests.length === 0 ? (
+                <div className="rounded-lg py-8 text-center" style={{ background: '#171717', border: '1px solid #1e1e1e' }}>
+                  <p className="text-xs" style={{ color: '#444' }}>No withdrawal requests.</p>
+                </div>
+              ) : (
+                <div className="rounded-lg overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
+                  {withdrawalRequests.map((req: any, i: number) => (
+                    <div
+                      key={req.id}
+                      className="flex items-start justify-between px-4 py-4"
+                      style={{ borderBottom: i < withdrawalRequests.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+                    >
+                      <div className="flex gap-3">
+                        <Avatar className="w-8 h-8 shrink-0">
+                          <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
+                            {initials(req.driver.user.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{req.driver.user.name}</p>
+                          <div className="text-[11px] mt-1 space-y-0.5" style={{ color: '#888' }}>
+                            <p>Bank: <span className="text-white">{req.driver.bankName}</span></p>
+                            <p>Acct: <span className="text-white">{req.driver.accountNumber}</span></p>
+                            <p>Name: <span className="text-white">{req.driver.accountName}</span></p>
+                            <p className="mt-1" style={{ color: '#555' }}>Requested: {new Date(req.createdAt).toLocaleString()}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="text-right flex flex-col items-end">
+                        <p className="text-lg font-bold" style={{ color: '#22c55e', letterSpacing: '-0.02em' }}>
+                          ₦{req.amount.toLocaleString()}
+                        </p>
+                        <div className="mt-1 mb-3">
+                          <StatusChip status={req.status} />
+                        </div>
+                        {req.status === 'PENDING' && (
+                          <div className="flex gap-2">
+                            <button
+                              disabled={processing === req.id}
+                              onClick={() => handlePayoutAction(req.id, 'approve')}
+                              className="text-[10px] font-semibold px-3 py-1.5 rounded"
+                              style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}
+                            >
+                              {processing === req.id ? '…' : 'Mark Paid'}
+                            </button>
+                            <button
+                              disabled={processing === req.id}
+                              onClick={() => handlePayoutAction(req.id, 'reject')}
+                              className="text-[10px] font-semibold px-3 py-1.5 rounded"
+                              style={{ background: '#1e1e1e', color: '#ef4444' }}
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}

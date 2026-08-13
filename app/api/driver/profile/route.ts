@@ -12,7 +12,12 @@ export async function GET(req: Request) {
     }
 
     const driverProfile = await prisma.driverProfile.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
+      include: {
+        withdrawalRequests: {
+          orderBy: { createdAt: 'desc' }
+        }
+      }
     })
 
     if (!driverProfile) {

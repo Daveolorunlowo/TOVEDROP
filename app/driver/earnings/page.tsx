@@ -16,8 +16,11 @@ export default function EarningsPage() {
   const [bankName, setBankName] = useState('')
   const [accountNumber, setAccountNumber] = useState('')
   const [accountName, setAccountName] = useState('')
+  const [withdrawAmount, setWithdrawAmount] = useState('')
+  const [withdrawing, setWithdrawing] = useState(false)
+  const [showWithdrawModal, setShowWithdrawModal] = useState(false)
 
-  useEffect(() => {
+  const fetchProfile = () => {
     fetch('/api/driver/profile')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch profile')
@@ -33,6 +36,10 @@ export default function EarningsPage() {
       })
       .catch(err => console.error("Error fetching driver profile:", err))
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    fetchProfile()
   }, [])
 
   const handleSaveBankDetails = async (e: React.FormEvent) => {
@@ -46,6 +53,7 @@ export default function EarningsPage() {
       })
       if (res.ok) {
         alert('Bank details saved!')
+        fetchProfile()
       } else {
         alert('Failed to save bank details')
       }
@@ -53,6 +61,33 @@ export default function EarningsPage() {
       console.error(e)
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleWithdraw = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!withdrawAmount || isNaN(Number(withdrawAmount)) || Number(withdrawAmount) <= 0) return
+    setWithdrawing(true)
+    try {
+      const res = await fetch('/api/driver/withdraw', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: Number(withdrawAmount) })
+      })
+      const data = await res.json()
+      if (res.ok) {
+        alert('Withdrawal request submitted!')
+        setShowWithdrawModal(false)
+        setWithdrawAmount('')
+        fetchProfile()
+      } else {
+        alert(data.message || 'Withdrawal failed')
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Error submitting withdrawal')
+    } finally {
+      setWithdrawing(false)
     }
   }
 
@@ -89,18 +124,30 @@ export default function EarningsPage() {
             </div>
             
             <div className="pt-4" style={{ borderTop: '1px solid #1e1e1e' }}>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#555' }}>
-                Wallet Balance
-              </p>
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+                  Wallet Balance
+                </p>
+                <Button 
+                  size="sm"
+                  onClick={() => setShowWithdrawModal(true)}
+                  disabled={walletBalance <= 0 || !data.bankName}
+                  style={{ background: 'var(--orange-brand)', color: 'black', height: '28px', fontSize: '11px', fontWeight: 'bold' }}
+                >
+                  Withdraw
+                </Button>
+              </div>
               <div className="flex items-center gap-2">
                 <Banknote className="w-5 h-5" style={{ color: '#22c55e' }} />
                 <p className="text-3xl font-bold tabular-nums" style={{ color: '#22c55e', letterSpacing: '-0.02em' }}>
                   ₦{walletBalance.toLocaleString()}
                 </p>
               </div>
-              <p className="text-[10px] mt-2" style={{ color: '#444' }}>
-                *Withdrawal requests coming soon. Your balance is tracked automatically for every completed ride.
-              </p>
+              {!data.bankName && (
+                <p className="text-[10px] mt-2 text-red-500">
+                  *Please save your bank details before withdrawing.
+                </p>
+              )}
             </div>
           </div>
 
@@ -153,7 +200,74 @@ export default function EarningsPage() {
             </form>
           </div>
         </div>
+
+        {/* Withdrawal History */}
+        {data.withdrawalRequests && data.withdrawalRequests.length > 0 && (
+          <div className="mt-6 rounded-lg" style={{ background: '#171717', border: '1px solid #222', padding: '24px' }}>
+            <h2 className="text-sm font-semibold mb-4" style={{ color: '#f5f5f5' }}>Withdrawal History</h2>
+            <div className="space-y-3">
+              {data.withdrawalRequests.map((req: any) => (
+                <div key={req.id} className="flex items-center justify-between p-3 rounded-md" style={{ background: '#111', border: '1px solid #1e1e1e' }}>
+                  <div>
+                    <p className="text-sm font-bold text-white">₦{req.amount.toLocaleString()}</p>
+                    <p className="text-[10px] text-[#555]">{new Date(req.createdAt).toLocaleString()}</p>
+                  </div>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded" style={{
+                    background: req.status === 'APPROVED' ? 'rgba(34,197,94,0.1)' : req.status === 'REJECTED' ? 'rgba(239,68,68,0.1)' : '#1e1e1e',
+                    color: req.status === 'APPROVED' ? '#22c55e' : req.status === 'REJECTED' ? '#ef4444' : '#888'
+                  }}>
+                    {req.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
+
+      {/* Withdraw Modal */}
+      {showWithdrawModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-lg p-6" style={{ background: '#171717', border: '1px solid #333' }}>
+            <h2 className="text-lg font-bold text-white mb-1">Request Withdrawal</h2>
+            <p className="text-xs text-[#888] mb-6">Enter the amount you wish to withdraw to {bankName}.</p>
+            
+            <form onSubmit={handleWithdraw} className="space-y-4">
+              <div>
+                <Label style={{ color: '#888', fontSize: '11px', textTransform: 'uppercase' }}>Amount (₦)</Label>
+                <Input 
+                  type="number"
+                  value={withdrawAmount}
+                  onChange={e => setWithdrawAmount(e.target.value)}
+                  placeholder={`Max: ₦${walletBalance}`}
+                  max={walletBalance}
+                  style={{ background: '#111', border: '1px solid #333', color: '#f5f5f5' }}
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="flex-1"
+                  onClick={() => setShowWithdrawModal(false)}
+                  style={{ background: 'transparent', borderColor: '#333', color: '#888' }}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={withdrawing || !withdrawAmount || Number(withdrawAmount) > walletBalance}
+                  className="flex-1"
+                  style={{ background: 'var(--orange-brand)', color: 'black' }}
+                >
+                  {withdrawing ? 'Processing...' : 'Withdraw'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -246,6 +246,17 @@ model WalletTransaction {
   trip        Trip?    @relation(fields: [tripId], references: [id])
 }
 
+model WithdrawalRequest {
+  id          String   @id @default(cuid())
+  driverId    String
+  amount      Float    // Naira
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  driver      DriverProfile @relation(fields: [driverId], references: [id])
+}
+
 model PlatformRevenue {
   id        String   @id @default(cuid())
   tripId    String   @unique
