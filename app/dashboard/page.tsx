@@ -51,7 +51,7 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ background: '#111111', minHeight: '100vh' }}>
-      <TripPoller pendingTripIds={pendingIds} />
+      <TripPoller userId={user.id} />
 
       <div className="max-w-5xl mx-auto px-5 py-8">
 

@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { sendWebPush } from "@/lib/webpush"
+import { pusherServer } from "@/lib/pusher"
 
 export async function POST(req: Request) {
   try {
@@ -65,6 +66,14 @@ export async function POST(req: Request) {
       const url = `/trip/${shareToken}`
       
       sendWebPush(trip.riderId, title, message, url)
+      
+      // Trigger pusher event to notify rider in real-time
+      await pusherServer.trigger(`user-trips-${trip.riderId}`, 'trip-accepted', {
+        tripId: trip.id,
+        driverName: driverProfile.user?.name || "A driver",
+        vehicle: vehicle,
+        rating: rating
+      }).catch(err => console.error("Pusher trigger failed:", err))
     }
 
     return NextResponse.json({ message: "Trip accepted successfully", shareToken }, { status: 200 })

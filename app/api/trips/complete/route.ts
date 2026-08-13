@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { DRIVER_COMPLETION_INCENTIVE, DROP_PACKAGES } from "@/lib/config"
 import { sendWebPush } from "@/lib/webpush"
+import { pusherServer } from "@/lib/pusher"
 
 export async function POST(req: Request) {
   try {
@@ -132,12 +133,15 @@ export async function POST(req: Request) {
     console.log(`Email sent to driver: You earned ₦${result.driverShare} for completing a ride via TOVEDROP! This is separate from the transport fare your rider already paid you directly.`)
 
     // Notify Rider via Web Push
-    const riderId = result.trip.riderId;
-    const title = 'Trip Complete!'
-    const message = 'Your TOVEDROP ride is complete. Tap to rate your driver.'
-    const url = `/rate/${result.trip.id}`
-      
-    sendWebPush(riderId, title, message, url)
+    const title = 'You have arrived! 🎉'
+    const message = `Hope you enjoyed your ride. Don't forget to review your trip!`
+    const url = `/dashboard`
+    sendWebPush(result.trip.riderId, title, message, url)
+    
+    // Trigger pusher event to notify rider in real-time
+    await pusherServer.trigger(`user-trips-${result.trip.riderId}`, 'trip-completed', {
+      tripId: result.trip.id
+    }).catch(err => console.error("Pusher trigger failed:", err))
 
     return NextResponse.json({ message: "Trip completed successfully", trip: result.trip }, { status: 200 })
   } catch (error: any) {

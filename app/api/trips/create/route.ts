@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { sendWebPush } from "@/lib/webpush"
+import { pusherServer } from "@/lib/pusher"
 
 export async function POST(req: Request) {
   try {
@@ -112,6 +113,11 @@ export async function POST(req: Request) {
         )
       }
     }).catch(err => console.error("Background Web Push driver broadcast failed:", err))
+
+    // Trigger pusher event to all drivers
+    await pusherServer.trigger('global-trips', 'new-trip', {
+      trip: result
+    })
 
     return NextResponse.json({ message: "Trip created successfully", trip: result }, { status: 201 })
   } catch (error: any) {

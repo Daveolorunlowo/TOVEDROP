@@ -8,8 +8,9 @@ import {
   CheckCircle, XCircle, Loader2, Check
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { SignOutButton } from '@/components/sign-out-button'
+import { CheckCircle2, ChevronRight, XCircle, Clock } from 'lucide-react'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
+import { DriverTripListener } from '@/components/driver-trip-listener'
 import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -705,6 +706,8 @@ export default function DriverDashboardPage() {
               )}
             </div>
       </div>
+      
+      <DriverTripListener />
     </div>
   )
 }

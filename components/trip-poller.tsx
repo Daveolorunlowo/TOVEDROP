@@ -2,40 +2,31 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import { pusherClient } from "@/lib/pusher-client"
 
-export function TripPoller({ pendingTripIds }: { pendingTripIds: string[] }) {
+export function TripPoller({ userId }: { userId: string }) {
   const router = useRouter()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (pendingTripIds.length === 0) return
+    if (!userId) return
 
-    const interval = setInterval(async () => {
-      try {
-        const res = await fetch(`/api/trips/check?ids=${pendingTripIds.join(",")}`)
-        if (res.ok) {
-          const data = await res.json()
-          const updatedTrips = data.trips || []
-          
-          let statusChanged = false
-          for (const trip of updatedTrips) {
-            if (trip.status === "CONFIRMED") {
-              setToastMessage(`🎉 ${trip.driver?.name || "A driver"} accepted your ride!`)
-              statusChanged = true
-            }
-          }
-          
-          if (statusChanged) {
-            router.refresh()
-          }
-        }
-      } catch (err) {
-        console.error("Failed to poll trips")
-      }
-    }, 15000) // Poll every 15 seconds
+    const channel = pusherClient.subscribe(`user-trips-${userId}`)
+    
+    channel.bind('trip-accepted', (data: any) => {
+      setToastMessage(`🎉 ${data.driverName || "A driver"} accepted your ride!`)
+      router.refresh()
+    })
 
-    return () => clearInterval(interval)
-  }, [pendingTripIds, router])
+    channel.bind('trip-completed', (data: any) => {
+      setToastMessage(`✅ Your ride is complete! Don't forget to leave a review.`)
+      router.refresh()
+    })
+
+    return () => {
+      pusherClient.unsubscribe(`user-trips-${userId}`)
+    }
+  }, [userId, router])
 
   if (!toastMessage) return null
 
