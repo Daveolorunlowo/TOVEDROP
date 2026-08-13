@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { ChatInterface } from '@/components/chat-interface'
 import Link from 'next/link'
 import { ArrowLeft, MapPin, Navigation, Calendar, Clock } from 'lucide-react'
+import { ShareTripButton } from '@/components/dashboard/ShareTripButton'
 
 export default async function TripDetailPage({ params }: { params: { id: string } }) {
   const session = await getServerSession(authOptions)
@@ -35,10 +36,16 @@ export default async function TripDetailPage({ params }: { params: { id: string 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <Link href="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Dashboard
-        </Link>
+        <div className="flex items-center justify-between mb-6">
+          <Link href="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Link>
+          
+          {trip.status === 'CONFIRMED' && isRider && trip.shareToken && (
+            <ShareTripButton shareToken={trip.shareToken} />
+          )}
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Trip Details */}

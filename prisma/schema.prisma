@@ -39,6 +39,8 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  phoneNumber   String?
+  whatsappNotificationsEnabled Boolean @default(true)
   password      String?
   university    String?
   role          String    @default("RIDER") // RIDER, DRIVER, ADMIN
@@ -134,6 +136,7 @@ model Trip {
   walletTransactions WalletTransaction[]
   platformRevenue    PlatformRevenue?
   adminRevenue       AdminRevenue?
+  shareToken    String?  @unique
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

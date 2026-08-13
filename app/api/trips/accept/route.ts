@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
+import { sendWhatsApp } from "@/lib/whatsapp"
 
 export async function POST(req: Request) {
   try {
@@ -18,7 +19,8 @@ export async function POST(req: Request) {
     }
 
     const driverProfile = await prisma.driverProfile.findUnique({
-      where: { userId: session.user.id }
+      where: { userId: session.user.id },
+      include: { user: true }
     })
 
     if (!driverProfile || driverProfile.status !== "APPROVED") {
@@ -26,6 +28,8 @@ export async function POST(req: Request) {
     }
 
     // Atomic update to accept the trip and prevent race conditions
+    const shareToken = crypto.randomUUID().replace(/-/g, '').slice(0, 12)
+
     const result = await prisma.trip.updateMany({
       where: { 
         id: tripId, 
@@ -34,7 +38,8 @@ export async function POST(req: Request) {
       },
       data: { 
         status: 'CONFIRMED', 
-        driverId: session.user.id 
+        driverId: session.user.id,
+        shareToken: shareToken
       }
     })
 
@@ -42,7 +47,28 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Trip was already accepted by someone else or is no longer available" }, { status: 409 })
     }
 
-    return NextResponse.json({ message: "Trip accepted successfully" }, { status: 200 })
+    // Notify rider
+    const trip = await prisma.trip.findUnique({
+      where: { id: tripId },
+      include: { rider: true }
+    })
+    
+    if (trip && trip.rider?.whatsappNotificationsEnabled && trip.rider?.phoneNumber) {
+      const driverName = driverProfile.user?.name || "A driver"
+      const vehicle = `${driverProfile.carColor} ${driverProfile.carMake} ${driverProfile.carModel}`
+      const rating = driverProfile.totalRatings > 0 
+        ? (driverProfile.totalRatingValue / driverProfile.totalRatings).toFixed(1) 
+        : 'New'
+      const shareUrl = process.env.NEXT_PUBLIC_APP_URL 
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/trip/${shareToken}`
+        : `https://tovedrop.com/trip/${shareToken}`
+
+      const message = `🎉 ${driverName} accepted your TOVEDROP ride!\n${vehicle} · ⭐ ${rating}\nPickup: ${trip.time} at ${trip.pickup}\nView details: ${shareUrl}`
+      
+      sendWhatsApp(trip.rider.phoneNumber, message)
+    }
+
+    return NextResponse.json({ message: "Trip accepted successfully", shareToken }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error accepting trip", error: error.message }, { status: 500 })
   }

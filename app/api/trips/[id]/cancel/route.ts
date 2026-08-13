@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
+import { sendWhatsApp } from "@/lib/whatsapp"
 
 export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
   const params = await context.params;
@@ -63,6 +64,27 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
 
       return updatedTrip
     })
+
+    // Notify Rider and Driver via WhatsApp
+    const fullTrip = await prisma.trip.findUnique({
+      where: { id: tripId },
+      include: { rider: true, driver: true }
+    })
+    
+    if (fullTrip) {
+      const dropRefundStatus = fullTrip.dropLotId ? "Your 1 Drop has been refunded." : "No refund applies."
+      const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${dropRefundStatus}`
+
+      // Notify Rider
+      if (fullTrip.rider?.whatsappNotificationsEnabled && fullTrip.rider?.phoneNumber) {
+        sendWhatsApp(fullTrip.rider.phoneNumber, message)
+      }
+
+      // Notify Driver
+      if (fullTrip.driver?.whatsappNotificationsEnabled && fullTrip.driver?.phoneNumber) {
+        sendWhatsApp(fullTrip.driver.phoneNumber, message)
+      }
+    }
 
     return NextResponse.json({ message: "Trip cancelled and drops refunded", trip: result }, { status: 200 })
   } catch (error: any) {

@@ -1,0 +1,72 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { Share, X, Copy, Check } from 'lucide-react'
+
+export function ShareTripButton({ shareToken }: { shareToken: string }) {
+  const [open, setOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [origin, setOrigin] = useState('')
+
+  useEffect(() => {
+    setOrigin(window.location.origin)
+  }, [])
+
+  const shareUrl = `${origin}/trip/${shareToken}`
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors hover:bg-[#1e1e1e]"
+        style={{ color: 'var(--orange-brand)', border: '1px solid var(--orange-brand)' }}
+      >
+        <Share className="w-3.5 h-3.5" />
+        Share Trip
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
+          <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
+            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #1e1e1e' }}>
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#f5f5f5' }}>Share Trip</p>
+              <button onClick={() => { setOpen(false); setCopied(false); }} className="p-1" style={{ color: '#888' }}>
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-5">
+              <p className="text-xs mb-4" style={{ color: '#888' }}>
+                Send this link to a friend so they can see your verified driver details and track your trip status.
+              </p>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="flex-1 px-3 py-2 rounded-md text-xs truncate" style={{ background: '#111111', border: '1px solid #222', color: '#555' }}>
+                  {shareUrl}
+                </div>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(shareUrl);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="shrink-0 p-2 rounded-md transition-colors hover:brightness-110" 
+                  style={{ background: 'var(--orange-brand)', color: 'black' }}
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+              <a 
+                href={`https://wa.me/?text=${encodeURIComponent(`I'm on a TOVEDROP ride — here's my trip details: ${shareUrl}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+                style={{ background: '#25D366' }}
+              >
+                Share via WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}

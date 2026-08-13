@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp } from 'lucide-react'
+import { X, Star, Car, TrendingUp, Share, Copy, Check } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
@@ -53,6 +53,8 @@ export function TripList({
   const [upcomingTrips, setUpcomingTrips] = useState(initialUpcoming)
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
+  const [shareModalOpen, setShareModalOpen] = useState<string | null>(null) // holds trip.shareToken
+  const [copied, setCopied] = useState(false)
   const handleBookRideClick = useBookRideNavigation()
   
   // Custom styled Toast/Alert fallback if we don't have a toast library available
@@ -163,15 +165,25 @@ export function TripList({
                     {trip.pickup} → {trip.destination}
                   </p>
                 </div>
-                <div className="shrink-0 text-right hidden sm:block">
+                <div className="shrink-0 text-right hidden sm:block mr-2">
                   <p className="text-[11px]" style={{ color: '#555' }}>{trip.date}</p>
                   <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
                 </div>
                 <StatusChip status={trip.status} />
+                {trip.status === 'CONFIRMED' && trip.shareToken && (
+                  <button
+                    onClick={() => setShareModalOpen(trip.shareToken)}
+                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-2"
+                    style={{ color: 'var(--orange-brand)' }}
+                    aria-label="Share Trip"
+                  >
+                    <Share className="w-3.5 h-3.5" />
+                  </button>
+                )}
                 <button
                   disabled={processing === trip.id}
                   onClick={() => handleCancel(trip.id)}
-                  className="p-1 rounded shrink-0 transition-colors hover:bg-white/5"
+                  className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
                   style={{ color: '#888' }}
                   aria-label="Cancel"
                 >
@@ -251,6 +263,50 @@ export function TripList({
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      {shareModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
+          <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
+            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #1e1e1e' }}>
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#f5f5f5' }}>Share Trip</p>
+              <button onClick={() => { setShareModalOpen(null); setCopied(false); }} className="p-1" style={{ color: '#888' }}>
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="p-5">
+              <p className="text-xs mb-4" style={{ color: '#888' }}>
+                Send this link to a friend so they can see your verified driver details and track your trip status.
+              </p>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="flex-1 px-3 py-2 rounded-md text-xs truncate" style={{ background: '#111111', border: '1px solid #222', color: '#555' }}>
+                  {`${window.location.origin}/trip/${shareModalOpen}`}
+                </div>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText(`${window.location.origin}/trip/${shareModalOpen}`);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  }}
+                  className="shrink-0 p-2 rounded-md transition-colors hover:brightness-110" 
+                  style={{ background: 'var(--orange-brand)', color: 'black' }}
+                >
+                  {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+              <a 
+                href={`https://wa.me/?text=${encodeURIComponent(`I'm on a TOVEDROP ride — here's my trip details: ${window.location.origin}/trip/${shareModalOpen}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+                style={{ background: '#25D366' }}
+              >
+                Share via WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

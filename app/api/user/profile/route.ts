@@ -20,6 +20,8 @@ export async function GET(req: Request) {
         university: true,
         role: true,
         dropsBalance: true,
+        phoneNumber: true,
+        whatsappNotificationsEnabled: true,
         hasUsedFirstTopupDiscount: true,
         dropTransactions: {
           orderBy: { createdAt: 'desc' }

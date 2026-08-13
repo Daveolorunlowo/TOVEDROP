@@ -74,6 +74,13 @@ export default async function DashboardPage() {
               className="text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5 !text-[#555]"
             />
             <Link
+              href="/dashboard/settings"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground hover:bg-white/5 transition-colors"
+              style={{ color: '#888' }}
+            >
+              Settings
+            </Link>
+            <Link
               href="/dashboard/referrals"
               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground border border-border"
               style={{ background: '#1e1e1e' }}
@@ -90,6 +97,23 @@ export default async function DashboardPage() {
             </Link>
           </div>
         </div>
+
+        {/* ── Missing Phone Banner ── */}
+        {!user.phoneNumber && (
+          <div className="rounded-lg mb-6 flex items-center justify-between" style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', padding: '16px 20px' }}>
+            <div>
+              <p className="text-sm font-semibold" style={{ color: '#22c55e' }}>WhatsApp Notifications</p>
+              <p className="text-xs mt-1" style={{ color: '#f5f5f5' }}>Add your phone number to get instant updates on your rides.</p>
+            </div>
+            <Link
+              href="/dashboard/settings"
+              className="text-xs font-semibold px-4 py-2 rounded-md transition-colors hover:brightness-110"
+              style={{ background: '#22c55e', color: 'black' }}
+            >
+              Add Phone Number
+            </Link>
+          </div>
+        )}
 
         {/* ── Stats card ── */}
         <div

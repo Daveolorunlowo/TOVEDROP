@@ -448,6 +448,13 @@ export default function DriverDashboardPage() {
           </div>
           <div className="flex items-center gap-2">
             <Link
+              href="/driver/settings"
+              className="text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-white/5 transition-colors"
+              style={{ color: '#888' }}
+            >
+              Settings
+            </Link>
+            <Link
               href="/driver/earnings"
               className="text-xs font-semibold px-3 py-1.5 rounded-md"
               style={{ background: '#1e1e1e', color: '#f5f5f5' }}
