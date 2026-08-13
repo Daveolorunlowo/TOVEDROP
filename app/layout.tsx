@@ -11,11 +11,34 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://tovedrop.com'),
   title: 'TOVEDROP — Your Campus Ride, Your Trusted Driver',
   description:
     'TOVEDROP connects university students to pre-vetted, trustworthy drivers for pre-scheduled trips. Safe, reliable, student-first.',
-  generator: 'v0.app',
+  generator: 'Next.js',
   manifest: '/manifest.json',
+  openGraph: {
+    title: 'TOVEDROP — Campus Rideshare',
+    description: 'Safe, reliable, student-first rides. Get 3 FREE Drops when you join!',
+    url: '/',
+    siteName: 'TOVEDROP',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'TOVEDROP Cover',
+      },
+    ],
+    locale: 'en_NG',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TOVEDROP — Campus Rideshare',
+    description: 'Safe, reliable, student-first rides. Get 3 FREE Drops when you join!',
+    images: ['/og-image.jpg'],
+  },
 }
 
 export const viewport: Viewport = {

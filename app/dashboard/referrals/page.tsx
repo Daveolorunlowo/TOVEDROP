@@ -3,7 +3,8 @@ import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Copy, Share2, Users, Gift } from 'lucide-react'
+import { ArrowLeft, Users, Gift } from 'lucide-react'
+import { ClientShareButtons } from '@/components/shared/ClientShareButtons'
 
 export default async function ReferralsPage() {
   const session = await getServerSession(authOptions)
@@ -58,9 +59,11 @@ export default async function ReferralsPage() {
                   {referralLink}
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground mt-4">
+              <p className="text-xs text-muted-foreground mt-4 mb-2">
                 Share this link or tell them to use your code: <strong className="text-foreground">{userCode.code}</strong>
               </p>
+              
+              <ClientShareButtons referralLink={referralLink} code={userCode.code} />
             </div>
           </div>
 
