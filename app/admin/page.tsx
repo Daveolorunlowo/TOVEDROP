@@ -722,7 +722,7 @@ export default function AdminPage() {
                       
                       <button
                         onClick={saveRevenueSettings}
-                        disabled={settingsSaving || (revenueSettings.driverPercentage + revenueSettings.adminPercentage + revenueSettings.companyPercentage) !== 100}
+                        disabled={settingsSaving || (revenueSettings.adminPercentage + revenueSettings.companyPercentage) !== 100}
                         className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-md transition-colors disabled:opacity-50"
                         style={{ background: 'var(--orange-brand)', color: '#000' }}
                       >
