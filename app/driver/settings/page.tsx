@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Bell } from 'lucide-react'
+import { ArrowLeft, Bell, MessageSquare, Loader2, CheckCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { subscribeToPushNotifications } from '@/lib/push-client'
 
@@ -11,6 +11,11 @@ export default function DriverSettingsPage() {
   const [pushEnabled, setPushEnabled] = useState(false)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
+  
+  const [feedbackType, setFeedbackType] = useState('ISSUE')
+  const [feedbackContent, setFeedbackContent] = useState('')
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false)
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false)
 
   useEffect(() => {
     // Check if browser has push permissions already
@@ -39,6 +44,32 @@ export default function DriverSettingsPage() {
       setMessage('Push notifications disabled locally.')
     }
     setTimeout(() => setMessage(''), 4000)
+  }
+
+  const submitFeedback = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!feedbackContent.trim()) return
+    
+    setFeedbackSubmitting(true)
+    try {
+      const res = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: feedbackType, content: feedbackContent })
+      })
+      
+      if (res.ok) {
+        setFeedbackSuccess(true)
+        setFeedbackContent('')
+        setTimeout(() => setFeedbackSuccess(false), 5000)
+      } else {
+        alert('Failed to submit feedback. Please try again.')
+      }
+    } catch (e) {
+      alert('Network error. Please try again.')
+    } finally {
+      setFeedbackSubmitting(false)
+    }
   }
 
   return (
@@ -86,6 +117,54 @@ export default function DriverSettingsPage() {
             </div>
 
             {message && <p className="text-sm font-medium text-foreground">{message}</p>}
+
+            <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <MessageSquare className="w-5 h-5 text-primary" />
+                <h2 className="font-semibold text-lg">Help & Feedback</h2>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground mb-4">Have an issue with the app, or an idea to make Tovedrop better? Let us know.</p>
+                
+                {feedbackSuccess ? (
+                  <div className="bg-[#1e1e1e] border border-[#333] p-6 rounded-lg text-center">
+                    <CheckCircle2 className="w-8 h-8 text-primary mx-auto mb-3" />
+                    <h3 className="text-sm font-semibold text-foreground mb-1">Feedback Received</h3>
+                    <p className="text-xs text-muted-foreground">Thank you for helping us improve!</p>
+                  </div>
+                ) : (
+                  <form onSubmit={submitFeedback} className="space-y-4">
+                    <div>
+                      <select 
+                        value={feedbackType} 
+                        onChange={(e) => setFeedbackType(e.target.value)}
+                        className="w-full bg-[#111] border border-[#222] text-sm text-foreground rounded-lg p-3 focus:outline-none focus:border-primary transition-colors"
+                      >
+                        <option value="ISSUE">Report an Issue</option>
+                        <option value="SUGGESTION">Suggest a Feature</option>
+                      </select>
+                    </div>
+                    <div>
+                      <textarea 
+                        value={feedbackContent}
+                        onChange={(e) => setFeedbackContent(e.target.value)}
+                        placeholder={feedbackType === 'ISSUE' ? "Describe the issue you're facing..." : "What would you like to see in Tovedrop?"}
+                        className="w-full bg-[#111] border border-[#222] text-sm text-foreground rounded-lg p-3 min-h-[120px] focus:outline-none focus:border-primary transition-colors resize-none"
+                        required
+                      />
+                    </div>
+                    <button 
+                      type="submit" 
+                      disabled={feedbackSubmitting || !feedbackContent.trim()}
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-lg text-sm transition-colors flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {feedbackSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit Feedback'}
+                    </button>
+                  </form>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>

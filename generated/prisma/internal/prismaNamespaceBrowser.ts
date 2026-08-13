@@ -65,6 +65,7 @@ export const ModelName = {
   ReferralCode: 'ReferralCode',
   Referral: 'Referral',
   DropTransaction: 'DropTransaction',
+  Feedback: 'Feedback',
   DropLot: 'DropLot',
   WalletTransaction: 'WalletTransaction',
   WithdrawalRequest: 'WithdrawalRequest',
@@ -284,6 +285,19 @@ export const DropTransactionScalarFieldEnum = {
 } as const
 
 export type DropTransactionScalarFieldEnum = (typeof DropTransactionScalarFieldEnum)[keyof typeof DropTransactionScalarFieldEnum]
+
+
+export const FeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  content: 'content',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeedbackScalarFieldEnum = (typeof FeedbackScalarFieldEnum)[keyof typeof FeedbackScalarFieldEnum]
 
 
 export const DropLotScalarFieldEnum = {

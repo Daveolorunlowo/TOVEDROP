@@ -19,7 +19,8 @@ export async function GET(req: Request) {
       platformRevenueThisMonth,
       driverPayoutsThisMonth,
       dropsSoldThisMonth,
-      withdrawalRequests
+      withdrawalRequests,
+      feedbacks
     ] = await Promise.all([
       prisma.user.count({ where: { role: "RIDER" } }),
       prisma.user.count({ where: { role: "DRIVER" } }),
@@ -42,6 +43,10 @@ export async function GET(req: Request) {
       prisma.withdrawalRequest.findMany({
         include: { driver: { include: { user: true } } },
         orderBy: { createdAt: 'desc' }
+      }),
+      prisma.feedback.findMany({
+        include: { user: true },
+        orderBy: { createdAt: 'desc' }
       })
     ])
 
@@ -59,6 +64,7 @@ export async function GET(req: Request) {
       drivers: driverProfiles,
       users,
       withdrawalRequests,
+      feedbacks,
       autoApproveDrivers: process.env.AUTO_APPROVE_DRIVERS === 'true'
     }, { status: 200 })
   } catch (error: any) {

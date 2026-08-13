@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import {
   CheckCircle, Search, Users, Car, TrendingUp,
   Flag, FileText, LayoutDashboard, Menu, X,
-  Loader2, Check, ShieldAlert, PieChart, Save, Banknote
+  Loader2, Check, ShieldAlert, PieChart, Save, Banknote, MessageSquare
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/SkeletonVariants'
@@ -28,6 +28,7 @@ const NAV_ITEMS = [
   { id: 'approvals', label: 'Driver Approvals',  icon: Car },
   { id: 'payouts',   label: 'Payouts',           icon: Banknote },
   { id: 'reports',   label: 'Reports',           icon: Flag },
+  { id: 'feedback',  label: 'Feedback',          icon: MessageSquare },
   { id: 'users',     label: 'Users',             icon: Users },
   { id: 'security',  label: 'Security',          icon: ShieldAlert },
 ]
@@ -226,19 +227,39 @@ export default function AdminPage() {
     finally { setProcessing(null) }
   }
 
-  const handlePayoutAction = async (requestId: string, action: string) => {
+  const handlePayoutAction = async (id: string, action: 'approve' | 'reject') => {
     if (!confirm(`Are you sure you want to ${action} this payout?`)) return
-    setProcessing(requestId)
+    setProcessing(id)
     try {
       const res = await fetch('/api/admin/withdrawals/manage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requestId, action }),
+        body: JSON.stringify({ withdrawalId: id, action })
       })
-      if (res.ok) await fetchData()
-      else alert((await res.json()).message ?? 'Action failed')
-    } catch { alert('Error processing payout') }
-    finally { setProcessing(null) }
+      if (res.ok) fetchData()
+      else alert('Failed to update payout request.')
+    } catch (e) {
+      alert('Network error.')
+    } finally {
+      setProcessing(null)
+    }
+  }
+
+  const handleFeedbackAction = async (id: string, action: 'review' | 'resolve') => {
+    setProcessing(id)
+    try {
+      const res = await fetch('/api/admin/feedback/manage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feedbackId: id, action })
+      })
+      if (res.ok) fetchData()
+      else alert('Failed to update feedback.')
+    } catch (e) {
+      alert('Network error.')
+    } finally {
+      setProcessing(null)
+    }
   }
 
   if (!data && !loading) return null
@@ -956,6 +977,72 @@ export default function AdminPage() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ── Feedback ── */}
+          {!loading && activeTab === 'feedback' && (
+            <div className="space-y-6 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold tracking-tight text-[#f5f5f5]">User Feedback</h2>
+                  <p className="text-sm text-[#888] mt-1">Review issues and feature suggestions from riders and drivers.</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                {!data?.feedbacks?.length ? (
+                  <p className="text-sm text-[#555]">No feedback received yet.</p>
+                ) : (
+                  data.feedbacks.map((fb: any) => (
+                    <div key={fb.id} className="bg-[#111] border border-[#222] rounded-xl p-5 shadow-sm">
+                      <div className="flex justify-between items-start mb-3">
+                        <div>
+                          <p className="text-sm font-medium text-[#f5f5f5]">{fb.user?.name || 'Anonymous'}</p>
+                          <p className="text-xs text-[#555]">{fb.user?.email}</p>
+                        </div>
+                        <StatusChip status={fb.status} />
+                      </div>
+                      <div className="mb-4">
+                        <span className={cn(
+                          "text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded border",
+                          fb.type === 'ISSUE' ? "bg-red-500/10 text-red-500 border-red-500/20" : "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                        )}>
+                          {fb.type}
+                        </span>
+                      </div>
+                      <p className="text-sm text-[#888] whitespace-pre-wrap mb-5">{fb.content}</p>
+                      
+                      {fb.status === 'OPEN' && (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleFeedbackAction(fb.id, 'review')}
+                            disabled={processing === fb.id}
+                            className="flex-1 bg-[#1e1e1e] hover:bg-[#252525] border border-[#333] text-xs font-semibold py-2 rounded-md transition-colors"
+                          >
+                            {processing === fb.id ? <Loader2 className="w-3 h-3 mx-auto animate-spin" /> : 'Mark Reviewed'}
+                          </button>
+                          <button
+                            onClick={() => handleFeedbackAction(fb.id, 'resolve')}
+                            disabled={processing === fb.id}
+                            className="flex-1 bg-green-500/10 hover:bg-green-500/20 text-green-500 border border-green-500/30 text-xs font-semibold py-2 rounded-md transition-colors"
+                          >
+                            {processing === fb.id ? <Loader2 className="w-3 h-3 mx-auto animate-spin" /> : 'Resolve'}
+                          </button>
+                        </div>
+                      )}
+                      {fb.status === 'REVIEWED' && (
+                        <button
+                          onClick={() => handleFeedbackAction(fb.id, 'resolve')}
+                          disabled={processing === fb.id}
+                          className="w-full bg-green-500/10 hover:bg-green-500/20 text-green-500 border border-green-500/30 text-xs font-semibold py-2 rounded-md transition-colors"
+                        >
+                          {processing === fb.id ? <Loader2 className="w-3 h-3 mx-auto animate-spin" /> : 'Resolve'}
+                        </button>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           )}
 

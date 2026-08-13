@@ -411,6 +411,7 @@ export const ModelName = {
   ReferralCode: 'ReferralCode',
   Referral: 'Referral',
   DropTransaction: 'DropTransaction',
+  Feedback: 'Feedback',
   DropLot: 'DropLot',
   WalletTransaction: 'WalletTransaction',
   WithdrawalRequest: 'WithdrawalRequest',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1472,6 +1473,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Feedback: {
+      payload: Prisma.$FeedbackPayload<ExtArgs>
+      fields: Prisma.FeedbackFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeedbackFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeedbackFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>
+        }
+        findFirst: {
+          args: Prisma.FeedbackFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeedbackFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>
+        }
+        findMany: {
+          args: Prisma.FeedbackFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>[]
+        }
+        create: {
+          args: Prisma.FeedbackCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>
+        }
+        createMany: {
+          args: Prisma.FeedbackCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeedbackCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>[]
+        }
+        delete: {
+          args: Prisma.FeedbackDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>
+        }
+        update: {
+          args: Prisma.FeedbackUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeedbackDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeedbackUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeedbackUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeedbackUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedbackPayload>
+        }
+        aggregate: {
+          args: Prisma.FeedbackAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeedback>
+        }
+        groupBy: {
+          args: Prisma.FeedbackGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeedbackGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeedbackCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeedbackCountAggregateOutputType> | number
+        }
+      }
+    }
     DropLot: {
       payload: Prisma.$DropLotPayload<ExtArgs>
       fields: Prisma.DropLotFieldRefs
@@ -2152,6 +2227,19 @@ export const DropTransactionScalarFieldEnum = {
 export type DropTransactionScalarFieldEnum = (typeof DropTransactionScalarFieldEnum)[keyof typeof DropTransactionScalarFieldEnum]
 
 
+export const FeedbackScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  content: 'content',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type FeedbackScalarFieldEnum = (typeof FeedbackScalarFieldEnum)[keyof typeof FeedbackScalarFieldEnum]
+
+
 export const DropLotScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -2478,6 +2566,7 @@ export type GlobalOmitConfig = {
   referralCode?: Prisma.ReferralCodeOmit
   referral?: Prisma.ReferralOmit
   dropTransaction?: Prisma.DropTransactionOmit
+  feedback?: Prisma.FeedbackOmit
   dropLot?: Prisma.DropLotOmit
   walletTransaction?: Prisma.WalletTransactionOmit
   withdrawalRequest?: Prisma.WithdrawalRequestOmit

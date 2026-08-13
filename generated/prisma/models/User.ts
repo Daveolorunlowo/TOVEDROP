@@ -285,6 +285,7 @@ export type UserWhereInput = {
   referredBy?: Prisma.XOR<Prisma.ReferralNullableScalarRelationFilter, Prisma.ReferralWhereInput> | null
   dropTransactions?: Prisma.DropTransactionListRelationFilter
   dropLots?: Prisma.DropLotListRelationFilter
+  feedbacks?: Prisma.FeedbackListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -313,6 +314,7 @@ export type UserOrderByWithRelationInput = {
   referredBy?: Prisma.ReferralOrderByWithRelationInput
   dropTransactions?: Prisma.DropTransactionOrderByRelationAggregateInput
   dropLots?: Prisma.DropLotOrderByRelationAggregateInput
+  feedbacks?: Prisma.FeedbackOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -344,6 +346,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   referredBy?: Prisma.XOR<Prisma.ReferralNullableScalarRelationFilter, Prisma.ReferralWhereInput> | null
   dropTransactions?: Prisma.DropTransactionListRelationFilter
   dropLots?: Prisma.DropLotListRelationFilter
+  feedbacks?: Prisma.FeedbackListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -410,6 +413,7 @@ export type UserCreateInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -438,6 +442,7 @@ export type UserUncheckedCreateInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -466,6 +471,7 @@ export type UserUpdateInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -494,6 +500,7 @@ export type UserUncheckedUpdateInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -790,6 +797,20 @@ export type UserUpdateOneRequiredWithoutDropTransactionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDropTransactionsInput, Prisma.UserUpdateWithoutDropTransactionsInput>, Prisma.UserUncheckedUpdateWithoutDropTransactionsInput>
 }
 
+export type UserCreateNestedOneWithoutFeedbacksInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbacksInput, Prisma.UserUncheckedCreateWithoutFeedbacksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbacksInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFeedbacksNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedbacksInput, Prisma.UserUncheckedCreateWithoutFeedbacksInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedbacksInput
+  upsert?: Prisma.UserUpsertWithoutFeedbacksInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFeedbacksInput, Prisma.UserUpdateWithoutFeedbacksInput>, Prisma.UserUncheckedUpdateWithoutFeedbacksInput>
+}
+
 export type UserCreateNestedOneWithoutDropLotsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutDropLotsInput, Prisma.UserUncheckedCreateWithoutDropLotsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutDropLotsInput
@@ -829,6 +850,7 @@ export type UserCreateWithoutAccountsInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -856,6 +878,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -899,6 +922,7 @@ export type UserUpdateWithoutAccountsInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -926,6 +950,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -953,6 +978,7 @@ export type UserCreateWithoutSessionsInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -980,6 +1006,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1023,6 +1050,7 @@ export type UserUpdateWithoutSessionsInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1050,6 +1078,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDriverProfileInput = {
@@ -1077,6 +1106,7 @@ export type UserCreateWithoutDriverProfileInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDriverProfileInput = {
@@ -1104,6 +1134,7 @@ export type UserUncheckedCreateWithoutDriverProfileInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDriverProfileInput = {
@@ -1147,6 +1178,7 @@ export type UserUpdateWithoutDriverProfileInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDriverProfileInput = {
@@ -1174,6 +1206,7 @@ export type UserUncheckedUpdateWithoutDriverProfileInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTripsAsRiderInput = {
@@ -1201,6 +1234,7 @@ export type UserCreateWithoutTripsAsRiderInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTripsAsRiderInput = {
@@ -1228,6 +1262,7 @@ export type UserUncheckedCreateWithoutTripsAsRiderInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTripsAsRiderInput = {
@@ -1260,6 +1295,7 @@ export type UserCreateWithoutTripsAsDriverInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTripsAsDriverInput = {
@@ -1287,6 +1323,7 @@ export type UserUncheckedCreateWithoutTripsAsDriverInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTripsAsDriverInput = {
@@ -1330,6 +1367,7 @@ export type UserUpdateWithoutTripsAsRiderInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTripsAsRiderInput = {
@@ -1357,6 +1395,7 @@ export type UserUncheckedUpdateWithoutTripsAsRiderInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTripsAsDriverInput = {
@@ -1395,6 +1434,7 @@ export type UserUpdateWithoutTripsAsDriverInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTripsAsDriverInput = {
@@ -1422,6 +1462,7 @@ export type UserUncheckedUpdateWithoutTripsAsDriverInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVerificationCodesInput = {
@@ -1449,6 +1490,7 @@ export type UserCreateWithoutVerificationCodesInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationCodesInput = {
@@ -1476,6 +1518,7 @@ export type UserUncheckedCreateWithoutVerificationCodesInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationCodesInput = {
@@ -1519,6 +1562,7 @@ export type UserUpdateWithoutVerificationCodesInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationCodesInput = {
@@ -1546,6 +1590,7 @@ export type UserUncheckedUpdateWithoutVerificationCodesInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionsInput = {
@@ -1573,6 +1618,7 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -1600,6 +1646,7 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -1643,6 +1690,7 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -1670,6 +1718,7 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -1697,6 +1746,7 @@ export type UserCreateWithoutMessagesInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -1724,6 +1774,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -1767,6 +1818,7 @@ export type UserUpdateWithoutMessagesInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -1794,6 +1846,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralCodeInput = {
@@ -1821,6 +1874,7 @@ export type UserCreateWithoutReferralCodeInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralCodeInput = {
@@ -1848,6 +1902,7 @@ export type UserUncheckedCreateWithoutReferralCodeInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralCodeInput = {
@@ -1891,6 +1946,7 @@ export type UserUpdateWithoutReferralCodeInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralCodeInput = {
@@ -1918,6 +1974,7 @@ export type UserUncheckedUpdateWithoutReferralCodeInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralsGivenInput = {
@@ -1945,6 +2002,7 @@ export type UserCreateWithoutReferralsGivenInput = {
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralsGivenInput = {
@@ -1972,6 +2030,7 @@ export type UserUncheckedCreateWithoutReferralsGivenInput = {
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralsGivenInput = {
@@ -2004,6 +2063,7 @@ export type UserCreateWithoutReferredByInput = {
   referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByInput = {
@@ -2031,6 +2091,7 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByInput = {
@@ -2074,6 +2135,7 @@ export type UserUpdateWithoutReferralsGivenInput = {
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsGivenInput = {
@@ -2101,6 +2163,7 @@ export type UserUncheckedUpdateWithoutReferralsGivenInput = {
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReferredByInput = {
@@ -2139,6 +2202,7 @@ export type UserUpdateWithoutReferredByInput = {
   referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByInput = {
@@ -2166,6 +2230,7 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDropTransactionsInput = {
@@ -2193,6 +2258,7 @@ export type UserCreateWithoutDropTransactionsInput = {
   referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDropTransactionsInput = {
@@ -2220,6 +2286,7 @@ export type UserUncheckedCreateWithoutDropTransactionsInput = {
   referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDropTransactionsInput = {
@@ -2263,6 +2330,7 @@ export type UserUpdateWithoutDropTransactionsInput = {
   referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDropTransactionsInput = {
@@ -2289,6 +2357,135 @@ export type UserUncheckedUpdateWithoutDropTransactionsInput = {
   referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
   referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
+  dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFeedbacksInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
+  password?: string | null
+  university?: string | null
+  role?: string
+  dropsBalance?: number
+  hasUsedFirstTopupDiscount?: boolean
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  driverProfile?: Prisma.DriverProfileCreateNestedOneWithoutUserInput
+  tripsAsRider?: Prisma.TripCreateNestedManyWithoutRiderInput
+  tripsAsDriver?: Prisma.TripCreateNestedManyWithoutDriverInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
+  referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
+  dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
+  dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFeedbacksInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
+  password?: string | null
+  university?: string | null
+  role?: string
+  dropsBalance?: number
+  hasUsedFirstTopupDiscount?: boolean
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  driverProfile?: Prisma.DriverProfileUncheckedCreateNestedOneWithoutUserInput
+  tripsAsRider?: Prisma.TripUncheckedCreateNestedManyWithoutRiderInput
+  tripsAsDriver?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
+  referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
+  dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
+  dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFeedbacksInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbacksInput, Prisma.UserUncheckedCreateWithoutFeedbacksInput>
+}
+
+export type UserUpsertWithoutFeedbacksInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFeedbacksInput, Prisma.UserUncheckedUpdateWithoutFeedbacksInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedbacksInput, Prisma.UserUncheckedCreateWithoutFeedbacksInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFeedbacksInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFeedbacksInput, Prisma.UserUncheckedUpdateWithoutFeedbacksInput>
+}
+
+export type UserUpdateWithoutFeedbacksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  driverProfile?: Prisma.DriverProfileUpdateOneWithoutUserNestedInput
+  tripsAsRider?: Prisma.TripUpdateManyWithoutRiderNestedInput
+  tripsAsDriver?: Prisma.TripUpdateManyWithoutDriverNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
+  referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
+  dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
+  dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFeedbacksInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  driverProfile?: Prisma.DriverProfileUncheckedUpdateOneWithoutUserNestedInput
+  tripsAsRider?: Prisma.TripUncheckedUpdateManyWithoutRiderNestedInput
+  tripsAsDriver?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
+  referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
+  dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -2317,6 +2514,7 @@ export type UserCreateWithoutDropLotsInput = {
   referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
   referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDropLotsInput = {
@@ -2344,6 +2542,7 @@ export type UserUncheckedCreateWithoutDropLotsInput = {
   referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
   referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
   dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDropLotsInput = {
@@ -2387,6 +2586,7 @@ export type UserUpdateWithoutDropLotsInput = {
   referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
   referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDropLotsInput = {
@@ -2414,6 +2614,7 @@ export type UserUncheckedUpdateWithoutDropLotsInput = {
   referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
   referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
   dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2432,6 +2633,7 @@ export type UserCountOutputType = {
   referralsGiven: number
   dropTransactions: number
   dropLots: number
+  feedbacks: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2445,6 +2647,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   referralsGiven?: boolean | UserCountOutputTypeCountReferralsGivenArgs
   dropTransactions?: boolean | UserCountOutputTypeCountDropTransactionsArgs
   dropLots?: boolean | UserCountOutputTypeCountDropLotsArgs
+  feedbacks?: boolean | UserCountOutputTypeCountFeedbacksArgs
 }
 
 /**
@@ -2527,6 +2730,13 @@ export type UserCountOutputTypeCountDropLotsArgs<ExtArgs extends runtime.Types.E
   where?: Prisma.DropLotWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFeedbacksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeedbackWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2554,6 +2764,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   dropTransactions?: boolean | Prisma.User$dropTransactionsArgs<ExtArgs>
   dropLots?: boolean | Prisma.User$dropLotsArgs<ExtArgs>
+  feedbacks?: boolean | Prisma.User$feedbacksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2617,6 +2828,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   referredBy?: boolean | Prisma.User$referredByArgs<ExtArgs>
   dropTransactions?: boolean | Prisma.User$dropTransactionsArgs<ExtArgs>
   dropLots?: boolean | Prisma.User$dropLotsArgs<ExtArgs>
+  feedbacks?: boolean | Prisma.User$feedbacksArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2638,6 +2850,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     referredBy: Prisma.$ReferralPayload<ExtArgs> | null
     dropTransactions: Prisma.$DropTransactionPayload<ExtArgs>[]
     dropLots: Prisma.$DropLotPayload<ExtArgs>[]
+    feedbacks: Prisma.$FeedbackPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3059,6 +3272,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   referredBy<T extends Prisma.User$referredByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$referredByArgs<ExtArgs>>): Prisma.Prisma__ReferralClient<runtime.Types.Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   dropTransactions<T extends Prisma.User$dropTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dropTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DropTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   dropLots<T extends Prisma.User$dropLotsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dropLotsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DropLotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  feedbacks<T extends Prisma.User$feedbacksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3787,6 +4001,30 @@ export type User$dropLotsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.DropLotScalarFieldEnum | Prisma.DropLotScalarFieldEnum[]
+}
+
+/**
+ * User.feedbacks
+ */
+export type User$feedbacksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Feedback
+   */
+  select?: Prisma.FeedbackSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Feedback
+   */
+  omit?: Prisma.FeedbackOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeedbackInclude<ExtArgs> | null
+  where?: Prisma.FeedbackWhereInput
+  orderBy?: Prisma.FeedbackOrderByWithRelationInput | Prisma.FeedbackOrderByWithRelationInput[]
+  cursor?: Prisma.FeedbackWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeedbackScalarFieldEnum | Prisma.FeedbackScalarFieldEnum[]
 }
 
 /**

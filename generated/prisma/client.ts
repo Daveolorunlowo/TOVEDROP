@@ -112,6 +112,11 @@ export type Referral = Prisma.ReferralModel
  */
 export type DropTransaction = Prisma.DropTransactionModel
 /**
+ * Model Feedback
+ * 
+ */
+export type Feedback = Prisma.FeedbackModel
+/**
  * Model DropLot
  * 
  */

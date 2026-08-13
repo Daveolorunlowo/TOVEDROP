@@ -65,6 +65,7 @@ model User {
   
   dropTransactions  DropTransaction[]
   dropLots          DropLot[]
+  feedbacks         Feedback[]
 }
 
 model VerificationToken {
@@ -219,6 +220,17 @@ model DropTransaction {
   user        User     @relation(fields: [userId], references: [id])
   
   dropLot     DropLot?
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // "ISSUE" or "SUGGESTION"
+  content   String
+  status    String   @default("OPEN") // "OPEN", "REVIEWED", "RESOLVED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model DropLot {
