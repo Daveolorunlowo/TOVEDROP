@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
       const driverShare = DRIVER_COMPLETION_INCENTIVE
 
-      await tx.driverProfile.update({
+      const updatedDriverProfile = await tx.driverProfile.update({
         where: { userId: session.user.id },
         data: {
           totalTrips: { increment: 1 },
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
       await tx.walletTransaction.create({
         data: {
-          driverId: trip.driverId as string,
+          driverId: updatedDriverProfile.id,
           tripId: trip.id,
           type: 'RIDE_EARNING',
           amount: driverShare,
