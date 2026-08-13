@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
-import { sendWhatsApp } from "@/lib/whatsapp"
+import { sendWebPush } from "@/lib/webpush"
 
 export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
   const params = await context.params;
@@ -65,7 +65,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
       return updatedTrip
     })
 
-    // Notify Rider and Driver via WhatsApp
+    // Notify Rider and Driver via Web Push
     const fullTrip = await prisma.trip.findUnique({
       where: { id: tripId },
       include: { rider: true, driver: true }
@@ -73,16 +73,18 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     
     if (fullTrip) {
       const dropRefundStatus = fullTrip.dropLotId ? "Your 1 Drop has been refunded." : "No refund applies."
+      const title = 'Trip Cancelled'
       const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${dropRefundStatus}`
+      const url = '/dashboard/trips'
 
       // Notify Rider
-      if (fullTrip.rider?.whatsappNotificationsEnabled && fullTrip.rider?.phoneNumber) {
-        sendWhatsApp(fullTrip.rider.phoneNumber, message)
+      if (fullTrip.riderId) {
+        sendWebPush(fullTrip.riderId, title, message, url)
       }
 
       // Notify Driver
-      if (fullTrip.driver?.whatsappNotificationsEnabled && fullTrip.driver?.phoneNumber) {
-        sendWhatsApp(fullTrip.driver.phoneNumber, message)
+      if (fullTrip.driverId) {
+        sendWebPush(fullTrip.driverId, title, message, '/driver')
       }
     }
 

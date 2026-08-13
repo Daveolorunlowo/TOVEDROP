@@ -40,6 +40,8 @@ export type UserMinAggregateOutputType = {
   email: string | null
   emailVerified: Date | null
   image: string | null
+  phoneNumber: string | null
+  whatsappNotificationsEnabled: boolean | null
   password: string | null
   university: string | null
   role: string | null
@@ -53,6 +55,8 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   emailVerified: Date | null
   image: string | null
+  phoneNumber: string | null
+  whatsappNotificationsEnabled: boolean | null
   password: string | null
   university: string | null
   role: string | null
@@ -66,6 +70,8 @@ export type UserCountAggregateOutputType = {
   email: number
   emailVerified: number
   image: number
+  phoneNumber: number
+  whatsappNotificationsEnabled: number
   password: number
   university: number
   role: number
@@ -89,6 +95,8 @@ export type UserMinAggregateInputType = {
   email?: true
   emailVerified?: true
   image?: true
+  phoneNumber?: true
+  whatsappNotificationsEnabled?: true
   password?: true
   university?: true
   role?: true
@@ -102,6 +110,8 @@ export type UserMaxAggregateInputType = {
   email?: true
   emailVerified?: true
   image?: true
+  phoneNumber?: true
+  whatsappNotificationsEnabled?: true
   password?: true
   university?: true
   role?: true
@@ -115,6 +125,8 @@ export type UserCountAggregateInputType = {
   email?: true
   emailVerified?: true
   image?: true
+  phoneNumber?: true
+  whatsappNotificationsEnabled?: true
   password?: true
   university?: true
   role?: true
@@ -215,6 +227,8 @@ export type UserGroupByOutputType = {
   email: string | null
   emailVerified: Date | null
   image: string | null
+  phoneNumber: string | null
+  whatsappNotificationsEnabled: boolean
   password: string | null
   university: string | null
   role: string
@@ -251,6 +265,8 @@ export type UserWhereInput = {
   email?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFilter<"User"> | boolean
   password?: Prisma.StringNullableFilter<"User"> | string | null
   university?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
@@ -277,6 +293,8 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappNotificationsEnabled?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   university?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
@@ -306,6 +324,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
+  phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFilter<"User"> | boolean
   password?: Prisma.StringNullableFilter<"User"> | string | null
   university?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringFilter<"User"> | string
@@ -332,6 +352,8 @@ export type UserOrderByWithAggregationInput = {
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  whatsappNotificationsEnabled?: Prisma.SortOrder
   password?: Prisma.SortOrderInput | Prisma.SortOrder
   university?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
@@ -353,6 +375,8 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   password?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   university?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.StringWithAggregatesFilter<"User"> | string
@@ -366,6 +390,8 @@ export type UserCreateInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -392,6 +418,8 @@ export type UserUncheckedCreateInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -418,6 +446,8 @@ export type UserUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -444,6 +474,8 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -470,6 +502,8 @@ export type UserCreateManyInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -483,6 +517,8 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -496,6 +532,8 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -514,6 +552,8 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
+  whatsappNotificationsEnabled?: Prisma.SortOrder
   password?: Prisma.SortOrder
   university?: Prisma.SortOrder
   role?: Prisma.SortOrder
@@ -531,6 +571,8 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
+  whatsappNotificationsEnabled?: Prisma.SortOrder
   password?: Prisma.SortOrder
   university?: Prisma.SortOrder
   role?: Prisma.SortOrder
@@ -544,6 +586,8 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   emailVerified?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  phoneNumber?: Prisma.SortOrder
+  whatsappNotificationsEnabled?: Prisma.SortOrder
   password?: Prisma.SortOrder
   university?: Prisma.SortOrder
   role?: Prisma.SortOrder
@@ -592,16 +636,16 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
-}
-
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
 }
 
 export type UserCreateNestedOneWithoutDriverProfileInput = {
@@ -766,6 +810,8 @@ export type UserCreateWithoutAccountsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -791,6 +837,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -832,6 +880,8 @@ export type UserUpdateWithoutAccountsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -857,6 +907,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -882,6 +934,8 @@ export type UserCreateWithoutSessionsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -907,6 +961,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -948,6 +1004,8 @@ export type UserUpdateWithoutSessionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -973,6 +1031,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -998,6 +1058,8 @@ export type UserCreateWithoutDriverProfileInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1023,6 +1085,8 @@ export type UserUncheckedCreateWithoutDriverProfileInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1064,6 +1128,8 @@ export type UserUpdateWithoutDriverProfileInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1089,6 +1155,8 @@ export type UserUncheckedUpdateWithoutDriverProfileInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1114,6 +1182,8 @@ export type UserCreateWithoutTripsAsRiderInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1139,6 +1209,8 @@ export type UserUncheckedCreateWithoutTripsAsRiderInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1169,6 +1241,8 @@ export type UserCreateWithoutTripsAsDriverInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1194,6 +1268,8 @@ export type UserUncheckedCreateWithoutTripsAsDriverInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1235,6 +1311,8 @@ export type UserUpdateWithoutTripsAsRiderInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1260,6 +1338,8 @@ export type UserUncheckedUpdateWithoutTripsAsRiderInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1296,6 +1376,8 @@ export type UserUpdateWithoutTripsAsDriverInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1321,6 +1403,8 @@ export type UserUncheckedUpdateWithoutTripsAsDriverInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1346,6 +1430,8 @@ export type UserCreateWithoutVerificationCodesInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1371,6 +1457,8 @@ export type UserUncheckedCreateWithoutVerificationCodesInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1412,6 +1500,8 @@ export type UserUpdateWithoutVerificationCodesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1437,6 +1527,8 @@ export type UserUncheckedUpdateWithoutVerificationCodesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1462,6 +1554,8 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1487,6 +1581,8 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1528,6 +1624,8 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1553,6 +1651,8 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1578,6 +1678,8 @@ export type UserCreateWithoutMessagesInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1603,6 +1705,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1644,6 +1748,8 @@ export type UserUpdateWithoutMessagesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1669,6 +1775,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1694,6 +1802,8 @@ export type UserCreateWithoutReferralCodeInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1719,6 +1829,8 @@ export type UserUncheckedCreateWithoutReferralCodeInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1760,6 +1872,8 @@ export type UserUpdateWithoutReferralCodeInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1785,6 +1899,8 @@ export type UserUncheckedUpdateWithoutReferralCodeInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1810,6 +1926,8 @@ export type UserCreateWithoutReferralsGivenInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1835,6 +1953,8 @@ export type UserUncheckedCreateWithoutReferralsGivenInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1865,6 +1985,8 @@ export type UserCreateWithoutReferredByInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1890,6 +2012,8 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -1931,6 +2055,8 @@ export type UserUpdateWithoutReferralsGivenInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1956,6 +2082,8 @@ export type UserUncheckedUpdateWithoutReferralsGivenInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1992,6 +2120,8 @@ export type UserUpdateWithoutReferredByInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2017,6 +2147,8 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2042,6 +2174,8 @@ export type UserCreateWithoutDropTransactionsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -2067,6 +2201,8 @@ export type UserUncheckedCreateWithoutDropTransactionsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -2108,6 +2244,8 @@ export type UserUpdateWithoutDropTransactionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2133,6 +2271,8 @@ export type UserUncheckedUpdateWithoutDropTransactionsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2158,6 +2298,8 @@ export type UserCreateWithoutDropLotsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -2183,6 +2325,8 @@ export type UserUncheckedCreateWithoutDropLotsInput = {
   email?: string | null
   emailVerified?: Date | string | null
   image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
   password?: string | null
   university?: string | null
   role?: string
@@ -2224,6 +2368,8 @@ export type UserUpdateWithoutDropLotsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2249,6 +2395,8 @@ export type UserUncheckedUpdateWithoutDropLotsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.StringFieldUpdateOperationsInput | string
@@ -2386,6 +2534,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   email?: boolean
   emailVerified?: boolean
   image?: boolean
+  phoneNumber?: boolean
+  whatsappNotificationsEnabled?: boolean
   password?: boolean
   university?: boolean
   role?: boolean
@@ -2413,6 +2563,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   emailVerified?: boolean
   image?: boolean
+  phoneNumber?: boolean
+  whatsappNotificationsEnabled?: boolean
   password?: boolean
   university?: boolean
   role?: boolean
@@ -2426,6 +2578,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   emailVerified?: boolean
   image?: boolean
+  phoneNumber?: boolean
+  whatsappNotificationsEnabled?: boolean
   password?: boolean
   university?: boolean
   role?: boolean
@@ -2439,6 +2593,8 @@ export type UserSelectScalar = {
   email?: boolean
   emailVerified?: boolean
   image?: boolean
+  phoneNumber?: boolean
+  whatsappNotificationsEnabled?: boolean
   password?: boolean
   university?: boolean
   role?: boolean
@@ -2446,7 +2602,7 @@ export type UserSelectScalar = {
   hasUsedFirstTopupDiscount?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "password" | "university" | "role" | "dropsBalance" | "hasUsedFirstTopupDiscount", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "phoneNumber" | "whatsappNotificationsEnabled" | "password" | "university" | "role" | "dropsBalance" | "hasUsedFirstTopupDiscount", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
@@ -2489,6 +2645,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     email: string | null
     emailVerified: Date | null
     image: string | null
+    phoneNumber: string | null
+    whatsappNotificationsEnabled: boolean
     password: string | null
     university: string | null
     role: string
@@ -2935,6 +3093,8 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly emailVerified: Prisma.FieldRef<"User", 'DateTime'>
   readonly image: Prisma.FieldRef<"User", 'String'>
+  readonly phoneNumber: Prisma.FieldRef<"User", 'String'>
+  readonly whatsappNotificationsEnabled: Prisma.FieldRef<"User", 'Boolean'>
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly university: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'String'>

@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { DRIVER_COMPLETION_INCENTIVE, DROP_PACKAGES } from "@/lib/config"
-import { sendWhatsApp } from "@/lib/whatsapp"
+import { sendWebPush } from "@/lib/webpush"
 
 export async function POST(req: Request) {
   try {
@@ -113,20 +113,13 @@ export async function POST(req: Request) {
     // (Mock) Send the driver an earnings email
     console.log(`Email sent to driver: You earned ₦${result.driverShare} for completing a ride via TOVEDROP! This is separate from the transport fare your rider already paid you directly.`)
 
-    // Notify Rider via WhatsApp
+    // Notify Rider via Web Push
     const riderId = result.trip.riderId;
-    const rider = await prisma.user.findUnique({
-      where: { id: riderId }
-    })
-
-    if (rider && rider.whatsappNotificationsEnabled && rider.phoneNumber) {
-      const rateUrl = process.env.NEXT_PUBLIC_APP_URL 
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/rate/${result.trip.id}`
-        : `https://tovedrop.com/rate/${result.trip.id}`
+    const title = 'Trip Complete!'
+    const message = 'Your TOVEDROP ride is complete. Tap to rate your driver.'
+    const url = `/rate/${result.trip.id}`
       
-      const message = `Your TOVEDROP ride is complete! Rate your driver: ${rateUrl}`
-      sendWhatsApp(rider.phoneNumber, message)
-    }
+    sendWebPush(riderId, title, message, url)
 
     return NextResponse.json({ message: "Trip completed successfully", trip: result.trip }, { status: 200 })
   } catch (error: any) {

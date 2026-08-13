@@ -122,6 +122,8 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  phoneNumber: 'phoneNumber',
+  whatsappNotificationsEnabled: 'whatsappNotificationsEnabled',
   password: 'password',
   university: 'university',
   role: 'role',
@@ -184,6 +186,7 @@ export const TripScalarFieldEnum = {
   driverArrivedAt: 'driverArrivedAt',
   bookingFeeNaira: 'bookingFeeNaira',
   dropLotId: 'dropLotId',
+  shareToken: 'shareToken',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

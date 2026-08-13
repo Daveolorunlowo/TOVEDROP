@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
-import { sendWhatsApp } from "@/lib/whatsapp"
+import { sendWebPush } from "@/lib/webpush"
 
 export async function POST(req: Request) {
   try {
@@ -98,20 +98,20 @@ export async function POST(req: Request) {
       return trip
     })
 
-    // Notify drivers in the background
+    // Notify drivers in the background via Web Push
     prisma.driverProfile.findMany({
       where: { status: 'APPROVED' },
-      include: { user: true }
     }).then(async (drivers) => {
-      const activeDrivers = drivers.filter(d => d.user?.whatsappNotificationsEnabled && d.user?.phoneNumber)
-      if (activeDrivers.length > 0) {
-        const message = `New TOVEDROP ride request\n${pickup} → ${destination}\n${date} at ${time}\nOpen the app to accept`
-        // We do not await all of them to prevent blocking, but run them in parallel
+      if (drivers.length > 0) {
+        const title = 'New Ride Request'
+        const message = `${pickup} → ${destination}\n${date} at ${time}`
+        const url = '/driver'
+        
         await Promise.all(
-          activeDrivers.map(driver => sendWhatsApp(driver.user.phoneNumber!, message))
+          drivers.map(driver => sendWebPush(driver.userId, title, message, url))
         )
       }
-    }).catch(err => console.error("Background WhatsApp driver broadcast failed:", err))
+    }).catch(err => console.error("Background Web Push driver broadcast failed:", err))
 
     return NextResponse.json({ message: "Trip created successfully", trip: result }, { status: 201 })
   } catch (error: any) {

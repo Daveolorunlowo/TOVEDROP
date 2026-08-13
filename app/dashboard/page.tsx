@@ -98,24 +98,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* ── Missing Phone Banner ── */}
-        {!user.phoneNumber && (
-          <div className="rounded-lg mb-6 flex items-center justify-between" style={{ background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', padding: '16px 20px' }}>
-            <div>
-              <p className="text-sm font-semibold" style={{ color: '#22c55e' }}>WhatsApp Notifications</p>
-              <p className="text-xs mt-1" style={{ color: '#f5f5f5' }}>Add your phone number to get instant updates on your rides.</p>
-            </div>
-            <Link
-              href="/dashboard/settings"
-              className="text-xs font-semibold px-4 py-2 rounded-md transition-colors hover:brightness-110"
-              style={{ background: '#22c55e', color: 'black' }}
-            >
-              Add Phone Number
-            </Link>
-          </div>
-        )}
-
-        {/* ── Stats card ── */}
+        {/* ── Active Trips ── */}
         <div
           className="rounded-lg mb-6"
           style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}

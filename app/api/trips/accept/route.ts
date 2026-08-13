@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
-import { sendWhatsApp } from "@/lib/whatsapp"
+import { sendWebPush } from "@/lib/webpush"
 
 export async function POST(req: Request) {
   try {
@@ -47,25 +47,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Trip was already accepted by someone else or is no longer available" }, { status: 409 })
     }
 
-    // Notify rider
+    // Notify rider via Web Push
     const trip = await prisma.trip.findUnique({
       where: { id: tripId },
       include: { rider: true }
     })
     
-    if (trip && trip.rider?.whatsappNotificationsEnabled && trip.rider?.phoneNumber) {
+    if (trip) {
       const driverName = driverProfile.user?.name || "A driver"
       const vehicle = `${driverProfile.carColor} ${driverProfile.carMake} ${driverProfile.carModel}`
       const rating = driverProfile.totalRatings > 0 
         ? (driverProfile.totalRatingValue / driverProfile.totalRatings).toFixed(1) 
         : 'New'
-      const shareUrl = process.env.NEXT_PUBLIC_APP_URL 
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/trip/${shareToken}`
-        : `https://tovedrop.com/trip/${shareToken}`
-
-      const message = `🎉 ${driverName} accepted your TOVEDROP ride!\n${vehicle} · ⭐ ${rating}\nPickup: ${trip.time} at ${trip.pickup}\nView details: ${shareUrl}`
+        
+      const title = 'Ride Accepted! 🎉'
+      const message = `${driverName} is on the way in a ${vehicle} (⭐ ${rating}).\nPickup: ${trip.time} at ${trip.pickup}`
+      const url = `/trip/${shareToken}`
       
-      sendWhatsApp(trip.rider.phoneNumber, message)
+      sendWebPush(trip.riderId, title, message, url)
     }
 
     return NextResponse.json({ message: "Trip accepted successfully", shareToken }, { status: 200 })
