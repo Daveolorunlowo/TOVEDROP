@@ -35,7 +35,6 @@ export async function POST(req: Request) {
         university,
         password: hashedPassword,
         role: "RIDER", // Default
-        dropsBalance: 0
       }
     })
 
