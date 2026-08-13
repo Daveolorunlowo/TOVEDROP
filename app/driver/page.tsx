@@ -8,8 +8,10 @@ import {
   CheckCircle, XCircle, Loader2, Check, CheckCircle2, ChevronRight
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { CheckCircle2, ChevronRight, XCircle, Clock, MessageSquare } from 'lucide-react'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
 import { DriverTripListener } from '@/components/driver-trip-listener'
+import { ChatModal } from '@/components/chat-modal'
 import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -105,7 +107,7 @@ function downloadICS(trip: any, scheduledAt: Date) {
   URL.revokeObjectURL(url);
 }
 
-function ConfirmedTripCard({ trip, isLast, onComplete, processing }: { trip: any, isLast: boolean, onComplete: (id: string) => void, processing: string | null }) {
+function ConfirmedTripCard({ trip, isLast, onComplete, onChat, processing }: { trip: any, isLast: boolean, onComplete: (id: string) => void, onChat: (trip: any) => void, processing: string | null }) {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -194,6 +196,14 @@ function ConfirmedTripCard({ trip, isLast, onComplete, processing }: { trip: any
           Add to Calendar
         </button>
         <button
+          onClick={() => onChat(trip)}
+          className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5"
+          style={{ color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}
+        >
+          <MessageSquare className="w-3 h-3" />
+          Message
+        </button>
+        <button
           disabled={processing === trip.id}
           onClick={() => onComplete(trip.id)}
           className="text-[11px] font-semibold px-2.5 py-1.5 rounded"
@@ -212,6 +222,7 @@ export default function DriverDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [declined, setDeclined] = useState<string[]>([])
   const [processing, setProcessing] = useState<string | null>(null)
+  const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
 
   const fetchData = async () => {
     const start = Date.now()
@@ -693,13 +704,14 @@ export default function DriverDashboardPage() {
                   style={{ background: '#171717', border: '1px solid #222' }}
                 >
                   {confirmedTrips.map((trip: any, i: number) => (
-                    <ConfirmedTripCard 
-                      key={trip.id} 
-                      trip={trip} 
-                      isLast={i === confirmedTrips.length - 1}
-                      onComplete={handleComplete}
-                      processing={processing}
-                    />
+                      <ConfirmedTripCard 
+                        key={trip.id} 
+                        trip={trip} 
+                        isLast={i === confirmedTrips.length - 1}
+                        onComplete={handleComplete}
+                        onChat={setActiveChatTrip}
+                        processing={processing}
+                      />
                   ))}
                 </div>
               )}
@@ -707,6 +719,15 @@ export default function DriverDashboardPage() {
       </div>
       
       <DriverTripListener />
+
+      {activeChatTrip && (
+        <ChatModal 
+          tripId={activeChatTrip.id}
+          currentUserId={data.driverProfile.userId}
+          otherPartyName={activeChatTrip.rider?.name || "Rider"}
+          onClose={() => setActiveChatTrip(null)}
+        />
+      )}
     </div>
   )
 }

@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, Share, Copy, Check } from 'lucide-react'
+import { X, Star, Car, TrendingUp, Share, Copy, Check, MessageSquare } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
+import { ChatModal } from '@/components/chat-modal'
 
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
@@ -54,6 +55,7 @@ export function TripList({
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
   const [shareModalOpen, setShareModalOpen] = useState<string | null>(null) // holds trip.shareToken
+  const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
   const [copied, setCopied] = useState(false)
   const handleBookRideClick = useBookRideNavigation()
   
@@ -170,10 +172,20 @@ export function TripList({
                   <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
                 </div>
                 <StatusChip status={trip.status} />
+                {trip.status === 'CONFIRMED' && (
+                  <button
+                    onClick={() => setActiveChatTrip(trip)}
+                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-2"
+                    style={{ color: '#22c55e' }}
+                    aria-label="Message Driver"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5" />
+                  </button>
+                )}
                 {trip.status === 'CONFIRMED' && trip.shareToken && (
                   <button
                     onClick={() => setShareModalOpen(trip.shareToken)}
-                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-2"
+                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
                     style={{ color: 'var(--orange-brand)' }}
                     aria-label="Share Trip"
                   >
