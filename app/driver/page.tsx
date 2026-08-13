@@ -64,6 +64,148 @@ function CheckRow({ done, label, detail }: { done: boolean; label: string; detai
   )
 }
 
+function generateICS(trip: any, scheduledAt: Date) {
+  const endDate = new Date(scheduledAt.getTime() + 30 * 60000); // 30 min duration estimate
+  
+  const formatICSDate = (date: Date) => 
+    date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+  return `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//TOVEDROP//Trip Reminder//EN
+BEGIN:VEVENT
+UID:${trip.id}@tovedrop.com
+DTSTAMP:${formatICSDate(new Date())}
+DTSTART:${formatICSDate(scheduledAt)}
+DTEND:${formatICSDate(endDate)}
+SUMMARY:TOVEDROP Ride: ${trip.pickup} to ${trip.destination}
+DESCRIPTION:Pickup rider at ${trip.pickup}, drop off at ${trip.destination}
+BEGIN:VALARM
+TRIGGER:-PT30M
+ACTION:DISPLAY
+DESCRIPTION:Trip starting in 30 minutes
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Trip starting in 10 minutes
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+}
+
+function downloadICS(trip: any, scheduledAt: Date) {
+  const icsContent = generateICS(trip, scheduledAt);
+  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `tovedrop-trip-${trip.id}.ics`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+function ConfirmedTripCard({ trip, isLast, onComplete, processing }: { trip: any, isLast: boolean, onComplete: (id: string) => void, processing: string | null }) {
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    // Update every minute
+    const id = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(id);
+  }, []);
+
+  const scheduledAt = new Date(`${trip.date}T${trip.time}:00`);
+  const diffMs = scheduledAt.getTime() - now.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+
+  let statusLevel = 0; // 0: > 1hr, 1: 15m-1hr, 2: < 15m
+  let timeStr = "";
+
+  if (diffMins > 60) {
+    statusLevel = 0;
+    const hrs = Math.floor(diffMins / 60);
+    const mins = diffMins % 60;
+    timeStr = `in ${hrs}h ${mins}m`;
+  } else if (diffMins >= 15) {
+    statusLevel = 1;
+    timeStr = `in ${diffMins}m`;
+  } else if (diffMins >= 0) {
+    statusLevel = 2;
+    timeStr = `in ${diffMins}m`;
+  } else {
+    statusLevel = 2;
+    timeStr = `Started`;
+  }
+
+  const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?';
+
+  return (
+    <div
+      className={cn("flex flex-col gap-3 px-4 py-4 transition-colors")}
+      style={{ 
+        borderBottom: isLast ? 'none' : '1px solid #1e1e1e',
+        borderLeft: statusLevel === 2 ? '3px solid var(--orange-brand)' : '3px solid transparent',
+        background: statusLevel === 2 ? 'rgba(217,119,6,0.02)' : 'transparent'
+      }}
+    >
+      <div className="flex items-start justify-between w-full">
+        <div className="flex items-center gap-3 min-w-0">
+          <Avatar className="w-8 h-8 shrink-0">
+            <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+              {initials(trip.rider.name)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>{trip.rider.name}</p>
+            <p className="text-xs truncate" style={{ color: '#888' }}>
+              {trip.pickup} → {trip.destination}
+            </p>
+            <p className="text-[11px]" style={{ color: '#555' }}>{trip.date} · {trip.time}</p>
+          </div>
+        </div>
+        
+        {/* Urgency Badge */}
+        <div className="shrink-0 flex flex-col items-end">
+          {statusLevel === 0 && (
+            <span className="text-[11px] font-medium" style={{ color: '#555' }}>{timeStr}</span>
+          )}
+          {statusLevel === 1 && (
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--orange-brand)' }}></span>
+              <span className="text-xs font-semibold" style={{ color: 'var(--orange-brand)' }}>{timeStr}</span>
+            </div>
+          )}
+          {statusLevel === 2 && (
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-bold uppercase tracking-wider mb-0.5" style={{ color: 'var(--orange-brand)' }}>Trip starting soon</span>
+              <span className="text-xs font-bold" style={{ color: '#f5f5f5' }}>{timeStr}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 mt-2 justify-end">
+        <button
+          onClick={() => downloadICS(trip, scheduledAt)}
+          className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded"
+          style={{ background: '#1e1e1e', color: '#f5f5f5', border: '1px solid #333' }}
+        >
+          <Calendar className="w-3 h-3" />
+          Add to Calendar
+        </button>
+        <button
+          disabled={processing === trip.id}
+          onClick={() => onComplete(trip.id)}
+          className="text-[11px] font-semibold px-2.5 py-1.5 rounded"
+          style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', border: '1px solid rgba(34,197,94,0.2)' }}
+        >
+          {processing === trip.id ? '…' : 'Mark Complete'}
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export default function DriverDashboardPage() {
   const router = useRouter()
   const [data, setData] = useState<any>(null)
@@ -544,32 +686,13 @@ export default function DriverDashboardPage() {
                   style={{ background: '#171717', border: '1px solid #222' }}
                 >
                   {confirmedTrips.map((trip: any, i: number) => (
-                    <div
-                      key={trip.id}
-                      className="flex items-center gap-3 px-4 py-3"
-                      style={{ borderBottom: i < confirmedTrips.length - 1 ? '1px solid #1e1e1e' : 'none' }}
-                    >
-                      <Avatar className="w-7 h-7 shrink-0">
-                        <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
-                          {initials(trip.rider.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{trip.rider.name}</p>
-                        <p className="text-[11px] truncate" style={{ color: '#555' }}>
-                          {trip.pickup} → {trip.destination}
-                        </p>
-                        <p className="text-[11px]" style={{ color: '#444' }}>{trip.date} · {trip.time}</p>
-                      </div>
-                      <button
-                        disabled={processing === trip.id}
-                        onClick={() => handleComplete(trip.id)}
-                        className="text-[11px] font-semibold px-2.5 py-1 shrink-0"
-                        style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
-                      >
-                        {processing === trip.id ? '…' : 'Mark Complete'}
-                      </button>
-                    </div>
+                    <ConfirmedTripCard 
+                      key={trip.id} 
+                      trip={trip} 
+                      isLast={i === confirmedTrips.length - 1}
+                      onComplete={handleComplete}
+                      processing={processing}
+                    />
                   ))}
                 </div>
               )}
