@@ -147,8 +147,10 @@
     }
   }
 
-  .animate-idle-wobble {
-    animation: idle-wobble 3s ease-in-out infinite;
+  @media (min-width: 640px) {
+    .animate-idle-wobble {
+      animation: idle-wobble 3s ease-in-out infinite;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

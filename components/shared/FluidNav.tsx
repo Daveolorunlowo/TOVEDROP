@@ -48,13 +48,16 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     if (!targetEl) return
 
-    const toX = targetEl.offsetLeft
-    const tabWidth = targetEl.offsetWidth
+    const containerRect = navRef.current.getBoundingClientRect()
+    const targetRect = targetEl.getBoundingClientRect()
+    
+    const toX = targetRect.left - containerRect.left
+    const tabWidth = targetRect.width
     
     // If reduced motion or first mount, just snap immediately
     if (isReducedMotion || activeTabIdRef.current === null) {
       blob.style.transition = 'none'
-      blob.style.transform = `translateX(${toX}px)`
+      blob.style.transform = `translateX(${toX}px) translateZ(0)`
       blob.style.width = `${tabWidth}px`
       activeTabIdRef.current = activeTabId
       return
@@ -66,7 +69,6 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
 
     // Get current actual position of the blob (supports rapid mid-flight clicks)
     const currentRect = blob.getBoundingClientRect()
-    const containerRect = navRef.current.getBoundingClientRect()
     const currentX = currentRect.left - containerRect.left
     const currentWidth = currentRect.width
 
@@ -83,7 +85,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
       droplet.className = 'absolute top-[50%] mt-[-12px] rounded-full bg-[var(--purple-brand)] pointer-events-none origin-center z-10'
       droplet.style.height = `${dropSize}px`
       droplet.style.width = `${dropSize}px`
-      droplet.style.transform = `translateX(${fromCenterX}px) scale(1)`
+      droplet.style.transform = `translateX(${fromCenterX}px) scale(1) translateZ(0)`
       droplet.style.opacity = '1'
       
       dropletsContainer.appendChild(droplet)
@@ -96,7 +98,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           droplet.style.transition = 'transform 0.55s cubic-bezier(0.3, 0.9, 0.4, 1), opacity 0.55s ease-in'
-          droplet.style.transform = `translateX(${toCenterX}px) scale(0.2)`
+          droplet.style.transform = `translateX(${toCenterX}px) scale(0.2) translateZ(0)`
           droplet.style.opacity = '0'
         })
       })
@@ -114,13 +116,13 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     const stretchedWidth = maxX - minX
 
     blob.style.transition = 'width 0.22s ease-out, transform 0.22s ease-out'
-    blob.style.transform = `translateX(${minX}px)`
+    blob.style.transform = `translateX(${minX}px) translateZ(0)`
     blob.style.width = `${stretchedWidth}px`
 
     // PHASE 2: Snap with extreme overshoot
     setTimeout(() => {
       blob.style.transition = 'width 0.4s cubic-bezier(0.34, 1.76, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.76, 0.64, 1)'
-      blob.style.transform = `translateX(${toX}px)`
+      blob.style.transform = `translateX(${toX}px) translateZ(0)`
       blob.style.width = `${tabWidth}px`
       
       setTimeout(() => {
@@ -136,9 +138,11 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
       if (!navRef.current || !blobContainerRef.current || isAnimatingRef.current) return
       const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabIdRef.current}"]`) as HTMLElement
       if (targetEl) {
+        const containerRect = navRef.current.getBoundingClientRect()
+        const targetRect = targetEl.getBoundingClientRect()
         blobContainerRef.current.style.transition = 'none'
-        blobContainerRef.current.style.transform = `translateX(${targetEl.offsetLeft}px)`
-        blobContainerRef.current.style.width = `${targetEl.offsetWidth}px`
+        blobContainerRef.current.style.transform = `translateX(${targetRect.left - containerRect.left}px) translateZ(0)`
+        blobContainerRef.current.style.width = `${targetRect.width}px`
       }
     }
     window.addEventListener('resize', handleResize)
@@ -152,19 +156,26 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     const blob = blobContainerRef.current
     
-    if (!activeEl || !blob) return
+    if (!activeEl || !blob || !navRef.current) return
     
-    const pullAmount = activeEl.offsetWidth * 0.15
+    const containerRect = navRef.current.getBoundingClientRect()
+    const activeRect = activeEl.getBoundingClientRect()
+    const hoverRect = hoverEl.getBoundingClientRect()
+    
+    const activeLeft = activeRect.left - containerRect.left
+    const hoverLeft = hoverRect.left - containerRect.left
+    
+    const pullAmount = activeRect.width * 0.15
     blob.style.transition = 'width 0.3s ease, transform 0.3s ease'
     
-    if (hoverEl.offsetLeft > activeEl.offsetLeft) {
+    if (hoverLeft > activeLeft) {
       // Pull Right
-      blob.style.width = `${activeEl.offsetWidth + pullAmount}px`
-      blob.style.transform = `translateX(${activeEl.offsetLeft}px)`
+      blob.style.width = `${activeRect.width + pullAmount}px`
+      blob.style.transform = `translateX(${activeLeft}px) translateZ(0)`
     } else {
       // Pull Left
-      blob.style.width = `${activeEl.offsetWidth + pullAmount}px`
-      blob.style.transform = `translateX(${activeEl.offsetLeft - pullAmount}px)`
+      blob.style.width = `${activeRect.width + pullAmount}px`
+      blob.style.transform = `translateX(${activeLeft - pullAmount}px) translateZ(0)`
     }
   }
 
@@ -172,18 +183,22 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     if (isReducedMotion || isAnimatingRef.current) return
     const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     const blob = blobContainerRef.current
-    if (!activeEl || !blob) return
+    if (!activeEl || !blob || !navRef.current) return
+    
+    const containerRect = navRef.current.getBoundingClientRect()
+    const activeRect = activeEl.getBoundingClientRect()
+    const activeLeft = activeRect.left - containerRect.left
     
     blob.style.transition = 'width 0.3s ease, transform 0.3s ease'
-    blob.style.width = `${activeEl.offsetWidth}px`
-    blob.style.transform = `translateX(${activeEl.offsetLeft}px)`
+    blob.style.width = `${activeRect.width}px`
+    blob.style.transform = `translateX(${activeLeft}px) translateZ(0)`
   }
 
   return (
     <div className="relative w-full sm:w-auto" ref={navRef}>
       {/* EXTREME Goo Filter Definition */}
       {!isReducedMotion && (
-        <svg width="0" height="0" className="absolute pointer-events-none">
+        <svg width="0" height="0" className="absolute pointer-events-none" style={{ transform: 'translateZ(0)' }}>
           <filter id="tovedrop-goo">
             <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
             <feColorMatrix 
@@ -209,7 +224,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
         {/* ======================= */}
         <div 
           className="absolute inset-0 overflow-hidden sm:rounded-full pointer-events-none"
-          style={!isReducedMotion ? { filter: 'url(#tovedrop-goo)' } : {}}
+          style={!isReducedMotion ? { filter: 'url(#tovedrop-goo)', transform: 'translateZ(0)', willChange: 'filter' } : {}}
         >
           {/* Base Background Blob inside filter to merge with active blob */}
           <div className="absolute inset-0 bg-[#1a1a1a]" />
