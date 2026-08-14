@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!--
+    TOVEDROP Favicon — Approach 2: "The Dripping T"
+    ================================================
+    The T's vertical stem descends and blossoms into a teardrop at the bottom.
+    The crossbar sits at the golden ratio height of the overall mark.
+    Mark spans y=30 (crossbar top) to y=492 (tip).
+    Total mark height: 462px.
+    Golden ratio from bottom: 0.618 × 462 = 285px → crossbar bottom at y=492-285=207
+    Crossbar: y=30–140 (110px, solid top bar). Stem: x=212–300 (88px).
+    Drop begins at y=355, tip at y=492.
+    Crossbar arms: x=70–442 (372px wide).
+  -->
+  <path
+    fill="#8B5CF6"
+    d="M 70 40
+       L 442 40
+       L 442 140
+       L 300 140
+       L 300 355
+       C 385 410 345 490 256 492
+       C 167 490 127 410 212 355
+       L 212 140
+       L 70 140
+       Z"
+  />
+</svg>

@@ -25,7 +25,8 @@ const withPWA = withPWAInit({
   dest: 'public',
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
+  sw: 'sw-custom.js',          // Use our hand-crafted service worker
+  disable: false,              // Always register SW so push works in all envs
 })
 
 export default withPWA(nextConfig)

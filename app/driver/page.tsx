@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, CheckCircle2, ChevronRight, MessageSquare
+  CheckCircle, XCircle, Loader2, Check, CheckCircle2, ChevronRight, MessageSquare, Bell
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/sign-out-button'
 import { cn } from '@/lib/utils'
+import { subscribeToPushNotifications, getNotificationPermission } from '@/lib/push-client'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg #111111 / surface #171717 / border #222 / divider #1e1e1e
@@ -107,14 +108,80 @@ function downloadICS(trip: any, scheduledAt: Date) {
   URL.revokeObjectURL(url);
 }
 
+// Fire an alarm push notification via the server
+async function fireAlarm(tripId: string, minutesUntilPickup: number) {
+  try {
+    await fetch('/api/driver/trips/alarm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tripId, minutesUntilPickup }),
+    })
+  } catch (err) {
+    console.error('Failed to fire alarm:', err)
+  }
+}
+
+// Play a short beep using Web Audio API (in-app alert when screen is open)
+function playAlarmSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+    const oscillator = ctx.createOscillator()
+    const gainNode = ctx.createGain()
+    oscillator.connect(gainNode)
+    gainNode.connect(ctx.destination)
+    oscillator.type = 'sine'
+    oscillator.frequency.setValueAtTime(880, ctx.currentTime)
+    oscillator.frequency.setValueAtTime(660, ctx.currentTime + 0.2)
+    oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.4)
+    gainNode.gain.setValueAtTime(0.5, ctx.currentTime)
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8)
+    oscillator.start(ctx.currentTime)
+    oscillator.stop(ctx.currentTime + 0.8)
+    if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300])
+  } catch (e) {
+    // AudioContext might not be available in all environments
+  }
+}
+
 function ConfirmedTripCard({ trip, isLast, onComplete, onChat, processing }: { trip: any, isLast: boolean, onComplete: (id: string) => void, onChat: (trip: any) => void, processing: string | null }) {
   const [now, setNow] = useState(new Date());
+  const firedAlarms = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    // Update every minute
-    const id = setInterval(() => setNow(new Date()), 60000);
+    // Update every minute and check alarm thresholds
+    const tick = () => {
+      const current = new Date();
+      setNow(current);
+
+      const scheduledAt = new Date(`${trip.date}T${trip.time}:00`);
+      const diffMs = scheduledAt.getTime() - current.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+
+      // Check localStorage for already-fired alarms to survive re-renders
+      const alarmKey30 = `alarm_30_${trip.id}`;
+      const alarmKey15 = `alarm_15_${trip.id}`;
+
+      // 30-minute alarm (fires between 31 and 29 minutes)
+      if (diffMins <= 31 && diffMins >= 29 && !firedAlarms.current.has(alarmKey30) && !localStorage.getItem(alarmKey30)) {
+        firedAlarms.current.add(alarmKey30);
+        localStorage.setItem(alarmKey30, '1');
+        fireAlarm(trip.id, 30);
+        playAlarmSound();
+      }
+
+      // 15-minute alarm (fires between 16 and 14 minutes)
+      if (diffMins <= 16 && diffMins >= 14 && !firedAlarms.current.has(alarmKey15) && !localStorage.getItem(alarmKey15)) {
+        firedAlarms.current.add(alarmKey15);
+        localStorage.setItem(alarmKey15, '1');
+        fireAlarm(trip.id, 15);
+        playAlarmSound();
+      }
+    };
+
+    tick(); // run immediately
+    const id = setInterval(tick, 60000);
     return () => clearInterval(id);
-  }, []);
+  }, [trip.id, trip.date, trip.time]);
 
   const scheduledAt = new Date(`${trip.date}T${trip.time}:00`);
   const diffMs = scheduledAt.getTime() - now.getTime();
@@ -223,6 +290,37 @@ export default function DriverDashboardPage() {
   const [declined, setDeclined] = useState<string[]>([])
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
+  const [showNotifBanner, setShowNotifBanner] = useState(false)
+
+  // Auto-prompt for notification permission once the driver dashboard loads
+  useEffect(() => {
+    const dismissed = localStorage.getItem('tovedrop_driver_notif_dismissed')
+    if (dismissed) return
+    const perm = getNotificationPermission()
+    if (perm === 'default') {
+      // Slight delay so it doesn't interrupt initial load
+      const timer = setTimeout(() => setShowNotifBanner(true), 2500)
+      return () => clearTimeout(timer)
+    }
+    if (perm === 'granted') {
+      // Re-subscribe in background to ensure subscription is fresh
+      subscribeToPushNotifications().catch(() => {})
+    }
+  }, [])
+
+  const handleEnableNotifications = async () => {
+    setShowNotifBanner(false)
+    const success = await subscribeToPushNotifications()
+    if (!success) {
+      // If denied, don't show again
+      localStorage.setItem('tovedrop_driver_notif_dismissed', 'true')
+    }
+  }
+
+  const handleDismissNotifBanner = () => {
+    setShowNotifBanner(false)
+    localStorage.setItem('tovedrop_driver_notif_dismissed', 'true')
+  }
 
   const fetchData = async () => {
     const start = Date.now()
@@ -417,6 +515,52 @@ export default function DriverDashboardPage() {
 
   return (
     <div style={{ background: '#111111', minHeight: '100vh' }}>
+      {/* ── Notification Permission Banner ── */}
+      {showNotifBanner && (
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50 p-4 animate-in slide-in-from-bottom-4"
+          style={{ pointerEvents: 'none' }}
+        >
+          <div
+            className="max-w-md mx-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-2xl"
+            style={{
+              background: '#1e1e1e',
+              border: '1px solid rgba(217,119,6,0.4)',
+              pointerEvents: 'all',
+            }}
+          >
+            <div
+              className="w-9 h-9 rounded-lg shrink-0 flex items-center justify-center"
+              style={{ background: 'rgba(217,119,6,0.12)' }}
+            >
+              <Bell className="w-4 h-4" style={{ color: 'var(--orange-brand)' }} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>
+                Enable Pickup Alarms
+              </p>
+              <p className="text-[11px]" style={{ color: '#888' }}>
+                Get notified 30 &amp; 15 mins before each pickup
+              </p>
+            </div>
+            <button
+              onClick={handleEnableNotifications}
+              className="text-[11px] font-bold px-3 py-1.5 rounded shrink-0"
+              style={{ background: 'var(--orange-brand)', color: '#fff' }}
+            >
+              Enable
+            </button>
+            <button
+              onClick={handleDismissNotifBanner}
+              className="text-[11px] px-2 py-1 shrink-0"
+              style={{ color: '#555' }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-5xl mx-auto px-5 py-8">
 
         {/* ── Header ── */}

@@ -1,7 +1,7 @@
 import webpush from 'web-push'
 import prisma from './prisma'
 
-const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:test@example.com'
+const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:support@tovedrop.com'
 const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
 const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY || ''
 
@@ -11,13 +11,25 @@ if (vapidPublicKey && vapidPrivateKey) {
   console.warn('VAPID keys are missing. Push notifications will not work.')
 }
 
-export async function sendPushNotification(userId: string, payload: { title: string, body: string, icon?: string, url?: string }) {
+export async function sendPushNotification(
+  userId: string,
+  payload: { title: string; body?: string; message?: string; icon?: string; url?: string; type?: string }
+) {
   try {
     const subscriptions = await prisma.pushSubscription.findMany({
       where: { userId }
     })
 
     if (subscriptions.length === 0) return
+
+    // Normalize: the SW reads 'message', so always set it
+    const normalizedPayload = {
+      title: payload.title,
+      message: payload.message || payload.body || '',
+      icon: payload.icon || '/icon-192x192.png',
+      url: payload.url || '/',
+      type: payload.type || 'NOTIFICATION',
+    }
 
     const notifications = subscriptions.map(async (sub) => {
       try {
@@ -26,7 +38,7 @@ export async function sendPushNotification(userId: string, payload: { title: str
             endpoint: sub.endpoint,
             keys: JSON.parse(sub.keys)
           },
-          JSON.stringify(payload)
+          JSON.stringify(normalizedPayload)
         )
       } catch (error: any) {
         if (error.statusCode === 404 || error.statusCode === 410) {
