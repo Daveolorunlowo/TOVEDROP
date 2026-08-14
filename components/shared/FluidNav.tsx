@@ -213,68 +213,70 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
         </svg>
       )}
 
-      {/* Main Container */}
-      <div 
-        ref={mainContainerRef}
-        className={cn(
-        "z-50 bg-[#111111] sm:bg-[#1a1a1a] sm:rounded-full border-t sm:border border-[#222]",
-        "fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:inline-flex",
+      {/* Outer Wrapper for fixed positioning and safe area */}
+      <div className={cn(
+        "z-50 bg-[#111111] sm:bg-transparent sm:rounded-none border-t sm:border-0 border-[#222]",
+        "fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:inline-flex flex-col",
         "pb-[env(safe-area-inset-bottom,0px)] sm:pb-0 shadow-2xl sm:shadow-none"
       )}>
-        
-        {/* ======================= */}
-        {/* LAYER 1: GOO BACKGROUND */}
-        {/* ======================= */}
+        {/* INNER WRAPPER (This exactly wraps the nav height, stopping the blob from stretching into safe-area) */}
         <div 
-          className="absolute inset-0 overflow-hidden sm:rounded-full pointer-events-none"
-          style={!isReducedMotion ? { filter: 'url(#tovedrop-goo)', transform: 'translateZ(0)', willChange: 'filter' } : {}}
+          ref={mainContainerRef}
+          className="relative w-full sm:w-auto sm:bg-[#1a1a1a] sm:rounded-full sm:border border-[#222]"
         >
-          {/* Base Background Blob inside filter to merge with active blob */}
-          <div className="absolute inset-0 bg-[#1a1a1a]" />
-          
-          {/* Droplets Container (Spawned via JS) */}
-          <div ref={dropletsContainerRef} className="absolute inset-0 z-10" />
-          
-          {/* Active Tab Blob Wrapper (handles position/width) */}
+          {/* ======================= */}
+          {/* LAYER 1: GOO BACKGROUND */}
+          {/* ======================= */}
           <div 
-            ref={blobContainerRef}
-            className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 origin-left left-0 z-20"
-            style={{ willChange: 'transform, width' }}
+            className="absolute inset-0 overflow-hidden sm:rounded-full pointer-events-none"
+            style={!isReducedMotion ? { filter: 'url(#tovedrop-goo)', transform: 'translateZ(0)', willChange: 'filter' } : {}}
           >
-            {/* Inner Blob (handles idle wobble) */}
+            {/* Base Background Blob inside filter to merge with active blob */}
+            <div className="absolute inset-0 bg-[#1a1a1a]" />
+            
+            {/* Droplets Container (Spawned via JS) */}
+            <div ref={dropletsContainerRef} className="absolute inset-0 z-10" />
+            
+            {/* Active Tab Blob Wrapper (handles position/width) */}
             <div 
-              className={cn(
-                "w-full h-full rounded-full",
-                isReducedMotion ? "bg-white/10" : "bg-[var(--purple-brand)] animate-idle-wobble"
-              )} 
-            />
-          </div>
-
-          {/* Parallel Flex Layout inside Goo Layer for perfect alignment of unread dots */}
-          <div className="absolute inset-0 flex sm:inline-flex px-2 sm:px-1.5 items-center w-full justify-around sm:justify-start z-30">
-            {tabs.map(tab => (
+              ref={blobContainerRef}
+              className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 origin-left left-0 z-20"
+              style={{ willChange: 'transform, width' }}
+            >
+              {/* Inner Blob (handles idle wobble) */}
               <div 
-                key={`goo-${tab.id}`} 
-                className="relative flex-1 sm:flex-none flex items-center justify-center px-2 py-1.5 sm:px-5 sm:py-2 h-full"
-              >
-                {tab.hasNotification && tab.id !== activeTabId && !isReducedMotion && (
-                  <div 
-                    className="absolute top-2 right-[25%] sm:top-2 sm:right-3 w-3 h-3 rounded-full" 
-                    style={{ 
-                      background: 'var(--orange-brand)',
-                      animation: 'blob-breathe 2s ease-in-out infinite' 
-                    }} 
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+                className={cn(
+                  "w-full h-full rounded-full",
+                  isReducedMotion ? "bg-white/10" : "bg-[var(--purple-brand)] animate-idle-wobble"
+                )} 
+              />
+            </div>
 
-        {/* ======================= */}
-        {/* LAYER 2: FOREGROUND LABELS */}
-        {/* ======================= */}
-        <nav className="relative z-40 flex sm:inline-flex w-full items-center justify-around sm:justify-start px-2 sm:px-1.5 py-2 sm:py-1.5">
+            {/* Parallel Flex Layout inside Goo Layer for perfect alignment of unread dots */}
+            <div className="absolute inset-0 flex sm:inline-flex px-2 sm:px-1.5 items-center w-full justify-around sm:justify-start z-30">
+              {tabs.map(tab => (
+                <div 
+                  key={`goo-${tab.id}`} 
+                  className="relative flex-1 sm:flex-none flex items-center justify-center px-2 py-1.5 sm:px-5 sm:py-2 h-full"
+                >
+                  {tab.hasNotification && tab.id !== activeTabId && !isReducedMotion && (
+                    <div 
+                      className="absolute top-2 right-[25%] sm:top-2 sm:right-3 w-3 h-3 rounded-full" 
+                      style={{ 
+                        background: 'var(--orange-brand)',
+                        animation: 'blob-breathe 2s ease-in-out infinite' 
+                      }} 
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ======================= */}
+          {/* LAYER 2: FOREGROUND LABELS */}
+          {/* ======================= */}
+          <nav className="relative z-40 flex sm:inline-flex w-full items-center justify-around sm:justify-start px-2 sm:px-1.5 py-2 sm:py-1.5">
           {tabs.map((tab) => {
             const isActive = activeTabId === tab.id
             const Icon = tab.icon
@@ -315,8 +317,8 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
         </nav>
       </div>
       
-      {/* Mobile spacing */}
-      <div className="h-[68px] sm:hidden w-full" aria-hidden="true" />
+      {/* Mobile spacing to push content above the fixed nav */}
+      <div className="h-[calc(68px+env(safe-area-inset-bottom,0px))] sm:hidden w-full" aria-hidden="true" />
     </div>
   )
 }
