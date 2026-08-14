@@ -17,76 +17,179 @@ export interface NavTab {
 
 export function FluidNav({ tabs }: { tabs: NavTab[] }) {
   const pathname = usePathname()
+  
   const navRef = useRef<HTMLDivElement>(null)
+  const blobContainerRef = useRef<HTMLDivElement>(null)
+  const dropletsContainerRef = useRef<HTMLDivElement>(null)
+  const isAnimatingRef = useRef(false)
+  const activeTabIdRef = useRef<string | null>(null)
   
-  // State for the active blob geometry
-  const [blobStyle, setBlobStyle] = useState({ left: 0, width: 0, opacity: 0 })
   const [isReducedMotion, setIsReducedMotion] = useState(false)
-  const [hoveredTab, setHoveredTab] = useState<{ id: string; left: number; width: number } | null>(null)
   
-  // Find active tab
+  // Find active tab based on current pathname
   const activeTabId = tabs.find(t => 
     t.matchPrefix ? pathname.startsWith(t.href) : pathname === t.href
   )?.id || tabs[0].id
 
   useEffect(() => {
     setIsReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-    
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     const handler = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches)
     mediaQuery.addEventListener('change', handler)
     return () => mediaQuery.removeEventListener('change', handler)
   }, [])
 
-  // Update blob position on mount, window resize, and pathname change
+  // The core extreme liquid animation logic
   useEffect(() => {
-    const updatePosition = () => {
-      if (!navRef.current) return
-      const activeEl = navRef.current.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
-      if (activeEl) {
-        setBlobStyle({
-          left: activeEl.offsetLeft,
-          width: activeEl.offsetWidth,
-          opacity: 1
+    if (!navRef.current || !blobContainerRef.current) return
+    const blob = blobContainerRef.current
+    const dropletsContainer = dropletsContainerRef.current
+    
+    const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
+    if (!targetEl) return
+
+    const toX = targetEl.offsetLeft
+    const tabWidth = targetEl.offsetWidth
+    
+    // If reduced motion or first mount, just snap immediately
+    if (isReducedMotion || activeTabIdRef.current === null) {
+      blob.style.transition = 'none'
+      blob.style.transform = `translateX(${toX}px)`
+      blob.style.width = `${tabWidth}px`
+      activeTabIdRef.current = activeTabId
+      return
+    }
+
+    // Only animate if the tab actually changed
+    if (activeTabIdRef.current === activeTabId) return
+    activeTabIdRef.current = activeTabId
+
+    // Get current actual position of the blob (supports rapid mid-flight clicks)
+    const currentRect = blob.getBoundingClientRect()
+    const containerRect = navRef.current.getBoundingClientRect()
+    const currentX = currentRect.left - containerRect.left
+    const currentWidth = currentRect.width
+
+    const fromX = currentX
+    isAnimatingRef.current = true
+
+    // PHASE 3: Spawn detached droplet
+    if (dropletsContainer && !isReducedMotion) {
+      const dropSize = 24
+      const fromCenterX = fromX + (currentWidth / 2) - (dropSize / 2)
+      const toCenterX = toX + (tabWidth / 2) - (dropSize / 2)
+
+      const droplet = document.createElement('div')
+      droplet.className = 'absolute top-[50%] mt-[-12px] rounded-full bg-[var(--purple-brand)] pointer-events-none origin-center z-10'
+      droplet.style.height = `${dropSize}px`
+      droplet.style.width = `${dropSize}px`
+      droplet.style.transform = `translateX(${fromCenterX}px) scale(1)`
+      droplet.style.opacity = '1'
+      
+      dropletsContainer.appendChild(droplet)
+      
+      // Cap droplets to prevent DOM bloat during extreme rapid clicking
+      if (dropletsContainer.children.length > 3) {
+        dropletsContainer.removeChild(dropletsContainer.firstChild!)
+      }
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          droplet.style.transition = 'transform 0.55s cubic-bezier(0.3, 0.9, 0.4, 1), opacity 0.55s ease-in'
+          droplet.style.transform = `translateX(${toCenterX}px) scale(0.2)`
+          droplet.style.opacity = '0'
         })
+      })
+
+      droplet.addEventListener('transitionend', (e) => {
+        if (e.propertyName === 'opacity' && droplet.parentNode) {
+          droplet.parentNode.removeChild(droplet)
+        }
+      })
+    }
+
+    // PHASE 1: Stretch Bridge
+    const minX = Math.min(fromX, toX)
+    const maxX = Math.max(fromX + currentWidth, toX + tabWidth)
+    const stretchedWidth = maxX - minX
+
+    blob.style.transition = 'width 0.22s ease-out, transform 0.22s ease-out'
+    blob.style.transform = `translateX(${minX}px)`
+    blob.style.width = `${stretchedWidth}px`
+
+    // PHASE 2: Snap with extreme overshoot
+    setTimeout(() => {
+      blob.style.transition = 'width 0.4s cubic-bezier(0.34, 1.76, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.76, 0.64, 1)'
+      blob.style.transform = `translateX(${toX}px)`
+      blob.style.width = `${tabWidth}px`
+      
+      setTimeout(() => {
+        isAnimatingRef.current = false
+      }, 400) // End of Phase 2
+    }, 220) // End of Phase 1
+
+  }, [activeTabId, isReducedMotion])
+  
+  // Handle window resizing (snaps blob back to place if it gets misaligned)
+  useEffect(() => {
+    const handleResize = () => {
+      if (!navRef.current || !blobContainerRef.current || isAnimatingRef.current) return
+      const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabIdRef.current}"]`) as HTMLElement
+      if (targetEl) {
+        blobContainerRef.current.style.transition = 'none'
+        blobContainerRef.current.style.transform = `translateX(${targetEl.offsetLeft}px)`
+        blobContainerRef.current.style.width = `${targetEl.offsetWidth}px`
       }
     }
-    
-    updatePosition()
-    window.addEventListener('resize', updatePosition)
-    const timer = setTimeout(updatePosition, 50)
-    
-    return () => {
-      window.removeEventListener('resize', updatePosition)
-      clearTimeout(timer)
-    }
-  }, [activeTabId, tabs, pathname]) // Re-run on pathname change to ensure layout shifts are caught
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
+  // Magnetic Hover Pull
   const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>, tabId: string) => {
-    if (tabId === activeTabId || isReducedMotion) return
-    const el = e.currentTarget
-    setHoveredTab({
-      id: tabId,
-      left: el.offsetLeft + el.offsetWidth / 2 - 16, // Center a small 32px blob
-      width: 32,
-    })
+    if (tabId === activeTabId || isReducedMotion || isAnimatingRef.current) return
+    const hoverEl = e.currentTarget
+    const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
+    const blob = blobContainerRef.current
+    
+    if (!activeEl || !blob) return
+    
+    const pullAmount = activeEl.offsetWidth * 0.15
+    blob.style.transition = 'width 0.3s ease, transform 0.3s ease'
+    
+    if (hoverEl.offsetLeft > activeEl.offsetLeft) {
+      // Pull Right
+      blob.style.width = `${activeEl.offsetWidth + pullAmount}px`
+      blob.style.transform = `translateX(${activeEl.offsetLeft}px)`
+    } else {
+      // Pull Left
+      blob.style.width = `${activeEl.offsetWidth + pullAmount}px`
+      blob.style.transform = `translateX(${activeEl.offsetLeft - pullAmount}px)`
+    }
   }
 
   const handleMouseLeave = () => {
-    setHoveredTab(null)
+    if (isReducedMotion || isAnimatingRef.current) return
+    const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
+    const blob = blobContainerRef.current
+    if (!activeEl || !blob) return
+    
+    blob.style.transition = 'width 0.3s ease, transform 0.3s ease'
+    blob.style.width = `${activeEl.offsetWidth}px`
+    blob.style.transform = `translateX(${activeEl.offsetLeft}px)`
   }
 
   return (
     <div className="relative w-full sm:w-auto" ref={navRef}>
-      {/* SVG Filter Definition */}
+      {/* EXTREME Goo Filter Definition */}
       {!isReducedMotion && (
         <svg width="0" height="0" className="absolute pointer-events-none">
           <filter id="tovedrop-goo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
             <feColorMatrix 
               in="blur" 
               mode="matrix" 
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9" 
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -11" 
               result="goo" 
             />
             <feComposite in="SourceGraphic" in2="goo" operator="atop" />
@@ -94,11 +197,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
         </svg>
       )}
 
-      {/* 
-        Container wrapping BOTH the goo layer and label layer. 
-        Mobile: Fixed to bottom edge, full width. 
-        Desktop: Auto width pill, positioned normally. 
-      */}
+      {/* Main Container */}
       <div className={cn(
         "z-50 bg-[#111111] sm:bg-[#1a1a1a] sm:rounded-full border-t sm:border border-[#222]",
         "fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:inline-flex",
@@ -115,37 +214,26 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
           {/* Base Background Blob inside filter to merge with active blob */}
           <div className="absolute inset-0 bg-[#1a1a1a]" />
           
-          {/* Active Tab Blob */}
+          {/* Droplets Container (Spawned via JS) */}
+          <div ref={dropletsContainerRef} className="absolute inset-0 z-10" />
+          
+          {/* Active Tab Blob Wrapper (handles position/width) */}
           <div 
-            className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 rounded-full origin-left left-0"
-            style={{
-              background: 'var(--purple-brand)',
-              transform: `translateX(${blobStyle.left}px) translateZ(0)`,
-              width: blobStyle.width,
-              opacity: blobStyle.opacity,
-              willChange: 'transform, width',
-              // Different easing for transform vs width creates the liquid stretch
-              transition: isReducedMotion 
-                ? 'background-color 200ms ease' 
-                : 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1), width 550ms cubic-bezier(0.65, -0.4, 0.3, 1.4)'
-            }}
-          />
-
-          {/* Hover Ripple Blobs */}
-          {!isReducedMotion && hoveredTab && (
-            <div
-              className="absolute top-1/2 -translate-y-1/2 h-8 rounded-full opacity-40 transition-all duration-300 pointer-events-none left-0"
-              style={{
-                background: 'var(--purple-light)',
-                transform: `translateX(${hoveredTab.left}px) translateZ(0)`,
-                width: hoveredTab.width,
-                willChange: 'transform',
-              }}
+            ref={blobContainerRef}
+            className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 origin-left left-0 z-20"
+            style={{ willChange: 'transform, width' }}
+          >
+            {/* Inner Blob (handles idle wobble) */}
+            <div 
+              className={cn(
+                "w-full h-full rounded-full",
+                isReducedMotion ? "bg-white/10" : "bg-[var(--purple-brand)] animate-idle-wobble"
+              )} 
             />
-          )}
+          </div>
 
           {/* Parallel Flex Layout inside Goo Layer for perfect alignment of unread dots */}
-          <div className="absolute inset-0 flex sm:inline-flex px-2 sm:px-1.5 items-center w-full justify-around sm:justify-start">
+          <div className="absolute inset-0 flex sm:inline-flex px-2 sm:px-1.5 items-center w-full justify-around sm:justify-start z-30">
             {tabs.map(tab => (
               <div 
                 key={`goo-${tab.id}`} 
@@ -168,7 +256,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
         {/* ======================= */}
         {/* LAYER 2: FOREGROUND LABELS */}
         {/* ======================= */}
-        <nav className="relative z-10 flex sm:inline-flex w-full items-center justify-around sm:justify-start px-2 sm:px-1.5 py-2 sm:py-1.5">
+        <nav className="relative z-40 flex sm:inline-flex w-full items-center justify-around sm:justify-start px-2 sm:px-1.5 py-2 sm:py-1.5">
           {tabs.map((tab) => {
             const isActive = activeTabId === tab.id
             const Icon = tab.icon
@@ -201,7 +289,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
                 
                 {/* Fallback Unread Dot (if reduced motion is on) */}
                 {isReducedMotion && tab.hasNotification && !isActive && (
-                  <span className="absolute top-1 right-[25%] sm:top-1.5 sm:right-2 w-2 h-2 rounded-full" style={{ background: 'var(--orange-brand)' }} />
+                  <span className="absolute top-1 right-[25%] sm:top-1.5 sm:right-2 w-2 h-2 rounded-full bg-orange-brand" />
                 )}
               </Link>
             )
@@ -209,10 +297,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
         </nav>
       </div>
       
-      {/* 
-        On mobile, the fixed bottom bar might cover content. 
-        Add an invisible spacer block so page content doesn't get hidden behind it. 
-      */}
+      {/* Mobile spacing */}
       <div className="h-[68px] sm:hidden w-full" aria-hidden="true" />
     </div>
   )
