@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { pusherServer } from '@/lib/pusher'
-
+import { sendWebPush } from '@/lib/webpush'
 export async function GET(req: Request, context: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions)
@@ -47,7 +47,13 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
       return NextResponse.json({ error: 'Invalid message content' }, { status: 400 })
     }
 
-    const trip = await prisma.trip.findUnique({ where: { id: tripId } })
+    const trip = await prisma.trip.findUnique({ 
+      where: { id: tripId },
+      include: {
+        rider: true,
+        driver: true
+      }
+    })
     if (!trip) return NextResponse.json({ error: 'Trip not found' }, { status: 404 })
 
     // Ensure the requester is part of the trip
@@ -70,6 +76,18 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
 
     // Trigger realtime event on the trip's channel
     await pusherServer.trigger(`trip-${tripId}`, 'new-message', message)
+
+    // Send push notification to the recipient
+    const isSenderDriver = session.user.id === trip.driverId
+    const recipientId = isSenderDriver ? trip.riderId : trip.driverId
+    const senderName = isSenderDriver ? trip.driver?.name : trip.rider?.name
+
+    if (recipientId) {
+      const title = `New message from ${senderName ? senderName.split(' ')[0] : (isSenderDriver ? 'driver' : 'rider')}`
+      const notificationContent = message.content.length > 50 ? `${message.content.substring(0, 47)}...` : message.content
+      const url = isSenderDriver ? (trip.shareToken ? `/trip/${trip.shareToken}` : '/dashboard/trips') : '/driver'
+      sendWebPush(recipientId, title, notificationContent, url)
+    }
 
     return NextResponse.json({ message }, { status: 201 })
   } catch (error: any) {

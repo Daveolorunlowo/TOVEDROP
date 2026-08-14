@@ -17,7 +17,6 @@ const riderTabs: NavTab[] = [
 
 const driverTabs: NavTab[] = [
   { id: 'requests', label: 'Requests', icon: Car, href: '/driver', hasNotification: true },
-  { id: 'trips', label: 'My Trips', icon: Route, href: '/driver/trips' }, // If it doesn't exist, they stay on /driver. But /driver has both.
   { id: 'wallet', label: 'Wallet', icon: Wallet, href: '/driver/earnings' },
   { id: 'profile', label: 'Profile', icon: User, href: '/driver/settings' },
 ]

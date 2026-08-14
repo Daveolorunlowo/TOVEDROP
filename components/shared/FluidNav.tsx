@@ -19,6 +19,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
   const pathname = usePathname()
   
   const navRef = useRef<HTMLDivElement>(null)
+  const mainContainerRef = useRef<HTMLDivElement>(null)
   const blobContainerRef = useRef<HTMLDivElement>(null)
   const dropletsContainerRef = useRef<HTMLDivElement>(null)
   const isAnimatingRef = useRef(false)
@@ -41,14 +42,14 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
 
   // The core extreme liquid animation logic
   useEffect(() => {
-    if (!navRef.current || !blobContainerRef.current) return
+    if (!navRef.current || !blobContainerRef.current || !mainContainerRef.current) return
     const blob = blobContainerRef.current
     const dropletsContainer = dropletsContainerRef.current
     
     const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     if (!targetEl) return
 
-    const containerRect = navRef.current.getBoundingClientRect()
+    const containerRect = mainContainerRef.current.getBoundingClientRect()
     const targetRect = targetEl.getBoundingClientRect()
     
     const toX = targetRect.left - containerRect.left
@@ -135,10 +136,10 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
   // Handle window resizing (snaps blob back to place if it gets misaligned)
   useEffect(() => {
     const handleResize = () => {
-      if (!navRef.current || !blobContainerRef.current || isAnimatingRef.current) return
+      if (!navRef.current || !blobContainerRef.current || !mainContainerRef.current || isAnimatingRef.current) return
       const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabIdRef.current}"]`) as HTMLElement
       if (targetEl) {
-        const containerRect = navRef.current.getBoundingClientRect()
+        const containerRect = mainContainerRef.current.getBoundingClientRect()
         const targetRect = targetEl.getBoundingClientRect()
         blobContainerRef.current.style.transition = 'none'
         blobContainerRef.current.style.transform = `translateX(${targetRect.left - containerRect.left}px) translateZ(0)`
@@ -156,9 +157,9 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     const blob = blobContainerRef.current
     
-    if (!activeEl || !blob || !navRef.current) return
+    if (!activeEl || !blob || !mainContainerRef.current) return
     
-    const containerRect = navRef.current.getBoundingClientRect()
+    const containerRect = mainContainerRef.current.getBoundingClientRect()
     const activeRect = activeEl.getBoundingClientRect()
     const hoverRect = hoverEl.getBoundingClientRect()
     
@@ -183,9 +184,9 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     if (isReducedMotion || isAnimatingRef.current) return
     const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     const blob = blobContainerRef.current
-    if (!activeEl || !blob || !navRef.current) return
+    if (!activeEl || !blob || !mainContainerRef.current) return
     
-    const containerRect = navRef.current.getBoundingClientRect()
+    const containerRect = mainContainerRef.current.getBoundingClientRect()
     const activeRect = activeEl.getBoundingClientRect()
     const activeLeft = activeRect.left - containerRect.left
     
@@ -213,7 +214,9 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
       )}
 
       {/* Main Container */}
-      <div className={cn(
+      <div 
+        ref={mainContainerRef}
+        className={cn(
         "z-50 bg-[#111111] sm:bg-[#1a1a1a] sm:rounded-full border-t sm:border border-[#222]",
         "fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:inline-flex",
         "pb-[env(safe-area-inset-bottom,0px)] sm:pb-0 shadow-2xl sm:shadow-none"
