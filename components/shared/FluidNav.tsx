@@ -117,27 +117,29 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
           
           {/* Active Tab Blob */}
           <div 
-            className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 rounded-full"
+            className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 rounded-full origin-left left-0"
             style={{
               background: 'var(--purple-brand)',
-              left: blobStyle.left,
+              transform: `translateX(${blobStyle.left}px) translateZ(0)`,
               width: blobStyle.width,
               opacity: blobStyle.opacity,
-              // Different easing for left vs width creates the liquid stretch
+              willChange: 'transform, width',
+              // Different easing for transform vs width creates the liquid stretch
               transition: isReducedMotion 
                 ? 'background-color 200ms ease' 
-                : 'left 500ms cubic-bezier(0.4, 0, 0.2, 1), width 550ms cubic-bezier(0.65, -0.4, 0.3, 1.4)'
+                : 'transform 500ms cubic-bezier(0.4, 0, 0.2, 1), width 550ms cubic-bezier(0.65, -0.4, 0.3, 1.4)'
             }}
           />
 
           {/* Hover Ripple Blobs */}
           {!isReducedMotion && hoveredTab && (
             <div
-              className="absolute top-1/2 -translate-y-1/2 h-8 rounded-full opacity-40 transition-all duration-300 pointer-events-none"
+              className="absolute top-1/2 -translate-y-1/2 h-8 rounded-full opacity-40 transition-all duration-300 pointer-events-none left-0"
               style={{
                 background: 'var(--purple-light)',
-                left: hoveredTab.left,
+                transform: `translateX(${hoveredTab.left}px) translateZ(0)`,
                 width: hoveredTab.width,
+                willChange: 'transform',
               }}
             />
           )}
