@@ -19,13 +19,10 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
   const pathname = usePathname()
   
   const navRef = useRef<HTMLDivElement>(null)
-  const mainContainerRef = useRef<HTMLDivElement>(null)
-  const blobContainerRef = useRef<HTMLDivElement>(null)
-  const dropletsContainerRef = useRef<HTMLDivElement>(null)
-  const isAnimatingRef = useRef(false)
-  const activeTabIdRef = useRef<string | null>(null)
+  const pillRef = useRef<HTMLDivElement>(null)
   
   const [isReducedMotion, setIsReducedMotion] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
   
   // Find active tab based on current pathname
   const activeTabId = tabs.find(t => 
@@ -33,6 +30,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
   )?.id || tabs[0].id
 
   useEffect(() => {
+    setIsMounted(true)
     setIsReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     const handler = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches)
@@ -40,286 +38,128 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     return () => mediaQuery.removeEventListener('change', handler)
   }, [])
 
-  // The core extreme liquid animation logic
+  // Position the highly performant sliding pill
   useEffect(() => {
-    if (!navRef.current || !blobContainerRef.current || !mainContainerRef.current) return
-    const blob = blobContainerRef.current
-    const dropletsContainer = dropletsContainerRef.current
+    if (!isMounted || !navRef.current || !pillRef.current) return
     
-    const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
-    if (!targetEl) return
-
-    const containerRect = mainContainerRef.current.getBoundingClientRect()
-    const targetRect = targetEl.getBoundingClientRect()
+    // Find the container and active tab elements
+    const container = navRef.current
+    const activeEl = container.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
     
-    const toX = targetRect.left - containerRect.left
-    const tabWidth = targetRect.width
+    if (!activeEl) return
     
-    // If reduced motion or first mount, just snap immediately
-    if (isReducedMotion || activeTabIdRef.current === null) {
-      blob.style.transition = 'none'
-      blob.style.transform = `translateX(${toX}px) translateZ(0)`
-      blob.style.width = `${tabWidth}px`
-      activeTabIdRef.current = activeTabId
-      return
+    const containerRect = container.getBoundingClientRect()
+    const activeRect = activeEl.getBoundingClientRect()
+    
+    const leftOffset = activeRect.left - containerRect.left
+    const width = activeRect.width
+    
+    // Use hardware accelerated CSS transforms for 60fps mobile performance
+    if (isReducedMotion) {
+      pillRef.current.style.transition = 'none'
+    } else {
+      pillRef.current.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)'
     }
+    
+    pillRef.current.style.width = `${width}px`
+    pillRef.current.style.transform = `translateX(${leftOffset}px) translateZ(0)`
+    
+  }, [activeTabId, isMounted, isReducedMotion])
 
-    // Only animate if the tab actually changed
-    if (activeTabIdRef.current === activeTabId) return
-    activeTabIdRef.current = activeTabId
-
-    // Get current actual position of the blob (supports rapid mid-flight clicks)
-    const currentRect = blob.getBoundingClientRect()
-    const currentX = currentRect.left - containerRect.left
-    const currentWidth = currentRect.width
-
-    const fromX = currentX
-    isAnimatingRef.current = true
-
-    // PHASE 3: Spawn detached droplet
-    if (dropletsContainer && !isReducedMotion) {
-      const dropSize = 24
-      const fromCenterX = fromX + (currentWidth / 2) - (dropSize / 2)
-      const toCenterX = toX + (tabWidth / 2) - (dropSize / 2)
-
-      const droplet = document.createElement('div')
-      droplet.className = 'absolute top-[50%] mt-[-12px] rounded-full bg-[var(--purple-brand)] pointer-events-none origin-center z-10'
-      droplet.style.height = `${dropSize}px`
-      droplet.style.width = `${dropSize}px`
-      droplet.style.transform = `translateX(${fromCenterX}px) scale(1) translateZ(0)`
-      droplet.style.opacity = '1'
-      
-      dropletsContainer.appendChild(droplet)
-      
-      // Cap droplets to prevent DOM bloat during extreme rapid clicking
-      if (dropletsContainer.children.length > 3) {
-        dropletsContainer.removeChild(dropletsContainer.firstChild!)
-      }
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          droplet.style.transition = 'transform 0.55s cubic-bezier(0.3, 0.9, 0.4, 1), opacity 0.55s ease-in'
-          droplet.style.transform = `translateX(${toCenterX}px) scale(0.2) translateZ(0)`
-          droplet.style.opacity = '0'
-        })
-      })
-
-      droplet.addEventListener('transitionend', (e) => {
-        if (e.propertyName === 'opacity' && droplet.parentNode) {
-          droplet.parentNode.removeChild(droplet)
-        }
-      })
-    }
-
-    // PHASE 1: Stretch Bridge
-    const minX = Math.min(fromX, toX)
-    const maxX = Math.max(fromX + currentWidth, toX + tabWidth)
-    const stretchedWidth = maxX - minX
-
-    blob.style.transition = 'width 0.22s ease-out, transform 0.22s ease-out'
-    blob.style.transform = `translateX(${minX}px) translateZ(0)`
-    blob.style.width = `${stretchedWidth}px`
-
-    // PHASE 2: Snap with extreme overshoot
-    setTimeout(() => {
-      blob.style.transition = 'width 0.4s cubic-bezier(0.34, 1.76, 0.64, 1), transform 0.4s cubic-bezier(0.34, 1.76, 0.64, 1)'
-      blob.style.transform = `translateX(${toX}px) translateZ(0)`
-      blob.style.width = `${tabWidth}px`
-      
-      setTimeout(() => {
-        isAnimatingRef.current = false
-      }, 400) // End of Phase 2
-    }, 220) // End of Phase 1
-
-  }, [activeTabId, isReducedMotion])
-  
-  // Handle window resizing (snaps blob back to place if it gets misaligned)
+  // Handle window resizing
   useEffect(() => {
     const handleResize = () => {
-      if (!navRef.current || !blobContainerRef.current || !mainContainerRef.current || isAnimatingRef.current) return
-      const targetEl = navRef.current.querySelector(`[data-tab-id="${activeTabIdRef.current}"]`) as HTMLElement
-      if (targetEl) {
-        const containerRect = mainContainerRef.current.getBoundingClientRect()
-        const targetRect = targetEl.getBoundingClientRect()
-        blobContainerRef.current.style.transition = 'none'
-        blobContainerRef.current.style.transform = `translateX(${targetRect.left - containerRect.left}px) translateZ(0)`
-        blobContainerRef.current.style.width = `${targetRect.width}px`
+      if (!navRef.current || !pillRef.current) return
+      const activeEl = navRef.current.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
+      if (activeEl) {
+        const containerRect = navRef.current.getBoundingClientRect()
+        const activeRect = activeEl.getBoundingClientRect()
+        
+        pillRef.current.style.transition = 'none'
+        pillRef.current.style.width = `${activeRect.width}px`
+        pillRef.current.style.transform = `translateX(${activeRect.left - containerRect.left}px) translateZ(0)`
       }
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  // Magnetic Hover Pull
-  const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>, tabId: string) => {
-    if (tabId === activeTabId || isReducedMotion || isAnimatingRef.current) return
-    const hoverEl = e.currentTarget
-    const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
-    const blob = blobContainerRef.current
-    
-    if (!activeEl || !blob || !mainContainerRef.current) return
-    
-    const containerRect = mainContainerRef.current.getBoundingClientRect()
-    const activeRect = activeEl.getBoundingClientRect()
-    const hoverRect = hoverEl.getBoundingClientRect()
-    
-    const activeLeft = activeRect.left - containerRect.left
-    const hoverLeft = hoverRect.left - containerRect.left
-    
-    const pullAmount = activeRect.width * 0.15
-    blob.style.transition = 'width 0.3s ease, transform 0.3s ease'
-    
-    if (hoverLeft > activeLeft) {
-      // Pull Right
-      blob.style.width = `${activeRect.width + pullAmount}px`
-      blob.style.transform = `translateX(${activeLeft}px) translateZ(0)`
-    } else {
-      // Pull Left
-      blob.style.width = `${activeRect.width + pullAmount}px`
-      blob.style.transform = `translateX(${activeLeft - pullAmount}px) translateZ(0)`
-    }
-  }
-
-  const handleMouseLeave = () => {
-    if (isReducedMotion || isAnimatingRef.current) return
-    const activeEl = navRef.current?.querySelector(`[data-tab-id="${activeTabId}"]`) as HTMLElement
-    const blob = blobContainerRef.current
-    if (!activeEl || !blob || !mainContainerRef.current) return
-    
-    const containerRect = mainContainerRef.current.getBoundingClientRect()
-    const activeRect = activeEl.getBoundingClientRect()
-    const activeLeft = activeRect.left - containerRect.left
-    
-    blob.style.transition = 'width 0.3s ease, transform 0.3s ease'
-    blob.style.width = `${activeRect.width}px`
-    blob.style.transform = `translateX(${activeLeft}px) translateZ(0)`
-  }
+  }, [activeTabId])
 
   return (
-    <div className="relative w-full sm:w-auto" ref={navRef}>
-      {/* EXTREME Goo Filter Definition */}
-      {!isReducedMotion && (
-        <svg width="0" height="0" className="absolute pointer-events-none" style={{ transform: 'translateZ(0)' }}>
-          <filter id="tovedrop-goo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-            <feColorMatrix 
-              in="blur" 
-              mode="matrix" 
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 25 -11" 
-              result="goo" 
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-        </svg>
-      )}
-
+    <div className="relative w-full sm:w-auto">
       {/* Outer Wrapper for fixed positioning and safe area */}
       <div className={cn(
         "z-50 bg-[#111111] sm:bg-transparent sm:rounded-none border-t sm:border-0 border-[#222]",
         "fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:inline-flex flex-col",
         "pb-[env(safe-area-inset-bottom,0px)] sm:pb-0 shadow-2xl sm:shadow-none"
       )}>
-        {/* INNER WRAPPER (This exactly wraps the nav height, stopping the blob from stretching into safe-area) */}
+        {/* INNER WRAPPER */}
         <div 
-          ref={mainContainerRef}
+          ref={navRef}
           className="relative w-full sm:w-auto sm:bg-[#1a1a1a] sm:rounded-full sm:border border-[#222]"
         >
-          {/* ======================= */}
-          {/* LAYER 1: GOO BACKGROUND */}
-          {/* ======================= */}
+          {/* SLIDING PILL BACKGROUND (Hardware Accelerated) */}
           <div 
-            className="absolute inset-0 overflow-hidden sm:rounded-full pointer-events-none"
-            style={!isReducedMotion ? { filter: 'url(#tovedrop-goo)', transform: 'translateZ(0)', willChange: 'filter' } : {}}
+            ref={pillRef}
+            className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 left-0 z-10 pointer-events-none"
+            style={{ 
+              opacity: isMounted ? 1 : 0,
+              willChange: 'transform, width' 
+            }}
           >
-            {/* Base Background Blob inside filter to merge with active blob */}
-            <div className="absolute inset-0 bg-[#1a1a1a]" />
-            
-            {/* Droplets Container (Spawned via JS) */}
-            <div ref={dropletsContainerRef} className="absolute inset-0 z-10" />
-            
-            {/* Active Tab Blob Wrapper (handles position/width) */}
-            <div 
-              ref={blobContainerRef}
-              className="absolute top-1 bottom-1 sm:top-1.5 sm:bottom-1.5 origin-left left-0 z-20"
-              style={{ willChange: 'transform, width' }}
-            >
-              {/* Inner Blob (handles idle wobble) */}
-              <div 
-                className={cn(
-                  "w-full h-full rounded-full",
-                  isReducedMotion ? "bg-white/10" : "bg-[var(--purple-brand)] animate-idle-wobble"
-                )} 
-              />
-            </div>
-
-            {/* Parallel Flex Layout inside Goo Layer for perfect alignment of unread dots */}
-            <div className="absolute inset-0 flex sm:inline-flex px-2 sm:px-1.5 items-center w-full justify-around sm:justify-start z-30">
-              {tabs.map(tab => (
-                <div 
-                  key={`goo-${tab.id}`} 
-                  className="relative flex-1 sm:flex-none flex items-center justify-center px-2 py-1.5 sm:px-5 sm:py-2 h-full"
-                >
-                  {tab.hasNotification && tab.id !== activeTabId && !isReducedMotion && (
-                    <div 
-                      className="absolute top-2 right-[25%] sm:top-2 sm:right-3 w-3 h-3 rounded-full" 
-                      style={{ 
-                        background: 'var(--orange-brand)',
-                        animation: 'blob-breathe 2s ease-in-out infinite' 
-                      }} 
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
+            <div className={cn(
+              "w-full h-full rounded-full shadow-md",
+              isReducedMotion ? "bg-white/10" : "bg-[var(--purple-brand)]"
+            )} />
           </div>
 
-          {/* ======================= */}
-          {/* LAYER 2: FOREGROUND LABELS */}
-          {/* ======================= */}
-          <nav className="relative z-40 flex sm:inline-flex w-full items-center justify-around sm:justify-start px-2 sm:px-1.5 py-2 sm:py-1.5">
-          {tabs.map((tab) => {
-            const isActive = activeTabId === tab.id
-            const Icon = tab.icon
+          {/* FOREGROUND LABELS */}
+          <nav className="relative z-20 flex sm:inline-flex w-full items-center justify-around sm:justify-start px-2 sm:px-1.5 py-2 sm:py-1.5">
+            {tabs.map((tab) => {
+              const isActive = activeTabId === tab.id
+              const Icon = tab.icon
 
-            return (
-              <Link
-                key={tab.id}
-                href={tab.href}
-                data-tab-id={tab.id}
-                aria-current={isActive ? 'page' : undefined}
-                onMouseEnter={(e) => handleMouseEnter(e, tab.id)}
-                onMouseLeave={handleMouseLeave}
-                className={cn(
-                  "relative flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
-                  "flex-1 sm:flex-none px-2 py-1.5 sm:px-5 sm:py-2 rounded-full",
-                  "transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-orange-brand",
-                  isActive ? "text-white" : "text-[#888] hover:text-white"
-                )}
-              >
-                <Icon 
-                  className={cn("w-5 h-5 sm:w-4 sm:h-4 transition-all duration-300", isActive ? "scale-110" : "scale-100")} 
-                  strokeWidth={isActive ? 2.5 : 2} 
-                />
-                <span className={cn(
-                  "text-[10px] sm:text-[11px] font-semibold tracking-wide uppercase mt-0.5 sm:mt-0",
-                  isActive ? "opacity-100" : "opacity-80"
-                )}>
-                  {tab.label}
-                </span>
-                
-                {/* Fallback Unread Dot (if reduced motion is on) */}
-                {isReducedMotion && tab.hasNotification && !isActive && (
-                  <span className="absolute top-1 right-[25%] sm:top-1.5 sm:right-2 w-2 h-2 rounded-full bg-orange-brand" />
-                )}
-              </Link>
-            )
-          })}
-        </nav>
+              return (
+                <Link
+                  key={tab.id}
+                  href={tab.href}
+                  data-tab-id={tab.id}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={cn(
+                    "relative flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
+                    "flex-1 sm:flex-none px-2 py-1.5 sm:px-5 sm:py-2 rounded-full",
+                    "transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-orange-brand",
+                    isActive ? "text-white" : "text-[#888] hover:text-white"
+                  )}
+                >
+                  <Icon 
+                    className={cn("w-5 h-5 sm:w-4 sm:h-4 transition-transform duration-300", isActive ? "scale-110" : "scale-100")} 
+                    strokeWidth={isActive ? 2.5 : 2} 
+                  />
+                  <span className={cn(
+                    "text-[10px] sm:text-[11px] font-semibold tracking-wide uppercase mt-0.5 sm:mt-0 transition-opacity duration-300",
+                    isActive ? "opacity-100" : "opacity-80"
+                  )}>
+                    {tab.label}
+                  </span>
+                  
+                  {/* Notification Dot */}
+                  {tab.hasNotification && (
+                    <span 
+                      className={cn(
+                        "absolute top-1 right-[25%] sm:top-1.5 sm:right-2 w-2 h-2 rounded-full transition-colors duration-300",
+                        isActive ? "bg-white" : "bg-orange-brand"
+                      )} 
+                    />
+                  )}
+                </Link>
+              )
+            })}
+          </nav>
+        </div>
       </div>
       
       {/* Mobile spacing to push content above the fixed nav */}
       <div className="h-[calc(68px+env(safe-area-inset-bottom,0px))] sm:hidden w-full" aria-hidden="true" />
-      </div>
     </div>
   )
 }
