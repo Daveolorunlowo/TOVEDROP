@@ -66,6 +66,7 @@ model User {
   dropTransactions  DropTransaction[]
   dropLots          DropLot[]
   feedbacks         Feedback[]
+  updateReads       UpdateRead[]
 }
 
 model VerificationToken {
@@ -292,4 +293,43 @@ model SystemSettings {
   adminPercentage   Int      @default(10)
   companyPercentage Int      @default(20)
   updatedAt         DateTime @updatedAt
+}
+
+model Update {
+  id          String         @id @default(cuid())
+  title       String
+  body        String         // supports basic markdown-style formatting
+  category    UpdateCategory
+  audience    UpdateAudience @default(ALL)
+  isPinned    Boolean        @default(false)
+  publishedAt DateTime?      // null = draft, not yet visible
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  updateReads UpdateRead[]
+}
+
+model UpdateRead {
+  id        String   @id @default(cuid())
+  userId    String
+  updateId  String
+  readAt    DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  update    Update   @relation(fields: [updateId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, updateId])
+}
+
+enum UpdateCategory {
+  NEW_FEATURE
+  IMPROVEMENT
+  BUG_FIX
+  ANNOUNCEMENT
+  MAINTENANCE
+}
+
+enum UpdateAudience {
+  ALL
+  RIDERS
+  DRIVERS
 }

@@ -9,7 +9,21 @@
 * 🟢 You can import this file directly.
 */
 
+export const UpdateCategory = {
+  NEW_FEATURE: 'NEW_FEATURE',
+  IMPROVEMENT: 'IMPROVEMENT',
+  BUG_FIX: 'BUG_FIX',
+  ANNOUNCEMENT: 'ANNOUNCEMENT',
+  MAINTENANCE: 'MAINTENANCE'
+} as const
+
+export type UpdateCategory = (typeof UpdateCategory)[keyof typeof UpdateCategory]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const UpdateAudience = {
+  ALL: 'ALL',
+  RIDERS: 'RIDERS',
+  DRIVERS: 'DRIVERS'
+} as const
+
+export type UpdateAudience = (typeof UpdateAudience)[keyof typeof UpdateAudience]

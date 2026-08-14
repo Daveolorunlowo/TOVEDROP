@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation'
 import {
   CheckCircle, Search, Users, Car, TrendingUp,
   Flag, FileText, LayoutDashboard, Menu, X,
-  Loader2, Check, ShieldAlert, PieChart, Save, Banknote, MessageSquare
+  Loader2, Check, ShieldAlert, PieChart, Save, Banknote, MessageSquare, Bell, Activity
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/SkeletonVariants'
 import { Skeleton } from '@/components/shared/Skeleton'
+import { UpdatesTab } from '@/components/admin/UpdatesTab'
+import { UserActivityModal } from '@/components/admin/UserActivityModal'
 import { cn } from '@/lib/utils'
 
 // ─── Design tokens ─────────────────────────────────────
@@ -27,6 +29,7 @@ const NAV_ITEMS = [
   { id: 'revenue_split', label: 'Revenue Split', icon: PieChart },
   { id: 'approvals', label: 'Driver Approvals',  icon: Car },
   { id: 'payouts',   label: 'Payouts',           icon: Banknote },
+  { id: 'updates',   label: 'Updates',           icon: Bell },
   { id: 'reports',   label: 'Reports',           icon: Flag },
   { id: 'feedback',  label: 'Feedback',          icon: MessageSquare },
   { id: 'users',     label: 'Users',             icon: Users },
@@ -87,6 +90,7 @@ export default function AdminPage() {
   const [revenueSettings, setRevenueSettings] = useState({ driverPercentage: 70, adminPercentage: 10, companyPercentage: 20 })
   const [settingsLoading, setSettingsLoading] = useState(false)
   const [settingsSaving, setSettingsSaving] = useState(false)
+  const [selectedActivityUser, setSelectedActivityUser] = useState<any>(null)
 
   const fetchData = async () => {
     const start = Date.now()
@@ -1077,7 +1081,7 @@ export default function AdminPage() {
                 <div
                   className="grid text-[10px] font-semibold uppercase tracking-[0.05em] px-4 py-2.5"
                   style={{
-                    gridTemplateColumns: '1fr 80px 100px 80px 60px',
+                    gridTemplateColumns: '1fr 80px 100px 80px 100px',
                     borderBottom: '1px solid #1e1e1e',
                     color: '#444',
                   }}
@@ -1099,7 +1103,7 @@ export default function AdminPage() {
                       key={user.id ?? i}
                       className="grid items-center px-4 py-2.5"
                       style={{
-                        gridTemplateColumns: '1fr 80px 100px 80px 60px',
+                        gridTemplateColumns: '1fr 80px 100px 80px 100px',
                         borderBottom: i < filteredUsers.length - 1 ? '1px solid #1e1e1e' : 'none',
                       }}
                     >
@@ -1128,7 +1132,14 @@ export default function AdminPage() {
                         {user.type === 'Driver' ? `${user.trips ?? 0} trips` : `${user.dropsBalance ?? 0} drops`}
                       </span>
                       <StatusChip status={user.detailStatus ?? 'approved'} />
-                      <div className="text-right">
+                      <div className="flex items-center justify-end gap-3 text-right">
+                        <button
+                          onClick={() => setSelectedActivityUser(user)}
+                          className="text-[#888] hover:text-orange-brand transition-colors"
+                          title="View Activity"
+                        >
+                          <Activity className="w-4 h-4" />
+                        </button>
                         {user.type === 'Driver' && (user.detailStatus === 'approved' || user.detailStatus === 'suspended') && (
                           <button
                             disabled={processing === user.id}
@@ -1145,6 +1156,10 @@ export default function AdminPage() {
                 )}
               </div>
             </div>
+          )}
+          {/* ── Updates ── */}
+          {!loading && activeTab === 'updates' && (
+            <UpdatesTab />
           )}
           {/* ── Security ── */}
           {!loading && activeTab === 'security' && (
@@ -1213,6 +1228,13 @@ export default function AdminPage() {
           )}
         </main>
       </div>
+      
+      {selectedActivityUser && (
+        <UserActivityModal 
+          user={selectedActivityUser} 
+          onClose={() => setSelectedActivityUser(null)} 
+        />
+      )}
     </div>
   )
 }

@@ -122,3 +122,13 @@ export type AdminRevenue = Prisma.AdminRevenueModel
  * 
  */
 export type SystemSettings = Prisma.SystemSettingsModel
+/**
+ * Model Update
+ * 
+ */
+export type Update = Prisma.UpdateModel
+/**
+ * Model UpdateRead
+ * 
+ */
+export type UpdateRead = Prisma.UpdateReadModel

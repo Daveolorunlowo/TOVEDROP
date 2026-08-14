@@ -1,10 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
-import { Car, Wallet, User, List, Route, MapPin, Gift, Search } from 'lucide-react'
+import { Car, Wallet, User, List, Route, MapPin, Gift, Search, Bell } from 'lucide-react'
 import { FluidNav, NavTab } from '@/components/shared/FluidNav'
 import { SignOutButton } from '@/components/sign-out-button'
 
@@ -24,6 +24,18 @@ const driverTabs: NavTab[] = [
 export function GlobalAuthenticatedNav() {
   const { data: session, status } = useSession()
   const pathname = usePathname()
+  const [unreadCount, setUnreadCount] = useState(0)
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user) {
+      fetch('/api/updates/unread-count')
+        .then(res => res.json())
+        .then(data => {
+          if (data.count !== undefined) setUnreadCount(data.count)
+        })
+        .catch(err => console.error(err))
+    }
+  }, [status, session?.user, pathname])
 
   if (status !== 'authenticated' || !session?.user) return null
 
@@ -53,6 +65,17 @@ export function GlobalAuthenticatedNav() {
         </Link>
         {/* On mobile, we might just hide the top-right controls or use a tiny avatar */}
         <div className="flex items-center gap-3">
+          <Link href="/updates" className="relative w-8 h-8 rounded-full bg-[#1e1e1e] border border-[#333] flex items-center justify-center hover:border-orange-brand/50 transition-colors">
+            <Bell className="w-4 h-4 text-[#888]" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-orange-brand border-2 border-[#111] text-[8px] font-bold text-white items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              </span>
+            )}
+          </Link>
           <Link href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-[#1e1e1e] border border-[#333] flex items-center justify-center hover:border-orange-brand/50 transition-colors">
             <User className="w-4 h-4 text-[#888]" />
           </Link>

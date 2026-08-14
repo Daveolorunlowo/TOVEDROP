@@ -71,7 +71,9 @@ export const ModelName = {
   WithdrawalRequest: 'WithdrawalRequest',
   PlatformRevenue: 'PlatformRevenue',
   AdminRevenue: 'AdminRevenue',
-  SystemSettings: 'SystemSettings'
+  SystemSettings: 'SystemSettings',
+  Update: 'Update',
+  UpdateRead: 'UpdateRead'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -367,6 +369,31 @@ export const SystemSettingsScalarFieldEnum = {
 } as const
 
 export type SystemSettingsScalarFieldEnum = (typeof SystemSettingsScalarFieldEnum)[keyof typeof SystemSettingsScalarFieldEnum]
+
+
+export const UpdateScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  body: 'body',
+  category: 'category',
+  audience: 'audience',
+  isPinned: 'isPinned',
+  publishedAt: 'publishedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UpdateScalarFieldEnum = (typeof UpdateScalarFieldEnum)[keyof typeof UpdateScalarFieldEnum]
+
+
+export const UpdateReadScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  updateId: 'updateId',
+  readAt: 'readAt'
+} as const
+
+export type UpdateReadScalarFieldEnum = (typeof UpdateReadScalarFieldEnum)[keyof typeof UpdateReadScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -256,6 +256,40 @@ export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
 }
 
+export type EnumUpdateCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateCategory | Prisma.EnumUpdateCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateCategoryFilter<$PrismaModel> | $Enums.UpdateCategory
+}
+
+export type EnumUpdateAudienceFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateAudience | Prisma.EnumUpdateAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel> | $Enums.UpdateAudience
+}
+
+export type EnumUpdateCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateCategory | Prisma.EnumUpdateCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateCategoryWithAggregatesFilter<$PrismaModel> | $Enums.UpdateCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUpdateCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUpdateCategoryFilter<$PrismaModel>
+}
+
+export type EnumUpdateAudienceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateAudience | Prisma.EnumUpdateAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateAudienceWithAggregatesFilter<$PrismaModel> | $Enums.UpdateAudience
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
+}
+
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -487,6 +521,40 @@ export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
   _sum?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _min?: Prisma.NestedFloatNullableFilter<$PrismaModel>
   _max?: Prisma.NestedFloatNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumUpdateCategoryFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateCategory | Prisma.EnumUpdateCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateCategoryFilter<$PrismaModel> | $Enums.UpdateCategory
+}
+
+export type NestedEnumUpdateAudienceFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateAudience | Prisma.EnumUpdateAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel> | $Enums.UpdateAudience
+}
+
+export type NestedEnumUpdateCategoryWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateCategory | Prisma.EnumUpdateCategoryFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateCategory[] | Prisma.ListEnumUpdateCategoryFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateCategoryWithAggregatesFilter<$PrismaModel> | $Enums.UpdateCategory
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUpdateCategoryFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUpdateCategoryFilter<$PrismaModel>
+}
+
+export type NestedEnumUpdateAudienceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.UpdateAudience | Prisma.EnumUpdateAudienceFieldRefInput<$PrismaModel>
+  in?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.UpdateAudience[] | Prisma.ListEnumUpdateAudienceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumUpdateAudienceWithAggregatesFilter<$PrismaModel> | $Enums.UpdateAudience
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
 }
 
 

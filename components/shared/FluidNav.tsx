@@ -319,6 +319,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
       
       {/* Mobile spacing to push content above the fixed nav */}
       <div className="h-[calc(68px+env(safe-area-inset-bottom,0px))] sm:hidden w-full" aria-hidden="true" />
+      </div>
     </div>
   )
 }
