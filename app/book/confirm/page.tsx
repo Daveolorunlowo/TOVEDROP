@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Navbar } from '@/components/navbar'
+
 import { Footer } from '@/components/footer'
 import { BookingProgress } from '@/components/booking-progress'
 
@@ -39,7 +39,7 @@ export default function ConfirmPage() {
   if (confirmed) {
     return (
       <div className="flex flex-col min-h-screen">
-        <Navbar />
+
         <main className="flex-1 flex items-center justify-center px-4 py-20">
           <div className="max-w-md w-full text-center">
             <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -77,7 +77,7 @@ export default function ConfirmPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+
       <main className="flex-1 py-10 px-4">
         <div className="max-w-2xl mx-auto">
           <BookingProgress currentStep={3} />

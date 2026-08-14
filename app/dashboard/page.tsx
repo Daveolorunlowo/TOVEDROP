@@ -69,31 +69,12 @@ export default async function DashboardPage() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <SignOutButton
-              variant="outline"
-              className="text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5 !text-[#555]"
-            />
-            <Link
-              href="/dashboard/settings"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground hover:bg-white/5 transition-colors"
-              style={{ color: '#888' }}
-            >
-              Settings
-            </Link>
             <Link
               href="/dashboard/referrals"
               className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground border border-border"
               style={{ background: '#1e1e1e' }}
             >
               Refer Friends
-            </Link>
-            <Link
-              href="/book"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-black"
-              style={{ background: 'var(--orange-brand)' }}
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Book a Ride
             </Link>
           </div>
         </div>

@@ -5,6 +5,7 @@ import './globals.css'
 import { Providers } from '@/components/providers'
 import { InstallPrompt } from '@/components/install-prompt'
 import { ReferralTracker } from '@/components/referral-tracker'
+import { GlobalAuthenticatedNav } from '@/components/shared/GlobalAuthenticatedNav'
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
@@ -71,6 +72,7 @@ export default function RootLayout({
     <html lang="en" className="bg-background">
       <body className={`${dmSans.className} antialiased`}>
         <Providers>
+          <GlobalAuthenticatedNav />
           {children}
           <InstallPrompt />
           <ReferralTracker />

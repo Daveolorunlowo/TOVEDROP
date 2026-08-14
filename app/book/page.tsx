@@ -7,7 +7,7 @@ import { MapPin, Navigation, Calendar, Clock, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Navbar } from '@/components/navbar'
+
 import { Footer } from '@/components/footer'
 import { BookingProgress } from '@/components/booking-progress'
 import type { MapPoint } from '@/components/map-picker'
@@ -106,7 +106,7 @@ export default function BookPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+
       <main className="flex-1 py-10 px-4">
         <div className="max-w-5xl mx-auto">
           <BookingProgress currentStep={1} />

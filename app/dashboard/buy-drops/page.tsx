@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Loader2, Plus, ArrowRight, CheckCircle2 } from 'lucide-react'
-import { Navbar } from '@/components/navbar'
+
 import { Footer } from '@/components/footer'
 import { Skeleton } from '@/components/shared/Skeleton'
 import { SkeletonTableRow } from '@/components/shared/SkeletonVariants'
@@ -228,7 +228,7 @@ export default function BuyDropsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-bg-deep text-text-primary">
-      <Navbar />
+
       
       <main className="flex-1 max-w-4xl mx-auto w-full px-5 py-10 relative">
         <h1 className="text-3xl font-extrabold tracking-tight mb-2">Buy Drops</h1>

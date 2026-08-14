@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Navbar } from '@/components/navbar'
+
 import { Footer } from '@/components/footer'
 import { BookingProgress } from '@/components/booking-progress'
 import { SkeletonDriverCard } from '@/components/shared/SkeletonVariants'
@@ -40,7 +40,7 @@ export default function DriversPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+
       <main className="flex-1 py-10 px-4">
         <div className="max-w-3xl mx-auto">
           <BookingProgress currentStep={2} />
