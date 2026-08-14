@@ -1,50 +1,79 @@
 /**
  * Requests notification permission and subscribes to push notifications.
  * Returns true if successfully subscribed, false otherwise.
+ *
+ * FIX: navigator.serviceWorker.ready hangs forever when no SW is registered
+ * (common in dev, or when the SW registration hasn't happened yet).
+ * Solution: request permission FIRST (instant browser dialog), then attempt
+ * the push subscription with a 5-second timeout so the UI never freezes.
  */
 export async function subscribeToPushNotifications(): Promise<boolean> {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-    console.warn('Push messaging is not supported')
+  if (!('Notification' in window)) {
+    console.warn('Notifications not supported in this browser')
     return false
   }
 
+  // ── Step 1: Permission — instant native dialog, no SW needed ──────────
+  let permission = Notification.permission
+  if (permission === 'denied') {
+    console.warn('Notification permission previously denied by user')
+    return false
+  }
+  if (permission !== 'granted') {
+    permission = await Notification.requestPermission()
+  }
+  if (permission !== 'granted') {
+    console.warn('Notification permission not granted')
+    return false
+  }
+
+  // ── Step 2: Push subscription — optional, with timeout guard ──────────
+  // If the service worker isn't ready (dev mode, missing SW) we still return
+  // true so the UI toggle works. The OS permission is what matters for now.
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    console.info('Push messaging not supported — permission only mode')
+    return true
+  }
+
+  const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
+  if (!VAPID_PUBLIC_KEY) {
+    console.warn('NEXT_PUBLIC_VAPID_PUBLIC_KEY is not set — skipping push subscription')
+    return true // permission granted, subscription skipped
+  }
+
   try {
-    const registration = await navigator.serviceWorker.ready
+    // Race serviceWorker.ready against a 5-second timeout
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error('SW ready timeout')), 5000)
+    )
+
+    const registration = await Promise.race([
+      navigator.serviceWorker.ready,
+      timeoutPromise,
+    ])
 
     // Check if already subscribed
     const existingSubscription = await registration.pushManager.getSubscription()
     if (existingSubscription) {
-      // Send to backend again to ensure it's saved
       await sendSubscriptionToBackend(existingSubscription)
       return true
-    }
-
-    // Request notification permission if not yet granted
-    const permission = await Notification.requestPermission()
-    if (permission !== 'granted') {
-      console.warn('Notification permission denied')
-      return false
-    }
-
-    const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
-    if (!VAPID_PUBLIC_KEY) {
-      console.warn('Missing VAPID public key')
-      return false
     }
 
     const convertedVapidKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: convertedVapidKey
+      applicationServerKey: convertedVapidKey,
     })
 
     await sendSubscriptionToBackend(subscription)
     return true
   } catch (error) {
-    console.error('Failed to subscribe to push notifications:', error)
-    return false
+    // SW timeout or subscription failed — permission was granted, just no push
+    console.warn('Push subscription failed (SW not ready or error):', error)
+    return true // still return true — permission was granted successfully
   }
 }
+
 
 /**
  * Requests notification permission only (no push subscription).

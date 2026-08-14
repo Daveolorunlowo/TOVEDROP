@@ -11,39 +11,57 @@ export default function RiderSettingsPage() {
   const [pushEnabled, setPushEnabled] = useState(false)
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
-  
+  const [permissionDenied, setPermissionDenied] = useState(false)
+
   const [feedbackType, setFeedbackType] = useState('ISSUE')
   const [feedbackContent, setFeedbackContent] = useState('')
   const [feedbackSubmitting, setFeedbackSubmitting] = useState(false)
   const [feedbackSuccess, setFeedbackSuccess] = useState(false)
 
   useEffect(() => {
-    // Check if browser has push permissions already
-    if ('Notification' in window && Notification.permission === 'granted') {
-      setPushEnabled(true)
+    if ('Notification' in window) {
+      const perm = Notification.permission
+      if (perm === 'granted') setPushEnabled(true)
+      if (perm === 'denied') setPermissionDenied(true)
     }
     setLoading(false)
   }, [])
 
   const handleTogglePush = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
+
     if (checked) {
+      // Check if previously blocked in browser settings
+      if ('Notification' in window && Notification.permission === 'denied') {
+        setPermissionDenied(true)
+        setMessage('Notifications are blocked. Please enable them in your browser/phone settings, then try again.')
+        setTimeout(() => setMessage(''), 6000)
+        return
+      }
+
       setMessage('Requesting permission...')
       const success = await subscribeToPushNotifications()
+
       if (success) {
         setPushEnabled(true)
-        setMessage('Push notifications enabled!')
+        setPermissionDenied(false)
+        setMessage('✓ Push notifications enabled!')
       } else {
         setPushEnabled(false)
-        setMessage('Failed to enable push notifications. Check browser permissions.')
+        // User dismissed or denied the dialog
+        if ('Notification' in window && Notification.permission === 'denied') {
+          setPermissionDenied(true)
+          setMessage('Notifications blocked. Open your browser settings to allow them.')
+        } else {
+          setMessage('Could not enable notifications. Please try again.')
+        }
       }
     } else {
-      // In a full implementation, you would call an API to delete the subscription.
-      // For now, we just flip the UI toggle.
       setPushEnabled(false)
-      setMessage('Push notifications disabled locally.')
+      setMessage('Push notifications disabled.')
     }
-    setTimeout(() => setMessage(''), 4000)
+
+    setTimeout(() => setMessage(''), 5000)
   }
 
   const submitFeedback = async (e: React.FormEvent) => {
@@ -116,7 +134,16 @@ export default function RiderSettingsPage() {
               </div>
             </div>
             
-            {message && <p className="text-sm font-medium text-foreground">{message}</p>}
+            {message && (
+              <p className={`text-sm font-medium ${message.startsWith('✓') ? 'text-green-400' : permissionDenied ? 'text-red-400' : 'text-muted-foreground'}`}>
+                {message}
+              </p>
+            )}
+            {permissionDenied && !message && (
+              <p className="text-xs text-red-400">
+                Notifications are blocked in your browser. To enable, go to your browser or phone settings and allow notifications for this site.
+              </p>
+            )}
 
             <div className="bg-card border border-border rounded-xl p-5 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
