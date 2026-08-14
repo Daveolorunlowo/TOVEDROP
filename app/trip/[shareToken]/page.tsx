@@ -61,8 +61,8 @@ export default async function TripSharePage({ params }: { params: { shareToken: 
   const riderFirstName = trip?.rider?.name ? trip.rider.name.split(' ')[0] : 'A rider'
   const driverInitials = trip?.driver?.name ? trip.driver.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '?'
   
-  const rating = driverProfile && driverProfile.totalRatings > 0 
-    ? (driverProfile.totalRatingValue / driverProfile.totalRatings).toFixed(1)
+  const rating = driverProfile && driverProfile.rating > 0 
+    ? driverProfile.rating.toFixed(1)
     : 'New'
 
   return (

@@ -2,6 +2,7 @@
 import Link from 'next/link'
 import { Globe, Mail, ExternalLink, Link2 } from 'lucide-react'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
+import { useSession } from 'next-auth/react'
 
 const platformLinks = [
   { href: '/dashboard', label: 'Book a Ride', isBookRide: true },
@@ -27,6 +28,12 @@ const socials = [
 
 export function Footer() {
   const handleBookRideClick = useBookRideNavigation()
+  const { status } = useSession()
+
+  // Hide footer globally for authenticated users
+  if (status === 'authenticated') {
+    return null
+  }
 
   return (
     <footer className="bg-[#060611] text-white">

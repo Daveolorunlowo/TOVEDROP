@@ -57,8 +57,8 @@ export async function POST(req: Request) {
     if (trip) {
       const driverName = driverProfile.user?.name || "A driver"
       const vehicle = `${driverProfile.vehicleColor} ${driverProfile.vehicleMake} ${driverProfile.vehicleModel}`
-      const rating = driverProfile.totalRatings > 0 
-        ? (driverProfile.totalRatingValue / driverProfile.totalRatings).toFixed(1) 
+      const rating = driverProfile.rating > 0 
+        ? driverProfile.rating.toFixed(1) 
         : 'New'
         
       const title = 'Ride Accepted! 🎉'
