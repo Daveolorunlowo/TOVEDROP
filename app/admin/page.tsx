@@ -13,6 +13,8 @@ import { Skeleton } from '@/components/shared/Skeleton'
 import { UpdatesTab } from '@/components/admin/UpdatesTab'
 import { UserActivityModal } from '@/components/admin/UserActivityModal'
 import { cn } from '@/lib/utils'
+import CountUp from 'react-countup'
+import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg #111111 / surface #171717 / border #222 / divider #1e1e1e
@@ -384,140 +386,127 @@ export default function AdminPage() {
 
           {/* ── Overview ── */}
           {!loading && activeTab === 'overview' && (
-            <div>
-              {/* Grouped stats card */}
-              <div
-                className="rounded-lg mb-6"
-                style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
-              >
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: '#555' }}>
-                  Platform Stats
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
-                  {[
-                    { label: 'Total Riders',       value: String(stats.totalUsers) },
-                    { label: 'Total Drivers',      value: String(stats.totalDrivers) },
-                    { label: 'Total Trips',        value: String(stats.totalTrips) },
-                    { label: 'Pending Approvals',  value: String(pendingDrivers.length), accent: pendingDrivers.length > 0 },
-                  ].map((s, i) => (
-                    <div
-                      key={s.label}
-                      className={cn(i > 0 && 'pl-5 sm:border-l')}
-                      style={{ borderColor: '#1e1e1e', paddingRight: i < 3 ? '20px' : undefined }}
+            <div className="space-y-6 animate-fade-in">
+              {/* Grouped stats card with glassmorphism */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { label: 'Total Riders',       value: stats.totalUsers },
+                  { label: 'Total Drivers',      value: stats.totalDrivers },
+                  { label: 'Total Trips',        value: stats.totalTrips },
+                  { label: 'Pending Approvals',  value: pendingDrivers.length, accent: pendingDrivers.length > 0 },
+                ].map((s, i) => (
+                  <div
+                    key={s.label}
+                    className="relative overflow-hidden rounded-xl p-5 border border-[#333] transition-all hover:border-orange-brand/50 group"
+                    style={{ background: 'linear-gradient(145deg, rgba(26,26,26,0.8) 0%, rgba(17,17,17,0.4) 100%)', backdropFilter: 'blur(10px)' }}
+                  >
+                    <div className="absolute top-0 right-0 -mr-4 -mt-4 w-16 h-16 rounded-full bg-orange-brand/10 blur-xl group-hover:bg-orange-brand/20 transition-colors" />
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-[#888]">
+                      {s.label}
+                    </p>
+                    <p
+                      className="text-3xl font-bold tabular-nums tracking-tight"
+                      style={{ color: s.accent ? 'var(--orange-brand)' : '#fff' }}
                     >
-                      <p className="text-[11px] font-medium uppercase tracking-[0.05em] mb-1" style={{ color: '#555' }}>
-                        {s.label}
-                      </p>
-                      <p
-                        className="text-2xl font-bold tabular-nums"
-                        style={{ color: s.accent ? 'var(--orange-brand)' : '#f5f5f5', letterSpacing: '-0.02em' }}
-                      >
-                        {s.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                {pendingDrivers.length > 0 && (
-                  <div style={{ borderTop: '1px solid #1e1e1e', marginTop: '14px', paddingTop: '10px' }}>
-                    <button
-                      onClick={() => setActiveTab('approvals')}
-                      className="text-[11px] font-semibold"
-                      style={{ color: 'var(--orange-brand)' }}
-                    >
-                      Review {pendingDrivers.length} pending application{pendingDrivers.length !== 1 ? 's' : ''} →
-                    </button>
+                      <CountUp end={s.value} duration={2.5} separator="," />
+                    </p>
                   </div>
-                )}
+                ))}
               </div>
+              
+              {/* Chart and Quick Actions */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Chart Section */}
+                <div className="lg:col-span-2 rounded-xl p-5 border border-[#333] relative overflow-hidden" style={{ background: '#141414' }}>
+                  <div className="absolute top-0 left-1/4 w-1/2 h-32 bg-orange-brand/5 blur-[100px] pointer-events-none" />
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-6 text-[#555]">
+                    Platform Growth (Last 7 Days)
+                  </p>
+                  <div className="h-[220px] w-full">
+                    {data.chartData ? (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={data.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="colorTrips" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="var(--orange-brand)" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="var(--orange-brand)" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <XAxis dataKey="date" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
+                          <Tooltip 
+                            contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', fontSize: '12px' }}
+                            itemStyle={{ color: 'var(--orange-brand)' }}
+                          />
+                          <Area type="monotone" dataKey="trips" stroke="var(--orange-brand)" strokeWidth={3} fillOpacity={1} fill="url(#colorTrips)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-xs text-[#555]">No data available</div>
+                    )}
+                  </div>
+                </div>
 
-              {/* Two compact lists */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Pending approvals preview */}
-                <div
-                  className="rounded-lg"
-                  style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
-                >
+                {/* Live Activity Ticker */}
+                <div className="rounded-xl p-5 border border-[#333] bg-[#141414] flex flex-col">
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
-                      Pending Approvals
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#555] flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      Live Activity
+                    </p>
+                  </div>
+                  <div className="flex-1 overflow-y-auto pr-2 space-y-4 max-h-[220px]">
+                    {data.recentActivity && data.recentActivity.length > 0 ? (
+                      data.recentActivity.map((activity: any) => (
+                        <div key={activity.id} className="flex items-start gap-3">
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${activity.type === 'TRIP' ? 'bg-orange-brand/10 text-orange-brand' : 'bg-purple-500/10 text-purple-500'}`}>
+                            {activity.type === 'TRIP' ? <Car className="w-4 h-4" /> : <Banknote className="w-4 h-4" />}
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-white leading-tight">{activity.title}</p>
+                            <p className="text-[11px] text-[#888] mt-0.5 line-clamp-1">{activity.desc}</p>
+                            <p className="text-[9px] text-[#555] mt-1">{new Date(activity.time).toLocaleTimeString()}</p>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-[#555] text-center mt-10">No recent activity</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Pending Approvals */}
+              {pendingDrivers.length > 0 && (
+                <div className="rounded-xl p-5 border border-[#333] bg-[#141414]">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#555]">
+                      Action Required: Pending Approvals
                     </p>
                     <button
                       onClick={() => setActiveTab('approvals')}
-                      className="text-[11px] font-semibold"
-                      style={{ color: 'var(--orange-brand)' }}
+                      className="text-[11px] font-semibold text-orange-brand hover:underline"
                     >
-                      View all →
+                      Review All {pendingDrivers.length} →
                     </button>
                   </div>
-                  {pendingDrivers.length === 0 ? (
-                    <p className="text-xs" style={{ color: '#444' }}>All caught up.</p>
-                  ) : (
-                    <div>
-                      {pendingDrivers.slice(0, 4).map((d: any, i: number) => (
-                        <div
-                          key={d.userId}
-                          className="flex items-center gap-3 py-2.5"
-                          style={{ borderBottom: i < Math.min(pendingDrivers.length, 4) - 1 ? '1px solid #1e1e1e' : 'none' }}
-                        >
-                          <Avatar className="w-7 h-7 shrink-0">
-                            <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
-                              {initials(d.user.name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium truncate" style={{ color: '#f5f5f5' }}>{d.user.name}</p>
-                            <p className="text-[11px]" style={{ color: '#555' }}>{d.vehicleMake} {d.vehicleModel}</p>
-                          </div>
-                          <StatusChip status="pending" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {pendingDrivers.slice(0, 4).map((d: any) => (
+                      <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-[#222]">
+                        <Avatar className="w-8 h-8 shrink-0">
+                          <AvatarFallback className="text-[10px] font-bold bg-[#333] text-[#aaa]">
+                            {initials(d.user.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-white truncate">{d.user.name}</p>
+                          <p className="text-[10px] text-[#666] truncate">{d.vehicleMake}</p>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Suspended drivers */}
-                <div
-                  className="rounded-lg"
-                  style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
-                      Suspended Drivers
-                    </p>
-                    <button
-                      onClick={() => setActiveTab('reports')}
-                      className="text-[11px] font-semibold"
-                      style={{ color: '#888' }}
-                    >
-                      View all →
-                    </button>
+                        <StatusChip status="pending" />
+                      </div>
+                    ))}
                   </div>
-                  {suspendedDrivers.length === 0 ? (
-                    <p className="text-xs" style={{ color: '#444' }}>No suspended drivers.</p>
-                  ) : (
-                    <div>
-                      {suspendedDrivers.slice(0, 4).map((d: any, i: number) => (
-                        <div
-                          key={d.userId}
-                          className="flex items-center gap-3 py-2.5"
-                          style={{ borderBottom: i < Math.min(suspendedDrivers.length, 4) - 1 ? '1px solid #1e1e1e' : 'none' }}
-                        >
-                          <Avatar className="w-7 h-7 shrink-0">
-                            <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
-                              {initials(d.user.name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium truncate" style={{ color: '#888' }}>{d.user.name}</p>
-                            <p className="text-[11px]" style={{ color: '#444' }}>{d.rating > 0 ? d.rating.toFixed(1) + ' avg' : 'No ratings'}</p>
-                          </div>
-                          <StatusChip status="suspended" />
-                        </div>
-                      ))}
-                    </div>
-                  )}
                 </div>
-              </div>
+              )}
             </div>
           )}
 

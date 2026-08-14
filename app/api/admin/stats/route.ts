@@ -14,13 +14,17 @@ export async function GET(req: Request) {
     const now = new Date()
     const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+
     const [
       totalUsers, totalDrivers, totalTrips, completedTrips, driverProfiles, users,
       platformRevenueThisMonth,
       driverPayoutsThisMonth,
       dropsSoldThisMonth,
       withdrawalRequests,
-      feedbacks
+      feedbacks,
+      recentTripsRaw,
+      recentDropsRaw
     ] = await Promise.all([
       prisma.user.count({ where: { role: "RIDER" } }),
       prisma.user.count({ where: { role: "DRIVER" } }),
@@ -47,8 +51,59 @@ export async function GET(req: Request) {
       prisma.feedback.findMany({
         include: { user: true },
         orderBy: { createdAt: 'desc' }
+      }),
+      // For chart data and recent activity
+      prisma.trip.findMany({
+        where: { createdAt: { gte: sevenDaysAgo } },
+        select: { id: true, createdAt: true, status: true, rider: { select: { name: true } } },
+        orderBy: { createdAt: 'desc' }
+      }),
+      prisma.dropTransaction.findMany({
+        where: { type: 'PURCHASE' },
+        take: 10,
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, createdAt: true, amount: true, user: { select: { name: true } } }
       })
     ])
+
+    // Build Chart Data (Trips per day over last 7 days)
+    const chartDataMap: Record<string, number> = {}
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000)
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      chartDataMap[dateStr] = 0
+    }
+    recentTripsRaw.forEach(trip => {
+      const dateStr = trip.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      if (chartDataMap[dateStr] !== undefined) {
+        chartDataMap[dateStr]++
+      }
+    })
+    const chartData = Object.keys(chartDataMap).map(date => ({
+      date,
+      trips: chartDataMap[date]
+    }))
+
+    // Build Recent Activity Feed (mix of latest trips and drops)
+    const activityMap = [
+      ...recentTripsRaw.slice(0, 10).map(t => ({
+        id: `trip-${t.id}`,
+        type: 'TRIP',
+        title: `Ride ${t.status.toLowerCase()}`,
+        desc: t.rider ? `${t.rider.name} requested a ride` : 'Ride requested',
+        time: t.createdAt
+      })),
+      ...recentDropsRaw.map(d => ({
+        id: `drop-${d.id}`,
+        type: 'DROP_PURCHASE',
+        title: 'Drops Purchased',
+        desc: d.user ? `${d.user.name} bought ${d.amount} drops` : `User bought ${d.amount} drops`,
+        time: d.createdAt
+      }))
+    ]
+    const recentActivity = activityMap
+      .sort((a, b) => b.time.getTime() - a.time.getTime())
+      .slice(0, 10)
 
     return NextResponse.json({
       stats: {
@@ -61,6 +116,8 @@ export async function GET(req: Request) {
         dropsSold: dropsSoldThisMonth._sum.amount || 0,
         nairaCollected: dropsSoldThisMonth._sum.nairaAmount || 0
       },
+      chartData,
+      recentActivity,
       drivers: driverProfiles,
       users,
       withdrawalRequests,
