@@ -573,19 +573,24 @@ export default function AdminPage() {
 
           {/* ── Finances ── */}
           {!loading && activeTab === 'finances' && (
-            <div className="space-y-10">
-              <div className="flex items-center justify-between">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
-                  Financial Overview
-                </p>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-10"
+            >
+              <div className="flex items-center justify-between glass-card p-4 rounded-xl mb-6 neon-border">
+                <div>
+                  <p className="text-sm font-bold text-white tracking-wide">Financial Command Center</p>
+                  <p className="text-[11px] text-gray-400 mt-1">Real-time overview of platform revenue, liabilities, and payouts.</p>
+                </div>
                 <button
                   onClick={exportFinancesCSV}
                   disabled={!financesData || financesLoading}
-                  className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-md transition-colors hover:bg-[#222] disabled:opacity-50"
-                  style={{ background: '#1a1a1a', color: '#f5f5f5', border: '1px solid #333' }}
+                  className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-white/10 disabled:opacity-50 glass-panel border border-white/10 text-white"
                 >
-                  <FileText className="w-3.5 h-3.5" />
-                  Export Full Report (CSV)
+                  <FileText className="w-3.5 h-3.5 text-orange-brand" />
+                  Export CSV Report
                 </button>
               </div>
 
@@ -599,60 +604,63 @@ export default function AdminPage() {
                 <>
                   {/* Section 1: Company Position */}
                   <section>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: '#8b5cf6' }}>
-                      Section 1: Company Position (Platform)
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #2e1065' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#a78bfa' }}>Total Cash Collected</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>₦{financesData.company.totalCashCollected.toLocaleString()}</p>
-                        <p className="text-[10px] mt-1" style={{ color: '#555' }}>All-Time via Paystack</p>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                        <TrendingUp className="w-5 h-5" />
                       </div>
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #2e1065' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#a78bfa' }}>Recognized Revenue</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>₦{financesData.company.recognizedRevenue.toLocaleString()}</p>
-                        <p className="text-[10px] mt-1" style={{ color: '#555' }}>All-Time Earned Profit</p>
-                      </div>
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #2e1065' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#a78bfa' }}>Outstanding Liability</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>₦{financesData.company.outstandingLiability.toLocaleString()}</p>
-                        <p className="text-[10px] mt-1" style={{ color: '#555' }}>Unredeemed Rider Drops</p>
-                      </div>
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #2e1065' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#a78bfa' }}>Total Driver Payouts</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>₦{financesData.company.totalDriverPayouts.toLocaleString()}</p>
-                        <p className="text-[10px] mt-1" style={{ color: '#555' }}>All-Time Committed</p>
-                      </div>
+                      <h2 className="text-lg font-bold text-white tracking-tight">Platform Position</h2>
                     </div>
 
-                    <div className="rounded-lg overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
-                      <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
-                        <thead>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+                      {[
+                        { label: 'Total Cash Collected', value: `₦${financesData.company.totalCashCollected.toLocaleString()}`, sub: 'All-Time via Paystack', color: 'from-purple-500 to-indigo-500', glow: 'shadow-purple-500/20' },
+                        { label: 'Recognized Revenue', value: `₦${financesData.company.recognizedRevenue.toLocaleString()}`, sub: 'All-Time Earned Profit', color: 'from-green-500 to-emerald-500', glow: 'shadow-green-500/20' },
+                        { label: 'Outstanding Liability', value: `₦${financesData.company.outstandingLiability.toLocaleString()}`, sub: 'Unredeemed Rider Drops', color: 'from-orange-500 to-red-500', glow: 'shadow-orange-500/20' },
+                        { label: 'Total Driver Payouts', value: `₦${financesData.company.totalDriverPayouts.toLocaleString()}`, sub: 'All-Time Committed', color: 'from-blue-500 to-cyan-500', glow: 'shadow-blue-500/20' },
+                      ].map((stat, i) => (
+                        <motion.div 
+                          key={stat.label}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: i * 0.1 }}
+                          className={`glass-card p-5 rounded-xl relative overflow-hidden group hover:border-white/20 transition-all ${stat.glow}`}
+                        >
+                          <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`} />
+                          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2 relative z-10">{stat.label}</p>
+                          <p className="text-2xl font-bold text-white tabular-nums tracking-tight relative z-10">{stat.value}</p>
+                          <p className="text-[10px] text-gray-500 mt-2 relative z-10">{stat.sub}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    <div className="glass-card rounded-xl overflow-hidden border border-white/5 shadow-2xl">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-white/5 border-b border-white/10">
                           <tr>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Period</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Cash Collected</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Recognized Revenue</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Driver Payouts</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Period</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Cash Collected</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Recognized Revenue</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Driver Payouts</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr style={{ borderBottom: '1px solid #1e1e1e' }}>
-                            <td className="px-4 py-3 text-[11px] font-medium" style={{ color: '#f5f5f5' }}>This Week</td>
-                            <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#888' }}>₦{financesData.company.thisWeek.cashCollected.toLocaleString()}</td>
-                            <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#22c55e' }}>+₦{financesData.company.thisWeek.recognizedRevenue.toLocaleString()}</td>
-                            <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#ef4444' }}>-₦{financesData.company.thisWeek.driverPayouts.toLocaleString()}</td>
+                        <tbody className="divide-y divide-white/5">
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="px-5 py-4 text-sm font-medium text-white">This Week</td>
+                            <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisWeek.cashCollected.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisWeek.recognizedRevenue.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisWeek.driverPayouts.toLocaleString()}</td>
                           </tr>
-                          <tr style={{ borderBottom: '1px solid #1e1e1e' }}>
-                            <td className="px-4 py-3 text-[11px] font-medium" style={{ color: '#f5f5f5' }}>This Month</td>
-                            <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#888' }}>₦{financesData.company.thisMonth.cashCollected.toLocaleString()}</td>
-                            <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#22c55e' }}>+₦{financesData.company.thisMonth.recognizedRevenue.toLocaleString()}</td>
-                            <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#ef4444' }}>-₦{financesData.company.thisMonth.driverPayouts.toLocaleString()}</td>
+                          <tr className="hover:bg-white/5 transition-colors">
+                            <td className="px-5 py-4 text-sm font-medium text-white">This Month</td>
+                            <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisMonth.cashCollected.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisMonth.recognizedRevenue.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisMonth.driverPayouts.toLocaleString()}</td>
                           </tr>
-                          <tr>
-                            <td className="px-4 py-3 text-[11px] font-medium" style={{ color: '#f5f5f5' }}>All-Time</td>
-                            <td className="px-4 py-3 text-[11px] text-right font-bold" style={{ color: '#f5f5f5' }}>₦{financesData.company.totalCashCollected.toLocaleString()}</td>
-                            <td className="px-4 py-3 text-[11px] text-right font-bold" style={{ color: '#22c55e' }}>+₦{financesData.company.recognizedRevenue.toLocaleString()}</td>
-                            <td className="px-4 py-3 text-[11px] text-right font-bold" style={{ color: '#ef4444' }}>-₦{financesData.company.totalDriverPayouts.toLocaleString()}</td>
+                          <tr className="bg-white/5 border-t-2 border-white/10">
+                            <td className="px-5 py-4 text-sm font-bold text-white uppercase tracking-wider">All-Time</td>
+                            <td className="px-5 py-4 text-sm text-right font-bold text-white">₦{financesData.company.totalCashCollected.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-bold text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]">+₦{financesData.company.recognizedRevenue.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-bold text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">-₦{financesData.company.totalDriverPayouts.toLocaleString()}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -661,46 +669,51 @@ export default function AdminPage() {
 
                   {/* Section 2: Drivers */}
                   <section>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: 'var(--orange-brand)' }}>
-                      Section 2: Drivers
-                    </p>
-                    <div className="rounded-lg p-4 mb-4 flex items-center gap-4" style={{ background: '#171717', border: '1px solid rgba(217,119,6,0.2)' }}>
-                      <div className="p-2 rounded-md" style={{ background: 'rgba(217,119,6,0.1)' }}>
-                        <Car className="w-5 h-5" style={{ color: 'var(--orange-brand)' }} />
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2 rounded-lg bg-orange-brand/20 text-orange-brand shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                        <Car className="w-5 h-5" />
                       </div>
+                      <h2 className="text-lg font-bold text-white tracking-tight">Driver Balances</h2>
+                    </div>
+
+                    <div className="glass-card rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center gap-6">
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--orange-brand)' }}>Total Across All Drivers</p>
-                        <p className="text-xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>₦{financesData.drivers.totalBalances.toLocaleString()}</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-orange-400 mb-1">Total Outstanding Driver Balances</p>
+                        <p className="text-3xl font-bold text-white tabular-nums tracking-tight">₦{financesData.drivers.totalBalances.toLocaleString()}</p>
                       </div>
+                      <div className="h-10 w-px bg-white/10 hidden sm:block"></div>
+                      <p className="text-xs text-gray-400 max-w-xs leading-relaxed">
+                        This is the sum of all driver wallet balances that have not yet been paid out via Paystack transfers.
+                      </p>
                     </div>
                     
-                    <div className="rounded-lg overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
-                      <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
-                        <thead>
+                    <div className="glass-card rounded-xl overflow-hidden border border-white/5 shadow-2xl">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-white/5 border-b border-white/10">
                           <tr>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Driver Name</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Status</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Wallet Balance (₦)</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Total Trips</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Avg ₦/Trip</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Last Payout Date</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Driver Name</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Status</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Wallet Balance</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Total Trips</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Avg ₦/Trip</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Last Payout</th>
                           </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-white/5">
                           {financesData.drivers.list.map((d: any, i: number) => (
-                            <tr key={d.id} className="cursor-pointer hover:bg-[#1e1e1e] transition-colors" onClick={() => router.push(`/admin/drivers/${d.id}`)} style={{ borderBottom: i < financesData.drivers.list.length - 1 ? '1px solid #1e1e1e' : 'none' }}>
-                              <td className="px-4 py-3 text-[11px] font-medium" style={{ color: '#f5f5f5' }}>{d.name}</td>
-                              <td className="px-4 py-3"><StatusChip status={d.status} /></td>
-                              <td className="px-4 py-3 text-[11px] text-right font-bold" style={{ color: 'var(--orange-brand)' }}>₦{d.walletBalance.toLocaleString()}</td>
-                              <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#888' }}>{d.totalTrips}</td>
-                              <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#888' }}>₦{d.avgPerTrip.toFixed(0)}</td>
-                              <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#555' }}>
+                            <tr key={d.id} className="cursor-pointer hover:bg-white/5 transition-colors group" onClick={() => router.push(`/admin/drivers/${d.id}`)}>
+                              <td className="px-5 py-4 text-sm font-medium text-white group-hover:text-orange-brand transition-colors">{d.name}</td>
+                              <td className="px-5 py-4"><StatusChip status={d.status} /></td>
+                              <td className="px-5 py-4 text-sm text-right font-bold text-orange-400">₦{d.walletBalance.toLocaleString()}</td>
+                              <td className="px-5 py-4 text-sm text-right text-gray-300">{d.totalTrips}</td>
+                              <td className="px-5 py-4 text-sm text-right text-gray-400">₦{d.avgPerTrip.toFixed(0)}</td>
+                              <td className="px-5 py-4 text-xs text-right text-gray-500">
                                 {d.lastPayoutDate ? new Date(d.lastPayoutDate).toLocaleDateString() : 'Never'}
                               </td>
                             </tr>
                           ))}
                           {financesData.drivers.list.length === 0 && (
-                            <tr><td colSpan={6} className="px-4 py-6 text-center text-xs" style={{ color: '#444' }}>No drivers found.</td></tr>
+                            <tr><td colSpan={6} className="px-5 py-8 text-center text-sm text-gray-500">No drivers found.</td></tr>
                           )}
                         </tbody>
                       </table>
@@ -709,50 +722,54 @@ export default function AdminPage() {
 
                   {/* Section 3: Riders */}
                   <section>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: '#64748b' }}>
-                      Section 3: Riders / Drops
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #1e293b' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#94a3b8' }}>Total Drops in Circulation</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>{financesData.riders.totalDrops.toLocaleString()} <span className="text-xs" style={{ color: '#555' }}>drops</span></p>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                        <Users className="w-5 h-5" />
                       </div>
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #1e293b' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#94a3b8' }}>Naira Value of Drops</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>₦{financesData.riders.totalNairaValue.toLocaleString()}</p>
+                      <h2 className="text-lg font-bold text-white tracking-tight">Rider Drops Economy</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
+                      <div className="glass-card rounded-xl p-5 border border-blue-500/20 hover:border-blue-500/40 transition-colors">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 mb-1">Total Drops in Circulation</p>
+                        <p className="text-2xl font-bold text-white tabular-nums tracking-tight">{financesData.riders.totalDrops.toLocaleString()} <span className="text-sm font-medium text-gray-500">drops</span></p>
                       </div>
-                      <div className="rounded-lg p-4" style={{ background: '#171717', border: '1px solid #1e293b' }}>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#94a3b8' }}>Avg Drops / Active Rider</p>
-                        <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5' }}>{financesData.riders.avgDropsPerRider.toFixed(1)} <span className="text-xs" style={{ color: '#555' }}>drops</span></p>
+                      <div className="glass-card rounded-xl p-5">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Est. Naira Value of Drops</p>
+                        <p className="text-2xl font-bold text-white tabular-nums tracking-tight">₦{financesData.riders.totalNairaValue.toLocaleString()}</p>
+                      </div>
+                      <div className="glass-card rounded-xl p-5">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Avg Drops / Active Rider</p>
+                        <p className="text-2xl font-bold text-white tabular-nums tracking-tight">{financesData.riders.avgDropsPerRider.toFixed(1)} <span className="text-sm font-medium text-gray-500">drops</span></p>
                       </div>
                     </div>
 
-                    <div className="rounded-lg overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
-                      <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
-                        <thead>
+                    <div className="glass-card rounded-xl overflow-hidden border border-white/5 shadow-2xl">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-white/5 border-b border-white/10">
                           <tr>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Rider Name</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Email</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Drops Balance</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Est. Naira Value</th>
-                            <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Total Trips Booked</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Rider Name</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Email</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Drops Balance</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Est. Naira Value</th>
+                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Total Trips</th>
                           </tr>
                         </thead>
-                        <tbody>
-                          {financesData.riders.list.map((r: any, i: number) => (
-                            <tr key={r.id} style={{ borderBottom: i < financesData.riders.list.length - 1 ? '1px solid #1e1e1e' : 'none' }}>
-                              <td className="px-4 py-3 text-[11px] font-medium" style={{ color: '#f5f5f5' }}>{r.name}</td>
-                              <td className="px-4 py-3 text-[11px]" style={{ color: '#888' }}>{r.email}</td>
-                              <td className="px-4 py-3 text-[11px] text-right font-bold" style={{ color: '#94a3b8' }}>{r.dropsBalance}</td>
-                              <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#888' }}>
+                        <tbody className="divide-y divide-white/5">
+                          {financesData.riders.list.map((r: any) => (
+                            <tr key={r.id} className="hover:bg-white/5 transition-colors">
+                              <td className="px-5 py-4 text-sm font-medium text-white">{r.name}</td>
+                              <td className="px-5 py-4 text-sm text-gray-400">{r.email}</td>
+                              <td className="px-5 py-4 text-sm text-right font-bold text-blue-400">{r.dropsBalance}</td>
+                              <td className="px-5 py-4 text-sm text-right text-gray-300">
                                 ₦{r.estNairaValue.toLocaleString()}
-                                {!r.hasDropLots && r.dropsBalance > 0 && <span className="text-[9px] block text-orange-500">*approximate</span>}
+                                {!r.hasDropLots && r.dropsBalance > 0 && <span className="text-[10px] block text-orange-400 mt-0.5 opacity-80">*approximate</span>}
                               </td>
-                              <td className="px-4 py-3 text-[11px] text-right" style={{ color: '#555' }}>{r.totalTripsBooked}</td>
+                              <td className="px-5 py-4 text-sm text-right text-gray-400">{r.totalTripsBooked}</td>
                             </tr>
                           ))}
                           {financesData.riders.list.length === 0 && (
-                            <tr><td colSpan={5} className="px-4 py-6 text-center text-xs" style={{ color: '#444' }}>No active riders with drops found.</td></tr>
+                            <tr><td colSpan={5} className="px-5 py-8 text-center text-sm text-gray-500">No active riders with drops found.</td></tr>
                           )}
                         </tbody>
                       </table>
