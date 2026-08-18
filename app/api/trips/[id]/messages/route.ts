@@ -74,14 +74,23 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
       }
     })
 
-    // Trigger realtime event on the trip's channel
+    // Trigger realtime event on the trip's channel (for open chat modals)
     await pusherServer.trigger(`trip-${tripId}`, 'new-message', message)
 
-    // Send push notification to the recipient
+    // Trigger realtime event on the recipient's global channel (for in-app popups)
     const isSenderDriver = session.user.id === trip.driverId
     const recipientId = isSenderDriver ? trip.riderId : trip.driverId
     const senderName = isSenderDriver ? trip.driver?.name : trip.rider?.name
+    
+    if (recipientId) {
+      await pusherServer.trigger(`user-trips-${recipientId}`, 'incoming-message', {
+        ...message,
+        senderName: senderName ?? 'User',
+        tripId
+      })
+    }
 
+    // Send push notification to the recipient
     if (recipientId) {
       const title = `New message from ${senderName ? senderName.split(' ')[0] : (isSenderDriver ? 'driver' : 'rider')}`
       const notificationContent = message.content.length > 50 ? `${message.content.substring(0, 47)}...` : message.content

@@ -8,6 +8,8 @@ import { ReferralTracker } from '@/components/referral-tracker'
 import { GlobalAuthenticatedNav } from '@/components/shared/GlobalAuthenticatedNav'
 import { NetworkIndicator } from '@/components/network-indicator'
 
+import { GlobalMessageListener } from '@/components/global-message-listener'
+
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
@@ -78,6 +80,7 @@ export default function RootLayout({
           {children}
           <InstallPrompt />
           <ReferralTracker />
+          <GlobalMessageListener />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </Providers>
         <NetworkIndicator />
