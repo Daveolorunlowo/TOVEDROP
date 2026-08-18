@@ -17,7 +17,7 @@ const riderTabs: NavTab[] = [
 ]
 
 const driverTabs: NavTab[] = [
-  { id: 'requests', label: 'Requests', icon: Car, href: '/driver', hasNotification: true },
+  { id: 'requests', label: 'Requests', icon: Car, href: '/driver' },
   { id: 'trips', label: 'My Trips', icon: MapPin, href: '/driver/trips' },
   { id: 'wallet', label: 'Wallet', icon: Wallet, href: '/driver/earnings' },
   { id: 'updates', label: 'Updates', icon: Bell, href: '/updates' },
