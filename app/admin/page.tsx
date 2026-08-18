@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
+import { CommandPalette } from '@/components/admin/CommandPalette'
+import { LiveMap } from '@/components/admin/LiveMap'
 import {
   CheckCircle, Search, Users, Car, TrendingUp,
   Flag, FileText, LayoutDashboard, Menu, X,
@@ -288,15 +291,16 @@ export default function AdminPage() {
   const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
   return (
-    <div className="flex min-h-screen" style={{ background: '#111111' }}>
+    <div className="flex min-h-screen admin-mesh-bg text-white">
+      <CommandPalette activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* ── Sidebar ── */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:z-auto transition-transform duration-200 lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:z-auto transition-transform duration-200 lg:translate-x-0 glass-panel',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
-        style={{ width: '210px', background: '#0e0e0e', borderRight: '1px solid #1a1a1a' }}
+        style={{ width: '210px', borderRight: '1px solid rgba(255,255,255,0.05)' }}
       >
         {/* Logo */}
         <div className="flex items-center justify-between px-5 py-5" style={{ borderBottom: '1px solid #1a1a1a' }}>
@@ -355,8 +359,8 @@ export default function AdminPage() {
 
         {/* Topbar */}
         <header
-          className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12"
-          style={{ background: '#111111', borderBottom: '1px solid #1a1a1a' }}
+          className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12 glass-panel"
+          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', borderRadius: '0' }}
         >
           <button className="lg:hidden" onClick={() => setSidebarOpen(true)} style={{ color: '#555' }}>
             <Menu className="w-4 h-4" />
@@ -386,7 +390,12 @@ export default function AdminPage() {
 
           {/* ── Overview ── */}
           {!loading && activeTab === 'overview' && (
-            <div className="space-y-6 animate-fade-in">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6"
+            >
               {/* Grouped stats card with glassmorphism */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
@@ -395,119 +404,171 @@ export default function AdminPage() {
                   { label: 'Total Trips',        value: stats.totalTrips },
                   { label: 'Successful Referrals',value: stats.successfulReferrals, accent: true },
                 ].map((s, i) => (
-                  <div
+                  <motion.div
                     key={s.label}
-                    className="relative overflow-hidden rounded-xl p-5 border border-[#333] transition-all hover:border-orange-brand/50 group"
-                    style={{ background: 'linear-gradient(145deg, rgba(26,26,26,0.8) 0%, rgba(17,17,17,0.4) 100%)', backdropFilter: 'blur(10px)' }}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.1, duration: 0.4 }}
+                    className="relative overflow-hidden rounded-xl p-5 glass-card group cursor-default"
                   >
-                    <div className="absolute top-0 right-0 -mr-4 -mt-4 w-16 h-16 rounded-full bg-orange-brand/10 blur-xl group-hover:bg-orange-brand/20 transition-colors" />
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-[#888]">
+                    <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 rounded-full bg-orange-brand/10 blur-2xl group-hover:bg-orange-brand/20 transition-all duration-500" />
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-[#888] group-hover:text-[#aaa] transition-colors">
                       {s.label}
                     </p>
                     <p
-                      className="text-3xl font-bold tabular-nums tracking-tight"
+                      className="text-3xl font-bold tabular-nums tracking-tight relative z-10"
                       style={{ color: s.accent ? 'var(--orange-brand)' : '#fff' }}
                     >
                       <CountUp end={s.value} duration={2.5} separator="," />
                     </p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
               
               {/* Chart and Quick Actions */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Chart Section */}
-                <div className="lg:col-span-2 rounded-xl p-5 border border-[#333] relative overflow-hidden" style={{ background: '#141414' }}>
-                  <div className="absolute top-0 left-1/4 w-1/2 h-32 bg-orange-brand/5 blur-[100px] pointer-events-none" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-6 text-[#555]">
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                  className="lg:col-span-2 rounded-xl p-5 relative overflow-hidden glass-card neon-border"
+                >
+                  <div className="absolute top-0 left-1/4 w-1/2 h-40 bg-orange-brand/10 blur-[120px] pointer-events-none" />
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-6 text-[#888]">
                     Platform Growth (Last 7 Days)
                   </p>
-                  <div className="h-[220px] w-full">
+                  <div className="h-[220px] w-full relative z-10">
                     {data.chartData ? (
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={data.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                           <defs>
                             <linearGradient id="colorTrips" x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="5%" stopColor="var(--orange-brand)" stopOpacity={0.3}/>
+                              <stop offset="5%" stopColor="var(--orange-brand)" stopOpacity={0.5}/>
                               <stop offset="95%" stopColor="var(--orange-brand)" stopOpacity={0}/>
                             </linearGradient>
                           </defs>
-                          <XAxis dataKey="date" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
+                          <XAxis dataKey="date" stroke="#666" fontSize={10} tickLine={false} axisLine={false} />
                           <Tooltip 
-                            contentStyle={{ backgroundColor: '#1a1a1a', border: '1px solid #333', borderRadius: '8px', fontSize: '12px' }}
-                            itemStyle={{ color: 'var(--orange-brand)' }}
+                            contentStyle={{ backgroundColor: 'rgba(15,15,20,0.9)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px', backdropFilter: 'blur(10px)' }}
+                            itemStyle={{ color: 'var(--orange-brand)', fontWeight: 'bold' }}
+                            cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
                           />
-                          <Area type="monotone" dataKey="trips" stroke="var(--orange-brand)" strokeWidth={3} fillOpacity={1} fill="url(#colorTrips)" />
+                          <Area type="monotone" dataKey="trips" stroke="var(--orange-brand)" strokeWidth={4} fillOpacity={1} fill="url(#colorTrips)" activeDot={{ r: 6, fill: 'var(--orange-brand)', stroke: '#fff', strokeWidth: 2 }} />
                         </AreaChart>
                       </ResponsiveContainer>
                     ) : (
                       <div className="flex items-center justify-center h-full text-xs text-[#555]">No data available</div>
                     )}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Live Activity Ticker */}
-                <div className="rounded-xl p-5 border border-[#333] bg-[#141414] flex flex-col">
+                <motion.div 
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                  className="rounded-xl p-5 glass-card flex flex-col"
+                >
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#555] flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#888] flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
                       Live Activity
                     </p>
                   </div>
                   <div className="flex-1 overflow-y-auto pr-2 space-y-4 max-h-[220px]">
-                    {data.recentActivity && data.recentActivity.length > 0 ? (
-                      data.recentActivity.map((activity: any) => (
-                        <div key={activity.id} className="flex items-start gap-3">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${activity.type === 'TRIP' ? 'bg-orange-brand/10 text-orange-brand' : 'bg-purple-500/10 text-purple-500'}`}>
-                            {activity.type === 'TRIP' ? <Car className="w-4 h-4" /> : <Banknote className="w-4 h-4" />}
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-white leading-tight">{activity.title}</p>
-                            <p className="text-[11px] text-[#888] mt-0.5 line-clamp-1">{activity.desc}</p>
-                            <p className="text-[9px] text-[#555] mt-1">{new Date(activity.time).toLocaleTimeString()}</p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-xs text-[#555] text-center mt-10">No recent activity</p>
-                    )}
+                    <AnimatePresence>
+                      {data.recentActivity && data.recentActivity.length > 0 ? (
+                        data.recentActivity.map((activity: any, idx: number) => (
+                          <motion.div 
+                            key={activity.id} 
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 * idx }}
+                            className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
+                          >
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-lg ${activity.type === 'TRIP' ? 'bg-orange-brand/20 text-orange-brand shadow-orange-brand/20' : 'bg-purple-500/20 text-purple-400 shadow-purple-500/20'}`}>
+                              {activity.type === 'TRIP' ? <Car className="w-4 h-4" /> : <Banknote className="w-4 h-4" />}
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-white leading-tight">{activity.title}</p>
+                              <p className="text-[11px] text-[#aaa] mt-0.5 line-clamp-1">{activity.desc}</p>
+                              <p className="text-[9px] text-[#666] mt-1">{new Date(activity.time).toLocaleTimeString()}</p>
+                            </div>
+                          </motion.div>
+                        ))
+                      ) : (
+                        <p className="text-xs text-[#666] text-center mt-10">No recent activity</p>
+                      )}
+                    </AnimatePresence>
                   </div>
-                </div>
+                </motion.div>
               </div>
               
-              {/* Pending Approvals */}
-              {pendingDrivers.length > 0 && (
-                <div className="rounded-xl p-5 border border-[#333] bg-[#141414]">
-                  <div className="flex items-center justify-between mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#555]">
-                      Action Required: Pending Approvals
-                    </p>
-                    <button
-                      onClick={() => setActiveTab('approvals')}
-                      className="text-[11px] font-semibold text-orange-brand hover:underline"
-                    >
-                      Review All {pendingDrivers.length} →
-                    </button>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {pendingDrivers.slice(0, 4).map((d: any) => (
-                      <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-[#1a1a1a] border border-[#222]">
-                        <Avatar className="w-8 h-8 shrink-0">
-                          <AvatarFallback className="text-[10px] font-bold bg-[#333] text-[#aaa]">
-                            {initials(d.user.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-medium text-white truncate">{d.user.name}</p>
-                          <p className="text-[10px] text-[#666] truncate">{d.vehicleMake}</p>
+              {/* Map and Pending Approvals Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                {/* Live Tracking Map */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="lg:col-span-2 rounded-xl p-1 relative overflow-hidden glass-card neon-border h-[350px]"
+                >
+                  <LiveMap />
+                </motion.div>
+
+                {/* Pending Approvals */}
+                {pendingDrivers.length > 0 ? (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="rounded-xl p-5 glass-card flex flex-col"
+                  >
+                    <div className="flex items-center justify-between mb-4 relative z-10">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#888]">
+                        Pending Approvals
+                      </p>
+                      <button
+                        onClick={() => setActiveTab('approvals')}
+                        className="text-[11px] font-semibold text-orange-brand hover:text-orange-400 hover:underline transition-colors"
+                      >
+                        Review All {pendingDrivers.length} →
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-y-auto space-y-3 relative z-10 pr-2">
+                      {pendingDrivers.map((d: any) => (
+                        <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-white/5 hover:border-orange-brand/30 transition-colors group cursor-pointer" onClick={() => setActiveTab('approvals')}>
+                          <Avatar className="w-8 h-8 shrink-0">
+                            <AvatarFallback className="text-[10px] font-bold bg-white/10 text-[#fff]">
+                              {initials(d.user.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium text-white truncate group-hover:text-orange-brand transition-colors">{d.user.name}</p>
+                            <p className="text-[10px] text-[#888] truncate">{d.vehicleMake}</p>
+                          </div>
+                          <StatusChip status="pending" />
                         </div>
-                        <StatusChip status="pending" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                    className="rounded-xl p-5 glass-card flex items-center justify-center text-center"
+                  >
+                    <div>
+                      <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider">All Caught Up</p>
+                      <p className="text-[10px] text-gray-600 mt-1">No pending driver approvals</p>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
           )}
 
           {/* ── Finances ── */}
