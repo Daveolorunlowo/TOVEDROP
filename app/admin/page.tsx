@@ -633,8 +633,8 @@ export default function AdminPage() {
                       ))}
                     </div>
 
-                    <div className="glass-card rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-                      <table className="w-full text-left border-collapse">
+                    <div className="glass-card rounded-xl overflow-x-auto border border-white/5 shadow-2xl">
+                      <table className="w-full text-left border-collapse min-w-[600px]">
                         <thead className="bg-white/5 border-b border-white/10">
                           <tr>
                             <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Period</th>
@@ -687,8 +687,8 @@ export default function AdminPage() {
                       </p>
                     </div>
                     
-                    <div className="glass-card rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-                      <table className="w-full text-left border-collapse">
+                    <div className="glass-card rounded-xl overflow-x-auto border border-white/5 shadow-2xl">
+                      <table className="w-full text-left border-collapse min-w-[700px]">
                         <thead className="bg-white/5 border-b border-white/10">
                           <tr>
                             <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Driver Name</th>
@@ -744,8 +744,8 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    <div className="glass-card rounded-xl overflow-hidden border border-white/5 shadow-2xl">
-                      <table className="w-full text-left border-collapse">
+                    <div className="glass-card rounded-xl overflow-x-auto border border-white/5 shadow-2xl">
+                      <table className="w-full text-left border-collapse min-w-[600px]">
                         <thead className="bg-white/5 border-b border-white/10">
                           <tr>
                             <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Rider Name</th>
@@ -1141,9 +1141,10 @@ export default function AdminPage() {
               </div>
 
               <div
-                className="rounded-lg overflow-hidden"
+                className="rounded-lg overflow-x-auto"
                 style={{ background: '#171717', border: '1px solid #222' }}
               >
+                <div className="min-w-[500px]">
                 {/* Table head */}
                 <div
                   className="grid text-[10px] font-semibold uppercase tracking-[0.05em] px-4 py-2.5"
@@ -1221,6 +1222,7 @@ export default function AdminPage() {
                     </div>
                   ))
                 )}
+                </div>
               </div>
             </div>
           )}

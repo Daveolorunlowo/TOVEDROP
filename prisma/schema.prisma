@@ -68,6 +68,7 @@ model User {
   dropLots         DropLot[]
   feedbacks        Feedback[]
   updateReads      UpdateRead[]
+  privacyRequests  PrivacyRequest[]
 }
 
 model VerificationToken {
@@ -336,4 +337,17 @@ enum UpdateAudience {
   ALL
   RIDERS
   DRIVERS
+}
+
+model PrivacyRequest {
+  id        String   @id @default(cuid())
+  userId    String?
+  email     String
+  type      String   // "DOWNLOAD_DATA" or "DELETE_ACCOUNT"
+  status    String   @default("PENDING") // PENDING, PROCESSING, COMPLETED, REJECTED
+  details   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 }

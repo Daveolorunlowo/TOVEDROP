@@ -157,7 +157,7 @@ export default function PrivacyPage() {
               <FileText className="w-4 h-4" /> Download privacy policy as PDF
             </button>
             <Link
-              href="#"
+              href="/privacy-request"
               className="text-sm font-semibold text-purple-brand hover:text-purple-brand/80 transition-colors"
             >
               Data subject request form →

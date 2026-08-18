@@ -132,3 +132,8 @@ export type Update = Prisma.UpdateModel
  * 
  */
 export type UpdateRead = Prisma.UpdateReadModel
+/**
+ * Model PrivacyRequest
+ * 
+ */
+export type PrivacyRequest = Prisma.PrivacyRequestModel

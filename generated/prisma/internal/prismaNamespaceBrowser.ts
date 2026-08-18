@@ -73,7 +73,8 @@ export const ModelName = {
   AdminRevenue: 'AdminRevenue',
   SystemSettings: 'SystemSettings',
   Update: 'Update',
-  UpdateRead: 'UpdateRead'
+  UpdateRead: 'UpdateRead',
+  PrivacyRequest: 'PrivacyRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -396,6 +397,20 @@ export const UpdateReadScalarFieldEnum = {
 } as const
 
 export type UpdateReadScalarFieldEnum = (typeof UpdateReadScalarFieldEnum)[keyof typeof UpdateReadScalarFieldEnum]
+
+
+export const PrivacyRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  type: 'type',
+  status: 'status',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
 
 
 export const SortOrder = {

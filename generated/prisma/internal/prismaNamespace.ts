@@ -419,7 +419,8 @@ export const ModelName = {
   AdminRevenue: 'AdminRevenue',
   SystemSettings: 'SystemSettings',
   Update: 'Update',
-  UpdateRead: 'UpdateRead'
+  UpdateRead: 'UpdateRead',
+  PrivacyRequest: 'PrivacyRequest'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -435,7 +436,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2141,6 +2142,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PrivacyRequest: {
+      payload: Prisma.$PrivacyRequestPayload<ExtArgs>
+      fields: Prisma.PrivacyRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PrivacyRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PrivacyRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.PrivacyRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PrivacyRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>
+        }
+        findMany: {
+          args: Prisma.PrivacyRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>[]
+        }
+        create: {
+          args: Prisma.PrivacyRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>
+        }
+        createMany: {
+          args: Prisma.PrivacyRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PrivacyRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.PrivacyRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>
+        }
+        update: {
+          args: Prisma.PrivacyRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.PrivacyRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PrivacyRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PrivacyRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.PrivacyRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PrivacyRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.PrivacyRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePrivacyRequest>
+        }
+        groupBy: {
+          args: Prisma.PrivacyRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrivacyRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PrivacyRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PrivacyRequestCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2486,6 +2561,20 @@ export const UpdateReadScalarFieldEnum = {
 export type UpdateReadScalarFieldEnum = (typeof UpdateReadScalarFieldEnum)[keyof typeof UpdateReadScalarFieldEnum]
 
 
+export const PrivacyRequestScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  email: 'email',
+  type: 'type',
+  status: 'status',
+  details: 'details',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -2780,6 +2869,7 @@ export type GlobalOmitConfig = {
   systemSettings?: Prisma.SystemSettingsOmit
   update?: Prisma.UpdateOmit
   updateRead?: Prisma.UpdateReadOmit
+  privacyRequest?: Prisma.PrivacyRequestOmit
 }
 
 /* Types for Logging */
