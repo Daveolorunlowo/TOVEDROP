@@ -777,7 +777,7 @@ export default function AdminPage() {
                   </section>
                 </>
               )}
-            </div>
+            </motion.div>
           )}
 
           {/* ── Revenue Split Settings ── */}
