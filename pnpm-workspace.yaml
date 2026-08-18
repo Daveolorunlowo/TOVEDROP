@@ -4,3 +4,7 @@ allowBuilds:
   msw: true
   prisma: true
   sharp: true
+
+overrides:
+  serialize-javascript: '>=7.0.3'
+  deepmerge-ts: '>=8.0.0'
