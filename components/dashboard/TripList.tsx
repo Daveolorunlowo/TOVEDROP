@@ -46,10 +46,12 @@ const initials = (name: string) =>
 
 export function TripList({
   initialUpcoming,
-  initialPast
+  initialPast,
+  userId
 }: {
   initialUpcoming: any[],
-  initialPast: any[]
+  initialPast: any[],
+  userId: string
 }) {
   const [upcomingTrips, setUpcomingTrips] = useState(initialUpcoming)
   const [pastTrips, setPastTrips] = useState(initialPast)
@@ -275,6 +277,16 @@ export function TripList({
           </div>
         )}
       </div>
+
+      {/* Chat Modal */}
+      {activeChatTrip && (
+        <ChatModal
+          tripId={activeChatTrip.id}
+          currentUserId={userId}
+          otherPartyName={activeChatTrip.driver?.name ?? 'Driver'}
+          onClose={() => setActiveChatTrip(null)}
+        />
+      )}
 
       {/* Share Modal */}
       {shareModalOpen && (

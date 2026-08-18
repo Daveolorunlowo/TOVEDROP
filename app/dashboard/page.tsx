@@ -125,7 +125,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* ── Main grid ── */}
-        <TripList initialUpcoming={upcomingTrips} initialPast={pastTrips} />
+        <TripList initialUpcoming={upcomingTrips} initialPast={pastTrips} userId={user.id} />
       </div>
     </div>
   )
