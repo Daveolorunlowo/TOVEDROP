@@ -6,6 +6,8 @@ import { Providers } from '@/components/providers'
 import { InstallPrompt } from '@/components/install-prompt'
 import { ReferralTracker } from '@/components/referral-tracker'
 import { GlobalAuthenticatedNav } from '@/components/shared/GlobalAuthenticatedNav'
+import { NetworkIndicator } from '@/components/network-indicator'
+
 const dmSans = DM_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700', '800'],
@@ -78,6 +80,7 @@ export default function RootLayout({
           <ReferralTracker />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </Providers>
+        <NetworkIndicator />
       </body>
     </html>
   )

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Send, MapPin, CheckCircle2 } from 'lucide-react'
 import { pusherClient } from '@/lib/pusher-client'
+import { addToOfflineQueue } from '@/lib/offline-queue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
@@ -15,6 +16,7 @@ type Message = {
     id: string
     name: string | null
   }
+  status?: 'sending' | 'failed' | 'sent'
 }
 
 export function ChatInterface({ 
@@ -40,7 +42,11 @@ export function ChatInterface({
     const channel = pusherClient.subscribe(`trip-${tripId}`)
     
     channel.bind('new-message', (data: Message) => {
-      setMessages(prev => [...prev, data])
+      setMessages(prev => {
+        // Remove optimistic message if it exists
+        const filtered = prev.filter(m => m.id !== 'optimistic-' + data.content)
+        return [...filtered, data]
+      })
     })
 
     channel.bind('driver-arrived', () => {
@@ -60,16 +66,37 @@ export function ChatInterface({
     e.preventDefault()
     if (!newMessage.trim() || loading) return
 
+    const optimisticMsg: Message = {
+      id: 'optimistic-' + newMessage,
+      content: newMessage,
+      senderId: currentUserId,
+      createdAt: new Date(),
+      sender: { id: currentUserId, name: 'You' },
+      status: 'sending'
+    }
+
+    setMessages(prev => [...prev, optimisticMsg])
+    setNewMessage('')
     setLoading(true)
+
     try {
-      await fetch(`/api/trips/${tripId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newMessage })
-      })
-      setNewMessage('')
+      if (!navigator.onLine) {
+        addToOfflineQueue(`/api/trips/${tripId}/messages`, 'POST', { 'Content-Type': 'application/json' }, JSON.stringify({ content: optimisticMsg.content }))
+      } else {
+        const res = await fetch(`/api/trips/${tripId}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ content: optimisticMsg.content })
+        })
+        if (res.ok) {
+          const savedMsg = await res.json()
+          // Update status to sent, although Pusher should bring the real message
+          setMessages(prev => prev.map(m => m.id === optimisticMsg.id ? { ...m, status: 'sent' } : m))
+        }
+      }
     } catch (error) {
       console.error(error)
+      setMessages(prev => prev.map(m => m.id === optimisticMsg.id ? { ...m, status: 'failed' } : m))
     } finally {
       setLoading(false)
     }
@@ -128,10 +155,12 @@ export function ChatInterface({
                     isMe 
                       ? 'bg-purple-brand text-white rounded-br-sm' 
                       : 'bg-secondary/10 text-foreground rounded-bl-sm'
-                  }`}
+                  } ${msg.status === 'sending' ? 'opacity-50' : ''} ${msg.status === 'failed' ? 'border border-red-500 bg-red-500/10 text-red-500' : ''}`}
                 >
                   <p className="text-sm">{msg.content}</p>
                 </div>
+                {msg.status === 'sending' && <span className="text-[10px] text-muted-foreground mt-1">Sending...</span>}
+                {msg.status === 'failed' && <span className="text-[10px] text-red-500 mt-1">Failed</span>}
                 <span className="text-[10px] text-muted-foreground mt-1 mx-1">
                   {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>

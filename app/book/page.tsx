@@ -7,6 +7,7 @@ import { MapPin, Navigation, Calendar, Clock, Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { addToOfflineQueue } from '@/lib/offline-queue'
 
 import { Footer } from '@/components/footer'
 import { BookingProgress } from '@/components/booking-progress'
@@ -36,6 +37,7 @@ export default function BookPage() {
   const [pickupText, setPickupText] = useState<string>('')
   const [destinationText, setDestinationText] = useState<string>('')
   const [selectingMode, setSelectingMode] = useState<'pickup' | 'destination'>('pickup')
+  const [isPool, setIsPool] = useState<boolean>(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,27 +64,35 @@ export default function BookPage() {
       
       setSubmitting(true)
       try {
-        const res = await fetch('/api/trips/create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            pickup: pickupPoint!.label, 
-            pickupLat: pickupPoint!.lat,
-            pickupLng: pickupPoint!.lng,
-            destination: destinationPoint!.label, 
-            destinationLat: destinationPoint!.lat,
-            destinationLng: destinationPoint!.lng,
-            date, 
-            time, 
-            notes: note 
-          })
-        })
+        const payload = { 
+          pickup: pickupPoint!.label, 
+          pickupLat: pickupPoint!.lat,
+          pickupLng: pickupPoint!.lng,
+          destination: destinationPoint!.label, 
+          destinationLat: destinationPoint!.lat,
+          destinationLng: destinationPoint!.lng,
+          date, 
+          time, 
+          notes: note,
+          isPool 
+        }
         
-        if (res.ok) {
+        if (!navigator.onLine) {
+          addToOfflineQueue('/api/trips/create', 'POST', { 'Content-Type': 'application/json' }, JSON.stringify(payload))
           router.push('/dashboard')
         } else {
-          const data = await res.json()
-          setErrors({ general: data.message || 'Failed to create trip.' })
+          const res = await fetch('/api/trips/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          })
+          
+          if (res.ok) {
+            router.push('/dashboard')
+          } else {
+            const data = await res.json()
+            setErrors({ general: data.message || 'Failed to create trip.' })
+          }
         }
       } catch (err) {
         setErrors({ general: 'An error occurred.' })
@@ -199,6 +209,20 @@ export default function BookPage() {
                     name="note"
                     placeholder="e.g. I have luggage, please bring a saloon car"
                   />
+                </div>
+
+                {/* Ride Pooling Toggle */}
+                <div className="flex flex-row items-center justify-between rounded-lg border p-4 bg-surface-card">
+                  <div className="space-y-0.5">
+                    <Label className="text-base font-semibold">Pool this Ride?</Label>
+                    <p className="text-sm text-muted-foreground">Share this ride with others going in the same direction.</p>
+                  </div>
+                  <div 
+                    className={`w-11 h-6 rounded-full relative cursor-pointer transition-colors ${isPool ? 'bg-orange-brand' : 'bg-muted'}`}
+                    onClick={() => setIsPool(!isPool)}
+                  >
+                    <div className={`absolute top-[2px] left-[2px] bg-white w-5 h-5 rounded-full transition-transform ${isPool ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </div>
                 </div>
 
                 {errors.general && <p className="text-sm font-semibold text-red-600 bg-red-100 p-3 rounded-md">{errors.general}</p>}

@@ -6,7 +6,7 @@ import { sendEmail } from "@/lib/email"
 export async function POST(req: Request) {
   try {
     const data = await req.json()
-    const { name, email, password, phone, area, availability, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate } = data
+    const { name, email, password, phone, area, availability, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate, isVerified } = data
 
     if (!name || !email || !password || !licenseNumber || !vehiclePlate) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
@@ -22,7 +22,10 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const driverStatus = process.env.AUTO_APPROVE_DRIVERS === 'true' ? 'APPROVED' : 'PENDING'
+    let driverStatus = 'PENDING'
+    if (process.env.AUTO_APPROVE_DRIVERS === 'true' || isVerified === true) {
+      driverStatus = 'APPROVED'
+    }
 
     // Create user and driver profile in a transaction
     const user = await prisma.$transaction(async (tx) => {
@@ -55,7 +58,7 @@ export async function POST(req: Request) {
       return newUser
     })
 
-    if (process.env.AUTO_APPROVE_DRIVERS === 'true') {
+    if (driverStatus === 'APPROVED') {
       await sendEmail(email, 'DriverApproved', { name, phone, vehiclePlate })
     } else {
       await sendEmail(email, 'DriverApplicationReceived', { name, phone, vehiclePlate })
@@ -64,7 +67,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ 
       message: "Driver application submitted successfully", 
-      autoApproved: process.env.AUTO_APPROVE_DRIVERS === 'true' 
+      autoApproved: driverStatus === 'APPROVED'
     }, { status: 201 })
   } catch (error: any) {
     console.error("Driver application error:", error)

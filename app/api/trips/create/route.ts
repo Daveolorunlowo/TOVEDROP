@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes } = await req.json()
+    const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool } = await req.json()
     
     if (!pickup || !destination || !date || !time || pickupLat === undefined || pickupLng === undefined || destinationLat === undefined || destinationLng === undefined) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
@@ -78,6 +78,23 @@ export async function POST(req: Request) {
         }
       })
 
+      let poolGroupId = null
+      if (isPool) {
+        // Try to find an existing pending pool ride in the next 30 minutes
+        // For simplicity we just look for any PENDING pool ride
+        const existingPool = await tx.trip.findFirst({
+          where: {
+            status: "PENDING",
+            isPool: true
+          }
+        })
+        if (existingPool && existingPool.poolGroupId) {
+          poolGroupId = existingPool.poolGroupId
+        } else {
+          poolGroupId = crypto.randomUUID()
+        }
+      }
+
       const trip = await tx.trip.create({
         data: {
           riderId: user.id,
@@ -92,7 +109,9 @@ export async function POST(req: Request) {
           notes,
           status: "PENDING",
           bookingFeeNaira,
-          dropLotId
+          dropLotId,
+          isPool: Boolean(isPool),
+          poolGroupId
         }
       })
       

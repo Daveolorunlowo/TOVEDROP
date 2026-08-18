@@ -12,11 +12,11 @@ const platformLinks = [
 ]
 
 const companyLinks = [
-  { href: '#', label: 'About Us' },
-  { href: '#', label: 'Safety' },
-  { href: '#', label: 'Contact' },
-  { href: '#', label: 'Privacy Policy' },
-  { href: '#', label: 'Terms of Service' },
+  { href: '/about', label: 'About Us' },
+  { href: '/safety', label: 'Safety' },
+  { href: '/contact', label: 'Contact' },
+  { href: '/privacy', label: 'Privacy Policy' },
+  { href: '/terms', label: 'Terms of Service' },
 ]
 
 const socials = [

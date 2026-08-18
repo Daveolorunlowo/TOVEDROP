@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/sign-out-button'
 import { cn } from '@/lib/utils'
 import { subscribeToPushNotifications, getNotificationPermission } from '@/lib/push-client'
+import { addToOfflineQueue } from '@/lib/offline-queue'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg #111111 / surface #171717 / border #222 / divider #1e1e1e
@@ -352,25 +353,44 @@ export default function DriverDashboardPage() {
     
     // 2. Optimistic Update
     setProcessing(id)
+    
+    // Identify all trips that should be optimistically accepted
+    let tripsToAccept = [tripToAccept]
+    if (tripToAccept.isPool && tripToAccept.poolGroupId) {
+      tripsToAccept = data.pendingTrips.filter((t: any) => 
+        t.poolGroupId === tripToAccept.poolGroupId
+      )
+    }
+    
+    const acceptedIds = tripsToAccept.map(t => t.id)
+
     setData({
       ...data,
-      pendingTrips: data.pendingTrips.filter((t: any) => t.id !== id),
-      confirmedTrips: [{ ...tripToAccept, status: 'CONFIRMED' }, ...data.confirmedTrips]
+      pendingTrips: data.pendingTrips.filter((t: any) => !acceptedIds.includes(t.id)),
+      confirmedTrips: [
+        ...tripsToAccept.map((t: any) => ({ ...t, status: 'CONFIRMED' })), 
+        ...data.confirmedTrips
+      ]
     })
     // toast.success('Trip accepted!') would go here
 
     // 3. Network Request
     try {
-      const res = await fetch('/api/trips/accept', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tripId: id }),
-      })
-      if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.message ?? 'Failed to accept')
+      if (!navigator.onLine) {
+        addToOfflineQueue('/api/trips/accept', 'POST', { 'Content-Type': 'application/json' }, JSON.stringify({ tripId: id }))
+        // Optimistically continue without throwing
+      } else {
+        const res = await fetch('/api/trips/accept', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tripId: id }),
+        })
+        if (!res.ok) {
+          const errorData = await res.json()
+          throw new Error(errorData.message ?? 'Failed to accept')
+        }
+        await fetchData()
       }
-      await fetchData()
     } catch (err: any) {
       // 4. Rollback
       setData(prevData)
@@ -393,16 +413,20 @@ export default function DriverDashboardPage() {
 
     // 3. Network Request
     try {
-      const res = await fetch('/api/trips/complete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tripId: id }),
-      })
-      if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.message ?? 'Failed to complete')
+      if (!navigator.onLine) {
+        addToOfflineQueue('/api/trips/complete', 'POST', { 'Content-Type': 'application/json' }, JSON.stringify({ tripId: id }))
+      } else {
+        const res = await fetch('/api/trips/complete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tripId: id }),
+        })
+        if (!res.ok) {
+          const errorData = await res.json()
+          throw new Error(errorData.message ?? 'Failed to complete')
+        }
+        await fetchData()
       }
-      await fetchData()
     } catch (err: any) {
       // 4. Rollback
       setData(prevData)
@@ -509,7 +533,36 @@ export default function DriverDashboardPage() {
     )
   }
 
-  const requests = pendingTrips.filter((t: any) => !declined.includes(t.id))
+  const rawRequests = pendingTrips.filter((t: any) => !declined.includes(t.id))
+  
+  // Group pooled trips
+  const requests: any[] = []
+  const pools = new Map<string, any[]>()
+  
+  for (const t of rawRequests) {
+    if (t.isPool && t.poolGroupId) {
+      if (!pools.has(t.poolGroupId)) pools.set(t.poolGroupId, [])
+      pools.get(t.poolGroupId)!.push(t)
+    } else {
+      requests.push(t)
+    }
+  }
+  
+  for (const [poolId, poolRides] of Array.from(pools.entries())) {
+    requests.push({
+      id: poolRides[0].id, // Driver accepts the first one, backend handles all
+      isPoolGroup: true,
+      poolCount: poolRides.length,
+      rider: { name: `Pool: ${poolRides.length} Riders` },
+      pickup: poolRides[0].pickup + (poolRides.length > 1 ? " & others" : ""),
+      destination: poolRides[0].destination + (poolRides.length > 1 ? " & others" : ""),
+      date: poolRides[0].date,
+      time: poolRides[0].time,
+      notes: poolRides.map(r => r.notes).filter(Boolean).join(" | "),
+    })
+  }
+  
+  // Sort by created time or something? Let's just leave it.
   const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
   const firstName = driverProfile.user.name?.split(' ')[0] ?? 'Driver'
 

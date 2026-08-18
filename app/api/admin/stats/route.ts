@@ -24,7 +24,9 @@ export async function GET(req: Request) {
       withdrawalRequests,
       feedbacks,
       recentTripsRaw,
-      recentDropsRaw
+      recentDropsRaw,
+      totalReferrals,
+      successfulReferrals
     ] = await Promise.all([
       prisma.user.count({ where: { role: "RIDER" } }),
       prisma.user.count({ where: { role: "DRIVER" } }),
@@ -63,7 +65,9 @@ export async function GET(req: Request) {
         take: 10,
         orderBy: { createdAt: 'desc' },
         select: { id: true, createdAt: true, amount: true, user: { select: { name: true } } }
-      })
+      }),
+      prisma.referral.count(),
+      prisma.referral.count({ where: { status: 'COMPLETED' } })
     ])
 
     // Build Chart Data (Trips per day over last 7 days)
@@ -114,7 +118,9 @@ export async function GET(req: Request) {
         platformRevenue: platformRevenueThisMonth._sum.amount || 0,
         driverPayouts: driverPayoutsThisMonth._sum.amount || 0,
         dropsSold: dropsSoldThisMonth._sum.amount || 0,
-        nairaCollected: dropsSoldThisMonth._sum.nairaAmount || 0
+        nairaCollected: dropsSoldThisMonth._sum.nairaAmount || 0,
+        totalReferrals,
+        successfulReferrals
       },
       chartData,
       recentActivity,

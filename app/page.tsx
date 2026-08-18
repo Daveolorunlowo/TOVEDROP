@@ -15,6 +15,7 @@ import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 import { cn } from '@/lib/utils'
+import { DROP_PACKAGES } from '@/lib/config'
 
 /* ─────────────────────────────────────────────
    Drop coin icon
@@ -520,12 +521,32 @@ function HowItWorksSection() {
 function DropsSection() {
   const { ref, visible } = useFadeIn(0.1)
 
-  const packages = [
-    { name: 'Starter', price: '₦1,000', drops: 50, bookings: 50, badge: null, coins: 3, accent: 'border-white/8', size: 'normal' },
-    { name: 'Popular', price: '₦2,000', drops: 120, bookings: 120, badge: 'BEST VALUE', coins: 6, accent: 'border-orange-brand/60', size: 'large' },
-    { name: 'Campus Pro', price: '₦5,000', drops: 320, bookings: 320, badge: null, coins: 8, accent: 'border-white/8', size: 'normal' },
-    { name: 'Semester', price: '₦10,000', drops: 700, bookings: 700, badge: 'MOST DROPS', coins: 10, accent: 'border-purple-brand/40', size: 'normal' },
-  ]
+  const packages = DROP_PACKAGES.map((pkg) => {
+    let coins = 3
+    if (pkg.drops > 10) coins = 6
+    if (pkg.drops > 20) coins = 8
+    if (pkg.drops >= 100) coins = 10
+
+    let accent = 'border-white/8'
+    let size = 'normal'
+    if (pkg.name === 'Popular') {
+      accent = 'border-orange-brand/60'
+      size = 'large'
+    } else if (pkg.name === 'Semester') {
+      accent = 'border-purple-brand/40'
+    }
+
+    return {
+      name: pkg.name,
+      price: `₦${pkg.naira.toLocaleString()}`,
+      drops: pkg.drops,
+      bookings: pkg.drops,
+      badge: pkg.badge || null,
+      coins,
+      accent,
+      size
+    }
+  })
 
   return (
     <section className="bg-[#080814] py-28 relative overflow-hidden">
@@ -565,7 +586,6 @@ function DropsSection() {
         <div className={cn('grid grid-cols-2 lg:grid-cols-4 gap-3 items-end transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
           {packages.map((pkg, i) => {
             const isPopular = pkg.name === 'Popular'
-            const isSemester = pkg.badge === 'MOST DROPS'
             return (
               <div
                 key={pkg.name}
@@ -792,128 +812,7 @@ function StatsSection() {
   )
 }
 
-/* ─────────────────────────────────────────────
-   Testimonials — Masonry
-───────────────────────────────────────────── */
-const testimonials = [
-  { name: 'Amara O.', university: 'University of Lagos', rating: 5, text: 'Finally a ride platform that gets campus life. I book in advance and never stress about early lectures.', rotate: '-1.2deg' },
-  { name: 'Kweku A.', university: 'Ashesi University', rating: 5, text: 'The driver vetting gives me real peace of mind. I know exactly who is picking me up.', rotate: '1.5deg' },
-  { name: 'Zara M.', university: 'University of Ghana', rating: 5, text: 'I became a driver on TOVEDROP to earn extra income. The platform is clean and students are respectful. I get consistent weekly bookings now.', rotate: '-0.8deg' },
-  { name: 'Tunde B.', university: 'Covenant University', rating: 5, text: 'Way better than random cab apps. Verified drivers, pre-scheduled trips, no last-minute panic.', rotate: '0.6deg' },
-  { name: 'Nana E.', university: 'KNUST', rating: 5, text: 'TOVEDROP is a game changer for off-campus travel. The booking UI is so smooth and quick.', rotate: '-1.8deg' },
-  { name: 'Seun F.', university: 'OAU Ile-Ife', rating: 5, text: 'Knowing the driver is vetted makes all the difference. I recommended TOVEDROP to my whole floor.', rotate: '1deg' },
-]
 
-function TestimonialsSection() {
-  const { ref, visible } = useFadeIn(0.1)
-  const cols: typeof testimonials[] = [[], [], []]
-  testimonials.forEach((t, i) => cols[i % 3].push(t))
-
-  return (
-    <section className="bg-[#0C0C1E] py-28 relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
-        style={{ background: '#080814', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
-
-      <div className="absolute left-0 top-0 select-none pointer-events-none" aria-hidden="true"
-        style={{ fontSize: '800px', lineHeight: 0.7, color: 'rgba(255,255,255,0.015)', fontFamily: 'Georgia, serif' }}>
-        &ldquo;
-      </div>
-
-      <div ref={ref} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div className={cn('text-center mb-14 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
-          <p className="text-[11px] font-semibold text-orange-brand uppercase tracking-widest mb-3">Student Stories</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white text-balance" style={{ letterSpacing: '-0.02em' }}>
-            What Students Say
-          </h2>
-          <div className="mx-auto mt-3 w-12 h-1 rounded-full bg-orange-brand" />
-        </div>
-
-        {/* Masonry — desktop */}
-        <div className="hidden lg:flex gap-5 items-start">
-          {cols.map((col, ci) => (
-            <div key={ci} className="flex-1 flex flex-col gap-5">
-              {col.map((t, ti) => {
-                const isAmber = (ci * col.length + ti) % 3 === 2
-                return (
-                  <div
-                    key={t.name}
-                    className={cn(
-                      'rounded-2xl p-6 relative transition-all duration-300 hover:scale-[1.02] cursor-default',
-                      visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8',
-                      isAmber
-                        ? 'border'
-                        : 'bg-surface-card border border-white/6 hover:border-orange-brand/30 hover:shadow-[0_8px_32px_rgba(217,119,6,0.1)]'
-                    )}
-                    style={{
-                      transform: `rotate(${t.rotate})`,
-                      transitionDelay: `${(ci * 2 + ti) * 80}ms`,
-                      ...(isAmber ? { background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', borderColor: 'var(--orange-brand)' } : {}),
-                    }}
-                  >
-                    {!isAmber && (
-                      <div className="absolute top-4 right-4 text-orange-brand/20" aria-hidden="true">
-                        <svg width="28" height="22" viewBox="0 0 28 22" fill="currentColor">
-                          <path d="M0 22V13.6C0 9.87 .933 6.8 2.8 4.4 4.667 2 7.2.667 10.4 0L11.6 2.4C9.87 2.93 8.467 3.8 7.4 5c-1.067 1.2-1.6 2.6-1.6 4.2H11.2V22H0zm16.8 0V13.6c0-3.73.933-6.8 2.8-9.2C21.467 2 24 .667 27.2 0L28.4 2.4c-1.73.53-3.133 1.4-4.2 2.6-1.067 1.2-1.6 2.6-1.6 4.2H28V22H16.8z"/>
-                        </svg>
-                      </div>
-                    )}
-                    <div className="flex gap-0.5 mb-3">
-                      {Array.from({ length: t.rating }).map((_, j) => (
-                        <Star key={j} className={cn('w-3.5 h-3.5', isAmber ? 'fill-white text-white' : 'fill-purple-brand text-purple-brand')} />
-                      ))}
-                    </div>
-                    <p className={cn('text-sm leading-relaxed mb-5', isAmber ? 'text-white/90' : 'text-white/65')}>
-                      &ldquo;{t.text}&rdquo;
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className={cn('w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0', isAmber ? 'bg-white/20' : 'bg-orange-brand/70')}>
-                        {t.name[0]}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-white">{t.name}</p>
-                        <p className={cn('text-xs', isAmber ? 'text-white/70' : 'text-white/40')}>{t.university}</p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-          ))}
-        </div>
-
-        {/* Mobile */}
-        <div className="lg:hidden flex flex-col gap-4">
-          {testimonials.map((t, i) => {
-            const isAmber = i % 3 === 2
-            return (
-              <div
-                key={t.name}
-                className={cn('rounded-2xl p-6 relative border', isAmber ? 'border-orange-brand' : 'bg-surface-card border-white/6')}
-                style={isAmber ? { background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' } : {}}
-              >
-                <div className="flex gap-0.5 mb-3">
-                  {Array.from({ length: t.rating }).map((_, j) => (
-                    <Star key={j} className={cn('w-3.5 h-3.5', isAmber ? 'fill-white text-white' : 'fill-purple-brand text-purple-brand')} />
-                  ))}
-                </div>
-                <p className={cn('text-sm leading-relaxed mb-4', isAmber ? 'text-white/90' : 'text-white/65')}>&ldquo;{t.text}&rdquo;</p>
-                <div className="flex items-center gap-3">
-                  <div className={cn('w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0', isAmber ? 'bg-white/20' : 'bg-orange-brand/70')}>
-                    {t.name[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">{t.name}</p>
-                    <p className={cn('text-xs', isAmber ? 'text-white/70' : 'text-white/40')}>{t.university}</p>
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 /* ─────────────────────────────────────────────
    Driver CTA
@@ -1037,7 +936,7 @@ export default function LandingPage() {
         <DropsSection />
         <TrustSection />
         <StatsSection />
-        <TestimonialsSection />
+
         <DriverCTASection />
       </main>
       <Footer />

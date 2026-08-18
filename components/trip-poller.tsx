@@ -2,31 +2,19 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { pusherClient } from "@/lib/pusher-client"
-
+import { pusherClient, useResilientChannel } from "@/lib/pusher-client"
 export function TripPoller({ userId }: { userId: string }) {
   const router = useRouter()
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!userId) return
+  const handleEvent = (data: any, type: string) => {
+    if (type === 'accepted') setToastMessage(`🎉 ${data.driverName || "A driver"} accepted your ride!`)
+    if (type === 'completed') setToastMessage(`✅ Your ride is complete! Don't forget to leave a review.`)
+    router.refresh()
+  }
 
-    const channel = pusherClient.subscribe(`user-trips-${userId}`)
-    
-    channel.bind('trip-accepted', (data: any) => {
-      setToastMessage(`🎉 ${data.driverName || "A driver"} accepted your ride!`)
-      router.refresh()
-    })
-
-    channel.bind('trip-completed', (data: any) => {
-      setToastMessage(`✅ Your ride is complete! Don't forget to leave a review.`)
-      router.refresh()
-    })
-
-    return () => {
-      pusherClient.unsubscribe(`user-trips-${userId}`)
-    }
-  }, [userId, router])
+  useResilientChannel(`user-trips-${userId}`, 'trip-accepted', (data) => handleEvent(data, 'accepted'), () => router.refresh())
+  useResilientChannel(`user-trips-${userId}`, 'trip-completed', (data) => handleEvent(data, 'completed'))
 
   if (!toastMessage) return null
 

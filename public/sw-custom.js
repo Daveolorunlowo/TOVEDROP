@@ -35,7 +35,7 @@ self.addEventListener('push', function (event) {
     data: { url },
     tag: isAlarm ? 'pickup-alarm' : 'tovedrop-notification',
     renotify: true,
-    requireInteraction: isAlarm, // Alarm stays until dismissed
+    requireInteraction: true, // Forces native popup outside app
     silent: false,
     vibrate: isAlarm
       ? [500, 200, 500, 200, 500, 200, 1000, 200, 1000] // Strong alarm pattern

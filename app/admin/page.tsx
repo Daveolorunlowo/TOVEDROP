@@ -393,7 +393,7 @@ export default function AdminPage() {
                   { label: 'Total Riders',       value: stats.totalUsers },
                   { label: 'Total Drivers',      value: stats.totalDrivers },
                   { label: 'Total Trips',        value: stats.totalTrips },
-                  { label: 'Pending Approvals',  value: pendingDrivers.length, accent: pendingDrivers.length > 0 },
+                  { label: 'Successful Referrals',value: stats.successfulReferrals, accent: true },
                 ].map((s, i) => (
                   <div
                     key={s.label}

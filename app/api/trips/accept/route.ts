@@ -28,15 +28,29 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Driver is not approved" }, { status: 403 })
     }
 
-    // Atomic update to accept the trip and prevent race conditions
     const shareToken = crypto.randomUUID().replace(/-/g, '').slice(0, 12)
 
+    const targetTrip = await prisma.trip.findUnique({ where: { id: tripId } })
+    if (!targetTrip) {
+      return NextResponse.json({ message: "Trip not found" }, { status: 404 })
+    }
+
+    let whereClause: any = { 
+      id: tripId, 
+      status: 'PENDING', 
+      driverId: null 
+    }
+    
+    if (targetTrip.isPool && targetTrip.poolGroupId) {
+      whereClause = {
+        poolGroupId: targetTrip.poolGroupId,
+        status: 'PENDING',
+        driverId: null
+      }
+    }
+
     const result = await prisma.trip.updateMany({
-      where: { 
-        id: tripId, 
-        status: 'PENDING', 
-        driverId: null 
-      },
+      where: whereClause,
       data: { 
         status: 'CONFIRMED', 
         driverId: session.user.id,
@@ -48,35 +62,35 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Trip was already accepted by someone else or is no longer available" }, { status: 409 })
     }
 
-    // Notify rider via Web Push
-    const trip = await prisma.trip.findUnique({
-      where: { id: tripId },
+    // Notify all affected riders via Web Push and Pusher
+    const updatedTrips = await prisma.trip.findMany({
+      where: targetTrip.isPool && targetTrip.poolGroupId 
+        ? { poolGroupId: targetTrip.poolGroupId, driverId: session.user.id }
+        : { id: tripId },
       include: { rider: true }
     })
     
-    if (trip) {
-      const driverName = driverProfile.user?.name || "A driver"
-      const vehicle = `${driverProfile.vehicleColor} ${driverProfile.vehicleMake} ${driverProfile.vehicleModel}`
-      const rating = driverProfile.rating > 0 
-        ? driverProfile.rating.toFixed(1) 
-        : 'New'
-        
+    const driverName = driverProfile.user?.name || "A driver"
+    const vehicle = `${driverProfile.vehicleColor} ${driverProfile.vehicleMake} ${driverProfile.vehicleModel}`
+    const rating = driverProfile.rating > 0 ? driverProfile.rating.toFixed(1) : 'New'
+
+    for (const trip of updatedTrips) {
       const title = 'Ride Accepted! 🎉'
       const message = `${driverName} is on the way in a ${vehicle} (⭐ ${rating}).\nPickup: ${trip.time} at ${trip.pickup}`
       const url = `/trip/${shareToken}`
       
       sendWebPush(trip.riderId, title, message, url)
       
-      // Trigger pusher event to notify rider in real-time
       await pusherServer.trigger(`user-trips-${trip.riderId}`, 'trip-accepted', {
         tripId: trip.id,
-        driverName: driverProfile.user?.name || "A driver",
-        vehicle: vehicle,
-        rating: rating
+        driverName,
+        vehicle,
+        rating,
+        isPool: trip.isPool
       }).catch(err => console.error("Pusher trigger failed:", err))
     }
 
-    return NextResponse.json({ message: "Trip accepted successfully", shareToken }, { status: 200 })
+    return NextResponse.json({ message: "Trip(s) accepted successfully", shareToken, count: result.count }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error accepting trip", error: error.message }, { status: 500 })
   }

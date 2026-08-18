@@ -46,6 +46,10 @@ export default function ApplyPage() {
   const [selectedDays, setSelectedDays] = useState<string[]>([])
   const [selectedAreas, setSelectedAreas] = useState<string[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
+  
+  // KYC ID Upload
+  const [idFile, setIdFile] = useState<File | null>(null)
+  const [kycStatus, setKycStatus] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -80,7 +84,40 @@ export default function ApplyPage() {
     setErrors(errs)
     
     if (Object.keys(errs).length === 0) {
-      if (step < 3) {
+      if (step === 2) {
+        if (!idFile) {
+          setErrors({ ...errs, license: 'Please upload an ID card for KYC verification.' })
+          return
+        }
+        
+        // Verify ID with Python Microservice
+        setProcessing(true)
+        try {
+          const fd = new FormData()
+          fd.append('file', idFile)
+          fd.append('expected_name', formData.fullname)
+          
+          const pyRes = await fetch('http://localhost:8000/api/verify-id', {
+            method: 'POST',
+            body: fd
+          })
+          
+          if (pyRes.ok) {
+            const pyData = await pyRes.json()
+            if (pyData.is_verified) {
+              setKycStatus('VERIFIED')
+            } else {
+              setKycStatus('FAILED')
+            }
+          }
+        } catch (e) {
+          console.error("KYC Service unreachable", e)
+          // Default to PENDING if Python service is down
+        } finally {
+          setProcessing(false)
+          setStep(3)
+        }
+      } else if (step < 3) {
         setStep((s) => s + 1)
       } else {
         setProcessing(true)
@@ -100,7 +137,8 @@ export default function ApplyPage() {
               vehicleMake: formData.make,
               vehicleModel: formData.year,
               vehiclePlate: formData.plate,
-              vehicleColor: "Unknown"
+              vehicleColor: "Unknown",
+              isVerified: kycStatus === 'VERIFIED'
             })
           })
           const data = await res.json()
@@ -281,13 +319,37 @@ export default function ApplyPage() {
                     {errors.plate && <p className="text-xs text-red-600">{errors.plate}</p>}
                   </div>
 
-                  {/* Upload areas */}
+                  <div className="space-y-1.5">
+                    <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Student ID / National ID (Required for KYC)</Label>
+                    <label
+                      htmlFor="idFile"
+                      className={`flex flex-col items-center justify-center gap-2 border ${idFile ? 'border-green-500 bg-green-500/10' : 'border-border-default bg-surface-elevated'} rounded-xl p-4 cursor-pointer hover:border-purple-brand/40 transition-colors`}
+                    >
+                      <Upload className={`w-5 h-5 ${idFile ? 'text-green-500' : 'text-text-muted'}`} />
+                      <span className={`text-sm font-medium ${idFile ? 'text-green-500' : 'text-text-primary'}`}>
+                        {idFile ? idFile.name : 'Click to upload your ID card'}
+                      </span>
+                      <span className="text-xs text-text-muted">PNG, JPG · max 5MB</span>
+                      <input 
+                        type="file" 
+                        id="idFile" 
+                        className="hidden" 
+                        accept="image/png, image/jpeg" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setIdFile(e.target.files[0])
+                          }
+                        }} 
+                      />
+                    </label>
+                  </div>
+                  
                   {[
                     { label: "Driver's License (photo)", name: 'licenseFile' },
                     { label: 'Vehicle Insurance', name: 'insuranceFile' },
                     { label: 'Roadworthy Certificate', name: 'roadworthyFile' },
                   ].map((field) => (
-                    <div key={field.name} className="space-y-1.5">
+                    <div key={field.name} className="space-y-1.5 opacity-50 pointer-events-none">
                       <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">{field.label}</Label>
                       <label
                         htmlFor={field.name}
@@ -298,7 +360,7 @@ export default function ApplyPage() {
                           Click to upload or drag &amp; drop
                         </span>
                         <span className="text-xs text-text-muted">PNG, JPG or PDF · max 5MB</span>
-                        <input id={field.name} name={field.name} type="file" className="sr-only" accept="image/*,.pdf" />
+                        <input type="file" id={field.name} className="hidden" disabled />
                       </label>
                     </div>
                   ))}
