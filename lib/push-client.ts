@@ -17,6 +17,7 @@ export async function subscribeToPushNotifications(): Promise<boolean> {
   let permission = Notification.permission
   if (permission === 'denied') {
     console.warn('Notification permission previously denied by user')
+    showNotificationDeniedAlert()
     return false
   }
   if (permission !== 'granted') {
@@ -118,4 +119,23 @@ function urlBase64ToUint8Array(base64String: string) {
     outputArray[i] = rawData.charCodeAt(i)
   }
   return outputArray
+}
+
+export function showNotificationDeniedAlert() {
+  const isWindows = navigator.userAgent.toLowerCase().includes('windows')
+  const isMac = navigator.userAgent.toLowerCase().includes('mac')
+  
+  let instructions = "Please enable notifications for this site in your browser settings."
+  
+  if (isWindows) {
+    instructions = "For Windows: Settings > System > Notifications, then enable notifications for your browser."
+  } else if (isMac) {
+    instructions = "For Mac: System Settings > Notifications, then enable notifications for your browser."
+  }
+
+  window.alert(
+    `System notification permission is blocked.\n\n` +
+    `${instructions}\n\n` +
+    `Please refresh the page after enabling notifications.`
+  )
 }

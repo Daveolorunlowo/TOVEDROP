@@ -31,10 +31,10 @@ export default function RiderSettingsPage() {
     const checked = e.target.checked
 
     if (checked) {
-      // Check if previously blocked in browser settings
       if ('Notification' in window && Notification.permission === 'denied') {
         setPermissionDenied(true)
         setMessage('Notifications are blocked. Please enable them in your browser/phone settings, then try again.')
+        import('@/lib/push-client').then(m => m.showNotificationDeniedAlert())
         setTimeout(() => setMessage(''), 6000)
         return
       }
@@ -50,8 +50,8 @@ export default function RiderSettingsPage() {
         setPushEnabled(false)
         // User dismissed or denied the dialog
         if ('Notification' in window && Notification.permission === 'denied') {
-          setPermissionDenied(true)
-          setMessage('Notifications blocked. Open your browser settings to allow them.')
+          import('@/lib/push-client').then(m => m.showNotificationDeniedAlert())
+          setMessage('Notifications are blocked by your browser.')
         } else {
           setMessage('Could not enable notifications. Please try again.')
         }

@@ -12,6 +12,7 @@ import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/Skeleton
 import { DriverTripListener } from '@/components/driver-trip-listener'
 import { ChatModal } from '@/components/chat-modal'
 import { Skeleton } from '@/components/shared/Skeleton'
+import { useLocationBroadcaster } from '@/hooks/useLocationBroadcaster'
 import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/sign-out-button'
 import { cn } from '@/lib/utils'
@@ -292,6 +293,12 @@ export default function DriverDashboardPage() {
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
   const [showNotifBanner, setShowNotifBanner] = useState(false)
+
+  // Start tracking location if the driver is loaded and approved
+  const driverId = data?.driverProfile?.userId
+  const driverName = data?.user?.name || data?.driverProfile?.userId
+  const isApproved = data?.driverProfile?.status === 'APPROVED'
+  useLocationBroadcaster(driverId, driverName, isApproved, 'AVAILABLE')
 
   // Auto-prompt for notification permission once the driver dashboard loads
   useEffect(() => {

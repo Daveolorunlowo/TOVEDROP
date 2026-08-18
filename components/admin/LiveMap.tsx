@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+import { pusherClient } from '@/lib/pusher-client'
 
 // Leaflet needs to be dynamically imported because it uses window
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
@@ -12,6 +13,9 @@ const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ss
 export function LiveMap() {
   const [mounted, setMounted] = useState(false)
   const [L, setL] = useState<any>(null)
+  
+  // Dynamic points from Pusher
+  const [points, setPoints] = useState<Record<string, { pos: [number, number], type: string, label: string, timestamp: number }>>({})
 
   useEffect(() => {
     import('leaflet').then(leaflet => {
@@ -21,11 +25,51 @@ export function LiveMap() {
     })
   }, [])
 
+  useEffect(() => {
+    const channel = pusherClient.subscribe('global-driver-locations')
+    
+    channel.bind('location-update', (data: any) => {
+      setPoints(prev => ({
+        ...prev,
+        [data.driverId]: {
+          pos: [data.lat, data.lng],
+          type: data.status === 'ON_TRIP' ? 'trip' : 'driver',
+          label: `Driver: ${data.driverName} (${data.status})`,
+          timestamp: Date.now()
+        }
+      }))
+    })
+
+    return () => {
+      channel.unbind('location-update')
+      pusherClient.unsubscribe('global-driver-locations')
+    }
+  }, [])
+
+  // Cleanup old points (stale > 5 mins)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPoints(prev => {
+        const now = Date.now()
+        const newPoints = { ...prev }
+        let changed = false
+        Object.keys(newPoints).forEach(id => {
+          if (now - newPoints[id].timestamp > 5 * 60 * 1000) {
+            delete newPoints[id]
+            changed = true
+          }
+        })
+        return changed ? newPoints : prev
+      })
+    }, 60000)
+    return () => clearInterval(interval)
+  }, [])
+
   if (!mounted || !L) {
     return <div className="w-full h-full min-h-[300px] flex items-center justify-center text-sm text-gray-500 animate-pulse bg-black/20 rounded-xl">Initializing Map...</div>
   }
 
-  // Simulated active trips in Lagos, Nigeria
+  // Default center Lagos, Nigeria
   const LAGOS_CENTER: [number, number] = [6.5244, 3.3792]
   
   const createPulseIcon = (color: string) => L.divIcon({
@@ -43,17 +87,12 @@ export function LiveMap() {
   const driverIcon = createPulseIcon('#22c55e') // Green for active driver
   const tripIcon = createPulseIcon('#F97316') // Orange for ongoing trip
 
-  const points = [
-    { id: 1, pos: [6.5244, 3.3792] as [number, number], type: 'driver', label: 'Driver: John D. (Available)' },
-    { id: 2, pos: [6.5000, 3.3600] as [number, number], type: 'trip', label: 'Trip #2041 (In Progress)' },
-    { id: 3, pos: [6.5400, 3.3900] as [number, number], type: 'trip', label: 'Trip #2045 (In Progress)' },
-    { id: 4, pos: [6.5100, 3.4000] as [number, number], type: 'driver', label: 'Driver: Mike T. (Available)' },
-  ]
+  const activePointsList = Object.entries(points).map(([id, pt]) => ({ id, ...pt }))
 
   return (
     <div className="w-full h-full min-h-[300px] rounded-xl overflow-hidden relative" style={{ zIndex: 1 }}>
       <MapContainer 
-        center={LAGOS_CENTER} 
+        center={activePointsList.length > 0 ? activePointsList[0].pos : LAGOS_CENTER} 
         zoom={12} 
         scrollWheelZoom={false} 
         style={{ height: '100%', width: '100%', background: '#0a0a0f' }}
@@ -62,7 +101,7 @@ export function LiveMap() {
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        {points.map((pt) => (
+        {activePointsList.map((pt) => (
           <Marker key={pt.id} position={pt.pos} icon={pt.type === 'driver' ? driverIcon : tripIcon}>
             <Popup className="glass-popup">
               <div className="text-xs font-semibold text-gray-800">{pt.label}</div>

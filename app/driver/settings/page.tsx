@@ -28,6 +28,13 @@ export default function DriverSettingsPage() {
   const handleTogglePush = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
     if (checked) {
+      if ('Notification' in window && Notification.permission === 'denied') {
+        setMessage('Notifications are blocked. Please enable them in your browser/phone settings, then try again.')
+        import('@/lib/push-client').then(m => m.showNotificationDeniedAlert())
+        setTimeout(() => setMessage(''), 6000)
+        return
+      }
+
       setMessage('Requesting permission...')
       const success = await subscribeToPushNotifications()
       if (success) {
