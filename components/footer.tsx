@@ -103,7 +103,7 @@ export function Footer() {
             <form className="flex flex-col gap-2" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
-                placeholder="your@university.edu"
+                placeholder="your@email.com"
                 className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-orange-brand/60 transition-colors"
               />
               <button

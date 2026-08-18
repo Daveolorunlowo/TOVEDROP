@@ -78,7 +78,7 @@ export default function PrivacyRequestPage() {
                   value={form.email}
                   onChange={e => setForm({...form, email: e.target.value})}
                   className="w-full bg-[#111] border border-[#222] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-orange-brand transition-colors"
-                  placeholder="name@university.edu"
+                  placeholder="your@email.com"
                 />
               </div>
 

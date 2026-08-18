@@ -171,10 +171,10 @@ function PhoneMockup() {
         </div>
         <div className="mx-3 mt-3 bg-[#1A1A30] rounded-xl p-3 flex items-center gap-3">
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0"
-            style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>KA</div>
+            style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>EO</div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-white truncate">Kwame Asante</p>
-            <p className="text-[10px] text-white/40">Toyota Corolla · GH-1234</p>
+            <p className="text-[11px] font-semibold text-white truncate">Emeka Obi</p>
+            <p className="text-[10px] text-white/40">Toyota Corolla · LAG-123AA</p>
           </div>
           <div className="flex items-center gap-0.5 shrink-0">
             <Star className="w-2.5 h-2.5 fill-purple-brand text-purple-brand" />
@@ -292,10 +292,7 @@ function HeroSection() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left — copy */}
           <div>
-            {/* Label above headline */}
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/35 mb-6">
-              PAY WITH DROPS · NOT CASH
-            </p>
+
 
             {/* Headline */}
             <h1 className="font-extrabold text-white leading-[1.04] text-balance" style={{ fontSize: 'clamp(40px, 6.5vw, 76px)', letterSpacing: '-0.03em' }}>
@@ -896,14 +893,14 @@ function DriverCTASection() {
           <div className="bg-surface-card border border-white/8 rounded-2xl p-6 w-72 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0"
-                style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>KA</div>
+                style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>EO</div>
               <div>
-                <p className="text-sm font-semibold text-white">Kwame Asante</p>
+                <p className="text-sm font-semibold text-white">Emeka Obi</p>
                 <p className="text-xs text-white/45">Verified Driver · Lagos</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3 text-center">
-              {[{ value: '4.9', label: 'Rating' }, { value: '218', label: 'Bookings' }, { value: '₵4.2k', label: 'Earned' }].map((stat) => (
+              {[{ value: '4.9', label: 'Rating' }, { value: '218', label: 'Bookings' }, { value: '₦450k', label: 'Earned' }].map((stat) => (
                 <div key={stat.label} className="bg-bg-deep/80 rounded-xl py-3">
                   <p className="text-base font-extrabold text-white">{stat.value}</p>
                   <p className="text-[10px] text-white/40 mt-0.5">{stat.label}</p>
