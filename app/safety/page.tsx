@@ -159,7 +159,7 @@ export default function SafetyPage() {
                   <h3 className="text-orange-brand font-bold mb-3 flex items-center gap-2"><Ear className="w-5 h-5" /> Report immediately:</h3>
                   <ul className="space-y-2 text-sm text-white/70">
                     <li>• Use the in-app "Report" button — reaches our safety team in under 5 minutes</li>
-                    <li>• Call our emergency line: <strong>+233 55 123 4567</strong></li>
+                    <li>• Call our emergency line: <strong>+234 80 123 4567</strong></li>
                     <li>• Email our safety team: <strong>safety@tovedrop.app</strong></li>
                   </ul>
                 </div>

@@ -899,7 +899,7 @@ function DriverCTASection() {
                 style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>KA</div>
               <div>
                 <p className="text-sm font-semibold text-white">Kwame Asante</p>
-                <p className="text-xs text-white/45">Verified Driver · Accra</p>
+                <p className="text-xs text-white/45">Verified Driver · Lagos</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3 text-center">

@@ -209,8 +209,8 @@ export default function TermsPage() {
               <div>
                 <h3 className="text-xl font-bold text-white mb-3">14. Governing Law</h3>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>These terms are governed by the laws of Ghana</li>
-                  <li>Any disputes are resolved in Accra jurisdiction</li>
+                  <li>These terms are governed by the laws of Nigeria</li>
+                  <li>Any disputes are resolved in Lagos jurisdiction</li>
                 </ul>
               </div>
 

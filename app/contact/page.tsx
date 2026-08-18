@@ -90,7 +90,7 @@ export default function ContactPage() {
               <div className="bg-surface-card border border-white/10 rounded-2xl p-6">
                 <Phone className="w-8 h-8 text-orange-brand mb-4" />
                 <h3 className="text-white font-bold mb-1">Phone / WhatsApp</h3>
-                <p className="text-sm font-semibold text-white/90 mb-3">+233 55 123 4567</p>
+                <p className="text-sm font-semibold text-white/90 mb-3">+234 80 123 4567</p>
                 <p className="text-xs text-white/50 mb-4">Quick questions, urgent issues</p>
                 <div className="text-[11px] uppercase tracking-widest text-white/30 font-bold">Hours: 8am - 9pm</div>
               </div>

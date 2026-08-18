@@ -263,7 +263,7 @@ export default function ApplyPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="phone" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Phone Number</Label>
-                    <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="+233 24 000 0000" className={errors.phone ? 'border-red-500' : ''} />
+                    <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="+234 80 000 0000" className={errors.phone ? 'border-red-500' : ''} />
                     {errors.phone && <p className="text-xs text-red-600">{errors.phone}</p>}
                   </div>
                   <div className="space-y-1.5">
@@ -299,7 +299,7 @@ export default function ApplyPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="license" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Driver&apos;s License Number</Label>
-                    <Input id="license" name="license" value={formData.license} onChange={handleInputChange} placeholder="GHA-DL-00000000" className={errors.license ? 'border-red-500' : ''} />
+                    <Input id="license" name="license" value={formData.license} onChange={handleInputChange} placeholder="NGA-DL-00000000" className={errors.license ? 'border-red-500' : ''} />
                     {errors.license && <p className="text-xs text-red-600">{errors.license}</p>}
                   </div>
                   <div className="grid grid-cols-2 gap-4">

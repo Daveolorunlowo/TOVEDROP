@@ -20,8 +20,8 @@ import { Footer } from '@/components/footer'
 import { BookingProgress } from '@/components/booking-progress'
 
 const TRIP = {
-  pickup: 'Main Gate, University of Ghana',
-  destination: 'Kotoka International Airport',
+  pickup: 'Main Gate, Bowen University',
+  destination: 'Murtala Muhammed International Airport',
   date: 'Wednesday, 30 July 2025',
   time: '07:30 AM',
 }
