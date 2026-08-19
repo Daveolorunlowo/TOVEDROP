@@ -71,7 +71,7 @@ export default function UpdatesPage() {
       <div className="space-y-4">
         {loading ? (
           Array(3).fill(0).map((_, i) => (
-            <div key={i} className="bg-[#111] p-5 rounded-xl border border-border">
+            <div key={i} className="bg-background p-5 rounded-xl border border-border">
               <Skeleton className="w-24 h-5 mb-3" />
               <Skeleton className="w-3/4 h-6 mb-3" />
               <Skeleton className="w-full h-4 mb-2" />
@@ -79,7 +79,7 @@ export default function UpdatesPage() {
             </div>
           ))
         ) : updates.length === 0 ? (
-          <div className="bg-[#111] p-8 rounded-xl border border-border text-center flex flex-col items-center justify-center animate-fade-in">
+          <div className="bg-background p-8 rounded-xl border border-border text-center flex flex-col items-center justify-center animate-fade-in">
             <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center mb-4">
               <AlertCircle className="w-6 h-6 text-[#555]" />
             </div>
@@ -90,7 +90,7 @@ export default function UpdatesPage() {
           updates.map((update, i) => (
             <div 
               key={update.id} 
-              className="bg-[#111] p-5 rounded-xl border border-border hover:border-border transition-colors animate-fade-in-up"
+              className="bg-background p-5 rounded-xl border border-border hover:border-border transition-colors animate-fade-in-up"
               style={{ animationDelay: `${i * 50}ms` }}
             >
               <div className="flex items-start justify-between gap-4 mb-3">

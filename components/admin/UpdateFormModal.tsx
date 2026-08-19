@@ -125,7 +125,7 @@ export function UpdateFormModal({ update, onClose, onRefresh }: { update: any, o
           </label>
         </div>
 
-        <div className="p-4 border-t border-border flex items-center justify-end gap-3 bg-[#171717] rounded-b-xl">
+        <div className="p-4 border-t border-border flex items-center justify-end gap-3 bg-card rounded-b-xl">
           <button
             onClick={() => handleSave('DRAFT')}
             disabled={!!loadingAction}

@@ -86,10 +86,10 @@ export function UpdatesTab() {
         </button>
       </div>
 
-      <div className="bg-[#171717] rounded-lg border border-border overflow-hidden">
+      <div className="bg-card rounded-lg border border-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm text-muted-foreground">
-            <thead className="bg-[#111] text-[#555] uppercase text-[10px] tracking-wider">
+            <thead className="bg-background text-[#555] uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="px-4 py-3 font-semibold">Title</th>
                 <th className="px-4 py-3 font-semibold">Category</th>

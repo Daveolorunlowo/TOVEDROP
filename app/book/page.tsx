@@ -282,7 +282,7 @@ export default function BookPage() {
                       key={lm.name}
                       type="button"
                       onClick={() => handleLandmarkSelect(lm)}
-                      className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors"
+                      className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors"
                     >
                       {lm.name}
                     </button>

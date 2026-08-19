@@ -77,7 +77,7 @@ export default function PrivacyRequestPage() {
                   required
                   value={form.email}
                   onChange={e => setForm({...form, email: e.target.value})}
-                  className="w-full bg-[#111] border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-orange-brand transition-colors"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-orange-brand transition-colors"
                   placeholder="your@email.com"
                 />
               </div>
@@ -87,14 +87,14 @@ export default function PrivacyRequestPage() {
                   Request Type
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DOWNLOAD_DATA' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-[#111] border-border text-muted-foreground hover:border-white/20'}`}>
+                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DOWNLOAD_DATA' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-background border-border text-muted-foreground hover:border-white/20'}`}>
                     <input type="radio" name="type" value="DOWNLOAD_DATA" checked={form.type === 'DOWNLOAD_DATA'} onChange={() => setForm({...form, type: 'DOWNLOAD_DATA'})} className="sr-only" />
                     <DownloadCloud className={`w-5 h-5 mb-2 ${form.type === 'DOWNLOAD_DATA' ? 'text-blue-400' : 'text-[#555]'}`} />
                     <span className="font-semibold text-sm">Export Data</span>
                     <span className="text-[10px] mt-1 opacity-80">Get a copy of your info</span>
                   </label>
 
-                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DELETE_ACCOUNT' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-[#111] border-border text-muted-foreground hover:border-white/20'}`}>
+                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DELETE_ACCOUNT' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-background border-border text-muted-foreground hover:border-white/20'}`}>
                     <input type="radio" name="type" value="DELETE_ACCOUNT" checked={form.type === 'DELETE_ACCOUNT'} onChange={() => setForm({...form, type: 'DELETE_ACCOUNT'})} className="sr-only" />
                     <Trash2 className={`w-5 h-5 mb-2 ${form.type === 'DELETE_ACCOUNT' ? 'text-red-400' : 'text-[#555]'}`} />
                     <span className="font-semibold text-sm">Delete Account</span>
@@ -110,7 +110,7 @@ export default function PrivacyRequestPage() {
                 <textarea
                   value={form.details}
                   onChange={e => setForm({...form, details: e.target.value})}
-                  className="w-full bg-[#111] border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-orange-brand transition-colors h-24 resize-none"
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-orange-brand transition-colors h-24 resize-none"
                   placeholder="Any specific data you're looking for?"
                 />
               </div>

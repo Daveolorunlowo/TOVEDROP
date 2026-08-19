@@ -44,7 +44,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center border-b border-border px-4 gap-6 pt-2 bg-[#171717]">
+        <div className="flex items-center border-b border-border px-4 gap-6 pt-2 bg-card">
           {(['trips', 'drops', 'feedbacks'] as const).map(tab => (
             <button
               key={tab}
@@ -62,7 +62,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-4 bg-[#111]">
+        <div className="flex-1 overflow-y-auto p-4 bg-background">
           {loading ? (
             <div className="flex items-center justify-center py-20 text-muted-foreground gap-2">
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -77,7 +77,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
                   <p className="text-[#555] text-sm text-center py-10">No recent trips found.</p>
                 ) : (
                   data.trips.map(trip => (
-                    <div key={trip.id} className="p-3 bg-[#171717] rounded-lg border border-border flex items-center justify-between">
+                    <div key={trip.id} className="p-3 bg-card rounded-lg border border-border flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-card flex items-center justify-center">
                           <Map className="w-4 h-4 text-orange-brand" />
@@ -107,7 +107,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
                   <p className="text-[#555] text-sm text-center py-10">No recent drop transactions.</p>
                 ) : (
                   data.drops.map(drop => (
-                    <div key={drop.id} className="p-3 bg-[#171717] rounded-lg border border-border flex items-center justify-between">
+                    <div key={drop.id} className="p-3 bg-card rounded-lg border border-border flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={`w-8 h-8 rounded-full flex items-center justify-center ${drop.type === 'EARNED' || drop.type === 'PURCHASED' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
                           <CreditCard className="w-4 h-4" />
@@ -133,7 +133,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
                   <p className="text-[#555] text-sm text-center py-10">No recent feedback submitted.</p>
                 ) : (
                   data.feedbacks.map(feedback => (
-                    <div key={feedback.id} className="p-3 bg-[#171717] rounded-lg border border-border">
+                    <div key={feedback.id} className="p-3 bg-card rounded-lg border border-border">
                       <div className="flex items-center gap-2 mb-2">
                         <MessageSquare className="w-4 h-4 text-orange-brand" />
                         <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">{feedback.category}</span>

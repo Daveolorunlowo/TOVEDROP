@@ -1065,7 +1065,7 @@ export default function AdminPage() {
                   <p className="text-sm text-[#555]">No feedback received yet.</p>
                 ) : (
                   data.feedbacks.map((fb: any) => (
-                    <div key={fb.id} className="bg-[#111] border border-border rounded-xl p-5 shadow-sm">
+                    <div key={fb.id} className="bg-background border border-border rounded-xl p-5 shadow-sm">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="text-sm font-medium text-[#f5f5f5]">{fb.user?.name || 'Anonymous'}</p>

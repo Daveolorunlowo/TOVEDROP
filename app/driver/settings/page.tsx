@@ -146,7 +146,7 @@ export default function DriverSettingsPage() {
                       <select 
                         value={feedbackType} 
                         onChange={(e) => setFeedbackType(e.target.value)}
-                        className="w-full bg-[#111] border border-border text-sm text-foreground rounded-lg p-3 focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-background border border-border text-sm text-foreground rounded-lg p-3 focus:outline-none focus:border-primary transition-colors"
                       >
                         <option value="ISSUE">Report an Issue</option>
                         <option value="SUGGESTION">Suggest a Feature</option>
@@ -157,7 +157,7 @@ export default function DriverSettingsPage() {
                         value={feedbackContent}
                         onChange={(e) => setFeedbackContent(e.target.value)}
                         placeholder={feedbackType === 'ISSUE' ? "Describe the issue you're facing..." : "What would you like to see in Tovedrop?"}
-                        className="w-full bg-[#111] border border-border text-sm text-foreground rounded-lg p-3 min-h-[120px] focus:outline-none focus:border-primary transition-colors resize-none"
+                        className="w-full bg-background border border-border text-sm text-foreground rounded-lg p-3 min-h-[120px] focus:outline-none focus:border-primary transition-colors resize-none"
                         required
                       />
                     </div>
