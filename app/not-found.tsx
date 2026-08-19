@@ -73,7 +73,7 @@ export default async function NotFound() {
             
             <Link 
               href={dashboardPath}
-              className="relative px-8 py-4 rounded-full text-black font-bold text-sm bg-white overflow-hidden group hover:scale-105 transition-transform duration-300 ease-out shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]"
+              className="relative px-8 py-4 rounded-full text-foreground font-bold text-sm bg-white overflow-hidden group hover:scale-105 transition-transform duration-300 ease-out shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]"
             >
               <span className="relative z-10">{session?.user ? 'Return to Dashboard' : 'Initiate Login'}</span>
             </Link>

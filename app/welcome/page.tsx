@@ -40,9 +40,9 @@ export default function WelcomePage() {
         </p>
         <div className="flex items-center justify-center gap-3 bg-surface-elevated border border-border-default rounded-2xl px-6 py-4 mb-8">
           <DropCoin size={32} />
-          <span className="text-4xl font-extrabold text-text-primary">3</span>
+          <span className="text-4xl font-extrabold text-primary">3</span>
           <div className="text-left ml-1">
-            <p className="text-text-primary font-bold text-sm">Drops gifted</p>
+            <p className="text-primary font-bold text-sm">Drops gifted</p>
             <p className="text-[11px] text-purple-brand font-semibold uppercase tracking-[0.05em] mt-0.5">= 3 free bookings</p>
           </div>
         </div>

@@ -227,7 +227,7 @@ export default function ApplyPage() {
                       />
                       <span className={cn(
                         'mt-2 text-[11px] font-semibold uppercase tracking-[0.05em] hidden sm:block whitespace-nowrap',
-                        isActive ? 'text-text-primary' : isDone ? 'text-orange-brand' : 'text-text-muted'
+                        isActive ? 'text-primary' : isDone ? 'text-orange-brand' : 'text-muted'
                       )}>
                         {s.label}
                       </span>
@@ -257,27 +257,27 @@ export default function ApplyPage() {
                     <p className="text-sm text-muted-foreground">Tell us a bit about yourself.</p>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="fullname" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Full Name</Label>
+                    <Label htmlFor="fullname" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Full Name</Label>
                     <Input id="fullname" name="fullname" value={formData.fullname} onChange={handleInputChange} placeholder="Emeka Nwosu" className={errors.fullname ? 'border-red-500' : ''} />
                     {errors.fullname && <p className="text-xs text-red-600">{errors.fullname}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="phone" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Phone Number</Label>
+                    <Label htmlFor="phone" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Phone Number</Label>
                     <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="+234 80 000 0000" className={errors.phone ? 'border-red-500' : ''} />
                     {errors.phone && <p className="text-xs text-red-600">{errors.phone}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Email Address</Label>
+                    <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Email Address</Label>
                     <Input id="email" name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="you@email.com" className={errors.email ? 'border-red-500' : ''} />
                     {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Password</Label>
+                    <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Password</Label>
                     <PasswordInput id="password" name="password" value={formData.password} onChange={handleInputChange} placeholder="Min 8 characters" className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''} showIcon={false} />
                     {errors.password && <p className="text-xs text-red-600">{errors.password}</p>}
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="bio" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Short Bio <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
+                    <Label htmlFor="bio" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Short Bio <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
                     <Textarea
                       id="bio"
                       name="bio"
@@ -298,38 +298,38 @@ export default function ApplyPage() {
                     <p className="text-sm text-muted-foreground">All documents are reviewed by our team and kept secure.</p>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="license" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Driver&apos;s License Number</Label>
+                    <Label htmlFor="license" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Driver&apos;s License Number</Label>
                     <Input id="license" name="license" value={formData.license} onChange={handleInputChange} placeholder="NGA-DL-00000000" className={errors.license ? 'border-red-500' : ''} />
                     {errors.license && <p className="text-xs text-red-600">{errors.license}</p>}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label htmlFor="make" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Vehicle Make & Model</Label>
+                      <Label htmlFor="make" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Vehicle Make & Model</Label>
                       <Input id="make" name="make" value={formData.make} onChange={handleInputChange} placeholder="Toyota Corolla" className={errors.make ? 'border-red-500' : ''} />
                       {errors.make && <p className="text-xs text-red-600">{errors.make}</p>}
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="year" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Year</Label>
+                      <Label htmlFor="year" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Year</Label>
                       <Input id="year" name="year" value={formData.year} onChange={handleInputChange} placeholder="2019" type="number" min={2000} max={2025} />
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <Label htmlFor="plate" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">License Plate Number</Label>
+                    <Label htmlFor="plate" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">License Plate Number</Label>
                     <Input id="plate" name="plate" value={formData.plate} onChange={handleInputChange} placeholder="GR-1234-22" className={errors.plate ? 'border-red-500' : ''} />
                     {errors.plate && <p className="text-xs text-red-600">{errors.plate}</p>}
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Student ID / National ID (Required for KYC)</Label>
+                    <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Student ID / National ID (Required for KYC)</Label>
                     <label
                       htmlFor="idFile"
                       className={`flex flex-col items-center justify-center gap-2 border ${idFile ? 'border-green-500 bg-green-500/10' : 'border-border-default bg-surface-elevated'} rounded-xl p-4 cursor-pointer hover:border-purple-brand/40 transition-colors`}
                     >
-                      <Upload className={`w-5 h-5 ${idFile ? 'text-green-500' : 'text-text-muted'}`} />
-                      <span className={`text-sm font-medium ${idFile ? 'text-green-500' : 'text-text-primary'}`}>
+                      <Upload className={`w-5 h-5 ${idFile ? 'text-green-500' : 'text-muted'}`} />
+                      <span className={`text-sm font-medium ${idFile ? 'text-green-500' : 'text-primary'}`}>
                         {idFile ? idFile.name : 'Click to upload your ID card'}
                       </span>
-                      <span className="text-xs text-text-muted">PNG, JPG · max 5MB</span>
+                      <span className="text-xs text-muted">PNG, JPG · max 5MB</span>
                       <input 
                         type="file" 
                         id="idFile" 
@@ -350,16 +350,16 @@ export default function ApplyPage() {
                     { label: 'Roadworthy Certificate', name: 'roadworthyFile' },
                   ].map((field) => (
                     <div key={field.name} className="space-y-1.5 opacity-50 pointer-events-none">
-                      <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">{field.label}</Label>
+                      <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">{field.label}</Label>
                       <label
                         htmlFor={field.name}
                         className="flex flex-col items-center justify-center gap-2 border border-border-default bg-surface-elevated rounded-xl p-4 cursor-pointer hover:border-purple-brand/40 transition-colors"
                       >
-                        <Upload className="w-5 h-5 text-text-muted" />
-                        <span className="text-sm font-medium text-text-primary">
+                        <Upload className="w-5 h-5 text-muted" />
+                        <span className="text-sm font-medium text-primary">
                           Click to upload or drag &amp; drop
                         </span>
-                        <span className="text-xs text-text-muted">PNG, JPG or PDF · max 5MB</span>
+                        <span className="text-xs text-muted">PNG, JPG or PDF · max 5MB</span>
                         <input type="file" id={field.name} className="hidden" disabled />
                       </label>
                     </div>
@@ -376,7 +376,7 @@ export default function ApplyPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Available Days</Label>
+                    <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Available Days</Label>
                     <div className="flex flex-wrap gap-2">
                       {DAYS.map((day) => (
                         <button
@@ -403,11 +403,11 @@ export default function ApplyPage() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label htmlFor="startTime" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">From (time)</Label>
+                      <Label htmlFor="startTime" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">From (time)</Label>
                       <Input id="startTime" name="startTime" type="time" defaultValue="06:00" />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="endTime" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">To (time)</Label>
+                      <Label htmlFor="endTime" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">To (time)</Label>
                       <Input id="endTime" name="endTime" type="time" defaultValue="20:00" />
                     </div>
                   </div>
@@ -415,7 +415,7 @@ export default function ApplyPage() {
 
 
                   <div className="space-y-1.5">
-                    <Label htmlFor="notes" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Additional Notes <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
+                    <Label htmlFor="notes" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Additional Notes <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
                     <Textarea
                       id="notes"
                       name="notes"

@@ -9,11 +9,11 @@ function UpdateBadge({ category }: { category: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
     NEW_FEATURE:  { label: 'New Feature',  color: '#c084fc', bg: 'rgba(192,132,252,0.1)' },
     IMPROVEMENT:  { label: 'Improvement',  color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.1)' },
-    BUG_FIX:      { label: 'Bug Fix',      color: '#888', bg: '#1e1e1e' },
+    BUG_FIX:      { label: 'Bug Fix',      color: 'var(--muted-foreground)', bg: 'var(--border)' },
     ANNOUNCEMENT: { label: 'Announcement', color: '#c084fc', bg: 'rgba(192,132,252,0.1)' },
-    MAINTENANCE:  { label: 'Maintenance',  color: '#888', bg: '#1e1e1e' },
+    MAINTENANCE:  { label: 'Maintenance',  color: 'var(--muted-foreground)', bg: 'var(--border)' },
   }
-  const s = map[category] || { label: category.replace('_', ' '), color: '#888', bg: '#1e1e1e' }
+  const s = map[category] || { label: category.replace('_', ' '), color: 'var(--muted-foreground)', bg: 'var(--border)' }
   return (
     <span
       className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded flex items-center shrink-0"

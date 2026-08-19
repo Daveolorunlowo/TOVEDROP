@@ -39,10 +39,10 @@ function StatusChip({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
     PENDING:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.1)' },
     CONFIRMED: { label: 'Confirmed', color: '#22c55e', bg: 'rgba(34,197,94,0.08)' },
-    COMPLETED: { label: 'Completed', color: '#555',    bg: '#1e1e1e' },
+    COMPLETED: { label: 'Completed', color: 'var(--muted-foreground)',    bg: '#1e1e1e' },
     CANCELLED: { label: 'Cancelled', color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
   }
-  const s = map[status] ?? { label: status, color: '#555', bg: '#1e1e1e' }
+  const s = map[status] ?? { label: status, color: 'var(--muted-foreground)', bg: '#1e1e1e' }
   return (
     <span
       className="inline-block text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
@@ -156,13 +156,13 @@ export function TripList({
       {/* Upcoming Trips */}
       <div className="lg:col-span-2">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
             Upcoming Trips
           </p>
           {upcomingTrips.length > 0 && (
             <span
               className="text-[10px] font-semibold px-1.5 py-0.5"
-              style={{ background: '#1e1e1e', color: '#888', borderRadius: '4px' }}
+              style={{ background: 'var(--card)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
             >
               {upcomingTrips.length}
             </span>
@@ -172,14 +172,14 @@ export function TripList({
         {upcomingTrips.length === 0 ? (
           <div
             className="rounded-lg flex flex-col items-start"
-            style={{ background: '#171717', border: '1px dashed #222', padding: '20px' }}
+            style={{ background: 'var(--card)', border: '1px dashed var(--border)', padding: '20px' }}
           >
-            <Car className="w-4 h-4 mb-2" style={{ color: '#333' }} />
-            <p className="text-sm font-medium" style={{ color: '#888' }}>No upcoming trips</p>
-            <p className="text-xs mt-0.5 mb-4" style={{ color: '#555' }}>Book your next campus ride.</p>
+            <Car className="w-4 h-4 mb-2" style={{ color: 'var(--muted-foreground)' }} />
+            <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>No upcoming trips</p>
+            <p className="text-xs mt-0.5 mb-4" style={{ color: 'var(--muted-foreground)' }}>Book your next campus ride.</p>
             <button
               onClick={handleBookRideClick}
-              className="text-xs font-semibold px-3 py-1.5 rounded-md text-black"
+              className="text-xs font-semibold px-3 py-1.5 rounded-md text-foreground"
               style={{ background: 'var(--orange-brand)' }}
             >
               Book a Ride
@@ -188,7 +188,7 @@ export function TripList({
         ) : (
           <div
             className="rounded-lg overflow-hidden"
-            style={{ background: '#171717', border: '1px solid #222' }}
+            style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
           >
             {upcomingTrips.map((trip, i) => {
               let candidates: any[] = [];
@@ -208,21 +208,21 @@ export function TripList({
                 >
                   <StatusDot status={trip.status} />
                   <Avatar className="w-7 h-7 shrink-0">
-                    <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                    <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border)', color: 'var(--muted-foreground)' }}>
                       {trip.driver ? initials(trip.driver.name!) : '?'}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold truncate" style={{ color: '#f5f5f5' }}>
+                    <p className="text-xs font-semibold truncate" style={{ color: 'var(--foreground)' }}>
                       {trip.driver?.name ?? 'Searching for driver…'}
                     </p>
-                    <p className="text-[11px] truncate" style={{ color: '#555' }}>
+                    <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                       {trip.pickup} → {trip.destination}
                     </p>
                   </div>
                   <div className="shrink-0 text-right hidden sm:block mr-2">
-                    <p className="text-[11px]" style={{ color: '#555' }}>{trip.date}</p>
-                    <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
+                    <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{trip.date}</p>
+                    <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{trip.time}</p>
                   </div>
                   <StatusChip status={trip.status} />
                   {trip.status === 'CONFIRMED' && (
@@ -249,7 +249,7 @@ export function TripList({
                     disabled={processing === trip.id}
                     onClick={() => handleCancel(trip.id)}
                     className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
-                    style={{ color: '#888' }}
+                    style={{ color: 'var(--muted-foreground)' }}
                     aria-label="Cancel"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -265,7 +265,7 @@ export function TripList({
                           <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--orange-brand)' }}></span>
                           Pinging Nearby Drivers
                         </p>
-                        <p className="text-[10px] font-medium" style={{ color: '#555' }}>{candidates.length} online</p>
+                        <p className="text-[10px] font-medium" style={{ color: 'var(--muted-foreground)' }}>{candidates.length} online</p>
                       </div>
                       
                       {candidates.length > 0 ? (
@@ -273,11 +273,11 @@ export function TripList({
                           {candidates.map(c => (
                             <div key={c.driverId} className="flex items-center justify-between rounded p-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
                               <div className="flex items-center gap-2">
-                                <Car className="w-3.5 h-3.5" style={{ color: '#888' }} />
-                                <span className="text-xs font-medium truncate max-w-[100px]" style={{ color: '#eee' }}>{c.driverName}</span>
+                                <Car className="w-3.5 h-3.5" style={{ color: 'var(--muted-foreground)' }} />
+                                <span className="text-xs font-medium truncate max-w-[100px]" style={{ color: 'var(--foreground)' }}>{c.driverName}</span>
                               </div>
                               <div className="flex items-center gap-2 text-[10px]">
-                                <span style={{ color: '#888' }}>~{Math.max(1, Math.round((c.distance / 30) * 60))} min ETA</span>
+                                <span style={{ color: 'var(--muted-foreground)' }}>~{Math.max(1, Math.round((c.distance / 30) * 60))} min ETA</span>
                                 <span className="font-semibold px-1.5 py-0.5 rounded" style={{ color: 'var(--orange-brand)', background: 'rgba(249,115,22,0.1)' }}>
                                   {c.distance.toFixed(1)} km
                                 </span>
@@ -286,7 +286,7 @@ export function TripList({
                           ))}
                         </div>
                       ) : (
-                        <div className="text-center py-3 text-xs" style={{ color: '#555' }}>
+                        <div className="text-center py-3 text-xs" style={{ color: 'var(--muted-foreground)' }}>
                           Looking for available drivers on campus...
                         </div>
                       )}
@@ -302,13 +302,13 @@ export function TripList({
       {/* Trip History */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
             Trip History
           </p>
           {pastTrips.length > 0 && (
             <span
               className="text-[10px] font-semibold px-1.5 py-0.5"
-              style={{ background: '#1e1e1e', color: '#888', borderRadius: '4px' }}
+              style={{ background: 'var(--card)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
             >
               {pastTrips.length}
             </span>
@@ -318,15 +318,15 @@ export function TripList({
         {pastTrips.length === 0 ? (
           <div
             className="rounded-lg"
-            style={{ background: '#171717', border: '1px solid #1e1e1e', padding: '20px' }}
+            style={{ background: 'var(--card)', border: '1px solid #1e1e1e', padding: '20px' }}
           >
             <TrendingUp className="w-4 h-4 mb-2" style={{ color: '#2a2a2a' }} />
-            <p className="text-xs" style={{ color: '#444' }}>Completed trips will appear here.</p>
+            <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Completed trips will appear here.</p>
           </div>
         ) : (
           <div
             className="rounded-lg overflow-hidden"
-            style={{ background: '#171717', border: '1px solid #222' }}
+            style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
           >
             {pastTrips.map((trip, i) => (
               <div
@@ -339,15 +339,15 @@ export function TripList({
                 }}
               >
                 <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
+                  <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
                     {trip.driver ? initials(trip.driver.name!) : '?'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-medium truncate ${trip.status === 'CANCELLED' ? 'line-through decoration-white/20' : ''}`} style={{ color: '#888' }}>
+                  <p className={`text-xs font-medium truncate ${trip.status === 'CANCELLED' ? 'line-through decoration-white/20' : ''}`} style={{ color: 'var(--muted-foreground)' }}>
                     {trip.driver?.name ?? 'Unknown'}
                   </p>
-                  <p className="text-[11px] truncate" style={{ color: '#444' }}>
+                  <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                     {trip.pickup} → {trip.destination}
                   </p>
                 </div>
@@ -355,7 +355,7 @@ export function TripList({
                   <Link
                     href={`/rate/${trip.id}`}
                     className="text-[10px] font-semibold px-2 py-0.5 rounded shrink-0 flex items-center gap-1 hover:brightness-110"
-                    style={{ background: '#1e1e1e', color: 'var(--orange-brand)', borderRadius: '4px' }}
+                    style={{ background: 'var(--card)', color: 'var(--orange-brand)', borderRadius: '4px' }}
                   >
                     <Star className="w-2.5 h-2.5" /> Rate
                   </Link>
@@ -381,19 +381,19 @@ export function TripList({
       {/* Share Modal */}
       {shareModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
-          <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
-            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #1e1e1e' }}>
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#f5f5f5' }}>Share Trip</p>
-              <button onClick={() => { setShareModalOpen(null); setCopied(false); }} className="p-1" style={{ color: '#888' }}>
+          <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--foreground)' }}>Share Trip</p>
+              <button onClick={() => { setShareModalOpen(null); setCopied(false); }} className="p-1" style={{ color: 'var(--muted-foreground)' }}>
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="p-5">
-              <p className="text-xs mb-4" style={{ color: '#888' }}>
+              <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>
                 Send this link to a friend so they can see your verified driver details and track your trip status.
               </p>
               <div className="flex items-center gap-2 mb-6">
-                <div className="flex-1 px-3 py-2 rounded-md text-xs truncate" style={{ background: '#111111', border: '1px solid #222', color: '#555' }}>
+                <div className="flex-1 px-3 py-2 rounded-md text-xs truncate" style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--muted-foreground)' }}>
                   {`${window.location.origin}/trip/${shareModalOpen}`}
                 </div>
                 <button 
@@ -403,7 +403,7 @@ export function TripList({
                     setTimeout(() => setCopied(false), 2000);
                   }}
                   className="shrink-0 p-2 rounded-md transition-colors hover:brightness-110" 
-                  style={{ background: 'var(--orange-brand)', color: 'black' }}
+                  style={{ background: 'var(--orange-brand)', color: 'var(--foreground)' }}
                 >
                   {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </button>

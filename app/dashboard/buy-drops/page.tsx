@@ -227,12 +227,12 @@ export default function BuyDropsPage() {
   const isFirstTime = user?.hasUsedFirstTopupDiscount === false
 
   return (
-    <div className="flex flex-col min-h-screen bg-bg-deep text-text-primary">
+    <div className="flex flex-col min-h-screen bg-bg-deep text-primary">
 
       
       <main className="flex-1 max-w-4xl mx-auto w-full px-5 py-10 relative">
         <h1 className="text-3xl font-extrabold tracking-tight mb-2">Buy Drops</h1>
-        <p className="text-text-muted mb-8">Purchase Drops to book rides. 1 Drop = 1 Ride.</p>
+        <p className="text-muted mb-8">Purchase Drops to book rides. 1 Drop = 1 Ride.</p>
 
         {/* Live Balance Card */}
         {loadingUser ? (
@@ -251,14 +251,14 @@ export default function BuyDropsPage() {
         ) : (
           <div className={`mb-10 p-5 rounded-2xl bg-surface-card border transition-colors duration-600 ${newTxnId ? 'border-orange-brand/50' : 'border-border-default'} flex items-center justify-between shadow-sm`}>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-1">Current Balance</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-muted mb-1">Current Balance</p>
               <div className="flex items-center gap-3">
                 <DropCoinIcon className="w-8 h-8" />
                 <span className="text-3xl font-bold tabular-nums tracking-tight">{animatedBalance}</span>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-sm text-text-secondary">Ready to ride</p>
+              <p className="text-sm text-secondary">Ready to ride</p>
             </div>
           </div>
         )}
@@ -308,12 +308,12 @@ export default function BuyDropsPage() {
                     )}
 
                     <div className={`mt-${isFirstTime ? '6' : '0'}`}>
-                      <h3 className="text-xl font-bold text-text-primary mb-1">{pkg.name}</h3>
+                      <h3 className="text-xl font-bold text-primary mb-1">{pkg.name}</h3>
                       
                       <div className="flex items-end gap-2 mb-4">
                         {isFirstTime ? (
                           <div className="flex flex-col">
-                            <span className="text-text-muted text-sm font-medium draw-strikethrough w-fit">
+                            <span className="text-muted text-sm font-medium draw-strikethrough w-fit">
                               ₦{pkg.naira.toLocaleString()}
                             </span>
                             <span className="text-orange-brand text-2xl font-black tracking-tight animate-fade-in-price" style={{ animationDelay: `${(idx * 100) + 300}ms` }}>
@@ -321,7 +321,7 @@ export default function BuyDropsPage() {
                             </span>
                           </div>
                         ) : (
-                          <span className="text-2xl font-black tracking-tight text-text-primary">
+                          <span className="text-2xl font-black tracking-tight text-primary">
                             ₦{pkg.naira.toLocaleString()}
                           </span>
                         )}
@@ -357,7 +357,7 @@ export default function BuyDropsPage() {
                 w-full md:w-auto min-w-[240px] py-4 px-8 rounded-xl font-bold text-lg text-foreground
                 flex items-center justify-center gap-2 transition-all duration-200
                 active:scale-97
-                ${!selectedPackage ? 'bg-border-default text-text-muted cursor-not-allowed' : 'bg-orange-brand shadow-lg hover:bg-orange-dark shadow-orange-brand/20'}
+                ${!selectedPackage ? 'bg-border-default text-muted cursor-not-allowed' : 'bg-orange-brand shadow-lg hover:bg-orange-dark shadow-orange-brand/20'}
                 ${isCheckingOut ? 'opacity-80 cursor-wait' : ''}
               `}
             >
@@ -376,7 +376,7 @@ export default function BuyDropsPage() {
 
         {/* Transaction History */}
         <div className="mt-16">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-text-muted mb-4">Transaction History</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-muted mb-4">Transaction History</h2>
           <div className="bg-surface-card rounded-2xl border border-border-default overflow-hidden">
             {loadingUser ? (
               Array.from({ length: 3 }).map((_, i) => <SkeletonTableRow key={i} />)
@@ -390,14 +390,14 @@ export default function BuyDropsPage() {
                   `}
                 >
                   <div>
-                    <p className="font-medium text-text-primary">{txn.description}</p>
-                    <p className="text-xs text-text-secondary mt-0.5">{txn.date}</p>
+                    <p className="font-medium text-primary">{txn.description}</p>
+                    <p className="text-xs text-secondary mt-0.5">{txn.date}</p>
                   </div>
                   <div className="text-right">
-                    <p className={`font-bold ${txn.amount.includes('-') ? 'text-text-primary' : (txn.amount.includes('+') ? 'text-status-success' : 'text-text-primary')}`}>
+                    <p className={`font-bold ${txn.amount.includes('-') ? 'text-primary' : (txn.amount.includes('+') ? 'text-status-success' : 'text-primary')}`}>
                       {txn.amount}
                     </p>
-                    <p className="text-[10px] uppercase font-bold tracking-wider text-text-muted mt-1">{txn.status}</p>
+                    <p className="text-[10px] uppercase font-bold tracking-wider text-muted mt-1">{txn.status}</p>
                   </div>
                 </div>
               ))
@@ -410,7 +410,7 @@ export default function BuyDropsPage() {
 
       {/* Redirect Overlay */}
       {showRedirectOverlay && (
-        <div className="fixed inset-0 z-50 bg-bg-deep flex flex-col items-center justify-center text-text-primary animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 bg-bg-deep flex flex-col items-center justify-center text-primary animate-in fade-in duration-200">
           <DropCoinIcon className="w-16 h-16 animate-spin-once mb-6" />
           <p className="font-medium text-lg tracking-tight">Redirecting to secure checkout...</p>
         </div>
@@ -451,11 +451,11 @@ export default function BuyDropsPage() {
               ))}
             </div>
 
-            <p className="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Purchase Successful</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-muted mb-2">Purchase Successful</p>
             <h2 className="text-4xl font-black text-foreground tracking-tight mb-2">
               +{useCountUp(celebrationData.drops, 600)} Drops
             </h2>
-            <p className="text-text-secondary text-sm font-medium mb-6">
+            <p className="text-secondary text-sm font-medium mb-6">
               New balance: {user?.dropsBalance} Drops
             </p>
 
@@ -474,7 +474,7 @@ export default function BuyDropsPage() {
               </button>
               <button 
                 onClick={dismissCelebration}
-                className="w-full text-text-muted hover:text-text-primary font-medium text-sm py-2 transition-colors"
+                className="w-full text-muted hover:text-primary font-medium text-sm py-2 transition-colors"
               >
                 Continue to Dashboard
               </button>

@@ -27,19 +27,19 @@ export function ShareTripButton({ shareToken }: { shareToken: string }) {
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
-          <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
-            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid #1e1e1e' }}>
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: '#f5f5f5' }}>Share Trip</p>
-              <button onClick={() => { setOpen(false); setCopied(false); }} className="p-1" style={{ color: '#888' }}>
+          <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+            <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid var(--border)' }}>
+              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--foreground)' }}>Share Trip</p>
+              <button onClick={() => { setOpen(false); setCopied(false); }} className="p-1" style={{ color: 'var(--muted-foreground)' }}>
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="p-5">
-              <p className="text-xs mb-4" style={{ color: '#888' }}>
+              <p className="text-xs mb-4" style={{ color: 'var(--muted-foreground)' }}>
                 Send this link to a friend so they can see your verified driver details and track your trip status.
               </p>
               <div className="flex items-center gap-2 mb-6">
-                <div className="flex-1 px-3 py-2 rounded-md text-xs truncate" style={{ background: '#111111', border: '1px solid #222', color: '#555' }}>
+                <div className="flex-1 px-3 py-2 rounded-md text-xs truncate" style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--muted-foreground)' }}>
                   {shareUrl}
                 </div>
                 <button 
@@ -49,7 +49,7 @@ export function ShareTripButton({ shareToken }: { shareToken: string }) {
                     setTimeout(() => setCopied(false), 2000);
                   }}
                   className="shrink-0 p-2 rounded-md transition-colors hover:brightness-110" 
-                  style={{ background: 'var(--orange-brand)', color: 'black' }}
+                  style={{ background: 'var(--orange-brand)', color: 'var(--foreground)' }}
                 >
                   {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </button>

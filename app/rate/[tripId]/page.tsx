@@ -137,10 +137,10 @@ export default function RatePage() {
       <main className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="max-w-md w-full">
           <div className="text-center mb-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-1">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">
               Rate Your Driver
             </p>
-            <h1 className="text-2xl font-extrabold text-text-primary">How was your trip?</h1>
+            <h1 className="text-2xl font-extrabold text-primary">How was your trip?</h1>
           </div>
 
           <div className="bg-surface-card border border-border-default rounded-2xl p-8">
@@ -158,14 +158,14 @@ export default function RatePage() {
                 </span>
               </div>
               <div>
-                <p className="font-bold text-text-primary text-lg">{trip.driver?.name || 'Unknown Driver'}</p>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mt-0.5">Trip {trip.id.substring(0, 8)}</p>
+                <p className="font-bold text-primary text-lg">{trip.driver?.name || 'Unknown Driver'}</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mt-0.5">Trip {trip.id.substring(0, 8)}</p>
               </div>
             </div>
 
             {/* Star selector */}
             <div className="text-center mb-6 bg-surface-elevated border border-border-default rounded-xl p-5">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-4">Tap to rate</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-4">Tap to rate</p>
               <div
                 className="flex items-center justify-center gap-3"
                 role="radiogroup"
@@ -188,7 +188,7 @@ export default function RatePage() {
                         'w-10 h-10 transition-colors',
                         (hovered || rating) >= star
                           ? 'fill-orange-brand text-orange-brand'
-                          : 'text-text-muted/30'
+                          : 'text-muted/30'
                       )}
                     />
                   </button>
@@ -204,7 +204,7 @@ export default function RatePage() {
 
             {/* Note */}
             <div className="mb-6">
-              <label htmlFor="note" className="block text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-2">
+              <label htmlFor="note" className="block text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-2">
                 Leave a note <span className="font-normal normal-case tracking-normal">(optional)</span>
               </label>
               <Textarea

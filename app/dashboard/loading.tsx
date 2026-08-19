@@ -3,7 +3,7 @@ import { Skeleton } from '@/components/shared/Skeleton'
 
 export default function DashboardLoading() {
   return (
-    <div style={{ background: '#111111', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--background)', minHeight: '100vh' }}>
       <div className="max-w-5xl mx-auto px-5 py-8">
         
         {/* Header Skeleton */}

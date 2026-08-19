@@ -153,10 +153,10 @@ export default function PortalGatewayPage() {
     >
       {/* Header */}
       <div className="mb-10 text-center">
-        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-text-muted mb-1">
+        <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted mb-1">
           TOVEDROP
         </p>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-text-muted">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
           Admin Access
         </p>
       </div>

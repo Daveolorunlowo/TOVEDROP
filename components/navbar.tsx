@@ -90,7 +90,7 @@ export function Navbar() {
                     {dropsLoading ? (
                       <div className="h-4 w-6 bg-border-default animate-pulse rounded" />
                     ) : (
-                      <span className="text-[12px] font-bold text-text-primary tabular-nums">{dropsBalance ?? session.user.dropsBalance ?? 0}</span>
+                      <span className="text-[12px] font-bold text-primary tabular-nums">{dropsBalance ?? session.user.dropsBalance ?? 0}</span>
                     )}
                     <span className="text-[11px] text-purple-brand font-semibold mr-0.5">Drops</span>
                     <span className="text-[10px] font-black text-foreground bg-purple-brand rounded-full w-3.5 h-3.5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -186,7 +186,7 @@ export function Navbar() {
             <Link href="/dashboard/buy-drops" onClick={() => setMobileOpen(false)} className="flex items-center justify-between px-4 py-3 mt-3 bg-surface-elevated border border-border-default rounded-xl hover:border-purple-brand/50 transition-colors">
               <div className="flex items-center gap-2">
                 <DropCoin className="w-4 h-4 shrink-0" />
-                <span className="text-sm font-bold text-text-primary">{session.user.dropsBalance || 0}</span>
+                <span className="text-sm font-bold text-primary">{session.user.dropsBalance || 0}</span>
                 <span className="text-xs text-purple-brand font-semibold">Drops</span>
               </div>
               <span className="text-[10px] font-bold text-foreground bg-purple-brand px-2 py-1 rounded">Buy More +</span>

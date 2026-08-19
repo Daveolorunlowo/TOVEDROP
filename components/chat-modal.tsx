@@ -98,12 +98,12 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-background/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
         className="w-full sm:max-w-md h-[80vh] sm:h-[600px] bg-surface-elevated flex flex-col rounded-t-2xl sm:rounded-2xl overflow-hidden animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-5"
-        style={{ border: '1px solid #222' }}
+        style={{ border: '1px solid var(--border)' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-default bg-surface-card">
           <div>
-            <h3 className="font-bold text-text-primary" style={{ letterSpacing: '-0.01em' }}>
+            <h3 className="font-bold text-primary" style={{ letterSpacing: '-0.01em' }}>
               Chat with {otherPartyName.split(' ')[0]}
             </h3>
             <p className="text-[10px] text-status-success font-semibold uppercase tracking-wider">
@@ -112,7 +112,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
           </div>
           <button 
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-white/5 transition-colors text-text-muted hover:text-text-primary"
+            className="p-2 rounded-full hover:bg-white/5 transition-colors text-muted hover:text-primary"
           >
             <X className="w-5 h-5" />
           </button>
@@ -122,12 +122,12 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
         <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-surface-base">
           {loading ? (
             <div className="h-full flex items-center justify-center">
-              <Loader2 className="w-6 h-6 animate-spin text-text-muted" />
+              <Loader2 className="w-6 h-6 animate-spin text-muted" />
             </div>
           ) : messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
-              <p className="text-sm font-medium text-text-primary mb-1">No messages yet</p>
-              <p className="text-xs text-text-muted">Say hi to coordinate your pickup!</p>
+              <p className="text-sm font-medium text-primary mb-1">No messages yet</p>
+              <p className="text-xs text-muted">Say hi to coordinate your pickup!</p>
             </div>
           ) : (
             messages.map((msg) => {
@@ -137,12 +137,12 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
                   <div 
                     className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
                       isMe 
-                        ? 'bg-[var(--orange-brand)] text-black rounded-tr-sm' 
-                        : 'bg-surface-card border border-border-default text-text-primary rounded-tl-sm'
+                        ? 'bg-[var(--orange-brand)] text-foreground rounded-tr-sm' 
+                        : 'bg-surface-card border border-border-default text-primary rounded-tl-sm'
                     }`}
                   >
                     <p className="text-sm font-medium break-words leading-relaxed">{msg.content}</p>
-                    <p className={`text-[9px] font-semibold uppercase tracking-wider mt-1.5 ${isMe ? 'text-black/60' : 'text-text-muted'}`}>
+                    <p className={`text-[9px] font-semibold uppercase tracking-wider mt-1.5 ${isMe ? 'text-foreground/60' : 'text-muted'}`}>
                       {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -161,12 +161,12 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Type a message..." 
-              className="flex-1 bg-surface-base border border-border-default rounded-full px-5 py-3 text-sm text-text-primary focus:outline-none focus:border-[var(--orange-brand)] transition-colors placeholder:text-text-muted"
+              className="flex-1 bg-surface-base border border-border-default rounded-full px-5 py-3 text-sm text-primary focus:outline-none focus:border-[var(--orange-brand)] transition-colors placeholder:text-muted"
             />
             <button 
               type="submit"
               disabled={!inputText.trim() || sending}
-              className="w-11 h-11 rounded-full flex items-center justify-center bg-[var(--orange-brand)] text-black shrink-0 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 active:scale-95 transition-all"
+              className="w-11 h-11 rounded-full flex items-center justify-center bg-[var(--orange-brand)] text-foreground shrink-0 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 active:scale-95 transition-all"
             >
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 ml-0.5" />}
             </button>

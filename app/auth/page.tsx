@@ -134,7 +134,7 @@ function AuthForm() {
                 key={t}
                 onClick={() => { setTab(t); setErrors({}); }}
                 className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${
-                  tab === t ? 'bg-surface-card text-text-primary shadow-sm' : 'text-text-secondary hover:text-text-primary'
+                  tab === t ? 'bg-surface-card text-primary shadow-sm' : 'text-secondary hover:text-primary'
                 }`}
               >
                 {t === 'login' ? 'Log In' : 'Sign Up'}
@@ -145,7 +145,7 @@ function AuthForm() {
           <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {tab === 'signup' && (
               <div className="space-y-1.5">
-                <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Full Name</Label>
+                <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Full Name</Label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input id="name" name="name" type="text" placeholder="Ada Okafor"
@@ -157,7 +157,7 @@ function AuthForm() {
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Email Address</Label>
+              <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Email Address</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input id="email" name="email" type="email" placeholder="you@example.com"
@@ -171,7 +171,7 @@ function AuthForm() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Password</Label>
+              <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Password</Label>
               <PasswordInput
                 id="password"
                 name="password"
@@ -184,7 +184,7 @@ function AuthForm() {
 
             {tab === 'signup' && (
               <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Confirm Password</Label>
                 <PasswordInput
                   id="confirmPassword"
                   name="confirmPassword"

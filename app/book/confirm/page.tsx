@@ -90,44 +90,44 @@ export default function ConfirmPage() {
           <div className="space-y-4">
             {/* Trip summary */}
             <div className="bg-surface-elevated border border-border-default rounded-2xl p-5 shadow-sm">
-              <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-3">
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-3">
                 Trip Details
               </h2>
               <div className="flex flex-col">
                 <div className="flex items-center justify-between py-2 border-b border-border-subtle">
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-purple-brand" />
-                    <span className="text-xs text-text-muted">Pickup</span>
+                    <span className="text-xs text-muted">Pickup</span>
                   </div>
-                  <span className="text-sm font-medium text-text-primary text-right">{TRIP.pickup}</span>
+                  <span className="text-sm font-medium text-primary text-right">{TRIP.pickup}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-border-subtle">
                   <div className="flex items-center gap-2">
                     <Navigation className="w-4 h-4 text-orange-brand" />
-                    <span className="text-xs text-text-muted">Destination</span>
+                    <span className="text-xs text-muted">Destination</span>
                   </div>
-                  <span className="text-sm font-medium text-text-primary text-right">{TRIP.destination}</span>
+                  <span className="text-sm font-medium text-primary text-right">{TRIP.destination}</span>
                 </div>
                 <div className="flex items-center justify-between py-2 border-b border-border-subtle">
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-text-muted" />
-                    <span className="text-xs text-text-muted">Date</span>
+                    <Calendar className="w-4 h-4 text-muted" />
+                    <span className="text-xs text-muted">Date</span>
                   </div>
-                  <span className="text-sm font-medium text-text-primary text-right">{TRIP.date}</span>
+                  <span className="text-sm font-medium text-primary text-right">{TRIP.date}</span>
                 </div>
                 <div className="flex items-center justify-between py-2">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-text-muted" />
-                    <span className="text-xs text-text-muted">Time</span>
+                    <Clock className="w-4 h-4 text-muted" />
+                    <span className="text-xs text-muted">Time</span>
                   </div>
-                  <span className="text-sm font-medium text-text-primary text-right">{TRIP.time}</span>
+                  <span className="text-sm font-medium text-primary text-right">{TRIP.time}</span>
                 </div>
               </div>
             </div>
 
             {/* Driver summary */}
             <div className="bg-surface-elevated border border-border-default rounded-2xl p-5 shadow-sm">
-              <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-3">
+              <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-3">
                 Your Driver
               </h2>
               <div className="flex items-center gap-4">
@@ -143,17 +143,17 @@ export default function ConfirmPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
-                    <p className="font-bold text-text-primary">{DRIVER.name}</p>
+                    <p className="font-bold text-primary">{DRIVER.name}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-1">
-                    <div className="flex items-center gap-1.5 text-sm text-text-primary">
+                    <div className="flex items-center gap-1.5 text-sm text-primary">
                       <Star className="w-3 h-3 fill-orange-brand text-orange-brand" />
                       <span className="font-semibold">{DRIVER.rating}</span>
-                      <span className="text-[10px] text-text-muted ml-0.5 tracking-wide uppercase">Rating</span>
+                      <span className="text-[10px] text-muted ml-0.5 tracking-wide uppercase">Rating</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-sm text-text-primary">
-                      <Car className="w-3 h-3 text-text-muted" />
-                      <span className="text-[10px] text-text-muted ml-0.5 tracking-wide uppercase">{DRIVER.vehicle}</span>
+                    <div className="flex items-center gap-1.5 text-sm text-primary">
+                      <Car className="w-3 h-3 text-muted" />
+                      <span className="text-[10px] text-muted ml-0.5 tracking-wide uppercase">{DRIVER.vehicle}</span>
                     </div>
                   </div>
                 </div>
@@ -178,7 +178,7 @@ export default function ConfirmPage() {
               href="/book/drivers" 
               className={buttonVariants({ 
                 variant: "outline", 
-                className: "border-border-default text-text-secondary hover:border-purple-brand/40 hover:text-foreground bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
+                className: "border-border-default text-secondary hover:border-purple-brand/40 hover:text-foreground bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
               })}
             >
               <ArrowLeft className="w-4 h-4" /> Change Driver

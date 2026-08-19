@@ -127,7 +127,7 @@ export default function PrivacyRequestPage() {
               <button
                 type="submit"
                 disabled={loading || !form.email}
-                className="w-full py-4 rounded-xl font-bold text-sm bg-orange-brand text-black hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-xl font-bold text-sm bg-orange-brand text-foreground hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading && <Loader2 className="w-4 h-4 animate-spin" />}
                 Submit Formal Request

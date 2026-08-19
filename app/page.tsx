@@ -600,8 +600,8 @@ function DropsSection() {
                   <div
                     className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest whitespace-nowrap"
                     style={isPopular
-                      ? { background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', color: 'white' }
-                      : { background: 'var(--purple-brand)', color: 'white' }
+                      ? { background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', color: 'var(--foreground)' }
+                      : { background: 'var(--purple-brand)', color: 'var(--foreground)' }
                     }
                   >
                     {pkg.badge}
@@ -878,7 +878,7 @@ function DriverCTASection() {
               background: hovered
                 ? 'linear-gradient(135deg, var(--orange-brand) 0%, var(--orange-brand) 100%)'
                 : 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
-              color: 'white',
+              color: 'var(--foreground)',
               boxShadow: hovered ? '0 4px 28px rgba(217,119,6,0.5)' : '0 4px 24px rgba(217,119,6,0.3)',
               transform: hovered ? 'scale(1.03)' : 'scale(1)',
             }}

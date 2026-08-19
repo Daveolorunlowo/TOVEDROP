@@ -141,7 +141,7 @@ export function LocationSearchInput({ placeholder = "Search for a location on ca
                 document.getElementById('map-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
               }}
             >
-              <div className="font-medium text-text-primary mb-1">Location not found</div>
+              <div className="font-medium text-primary mb-1">Location not found</div>
               <div className="text-muted-foreground">
                 We don't have this location saved yet. Please tap the exact spot on the map below to set it precisely.
               </div>

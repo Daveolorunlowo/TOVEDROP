@@ -99,7 +99,7 @@ export default function DriversPage() {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-3 flex-wrap">
-                          <h3 className="font-bold text-text-primary text-base">{driver.name}</h3>
+                          <h3 className="font-bold text-primary text-base">{driver.name}</h3>
                           {!driver.available && (
                             <span className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-sm bg-status-neutral/10 text-status-neutral border border-status-neutral/20">
                               Unavailable
@@ -110,22 +110,22 @@ export default function DriversPage() {
                         {/* Dense data rows */}
                         <div className="grid grid-cols-3 gap-4">
                           <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-1">Rating</p>
-                            <p className="text-sm font-medium flex items-center gap-1.5 text-text-primary">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">Rating</p>
+                            <p className="text-sm font-medium flex items-center gap-1.5 text-primary">
                               <Star className="w-3.5 h-3.5 fill-orange-brand text-orange-brand" />
                               {driver.rating}
                             </p>
                           </div>
                           <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-1">Trips</p>
-                            <p className="text-sm font-medium text-text-primary">
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">Trips</p>
+                            <p className="text-sm font-medium text-primary">
                               {driver.trips.toLocaleString()}
                             </p>
                           </div>
                           <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted mb-1">Vehicle</p>
-                            <p className="text-sm font-medium text-text-primary flex items-center gap-1.5">
-                              <Car className="w-3.5 h-3.5 text-text-muted" />
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">Vehicle</p>
+                            <p className="text-sm font-medium text-primary flex items-center gap-1.5">
+                              <Car className="w-3.5 h-3.5 text-muted" />
                               {driver.vehicle}
                             </p>
                           </div>
@@ -134,7 +134,7 @@ export default function DriversPage() {
                     </div>
 
                     <div className="flex items-center justify-between mt-5 pt-4 border-t border-border-subtle">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-text-muted">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">
                         1 Drop Booking Fee
                       </p>
                       {selected === driver.id ? (
@@ -151,7 +151,7 @@ export default function DriversPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-border-default text-text-secondary hover:text-foreground hover:border-purple-brand/40 bg-surface-card rounded-lg h-8 px-4"
+                          className="border-border-default text-secondary hover:text-foreground hover:border-purple-brand/40 bg-surface-card rounded-lg h-8 px-4"
                           onClick={() => setSelected(driver.id)}
                         >
                           Select

@@ -30,7 +30,7 @@ export function BookingProgress({ currentStep }: BookingProgressProps) {
               <span
                 className={cn(
                   'mt-2 text-[11px] font-semibold uppercase tracking-[0.05em] whitespace-nowrap',
-                  isActive ? 'text-text-primary' : isDone ? 'text-orange-brand' : 'text-text-muted'
+                  isActive ? 'text-primary' : isDone ? 'text-orange-brand' : 'text-muted'
                 )}
               >
                 {step.label}

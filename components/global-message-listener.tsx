@@ -60,13 +60,13 @@ export function GlobalMessageListener() {
           
           <div className="flex-1 min-w-0 pt-0.5">
             <div className="flex items-center justify-between mb-1">
-              <p className="text-sm font-semibold truncate" style={{ color: '#f5f5f5' }}>
+              <p className="text-sm font-semibold truncate" style={{ color: 'var(--foreground)' }}>
                 {toast.senderName}
               </p>
               <button 
                 onClick={() => setToast(null)}
                 className="shrink-0 p-1 rounded-full hover:bg-white/10 transition-colors"
-                style={{ color: '#888' }}
+                style={{ color: 'var(--muted-foreground)' }}
               >
                 <X className="h-3.5 w-3.5" />
               </button>

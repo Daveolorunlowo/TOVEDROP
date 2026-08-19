@@ -47,7 +47,7 @@ function StatusChip({ status }: { status: string }) {
     pending:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.08)' },
     suspended: { label: 'Suspended', color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
   }
-  const s = map[status.toLowerCase()] ?? { label: status, color: '#555', bg: '#1e1e1e' }
+  const s = map[status.toLowerCase()] ?? { label: status, color: 'var(--muted-foreground)', bg: 'var(--border)' }
   return (
     <span
       className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
@@ -60,7 +60,7 @@ function StatusChip({ status }: { status: string }) {
 
 function CheckRow({ done, label, detail }: { done: boolean; label: string; detail: string }) {
   return (
-    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: '1px solid #1e1e1e' }}>
+    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: '1px solid var(--border)' }}>
       <div className="flex items-center gap-2.5">
         <span
           className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
@@ -304,17 +304,17 @@ export default function AdminPage() {
       >
         {/* Logo */}
         <div className="flex items-center justify-between px-5 py-5" style={{ borderBottom: '1px solid #1a1a1a' }}>
-          <a href="/" className="text-sm font-bold tracking-tight" style={{ color: '#f5f5f5' }}>
+          <a href="/" className="text-sm font-bold tracking-tight" style={{ color: 'var(--foreground)' }}>
             TOVE<span style={{ color: 'var(--orange-brand)' }}>DROP</span>
           </a>
-          <button className="lg:hidden" onClick={() => setSidebarOpen(false)} style={{ color: '#555' }}>
+          <button className="lg:hidden" onClick={() => setSidebarOpen(false)} style={{ color: 'var(--muted-foreground)' }}>
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Nav label */}
         <div className="px-5 pt-5 pb-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: '#333' }}>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--muted-foreground)' }}>
             Admin
           </p>
         </div>
@@ -339,7 +339,7 @@ export default function AdminPage() {
                 {item.id === 'approvals' && pendingDrivers.length > 0 && (
                   <span
                     className="ml-auto text-[10px] font-bold px-1.5 py-0.5 tabular-nums"
-                    style={{ background: '#1e1e1e', color: 'var(--orange-brand)', borderRadius: '4px' }}
+                    style={{ background: 'var(--card)', color: 'var(--orange-brand)', borderRadius: '4px' }}
                   >
                     {pendingDrivers.length}
                   </span>
@@ -362,10 +362,10 @@ export default function AdminPage() {
           className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12 glass-panel"
           style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', borderRadius: '0' }}
         >
-          <button className="lg:hidden" onClick={() => setSidebarOpen(true)} style={{ color: '#555' }}>
+          <button className="lg:hidden" onClick={() => setSidebarOpen(true)} style={{ color: 'var(--muted-foreground)' }}>
             <Menu className="w-4 h-4" />
           </button>
-          <p className="text-xs font-semibold" style={{ color: '#888' }}>
+          <p className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>
             {NAV_ITEMS.find(n => n.id === activeTab)?.label ?? 'Admin Panel'}
           </p>
         </header>
@@ -597,8 +597,8 @@ export default function AdminPage() {
               {financesLoading ? (
                 <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
               ) : !financesData ? (
-                <div className="rounded-lg h-full flex flex-col items-center justify-center min-h-[120px]" style={{ background: '#111111', border: '1px dashed #222', padding: '20px' }}>
-                  <p className="text-xs" style={{ color: '#444' }}>No data available.</p>
+                <div className="rounded-lg h-full flex flex-col items-center justify-center min-h-[120px]" style={{ background: 'var(--background)', border: '1px dashed var(--border)', padding: '20px' }}>
+                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No data available.</p>
                 </div>
               ) : (
                 <>
@@ -783,47 +783,47 @@ export default function AdminPage() {
           {/* ── Revenue Split Settings ── */}
           {!loading && activeTab === 'revenue_split' && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Revenue Split Configuration
               </p>
               
               {settingsLoading ? (
                 <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
               ) : (
-                <div className="rounded-lg p-5" style={{ background: '#171717', border: '1px solid #222' }}>
-                  <p className="text-sm mb-6" style={{ color: '#888' }}>
+                <div className="rounded-lg p-5" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+                  <p className="text-sm mb-6" style={{ color: 'var(--muted-foreground)' }}>
                     Drivers automatically receive a flat <strong>₦12</strong> fee per completed ride. Configure how the <em>remaining</em> balance of the booking fee is split between the Admin and the Company. The total must equal 100%.
                   </p>
 
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Admin Percentage (%)</label>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Admin Percentage (%)</label>
                       <input 
                         type="number"
                         min="0" max="100"
                         className="w-full px-3 py-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-[var(--orange-brand)]"
-                        style={{ background: '#111111', border: '1px solid #222', color: '#f5f5f5' }}
+                        style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
                         value={revenueSettings.adminPercentage}
                         onChange={e => setRevenueSettings({...revenueSettings, adminPercentage: Number(e.target.value)})}
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: '#555' }}>Company (Platform) Percentage (%)</label>
+                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Company (Platform) Percentage (%)</label>
                       <input 
                         type="number"
                         min="0" max="100"
                         className="w-full px-3 py-2 rounded-md text-sm outline-none focus:ring-1 focus:ring-[var(--orange-brand)]"
-                        style={{ background: '#111111', border: '1px solid #222', color: '#f5f5f5' }}
+                        style={{ background: 'var(--background)', border: '1px solid var(--border)', color: 'var(--foreground)' }}
                         value={revenueSettings.companyPercentage}
                         onChange={e => setRevenueSettings({...revenueSettings, companyPercentage: Number(e.target.value)})}
                       />
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-5" style={{ borderTop: '1px solid #1e1e1e' }}>
+                  <div className="mt-6 pt-5" style={{ borderTop: '1px solid var(--border)' }}>
                     <div className="flex items-center justify-between">
                       <div className="text-sm">
-                        <span style={{ color: '#555' }}>Total: </span>
+                        <span style={{ color: 'var(--muted-foreground)' }}>Total: </span>
                         <span className="font-bold" style={{ color: (revenueSettings.adminPercentage + revenueSettings.companyPercentage) === 100 ? '#22c55e' : '#ef4444' }}>
                           {revenueSettings.adminPercentage + revenueSettings.companyPercentage}%
                         </span>
@@ -856,19 +856,19 @@ export default function AdminPage() {
                   </div>
                 </div>
               )}
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Driver Approvals · {pendingDrivers.length} pending
               </p>
 
               {pendingDrivers.length === 0 ? (
                 <div
                   className="rounded-lg flex items-start gap-3"
-                  style={{ background: '#171717', border: '1px solid #222', padding: '20px' }}
+                  style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '20px' }}
                 >
                   <CheckCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />
                   <div>
-                    <p className="text-sm font-medium" style={{ color: '#888' }}>All applications reviewed</p>
-                    <p className="text-xs mt-0.5" style={{ color: '#444' }}>No pending driver applications at this time.</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>All applications reviewed</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>No pending driver applications at this time.</p>
                   </div>
                 </div>
               ) : (
@@ -877,18 +877,18 @@ export default function AdminPage() {
                     <div
                       key={driver.userId}
                       className="rounded-lg"
-                      style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
+                      style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '16px 20px' }}
                     >
                       {/* Driver identity row */}
-                      <div className="flex items-center gap-3 mb-4" style={{ paddingBottom: '14px', borderBottom: '1px solid #1e1e1e' }}>
+                      <div className="flex items-center gap-3 mb-4" style={{ paddingBottom: '14px', borderBottom: '1px solid var(--border)' }}>
                         <Avatar className="w-9 h-9 shrink-0">
-                          <AvatarFallback className="text-xs font-bold" style={{ background: '#1e1e1e', color: '#888' }}>
+                          <AvatarFallback className="text-xs font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
                             {initials(driver.user.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>{driver.user.name}</p>
-                          <p className="text-[11px]" style={{ color: '#555' }}>
+                          <p className="text-sm font-semibold" style={{ color: 'var(--foreground)' }}>{driver.user.name}</p>
+                          <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
                             {driver.user.email} · {driver.phone}
                           </p>
                         </div>
@@ -896,7 +896,7 @@ export default function AdminPage() {
                       </div>
 
                       {/* Verification checklist */}
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-2" style={{ color: '#444' }}>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-2" style={{ color: 'var(--muted-foreground)' }}>
                         Verification
                       </p>
                       <CheckRow done label="Name & Contact" detail={driver.user.name} />
@@ -905,7 +905,7 @@ export default function AdminPage() {
                       <CheckRow done label="License Number" detail={driver.licenseNumber} />
 
                       {/* Actions */}
-                      <div className="flex items-center gap-2 mt-4" style={{ paddingTop: '14px', borderTop: '1px solid #1e1e1e' }}>
+                      <div className="flex items-center gap-2 mt-4" style={{ paddingTop: '14px', borderTop: '1px solid var(--border)' }}>
                         <button
                           disabled={processing === driver.userId}
                           onClick={() => handleAction(driver.userId, 'approve')}
@@ -918,7 +918,7 @@ export default function AdminPage() {
                           disabled={processing === driver.userId}
                           onClick={() => handleAction(driver.userId, 'suspend')}
                           className="text-xs font-semibold px-3 py-1.5 rounded-md"
-                          style={{ background: '#1e1e1e', color: '#555', borderRadius: '6px' }}
+                          style={{ background: 'var(--card)', color: 'var(--muted-foreground)', borderRadius: '6px' }}
                         >
                           Reject
                         </button>
@@ -933,16 +933,16 @@ export default function AdminPage() {
           {/* ── Payouts ── */}
           {!loading && activeTab === 'payouts' && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Pending Payouts · {pendingPayouts.length}
               </p>
 
               {withdrawalRequests.length === 0 ? (
-                <div className="rounded-lg py-8 text-center" style={{ background: '#171717', border: '1px solid #1e1e1e' }}>
-                  <p className="text-xs" style={{ color: '#444' }}>No withdrawal requests.</p>
+                <div className="rounded-lg py-8 text-center" style={{ background: 'var(--card)', border: '1px solid #1e1e1e' }}>
+                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No withdrawal requests.</p>
                 </div>
               ) : (
-                <div className="rounded-lg overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
+                <div className="rounded-lg overflow-hidden" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                   {withdrawalRequests.map((req: any, i: number) => (
                     <div
                       key={req.id}
@@ -951,17 +951,17 @@ export default function AdminPage() {
                     >
                       <div className="flex gap-3">
                         <Avatar className="w-8 h-8 shrink-0">
-                          <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
+                          <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
                             {initials(req.driver.user.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{req.driver.user.name}</p>
-                          <div className="text-[11px] mt-1 space-y-0.5" style={{ color: '#888' }}>
+                          <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.driver.user.name}</p>
+                          <div className="text-[11px] mt-1 space-y-0.5" style={{ color: 'var(--muted-foreground)' }}>
                             <p>Bank: <span className="text-foreground">{req.driver.bankName}</span></p>
                             <p>Acct: <span className="text-foreground">{req.driver.accountNumber}</span></p>
                             <p>Name: <span className="text-foreground">{req.driver.accountName}</span></p>
-                            <p className="mt-1" style={{ color: '#555' }}>Requested: {new Date(req.createdAt).toLocaleString()}</p>
+                            <p className="mt-1" style={{ color: 'var(--muted-foreground)' }}>Requested: {new Date(req.createdAt).toLocaleString()}</p>
                           </div>
                         </div>
                       </div>
@@ -987,7 +987,7 @@ export default function AdminPage() {
                               disabled={processing === req.id}
                               onClick={() => handlePayoutAction(req.id, 'reject')}
                               className="text-[10px] font-semibold px-3 py-1.5 rounded"
-                              style={{ background: '#1e1e1e', color: '#ef4444' }}
+                              style={{ background: 'var(--card)', color: '#ef4444' }}
                             >
                               Reject
                             </button>
@@ -1004,21 +1004,21 @@ export default function AdminPage() {
           {/* ── Reports / Suspended ── */}
           {!loading && activeTab === 'reports' && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Suspended Drivers · {suspendedDrivers.length}
               </p>
 
               {suspendedDrivers.length === 0 ? (
                 <div
                   className="rounded-lg"
-                  style={{ background: '#171717', border: '1px solid #1e1e1e', padding: '20px' }}
+                  style={{ background: 'var(--card)', border: '1px solid #1e1e1e', padding: '20px' }}
                 >
-                  <p className="text-xs" style={{ color: '#444' }}>No suspended drivers.</p>
+                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No suspended drivers.</p>
                 </div>
               ) : (
                 <div
                   className="rounded-lg overflow-hidden"
-                  style={{ background: '#171717', border: '1px solid #222' }}
+                  style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
                 >
                   {suspendedDrivers.map((driver: any, i: number) => (
                     <div
@@ -1027,20 +1027,20 @@ export default function AdminPage() {
                       style={{ borderBottom: i < suspendedDrivers.length - 1 ? '1px solid #1e1e1e' : 'none' }}
                     >
                       <Avatar className="w-7 h-7 shrink-0">
-                        <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
+                        <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
                           {initials(driver.user.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium" style={{ color: '#888' }}>{driver.user.name}</p>
-                        <p className="text-[11px]" style={{ color: '#444' }}>{driver.user.email}</p>
+                        <p className="text-xs font-medium" style={{ color: 'var(--muted-foreground)' }}>{driver.user.name}</p>
+                        <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{driver.user.email}</p>
                       </div>
                       <StatusChip status="suspended" />
                       <button
                         disabled={processing === driver.userId}
                         onClick={() => handleAction(driver.userId, 'unsuspend')}
                         className="text-[11px] font-semibold px-2.5 py-1"
-                        style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
+                        style={{ background: 'var(--card)', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
                       >
                         Reinstate
                       </button>
@@ -1122,7 +1122,7 @@ export default function AdminPage() {
             <div>
               <div className="flex items-center gap-4 mb-5">
                 <div className="relative flex-1 max-w-xs">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: '#444' }} />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: 'var(--muted-foreground)' }} />
                   <input
                     type="text"
                     placeholder="Search name or email…"
@@ -1130,19 +1130,19 @@ export default function AdminPage() {
                     onChange={e => setSearch(e.target.value)}
                     className="w-full text-xs pl-9 pr-3 py-1.5 rounded-md outline-none"
                     style={{
-                      background: '#171717',
-                      border: '1px solid #222',
-                      color: '#f5f5f5',
+                      background: 'var(--card)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--foreground)',
                       borderRadius: '6px',
                     }}
                   />
                 </div>
-                <p className="text-[11px]" style={{ color: '#444' }}>{filteredUsers.length} users</p>
+                <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{filteredUsers.length} users</p>
               </div>
 
               <div
                 className="rounded-lg overflow-x-auto"
-                style={{ background: '#171717', border: '1px solid #222' }}
+                style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
               >
                 <div className="min-w-[500px]">
                 {/* Table head */}
@@ -1150,8 +1150,8 @@ export default function AdminPage() {
                   className="grid text-[10px] font-semibold uppercase tracking-[0.05em] px-4 py-2.5"
                   style={{
                     gridTemplateColumns: '1fr 80px 100px 80px 100px',
-                    borderBottom: '1px solid #1e1e1e',
-                    color: '#444',
+                    borderBottom: '1px solid var(--border)',
+                    color: 'var(--muted-foreground)',
                   }}
                 >
                   <span>User</span>
@@ -1163,7 +1163,7 @@ export default function AdminPage() {
 
                 {filteredUsers.length === 0 ? (
                   <div className="py-8 text-center">
-                    <p className="text-xs" style={{ color: '#444' }}>No users matching "{search}"</p>
+                    <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No users matching "{search}"</p>
                   </div>
                 ) : (
                   filteredUsers.map((user: any, i: number) => (
@@ -1177,26 +1177,26 @@ export default function AdminPage() {
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <Avatar className="w-6 h-6 shrink-0">
-                          <AvatarFallback className="text-[9px] font-bold" style={{ background: '#222', color: '#666' }}>
+                          <AvatarFallback className="text-[9px] font-bold" style={{ background: 'var(--border)', color: '#666' }}>
                             {initials(user.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="min-w-0">
-                          <p className="text-xs font-medium truncate" style={{ color: '#f5f5f5' }}>{user.name}</p>
-                          <p className="text-[11px] truncate" style={{ color: '#444' }}>{user.email}</p>
+                          <p className="text-xs font-medium truncate" style={{ color: 'var(--foreground)' }}>{user.name}</p>
+                          <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>{user.email}</p>
                         </div>
                       </div>
                       <span
                         className="text-[10px] font-semibold px-1.5 py-0.5 w-fit"
                         style={{
-                          background: '#1e1e1e',
+                          background: 'var(--card)',
                           color: user.type === 'Driver' ? '#888' : '#666',
                           borderRadius: '4px',
                         }}
                       >
                         {user.type}
                       </span>
-                      <span className="text-[11px] hidden sm:block" style={{ color: '#555' }}>
+                      <span className="text-[11px] hidden sm:block" style={{ color: 'var(--muted-foreground)' }}>
                         {user.type === 'Driver' ? `${user.trips ?? 0} trips` : `${user.dropsBalance ?? 0} drops`}
                       </span>
                       <StatusChip status={user.detailStatus ?? 'approved'} />
@@ -1233,9 +1233,9 @@ export default function AdminPage() {
           {/* ── Security ── */}
           {!loading && activeTab === 'security' && (
             <div>
-              <div className="rounded-lg" style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}>
+              <div className="rounded-lg" style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '16px 20px' }}>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>Admin Login Audit Log</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>Admin Login Audit Log</p>
                   <button
                     onClick={fetchSecurityLogs}
                     className="text-[10px] font-semibold uppercase tracking-[0.05em] transition-opacity hover:opacity-100 opacity-50"
@@ -1247,27 +1247,27 @@ export default function AdminPage() {
 
                 {securityLoading ? (
                   <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#444' }} />
+                    <Loader2 className="w-4 h-4 animate-spin" style={{ color: 'var(--muted-foreground)' }} />
                   </div>
                 ) : securityLogs.length === 0 ? (
-                  <p className="text-xs py-8 text-center" style={{ color: '#444' }}>No login attempts recorded yet.</p>
+                  <p className="text-xs py-8 text-center" style={{ color: 'var(--muted-foreground)' }}>No login attempts recorded yet.</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
                       <thead>
                         <tr>
                           {['Time', 'Email', 'Result', 'IP Address', 'User Agent'].map(h => (
-                            <th key={h} className="text-[10px] font-semibold uppercase tracking-[0.05em] pb-3 pr-4" style={{ color: '#444', whiteSpace: 'nowrap' }}>{h}</th>
+                            <th key={h} className="text-[10px] font-semibold uppercase tracking-[0.05em] pb-3 pr-4" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>{h}</th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
                         {securityLogs.map((log: any) => (
                           <tr key={log.id} style={{ borderTop: '1px solid #1a1a1a' }}>
-                            <td className="py-2.5 pr-4 text-[11px] tabular-nums" style={{ color: '#555', whiteSpace: 'nowrap' }}>
+                            <td className="py-2.5 pr-4 text-[11px] tabular-nums" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>
                               {new Date(log.createdAt).toLocaleString()}
                             </td>
-                            <td className="py-2.5 pr-4 text-[11px]" style={{ color: '#888' }}>{log.email}</td>
+                            <td className="py-2.5 pr-4 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{log.email}</td>
                             <td className="py-2.5 pr-4">
                               <span
                                 className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5"
@@ -1280,8 +1280,8 @@ export default function AdminPage() {
                                 {log.success ? 'Success' : 'Failed'}
                               </span>
                             </td>
-                            <td className="py-2.5 pr-4 text-[11px] font-mono" style={{ color: '#555' }}>{log.ipAddress ?? '—'}</td>
-                            <td className="py-2.5 text-[11px]" style={{ color: '#444', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <td className="py-2.5 pr-4 text-[11px] font-mono" style={{ color: 'var(--muted-foreground)' }}>{log.ipAddress ?? '—'}</td>
+                            <td className="py-2.5 text-[11px]" style={{ color: 'var(--muted-foreground)', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {log.userAgent ?? '—'}
                             </td>
                           </tr>
@@ -1292,7 +1292,7 @@ export default function AdminPage() {
                 )}
               </div>
 
-              <p className="text-[10px] mt-4" style={{ color: '#333' }}>Showing last 50 entries · Includes both Step 1 and Step 2 attempts</p>
+              <p className="text-[10px] mt-4" style={{ color: 'var(--muted-foreground)' }}>Showing last 50 entries · Includes both Step 1 and Step 2 attempts</p>
             </div>
           )}
         </main>
