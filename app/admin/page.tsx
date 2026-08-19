@@ -15,6 +15,7 @@ import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/Skeleton
 import { Skeleton } from '@/components/shared/Skeleton'
 import { UpdatesTab } from '@/components/admin/UpdatesTab'
 import { UserActivityModal } from '@/components/admin/UserActivityModal'
+import { SignOutButton } from '@/components/sign-out-button'
 import { cn } from '@/lib/utils'
 import CountUp from 'react-countup'
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
@@ -348,6 +349,14 @@ export default function AdminPage() {
             )
           })}
         </nav>
+
+        {/* Sign Out */}
+        <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <SignOutButton 
+            variant="ghost" 
+            className="w-full justify-start text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-[#1a1a1a] transition-colors" 
+          />
+        </div>
       </aside>
 
       {sidebarOpen && (
