@@ -919,7 +919,7 @@ function DriverCTASection() {
 ───────────────────────────────────────────── */
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-bg-deep">
+    <div className="dark flex flex-col min-h-screen bg-bg-deep text-foreground" style={{ colorScheme: 'dark' }}>
       {/* Fixed top glow strip */}
       <div
         className="fixed top-0 left-0 right-0 h-[2px] z-[9997] pointer-events-none"
