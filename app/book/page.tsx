@@ -20,6 +20,8 @@ import { useDropsBalance } from '@/hooks/useDropsBalance'
 
 
 
+import { CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react'
+
 export default function BookPage() {
   const router = useRouter()
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -37,6 +39,9 @@ export default function BookPage() {
   const [isPool, setIsPool] = useState<boolean>(false)
   const [noteStr, setNoteStr] = useState<string>('')
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  
+  // Wizard state
+  const [step, setStep] = useState<number>(1)
 
   const [dateStr, setDateStr] = useState<string>('')
   const [timeStr, setTimeStr] = useState<string>('')
@@ -56,24 +61,42 @@ export default function BookPage() {
     setTimeStr(String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))
   }
 
+  const validateStep1 = () => {
+    const newErrors: Record<string, string> = {}
+    if (!pickupPoint || pickupPoint.label !== pickupText) newErrors.pickup = 'Please select a Pickup Location.'
+    if (!destinationPoint || destinationPoint.label !== destinationText) newErrors.destination = 'Please select a Destination.'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const validateStep2 = () => {
+    const newErrors: Record<string, string> = {}
+    if (!dateStr) newErrors.date = 'Please select a date.'
+    if (!timeStr) newErrors.time = 'Please select a time.'
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleNextStep = () => {
+    if (step === 1 && validateStep1()) {
+      setStep(2)
+    } else if (step === 2 && validateStep2()) {
+      setStep(3)
+    }
+  }
+
+  const handlePrevStep = () => {
+    if (step > 1) {
+      setStep(step - 1)
+      setErrors({})
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (submitting) return
 
-    const form = e.target as HTMLFormElement
-    const newErrors: Record<string, string> = {}
-    const date = dateStr
-    const time = timeStr
-    const note = noteStr
-    
-    if (!pickupPoint || pickupPoint.label !== pickupText) newErrors.pickup = 'Please select a Pickup Location from the search results or tap the map.'
-    if (!destinationPoint || destinationPoint.label !== destinationText) newErrors.destination = 'Please select a Destination from the search results or tap the map.'
-    if (!date) newErrors.date = 'Please select a date.'
-    if (!time) newErrors.time = 'Please select a time.'
-    
-    setErrors(newErrors)
-    
-    if (Object.keys(newErrors).length === 0) {
+    if (step === 3) {
       if (drops < 1) {
         setErrors({ general: 'Insufficient Drops to book a trip.' })
         return
@@ -138,194 +161,274 @@ export default function BookPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-
       <main className="flex-1 py-10 px-4">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
+          {/* Progress Indicator */}
+          <div className="mb-8 flex items-center justify-center space-x-2 md:space-x-4">
+            {[1, 2, 3].map((s) => (
+              <div key={s} className="flex items-center">
+                <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm transition-colors duration-300 ${step >= s ? 'bg-orange-brand text-white' : 'bg-muted text-muted-foreground'}`}>
+                  {step > s ? <CheckCircle2 className="w-5 h-5 text-white" /> : s}
+                </div>
+                {s < 3 && (
+                  <div className={`w-8 md:w-16 h-1 ml-2 md:ml-4 rounded-full transition-colors duration-300 ${step > s ? 'bg-orange-brand' : 'bg-muted'}`} />
+                )}
+              </div>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Form */}
-            <div className="bg-card rounded-2xl shadow-sm border border-border p-8">
-              <h1 className="text-2xl font-extrabold text-secondary mb-1">Where are you going?</h1>
+            <div className="bg-card rounded-2xl shadow-sm border border-border p-8 min-h-[420px] flex flex-col relative overflow-hidden">
+              <h1 className="text-2xl font-extrabold text-secondary mb-1">
+                {step === 1 && "Where are you going?"}
+                {step === 2 && "When do you need a ride?"}
+                {step === 3 && "Review & Confirm"}
+              </h1>
               <p className="text-sm text-muted-foreground mb-7">
-                Tap on the map or use a landmark to set locations.
+                {step === 1 && "Tap on the map or use a landmark to set locations."}
+                {step === 2 && "Select a date and time for your pickup."}
+                {step === 3 && "Add any notes and review your booking details."}
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                {/* Pickup */}
-                <div className="space-y-1.5">
-                  <Label>Pickup Location</Label>
-                  <LocationSearchInput
-                    placeholder="Search pickup location..."
-                    value={pickupPoint?.label || ''}
-                    onFocus={() => setSelectingMode('pickup')}
-                    onChangeText={setPickupText}
-                    icon={<MapPin className="w-4 h-4 text-primary" />}
-                    onSelect={(result) => {
-                      const pt: MapPoint = { lat: result.lat, lng: result.lng, label: result.label }
-                      setPickupPoint(pt)
-                      setPickupText(result.label)
-                      setSelectingMode('pickup')
-                      if (!destinationPoint) setSelectingMode('destination')
-                    }}
-                    className={`${errors.pickup ? '[&_input]:border-red-500' : ''} ${pickupPoint && pickupPoint.label === pickupText && selectingMode === 'pickup' ? '[&_input]:border-primary [&_input]:ring-2 [&_input]:ring-ring [&_input]:ring-offset-2' : ''}`}
-                  />
-                  {errors.pickup && <p className="text-xs text-red-600">{errors.pickup}</p>}
-                </div>
-
-                {/* Destination */}
-                <div className="space-y-1.5">
-                  <Label>Destination</Label>
-                  <LocationSearchInput
-                    placeholder="Search destination..."
-                    value={destinationPoint?.label || ''}
-                    onFocus={() => setSelectingMode('destination')}
-                    onChangeText={setDestinationText}
-                    icon={<Navigation className="w-4 h-4 text-secondary" />}
-                    onSelect={(result) => {
-                      const pt: MapPoint = { lat: result.lat, lng: result.lng, label: result.label }
-                      setDestinationPoint(pt)
-                      setDestinationText(result.label)
-                      setSelectingMode('destination')
-                    }}
-                    className={`${errors.destination ? '[&_input]:border-red-500' : ''} ${destinationPoint && destinationPoint.label === destinationText && selectingMode === 'destination' ? '[&_input]:border-secondary [&_input]:ring-2 [&_input]:ring-ring [&_input]:ring-offset-2' : ''}`}
-                  />
-                  {errors.destination && <p className="text-xs text-red-600">{errors.destination}</p>}
-                </div>
-
-                {/* Date + Time */}
-                <div className="space-y-3">
-                  <div className="grid grid-cols-2 gap-4">
+              <form onSubmit={handleSubmit} className="space-y-5 flex-1 flex flex-col" noValidate>
+                {/* STEP 1: Locations */}
+                {step === 1 && (
+                  <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+                    {/* Pickup */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="date">Date</Label>
-                      <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="date"
-                          name="date"
-                          type="date"
-                          value={dateStr}
-                          onChange={(e) => setDateStr(e.target.value)}
-                          className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
-                        />
-                      </div>
-                      {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
+                      <Label>Pickup Location</Label>
+                      <LocationSearchInput
+                        placeholder="Search pickup location..."
+                        value={pickupPoint?.label || ''}
+                        onFocus={() => setSelectingMode('pickup')}
+                        onChangeText={setPickupText}
+                        icon={<MapPin className="w-4 h-4 text-primary" />}
+                        onSelect={(result) => {
+                          const pt: MapPoint = { lat: result.lat, lng: result.lng, label: result.label }
+                          setPickupPoint(pt)
+                          setPickupText(result.label)
+                          setSelectingMode('pickup')
+                          if (!destinationPoint) setSelectingMode('destination')
+                        }}
+                        className={`${errors.pickup ? '[&_input]:border-red-500' : ''} ${pickupPoint && pickupPoint.label === pickupText && selectingMode === 'pickup' ? '[&_input]:border-primary [&_input]:ring-2 [&_input]:ring-ring [&_input]:ring-offset-2' : ''}`}
+                      />
+                      {errors.pickup && <p className="text-xs text-red-600">{errors.pickup}</p>}
                     </div>
+
+                    {/* Destination */}
                     <div className="space-y-1.5">
-                      <Label htmlFor="time">Time</Label>
-                      <div className="relative">
-                        <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <Input
-                          id="time"
-                          name="time"
-                          type="time"
-                          value={timeStr}
-                          onChange={(e) => setTimeStr(e.target.value)}
-                          className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
-                        />
-                      </div>
-                      {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+                      <Label>Destination</Label>
+                      <LocationSearchInput
+                        placeholder="Search destination..."
+                        value={destinationPoint?.label || ''}
+                        onFocus={() => setSelectingMode('destination')}
+                        onChangeText={setDestinationText}
+                        icon={<Navigation className="w-4 h-4 text-secondary" />}
+                        onSelect={(result) => {
+                          const pt: MapPoint = { lat: result.lat, lng: result.lng, label: result.label }
+                          setDestinationPoint(pt)
+                          setDestinationText(result.label)
+                          setSelectingMode('destination')
+                        }}
+                        className={`${errors.destination ? '[&_input]:border-red-500' : ''} ${destinationPoint && destinationPoint.label === destinationText && selectingMode === 'destination' ? '[&_input]:border-secondary [&_input]:ring-2 [&_input]:ring-ring [&_input]:ring-offset-2' : ''}`}
+                      />
+                      {errors.destination && <p className="text-xs text-red-600">{errors.destination}</p>}
                     </div>
                   </div>
-
-                  {/* Quick Time Selection */}
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setQuickTime(0)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">Now</button>
-                    <button type="button" onClick={() => setQuickTime(15)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+15m</button>
-                    <button type="button" onClick={() => setQuickTime(30)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+30m</button>
-                    <button type="button" onClick={() => setQuickTime(60)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+1h</button>
-                  </div>
-                </div>
-
-                {/* Optional note */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="note">Note for driver <span className="text-muted-foreground font-normal">(optional)</span></Label>
-                  <Input
-                    id="note"
-                    name="note"
-                    value={noteStr}
-                    onChange={(e) => setNoteStr(e.target.value)}
-                    placeholder="e.g. I have luggage, please bring a saloon car"
-                  />
-                </div>
-
-                {/* Ride Pooling Toggle */}
-                <div className="flex flex-row items-center justify-between rounded-lg border p-4 bg-surface-card">
-                  <div className="space-y-0.5">
-                    <Label className="text-base font-semibold">Pool this Ride?</Label>
-                    <p className="text-sm text-muted-foreground">Share this ride with others going in the same direction.</p>
-                  </div>
-                  <div 
-                    className={`w-11 h-6 rounded-full relative cursor-pointer transition-colors ${isPool ? 'bg-orange-brand' : 'bg-muted'}`}
-                    onClick={() => setIsPool(!isPool)}
-                  >
-                    <div className={`absolute top-[2px] left-[2px] bg-white w-5 h-5 rounded-full transition-transform ${isPool ? 'translate-x-5' : 'translate-x-0'}`} />
-                  </div>
-                </div>
-
-                {errors.general && <p className="text-sm font-semibold text-red-600 bg-red-100 p-3 rounded-md">{errors.general}</p>}
-
-                <div className="bg-surface-card rounded-xl p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                      <circle cx="10" cy="10" r="9" fill="url(#bdc)" />
-                      <path d="M10 5 C10 5 7 9 7 11.5 A3 3 0 0 0 13 11.5 C13 9 10 5 10 5Z" fill="white" opacity="0.85" />
-                      <defs><linearGradient id="bdc" x1="0" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="var(--orange-brand)" /><stop offset="100%" stopColor="var(--orange-brand)" /></linearGradient></defs>
-                    </svg>
-                    <span className="text-sm font-semibold text-orange-brand">This booking costs 1 Drop</span>
-                  </div>
-                  <span className="text-xs text-muted-foreground">{loading ? <div className="h-4 w-12 bg-muted animate-pulse rounded inline-block align-middle" /> : drops} Drops remaining</span>
-                </div>
-                <div className="space-y-1">
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>Drops used</span>
-                    <span>1 / {loading ? <div className="h-3 w-4 bg-muted animate-pulse rounded inline-block align-middle" /> : drops}</span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                    <div className="h-full rounded-full transition-all duration-300" style={{ width: drops > 0 ? `${(1 / drops) * 100}%` : '0%', backgroundColor: 'var(--orange-brand)' }} />
-                  </div>
-                </div>
-                {(!loading && drops < 1) ? (
-                  <Button
-                    type="button"
-                    size="lg"
-                    onClick={() => router.push('/dashboard/buy-drops')}
-                    className="w-full text-foreground font-semibold mt-2"
-                    style={{ backgroundColor: 'var(--orange-brand)' }}
-                  >
-                    Buy Drops
-                  </Button>
-                ) : (
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={submitting || loading}
-                    className="w-full text-foreground font-semibold mt-2"
-                    style={{ backgroundColor: 'var(--orange-brand)' }}
-                  >
-                    <Search className="w-4 h-4 mr-2" />
-                    {submitting ? 'Requesting...' : (loading ? 'Loading...' : 'Book Ride')}
-                  </Button>
                 )}
+
+                {/* STEP 2: Date & Time */}
+                {step === 2 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="date">Date</Label>
+                        <div className="relative">
+                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="date"
+                            name="date"
+                            type="date"
+                            value={dateStr}
+                            onChange={(e) => setDateStr(e.target.value)}
+                            className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
+                          />
+                        </div>
+                        {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="time">Time</Label>
+                        <div className="relative">
+                          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Input
+                            id="time"
+                            name="time"
+                            type="time"
+                            value={timeStr}
+                            onChange={(e) => setTimeStr(e.target.value)}
+                            className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
+                          />
+                        </div>
+                        {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+                      </div>
+                    </div>
+
+                    {/* Quick Time Selection */}
+                    <div className="space-y-2">
+                      <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
+                      <div className="flex flex-wrap gap-2">
+                        <button type="button" onClick={() => setQuickTime(0)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">Now</button>
+                        <button type="button" onClick={() => setQuickTime(15)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+15m</button>
+                        <button type="button" onClick={() => setQuickTime(30)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+30m</button>
+                        <button type="button" onClick={() => setQuickTime(60)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+1h</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* STEP 3: Details & Review */}
+                {step === 3 && (
+                  <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
+                    <div className="bg-surface-elevated rounded-xl p-4 border border-border-subtle space-y-3">
+                      <div className="flex items-start gap-3">
+                        <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider">Pickup</p>
+                          <p className="text-sm font-medium">{pickupText}</p>
+                        </div>
+                      </div>
+                      <div className="w-0.5 h-4 bg-border ml-[9px]" />
+                      <div className="flex items-start gap-3">
+                        <Navigation className="w-5 h-5 text-secondary mt-0.5" />
+                        <div>
+                          <p className="text-xs text-muted-foreground uppercase tracking-wider">Destination</p>
+                          <p className="text-sm font-medium">{destinationText}</p>
+                        </div>
+                      </div>
+                      <div className="border-t border-border mt-3 pt-3 flex items-center justify-between">
+                         <div className="flex items-center gap-2 text-sm">
+                           <Calendar className="w-4 h-4 text-muted-foreground" />
+                           <span>{dateStr}</span>
+                         </div>
+                         <div className="flex items-center gap-2 text-sm font-semibold">
+                           <Clock className="w-4 h-4 text-muted-foreground" />
+                           <span>{timeStr}</span>
+                         </div>
+                      </div>
+                    </div>
+
+                    {/* Optional note */}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="note">Note for driver <span className="text-muted-foreground font-normal">(optional)</span></Label>
+                      <Input
+                        id="note"
+                        name="note"
+                        value={noteStr}
+                        onChange={(e) => setNoteStr(e.target.value)}
+                        placeholder="e.g. I have luggage, please bring a saloon car"
+                      />
+                    </div>
+
+                    {/* Ride Pooling Toggle */}
+                    <div className="flex flex-row items-center justify-between rounded-lg border p-4 bg-surface-card">
+                      <div className="space-y-0.5">
+                        <Label className="text-base font-semibold">Pool this Ride?</Label>
+                        <p className="text-sm text-muted-foreground">Share this ride with others going in the same direction.</p>
+                      </div>
+                      <div 
+                        className={`w-11 h-6 rounded-full relative cursor-pointer transition-colors ${isPool ? 'bg-orange-brand' : 'bg-muted'}`}
+                        onClick={() => setIsPool(!isPool)}
+                      >
+                        <div className={`absolute top-[2px] left-[2px] bg-white w-5 h-5 rounded-full transition-transform ${isPool ? 'translate-x-5' : 'translate-x-0'}`} />
+                      </div>
+                    </div>
+
+                    <div className="bg-surface-card rounded-xl p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                          <circle cx="10" cy="10" r="9" fill="url(#bdc)" />
+                          <path d="M10 5 C10 5 7 9 7 11.5 A3 3 0 0 0 13 11.5 C13 9 10 5 10 5Z" fill="white" opacity="0.85" />
+                          <defs><linearGradient id="bdc" x1="0" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="var(--orange-brand)" /><stop offset="100%" stopColor="var(--orange-brand)" /></linearGradient></defs>
+                        </svg>
+                        <span className="text-sm font-semibold text-orange-brand">This booking costs 1 Drop</span>
+                      </div>
+                      <span className="text-xs text-muted-foreground">{loading ? <div className="h-4 w-12 bg-muted animate-pulse rounded inline-block align-middle" /> : drops} Drops remaining</span>
+                    </div>
+
+                    {errors.general && <p className="text-sm font-semibold text-red-600 bg-red-100 p-3 rounded-md">{errors.general}</p>}
+                  </div>
+                )}
+
+                {/* Form Footer Actions */}
+                <div className="mt-auto pt-6 flex items-center gap-3">
+                  {step > 1 && (
+                    <Button type="button" variant="outline" size="lg" onClick={handlePrevStep} className="px-4">
+                      <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                  )}
+                  
+                  {step < 3 ? (
+                    <Button type="button" size="lg" onClick={handleNextStep} className="flex-1 text-foreground font-semibold" style={{ backgroundColor: 'var(--orange-brand)' }}>
+                      Next Step <ChevronRight className="w-5 h-5 ml-1" />
+                    </Button>
+                  ) : (
+                    (!loading && drops < 1) ? (
+                      <Button
+                        type="button"
+                        size="lg"
+                        onClick={() => router.push('/dashboard/buy-drops')}
+                        className="flex-1 text-foreground font-semibold"
+                        style={{ backgroundColor: 'var(--orange-brand)' }}
+                      >
+                        Buy Drops
+                      </Button>
+                    ) : (
+                      <Button
+                        type="submit"
+                        size="lg"
+                        disabled={submitting || loading}
+                        className="flex-1 text-foreground font-semibold"
+                        style={{ backgroundColor: 'var(--orange-brand)' }}
+                      >
+                        <Search className="w-4 h-4 mr-2" />
+                        {submitting ? 'Requesting...' : (loading ? 'Loading...' : 'Confirm & Book Ride')}
+                      </Button>
+                    )
+                  )}
+                </div>
               </form>
             </div>
 
+            {/* Quick Landmarks / Map Container */}
             <div id="map-container" className="flex flex-col gap-4 lg:sticky lg:top-24 scroll-mt-24">
-              <div className="bg-card rounded-2xl border border-border p-4 shadow-sm flex flex-col gap-4">
-                <div>
-                  <p className="text-sm font-semibold mb-3">Quick Landmarks</p>
-                  <div className="flex flex-wrap gap-2">
-                  {CAMPUS_LANDMARKS.map(lm => (
-                    <button
-                      key={lm.name}
-                      type="button"
-                      onClick={() => handleLandmarkSelect(lm)}
-                      className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors"
-                    >
-                      {lm.name}
-                    </button>
-                  ))}
+              {step === 1 && (
+                <div className="bg-card rounded-2xl border border-border p-4 shadow-sm flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <div>
+                    <p className="text-sm font-semibold mb-3">Quick Landmarks</p>
+                    <div className="flex flex-wrap gap-2">
+                    {CAMPUS_LANDMARKS.map(lm => (
+                      <button
+                        key={lm.name}
+                        type="button"
+                        onClick={() => handleLandmarkSelect(lm)}
+                        className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors"
+                      >
+                        {lm.name}
+                      </button>
+                    ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
+              {step > 1 && (
+                <div className="hidden lg:flex items-center justify-center bg-card/50 rounded-2xl border border-border/50 p-8 h-[200px] text-center text-muted-foreground animate-in fade-in duration-500">
+                  <div className="space-y-3">
+                    <Navigation className="w-10 h-10 mx-auto text-border" />
+                    <p className="text-sm">Ready for the next step.</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -335,7 +438,7 @@ export default function BookPage() {
       <ConfirmModal
         isOpen={showConfirm}
         title="Confirm Booking"
-        description={<>Are you sure you want to book a ride from <strong>{pickupText}</strong> to <strong>{destinationText}</strong>? This will cost 1 Drop.</>}
+        description={<>Are you sure you want to book a ride from <strong>{pickupText}</strong> to <strong>{destinationText}</strong> on <strong>{dateStr} at {timeStr}</strong>? This will cost 1 Drop.</>}
         confirmText="Confirm & Book"
         isDestructive={false}
         isLoading={submitting}
