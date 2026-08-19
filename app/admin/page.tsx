@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/shared/Skeleton'
 import { UpdatesTab } from '@/components/admin/UpdatesTab'
 import { UserActivityModal } from '@/components/admin/UserActivityModal'
 import { SignOutButton } from '@/components/sign-out-button'
+import { ConfirmModal } from '@/components/shared/ConfirmModal'
 import { cn } from '@/lib/utils'
 import CountUp from 'react-countup'
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts'
@@ -97,6 +98,7 @@ export default function AdminPage() {
   const [settingsLoading, setSettingsLoading] = useState(false)
   const [settingsSaving, setSettingsSaving] = useState(false)
   const [selectedActivityUser, setSelectedActivityUser] = useState<any>(null)
+  const [confirmAction, setConfirmAction] = useState<{ id: string, action: string, type: 'payout' | 'feedback' } | null>(null)
 
   const fetchData = async () => {
     const start = Date.now()
@@ -238,37 +240,33 @@ export default function AdminPage() {
   }
 
   const handlePayoutAction = async (id: string, action: 'approve' | 'reject') => {
-    if (!confirm(`Are you sure you want to ${action} this payout?`)) return
-    setProcessing(id)
-    try {
-      const res = await fetch('/api/admin/withdrawals/manage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ withdrawalId: id, action })
-      })
-      if (res.ok) fetchData()
-      else alert('Failed to update payout request.')
-    } catch (e) {
-      alert('Network error.')
-    } finally {
-      setProcessing(null)
-    }
+    setConfirmAction({ id, action, type: 'payout' })
   }
 
   const handleFeedbackAction = async (id: string, action: 'review' | 'resolve') => {
+    setConfirmAction({ id, action, type: 'feedback' })
+  }
+
+  const executeAction = async () => {
+    if (!confirmAction) return
+    const { id, action, type } = confirmAction
     setProcessing(id)
     try {
-      const res = await fetch('/api/admin/feedback/manage', {
+      const endpoint = type === 'payout' ? '/api/admin/withdrawals/manage' : '/api/admin/feedback/manage'
+      const payload = type === 'payout' ? { withdrawalId: id, action } : { feedbackId: id, action }
+      
+      const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ feedbackId: id, action })
+        body: JSON.stringify(payload)
       })
       if (res.ok) fetchData()
-      else alert('Failed to update feedback.')
+      else alert(`Failed to update ${type}.`)
     } catch (e) {
       alert('Network error.')
     } finally {
       setProcessing(null)
+      setConfirmAction(null)
     }
   }
 
@@ -1313,6 +1311,21 @@ export default function AdminPage() {
           onClose={() => setSelectedActivityUser(null)} 
         />
       )}
+
+      {/* Admin Action Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!confirmAction}
+        title={confirmAction?.type === 'payout' ? 'Confirm Payout Action' : 'Confirm Feedback Action'}
+        description={
+          confirmAction?.type === 'payout' 
+            ? `Are you sure you want to ${confirmAction.action} this payout request?`
+            : `Are you sure you want to mark this feedback as ${confirmAction?.action === 'resolve' ? 'resolved' : 'under review'}?`
+        }
+        confirmText={confirmAction?.action === 'approve' || confirmAction?.action === 'resolve' ? 'Confirm' : 'Confirm Action'}
+        isDestructive={confirmAction?.action === 'reject'}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={executeAction}
+      />
     </div>
   )
 }

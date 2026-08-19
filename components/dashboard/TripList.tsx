@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 import { ChatModal } from '@/components/chat-modal'
+import { ConfirmModal } from '@/components/shared/ConfirmModal'
 import { pusherClient } from '@/lib/pusher-client'
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -73,6 +74,7 @@ export function TripList({
   const [copied, setCopied] = useState(false)
   const handleBookRideClick = useBookRideNavigation()
   const [activeDrivers, setActiveDrivers] = useState<any[]>([])
+  const [tripToCancel, setTripToCancel] = useState<string | null>(null)
 
   // Subscribe to driver locations if we have a pending trip
   useEffect(() => {
@@ -112,7 +114,7 @@ export function TripList({
   }
 
   const handleCancel = async (tripId: string) => {
-    if (!window.confirm("Are you sure you want to cancel this trip?")) return
+    setTripToCancel(null)
     
     // 1. Snapshot
     const prevUpcoming = [...upcomingTrips]
@@ -247,7 +249,7 @@ export function TripList({
                   )}
                   <button
                     disabled={processing === trip.id}
-                    onClick={() => handleCancel(trip.id)}
+                    onClick={() => setTripToCancel(trip.id)}
                     className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
                     style={{ color: 'var(--muted-foreground)' }}
                     aria-label="Cancel"
@@ -421,6 +423,18 @@ export function TripList({
           </div>
         </div>
       )}
+      {/* Cancel Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!tripToCancel}
+        title="Cancel Trip"
+        description="Are you sure you want to cancel this trip? If you cancel within 2 hours of the pickup time, you will not be refunded your Drop."
+        confirmText="Cancel Trip"
+        isDestructive={true}
+        onCancel={() => setTripToCancel(null)}
+        onConfirm={() => {
+          if (tripToCancel) handleCancel(tripToCancel)
+        }}
+      />
     </div>
   )
 }

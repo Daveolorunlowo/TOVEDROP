@@ -13,6 +13,7 @@ import { Footer } from '@/components/footer'
 import type { MapPoint } from '@/components/map-picker'
 import { LocationSearchInput } from '@/components/shared/LocationSearchInput'
 import { getCampusLandmarks } from '@/lib/campus-landmarks'
+import { ConfirmModal } from '@/components/shared/ConfirmModal'
 
 const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 import { useDropsBalance } from '@/hooks/useDropsBalance'
@@ -34,6 +35,26 @@ export default function BookPage() {
   const [destinationText, setDestinationText] = useState<string>('')
   const [selectingMode, setSelectingMode] = useState<'pickup' | 'destination'>('pickup')
   const [isPool, setIsPool] = useState<boolean>(false)
+  const [noteStr, setNoteStr] = useState<string>('')
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
+
+  const [dateStr, setDateStr] = useState<string>('')
+  const [timeStr, setTimeStr] = useState<string>('')
+
+  // Set default date/time to now on mount
+  useEffect(() => {
+    setQuickTime(0)
+  }, [])
+
+  const setQuickTime = (minutesToAdd: number) => {
+    const d = new Date()
+    d.setMinutes(d.getMinutes() + minutesToAdd)
+    const yyyy = d.getFullYear()
+    const mm = String(d.getMonth() + 1).padStart(2, '0')
+    const dd = String(d.getDate()).padStart(2, '0')
+    setDateStr(`${yyyy}-${mm}-${dd}`)
+    setTimeStr(String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -41,9 +62,9 @@ export default function BookPage() {
 
     const form = e.target as HTMLFormElement
     const newErrors: Record<string, string> = {}
-    const date = (form.elements.namedItem('date') as HTMLInputElement)?.value
-    const time = (form.elements.namedItem('time') as HTMLInputElement)?.value
-    const note = (form.elements.namedItem('note') as HTMLInputElement)?.value
+    const date = dateStr
+    const time = timeStr
+    const note = noteStr
     
     if (!pickupPoint || pickupPoint.label !== pickupText) newErrors.pickup = 'Please select a Pickup Location from the search results or tap the map.'
     if (!destinationPoint || destinationPoint.label !== destinationText) newErrors.destination = 'Please select a Destination from the search results or tap the map.'
@@ -57,44 +78,49 @@ export default function BookPage() {
         setErrors({ general: 'Insufficient Drops to book a trip.' })
         return
       }
+      setShowConfirm(true)
+    }
+  }
+
+  const confirmBooking = async () => {
+    setSubmitting(true)
+    try {
+      const payload = { 
+        pickup: pickupPoint!.label, 
+        pickupLat: pickupPoint!.lat,
+        pickupLng: pickupPoint!.lng,
+        destination: destinationPoint!.label, 
+        destinationLat: destinationPoint!.lat,
+        destinationLng: destinationPoint!.lng,
+        date: dateStr, 
+        time: timeStr, 
+        notes: noteStr,
+        isPool 
+      }
       
-      setSubmitting(true)
-      try {
-        const payload = { 
-          pickup: pickupPoint!.label, 
-          pickupLat: pickupPoint!.lat,
-          pickupLng: pickupPoint!.lng,
-          destination: destinationPoint!.label, 
-          destinationLat: destinationPoint!.lat,
-          destinationLng: destinationPoint!.lng,
-          date, 
-          time, 
-          notes: note,
-          isPool 
-        }
+      if (!navigator.onLine) {
+        addToOfflineQueue('/api/trips/create', 'POST', { 'Content-Type': 'application/json' }, JSON.stringify(payload))
+        router.push('/dashboard')
+      } else {
+        const res = await fetch('/api/trips/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
         
-        if (!navigator.onLine) {
-          addToOfflineQueue('/api/trips/create', 'POST', { 'Content-Type': 'application/json' }, JSON.stringify(payload))
+        if (res.ok) {
           router.push('/dashboard')
         } else {
-          const res = await fetch('/api/trips/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-          })
-          
-          if (res.ok) {
-            router.push('/dashboard')
-          } else {
-            const data = await res.json()
-            setErrors({ general: data.message || 'Failed to create trip.' })
-          }
+          const data = await res.json()
+          setErrors({ general: data.message || 'Failed to create trip.' })
+          setShowConfirm(false)
         }
-      } catch (err) {
-        setErrors({ general: 'An error occurred.' })
-      } finally {
-        setSubmitting(false)
       }
+    } catch (err) {
+      setErrors({ general: 'An error occurred.' })
+      setShowConfirm(false)
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -166,32 +192,46 @@ export default function BookPage() {
                 </div>
 
                 {/* Date + Time */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <Label htmlFor="date">Date</Label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="date"
-                        name="date"
-                        type="date"
-                        className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
-                      />
+                <div className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="date">Date</Label>
+                      <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="date"
+                          name="date"
+                          type="date"
+                          value={dateStr}
+                          onChange={(e) => setDateStr(e.target.value)}
+                          className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
+                        />
+                      </div>
+                      {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
                     </div>
-                    {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
+                    <div className="space-y-1.5">
+                      <Label htmlFor="time">Time</Label>
+                      <div className="relative">
+                        <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <Input
+                          id="time"
+                          name="time"
+                          type="time"
+                          value={timeStr}
+                          onChange={(e) => setTimeStr(e.target.value)}
+                          className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
+                        />
+                      </div>
+                      {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+                    </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <Label htmlFor="time">Time</Label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <Input
-                        id="time"
-                        name="time"
-                        type="time"
-                        className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
-                      />
-                    </div>
-                    {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+
+                  {/* Quick Time Selection */}
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" onClick={() => setQuickTime(0)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">Now</button>
+                    <button type="button" onClick={() => setQuickTime(15)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+15m</button>
+                    <button type="button" onClick={() => setQuickTime(30)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+30m</button>
+                    <button type="button" onClick={() => setQuickTime(60)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+1h</button>
                   </div>
                 </div>
 
@@ -201,6 +241,8 @@ export default function BookPage() {
                   <Input
                     id="note"
                     name="note"
+                    value={noteStr}
+                    onChange={(e) => setNoteStr(e.target.value)}
                     placeholder="e.g. I have luggage, please bring a saloon car"
                   />
                 </div>
@@ -289,6 +331,17 @@ export default function BookPage() {
         </div>
       </main>
       <Footer />
+
+      <ConfirmModal
+        isOpen={showConfirm}
+        title="Confirm Booking"
+        description={<>Are you sure you want to book a ride from <strong>{pickupText}</strong> to <strong>{destinationText}</strong>? This will cost 1 Drop.</>}
+        confirmText="Confirm & Book"
+        isDestructive={false}
+        isLoading={submitting}
+        onCancel={() => setShowConfirm(false)}
+        onConfirm={confirmBooking}
+      />
     </div>
   )
 }
