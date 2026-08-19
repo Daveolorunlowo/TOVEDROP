@@ -296,14 +296,14 @@ function HeroSection() {
 
             {/* Headline */}
             <h1 className="font-extrabold text-white leading-[1.04] text-balance" style={{ fontSize: 'clamp(40px, 6.5vw, 76px)', letterSpacing: '-0.03em' }}>
-              <span style={{ fontWeight: 300, display: 'block' }}>Your campus ride,</span>
-              <span style={{ display: 'block' }}>your{' '}
+              <span style={{ fontWeight: 300, display: 'block' }}>Your trusted ride,</span>
+              <span style={{ display: 'block' }}>perfectly{' '}
                 <span style={{
                   background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   filter: 'drop-shadow(0 0 24px rgba(217,119,6,0.4))',
-                }}>trusted driver.</span>
+                }}>organized.</span>
               </span>
             </h1>
 
@@ -313,9 +313,9 @@ function HeroSection() {
             </div>
 
             <p className="mt-6 text-white/50 leading-relaxed max-w-sm" style={{ fontSize: '15px' }}>
-              TOVEDROP connects students<br />
-              to pre-vetted campus drivers.<br />
-              Book ahead. Ride safe.
+              All drivers are trusted. The goal is<br />
+              to make transportation easier,<br />
+              and organized for the campus.
             </p>
 
             {/* CTAs */}

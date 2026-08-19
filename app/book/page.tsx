@@ -10,7 +10,6 @@ import { Label } from '@/components/ui/label'
 import { addToOfflineQueue } from '@/lib/offline-queue'
 
 import { Footer } from '@/components/footer'
-import { BookingProgress } from '@/components/booking-progress'
 import type { MapPoint } from '@/components/map-picker'
 import { LocationSearchInput } from '@/components/shared/LocationSearchInput'
 import { getCampusLandmarks } from '@/lib/campus-landmarks'
@@ -119,8 +118,6 @@ export default function BookPage() {
 
       <main className="flex-1 py-10 px-4">
         <div className="max-w-5xl mx-auto">
-          <BookingProgress currentStep={1} />
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
             {/* Form */}
             <div className="bg-card rounded-2xl shadow-sm border border-border p-8">

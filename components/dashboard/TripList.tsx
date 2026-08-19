@@ -1,12 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, Share, Copy, Check, MessageSquare } from 'lucide-react'
+import { X, Star, Car, TrendingUp, Share, Copy, Check, MessageSquare, MapPin } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 import { ChatModal } from '@/components/chat-modal'
+import { pusherClient } from '@/lib/pusher-client'
+
+function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
 
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
@@ -60,6 +72,38 @@ export function TripList({
   const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
   const [copied, setCopied] = useState(false)
   const handleBookRideClick = useBookRideNavigation()
+  const [activeDrivers, setActiveDrivers] = useState<any[]>([])
+
+  // Subscribe to driver locations if we have a pending trip
+  useEffect(() => {
+    const hasPending = upcomingTrips.some(t => t.status === 'PENDING');
+    if (!hasPending) return;
+
+    const channel = pusherClient.subscribe('global-driver-locations')
+    
+    channel.bind('location-update', (data: any) => {
+      // Only track online drivers who are not already on a trip
+      if (data.status === 'ON_TRIP') return;
+      
+      setActiveDrivers(prev => {
+        const existing = prev.filter(d => d.driverId !== data.driverId);
+        return [...existing, { ...data, timestamp: Date.now() }];
+      })
+    })
+
+    return () => {
+      channel.unbind('location-update')
+      pusherClient.unsubscribe('global-driver-locations')
+    }
+  }, [upcomingTrips])
+
+  // Cleanup stale drivers
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveDrivers(prev => prev.filter(d => Date.now() - d.timestamp < 60000));
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
   
   // Custom styled Toast/Alert fallback if we don't have a toast library available
   // In a real app we'd use sonner or similar.
@@ -146,65 +190,111 @@ export function TripList({
             className="rounded-lg overflow-hidden"
             style={{ background: '#171717', border: '1px solid #222' }}
           >
-            {upcomingTrips.map((trip, i) => (
-              <div
-                key={trip.id}
-                className="flex items-center gap-3 px-4 py-3 transition-opacity"
-                style={{ 
-                  borderBottom: i < upcomingTrips.length - 1 ? '1px solid #1e1e1e' : 'none',
-                  opacity: processing === trip.id ? 0.5 : 1
-                }}
-              >
-                <StatusDot status={trip.status} />
-                <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
-                    {trip.driver ? initials(trip.driver.name!) : '?'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold truncate" style={{ color: '#f5f5f5' }}>
-                    {trip.driver?.name ?? 'Searching for driver…'}
-                  </p>
-                  <p className="text-[11px] truncate" style={{ color: '#555' }}>
-                    {trip.pickup} → {trip.destination}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right hidden sm:block mr-2">
-                  <p className="text-[11px]" style={{ color: '#555' }}>{trip.date}</p>
-                  <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
-                </div>
-                <StatusChip status={trip.status} />
-                {trip.status === 'CONFIRMED' && (
-                  <button
-                    onClick={() => setActiveChatTrip(trip)}
-                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-2"
-                    style={{ color: '#22c55e' }}
-                    aria-label="Message Driver"
-                  >
-                    <MessageSquare className="w-3.5 h-3.5" />
-                  </button>
-                )}
-                {trip.status === 'CONFIRMED' && trip.shareToken && (
-                  <button
-                    onClick={() => setShareModalOpen(trip.shareToken)}
-                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
-                    style={{ color: 'var(--orange-brand)' }}
-                    aria-label="Share Trip"
-                  >
-                    <Share className="w-3.5 h-3.5" />
-                  </button>
-                )}
-                <button
-                  disabled={processing === trip.id}
-                  onClick={() => handleCancel(trip.id)}
-                  className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
-                  style={{ color: '#888' }}
-                  aria-label="Cancel"
+            {upcomingTrips.map((trip, i) => {
+              let candidates: any[] = [];
+              if (trip.status === 'PENDING' && trip.pickupLat && trip.pickupLng) {
+                // Calculate distance for all active drivers
+                candidates = activeDrivers.map(d => {
+                  const dist = getDistance(trip.pickupLat, trip.pickupLng, d.lat, d.lng);
+                  return { ...d, distance: dist };
+                }).sort((a, b) => a.distance - b.distance).slice(0, 3);
+              }
+
+              return (
+              <div key={trip.id} style={{ borderBottom: i < upcomingTrips.length - 1 ? '1px solid #1e1e1e' : 'none' }}>
+                <div
+                  className="flex items-center gap-3 px-4 py-3 transition-opacity"
+                  style={{ opacity: processing === trip.id ? 0.5 : 1 }}
                 >
-                  <X className="w-3.5 h-3.5" />
-                </button>
+                  <StatusDot status={trip.status} />
+                  <Avatar className="w-7 h-7 shrink-0">
+                    <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                      {trip.driver ? initials(trip.driver.name!) : '?'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold truncate" style={{ color: '#f5f5f5' }}>
+                      {trip.driver?.name ?? 'Searching for driver…'}
+                    </p>
+                    <p className="text-[11px] truncate" style={{ color: '#555' }}>
+                      {trip.pickup} → {trip.destination}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-right hidden sm:block mr-2">
+                    <p className="text-[11px]" style={{ color: '#555' }}>{trip.date}</p>
+                    <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
+                  </div>
+                  <StatusChip status={trip.status} />
+                  {trip.status === 'CONFIRMED' && (
+                    <button
+                      onClick={() => setActiveChatTrip(trip)}
+                      className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-2"
+                      style={{ color: '#22c55e' }}
+                      aria-label="Message Driver"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                  {trip.status === 'CONFIRMED' && trip.shareToken && (
+                    <button
+                      onClick={() => setShareModalOpen(trip.shareToken)}
+                      className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
+                      style={{ color: 'var(--orange-brand)' }}
+                      aria-label="Share Trip"
+                    >
+                      <Share className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                  <button
+                    disabled={processing === trip.id}
+                    onClick={() => handleCancel(trip.id)}
+                    className="p-1 rounded shrink-0 transition-colors hover:bg-white/5 ml-1"
+                    style={{ color: '#888' }}
+                    aria-label="Cancel"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Match Dashboard / Nearby Candidates UI for PENDING trips */}
+                {trip.status === 'PENDING' && (
+                  <div className="px-4 pb-4 pt-1">
+                    <div className="bg-black/40 rounded-lg border border-white/5 p-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 animate-pulse" style={{ color: 'var(--orange-brand)' }}>
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--orange-brand)' }}></span>
+                          Pinging Nearby Drivers
+                        </p>
+                        <p className="text-[10px] font-medium" style={{ color: '#555' }}>{candidates.length} online</p>
+                      </div>
+                      
+                      {candidates.length > 0 ? (
+                        <div className="space-y-2">
+                          {candidates.map(c => (
+                            <div key={c.driverId} className="flex items-center justify-between rounded p-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                              <div className="flex items-center gap-2">
+                                <Car className="w-3.5 h-3.5" style={{ color: '#888' }} />
+                                <span className="text-xs font-medium truncate max-w-[100px]" style={{ color: '#eee' }}>{c.driverName}</span>
+                              </div>
+                              <div className="flex items-center gap-2 text-[10px]">
+                                <span style={{ color: '#888' }}>~{Math.max(1, Math.round((c.distance / 30) * 60))} min ETA</span>
+                                <span className="font-semibold px-1.5 py-0.5 rounded" style={{ color: 'var(--orange-brand)', background: 'rgba(249,115,22,0.1)' }}>
+                                  {c.distance.toFixed(1)} km
+                                </span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-3 text-xs" style={{ color: '#555' }}>
+                          Looking for available drivers on campus...
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-            ))}
+            )})}
           </div>
         )}
       </div>
