@@ -1,12 +1,18 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { sendWebPush } from "@/lib/webpush"
 import { pusherServer } from "@/lib/pusher"
+import { checkRateLimit } from "@/lib/rateLimit"
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const rateLimit = checkRateLimit(req, 10, 60 * 1000) // 10 requests per minute
+    if (!rateLimit.success) {
+      return NextResponse.json({ message: "Too many requests. Please try again later." }, { status: 429 })
+    }
+
     const session = await getServerSession(authOptions)
     
     if (!session || !session.user) {

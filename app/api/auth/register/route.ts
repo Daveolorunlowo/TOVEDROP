@@ -1,9 +1,15 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
+import { checkRateLimit } from "@/lib/rateLimit"
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const rateLimit = checkRateLimit(req, 5, 60 * 1000) // 5 requests per minute
+    if (!rateLimit.success) {
+      return NextResponse.json({ message: "Too many registration attempts. Please try again later." }, { status: 429 })
+    }
+
     const { name, email, university, password } = await req.json()
     
     if (!name || !email || !password) {
