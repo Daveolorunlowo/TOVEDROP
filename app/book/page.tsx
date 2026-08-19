@@ -266,6 +266,7 @@ export default function BookPage() {
               </form>
             </div>
 
+            <div id="map-container" className="flex flex-col gap-4 lg:sticky lg:top-24 scroll-mt-24">
               <div className="bg-card rounded-2xl border border-border p-4 shadow-sm flex flex-col gap-4">
                 <div>
                   <p className="text-sm font-semibold mb-3">Quick Landmarks</p>
