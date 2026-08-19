@@ -259,7 +259,7 @@ export function TripList({
                 {/* Match Dashboard / Nearby Candidates UI for PENDING trips */}
                 {trip.status === 'PENDING' && (
                   <div className="px-4 pb-4 pt-1">
-                    <div className="bg-black/40 rounded-lg border border-white/5 p-3">
+                    <div className="bg-background/40 rounded-lg border border-white/5 p-3">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 animate-pulse" style={{ color: 'var(--orange-brand)' }}>
                           <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--orange-brand)' }}></span>
@@ -412,7 +412,7 @@ export function TripList({
                 href={`https://wa.me/?text=${encodeURIComponent(`I'm on a TOVEDROP ride — here's my trip details: ${window.location.origin}/trip/${shareModalOpen}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-foreground transition-opacity hover:opacity-90"
                 style={{ background: '#25D366' }}
               >
                 Share via WhatsApp

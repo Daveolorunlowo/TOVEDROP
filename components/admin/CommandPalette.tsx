@@ -23,12 +23,12 @@ export function CommandPalette({ activeTab, setActiveTab }: { activeTab: string,
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)}>
+    <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] bg-background/60 backdrop-blur-sm" onClick={() => setOpen(false)}>
       <div 
         className="w-full max-w-lg rounded-xl overflow-hidden glass-card neon-border shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <Command className="flex flex-col bg-transparent w-full h-full text-white" label="Command Menu">
+        <Command className="flex flex-col bg-transparent w-full h-full text-foreground" label="Command Menu">
           <div className="flex items-center border-b border-white/10 px-3">
             <Search className="w-5 h-5 text-gray-400 shrink-0" />
             <Command.Input 

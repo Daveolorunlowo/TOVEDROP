@@ -483,12 +483,12 @@ export default function DriverDashboardPage() {
     return (
       <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <Car className="w-12 h-12 mb-4 opacity-50" style={{ color: '#555' }} />
-        <h2 className="text-xl font-bold mb-2 text-white">Driver Profile Not Found</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Driver Profile Not Found</h2>
         <p className="text-sm text-muted-foreground max-w-sm mb-6">
           Your driver profile could not be found. Please contact support or submit a new application.
         </p>
         <Link href="/apply">
-          <Button style={{ background: 'var(--orange-brand)' }} className="text-white hover:opacity-90">
+          <Button style={{ background: 'var(--orange-brand)' }} className="text-foreground hover:opacity-90">
             Apply to Drive
           </Button>
         </Link>
@@ -503,7 +503,7 @@ export default function DriverDashboardPage() {
     return (
       <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <Clock className="w-12 h-12 mb-4" style={{ color: 'var(--orange-brand)' }} />
-        <h2 className="text-xl font-bold mb-2 text-white">Application Under Review</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Application Under Review</h2>
         <p className="text-sm text-muted-foreground max-w-sm">
           We are currently reviewing your driver application. This process usually takes 24-48 hours. We'll email you once you're approved.
         </p>
@@ -515,7 +515,7 @@ export default function DriverDashboardPage() {
     return (
       <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <XCircle className="w-12 h-12 mb-4 text-red-500" />
-        <h2 className="text-xl font-bold mb-2 text-white">Account Suspended</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Account Suspended</h2>
         <p className="text-sm text-muted-foreground max-w-sm">
           Your driver account has been suspended. Please contact support for more information or to appeal this decision.
         </p>
@@ -527,12 +527,12 @@ export default function DriverDashboardPage() {
     return (
       <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <XCircle className="w-12 h-12 mb-4 text-red-500" />
-        <h2 className="text-xl font-bold mb-2 text-white">Application Not Approved</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Application Not Approved</h2>
         <p className="text-sm text-muted-foreground max-w-sm mb-6">
           Unfortunately, your application to drive with TOVEDROP was not approved at this time.
         </p>
         <Link href="/apply">
-          <Button variant="outline" className="text-white border-border-default hover:bg-surface-elevated">
+          <Button variant="outline" className="text-foreground border-border-default hover:bg-surface-elevated">
             Reapply
           </Button>
         </Link>
@@ -640,7 +640,7 @@ export default function DriverDashboardPage() {
                 className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
                 style={{ background: '#22c55e', border: '2px solid #111111' }}
               >
-                <Check className="w-2 h-2 text-white" />
+                <Check className="w-2 h-2 text-foreground" />
               </span>
             </div>
             <div className="min-w-0">

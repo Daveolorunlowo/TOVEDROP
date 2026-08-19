@@ -104,8 +104,8 @@ export default function RiderSettingsPage() {
 
         {loading ? (
           <div className="animate-pulse flex flex-col gap-4">
-            <div className="h-10 bg-[#1e1e1e] rounded-md w-full"></div>
-            <div className="h-10 bg-[#1e1e1e] rounded-md w-full"></div>
+            <div className="h-10 bg-card rounded-md w-full"></div>
+            <div className="h-10 bg-card rounded-md w-full"></div>
           </div>
         ) : (
           <div className="space-y-6">
@@ -155,7 +155,7 @@ export default function RiderSettingsPage() {
                 <p className="text-sm text-muted-foreground mb-4">Have an issue with a trip, or an idea to make Tovedrop better? Let us know.</p>
                 
                 {feedbackSuccess ? (
-                  <div className="bg-[#1e1e1e] border border-[#333] p-6 rounded-lg text-center">
+                  <div className="bg-card border border-border p-6 rounded-lg text-center">
                     <CheckCircle2 className="w-8 h-8 text-primary mx-auto mb-3" />
                     <h3 className="text-sm font-semibold text-foreground mb-1">Feedback Received</h3>
                     <p className="text-xs text-muted-foreground">Thank you for helping us improve!</p>
@@ -166,7 +166,7 @@ export default function RiderSettingsPage() {
                       <select 
                         value={feedbackType} 
                         onChange={(e) => setFeedbackType(e.target.value)}
-                        className="w-full bg-[#111] border border-[#222] text-sm text-foreground rounded-lg p-3 focus:outline-none focus:border-primary transition-colors"
+                        className="w-full bg-[#111] border border-border text-sm text-foreground rounded-lg p-3 focus:outline-none focus:border-primary transition-colors"
                       >
                         <option value="ISSUE">Report an Issue</option>
                         <option value="SUGGESTION">Suggest a Feature</option>
@@ -177,7 +177,7 @@ export default function RiderSettingsPage() {
                         value={feedbackContent}
                         onChange={(e) => setFeedbackContent(e.target.value)}
                         placeholder={feedbackType === 'ISSUE' ? "Describe the issue you're facing..." : "What would you like to see in Tovedrop?"}
-                        className="w-full bg-[#111] border border-[#222] text-sm text-foreground rounded-lg p-3 min-h-[120px] focus:outline-none focus:border-primary transition-colors resize-none"
+                        className="w-full bg-[#111] border border-border text-sm text-foreground rounded-lg p-3 min-h-[120px] focus:outline-none focus:border-primary transition-colors resize-none"
                         required
                       />
                     </div>

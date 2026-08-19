@@ -249,7 +249,7 @@ export default function BookPage() {
                     type="button"
                     size="lg"
                     onClick={() => router.push('/dashboard/buy-drops')}
-                    className="w-full text-white font-semibold mt-2"
+                    className="w-full text-foreground font-semibold mt-2"
                     style={{ backgroundColor: 'var(--orange-brand)' }}
                   >
                     Buy Drops
@@ -259,11 +259,11 @@ export default function BookPage() {
                     type="submit"
                     size="lg"
                     disabled={submitting || loading}
-                    className="w-full text-white font-semibold mt-2"
+                    className="w-full text-foreground font-semibold mt-2"
                     style={{ backgroundColor: 'var(--orange-brand)' }}
                   >
                     <Search className="w-4 h-4 mr-2" />
-                    {submitting ? 'Requesting...' : (loading ? 'Loading...' : 'Find Drivers')}
+                    {submitting ? 'Requesting...' : (loading ? 'Loading...' : 'Book Ride')}
                   </Button>
                 )}
               </form>

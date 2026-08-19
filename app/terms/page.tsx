@@ -18,20 +18,20 @@ export default function TermsPage() {
           
           {/* Section 1: Hero */}
           <section className="py-16 border-b border-white/10">
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-6" style={{ letterSpacing: '-0.025em' }}>
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-6" style={{ letterSpacing: '-0.025em' }}>
               Here's how TOVEDROP <span className="text-orange-brand">works.</span>
             </h1>
-            <p className="text-lg text-white/60 leading-relaxed max-w-2xl">
+            <p className="text-lg text-foreground/60 leading-relaxed max-w-2xl">
               Everyone plays by the same rules. We do too.
             </p>
           </section>
 
           {/* Section 2: Quick Summary */}
           <section className="py-20 border-b border-white/10">
-            <h2 className="text-2xl font-bold text-white mb-10">Terms in a nutshell</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-10">Terms in a nutshell</h2>
             
             <div className="bg-surface-card border border-white/10 rounded-2xl p-8 space-y-4">
-              <ul className="space-y-4 text-sm text-white/70">
+              <ul className="space-y-4 text-sm text-foreground/70">
                 <li className="flex items-start gap-3">
                   <Scale className="w-5 h-5 text-orange-brand shrink-0" />
                   <span>You agree to be a responsible user (no false reports, no harassment, follow traffic laws).</span>
@@ -58,12 +58,12 @@ export default function TermsPage() {
 
           {/* Section 3: Full Terms of Service */}
           <section className="py-20">
-            <h2 className="text-2xl font-bold text-white mb-10">Full Terms of Service</h2>
+            <h2 className="text-2xl font-bold text-foreground mb-10">Full Terms of Service</h2>
             
-            <div className="space-y-10 text-white/70 text-[15px] leading-relaxed">
+            <div className="space-y-10 text-foreground/70 text-[15px] leading-relaxed">
               
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">1. Definitions</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">1. Definitions</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li><strong>"User"</strong> = student or driver using TOVEDROP</li>
                   <li><strong>"Platform"</strong> = the TOVEDROP app and website</li>
@@ -73,7 +73,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">2. Eligibility</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">2. Eligibility</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Must be 18+ years old (or 16+ with parental consent in applicable regions)</li>
                   <li>Must be enrolled as a student at a campus where TOVEDROP operates</li>
@@ -82,7 +82,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">3. User Responsibilities</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">3. User Responsibilities</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Keep your account password confidential</li>
                   <li>Don't create multiple accounts</li>
@@ -94,7 +94,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">4. Driver Responsibilities</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">4. Driver Responsibilities</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Maintain valid driver's license and vehicle insurance</li>
                   <li>Don't accept payment outside the app</li>
@@ -106,7 +106,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">5. Rider Responsibilities</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">5. Rider Responsibilities</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Provide accurate pickup/dropoff locations</li>
                   <li>Be ready at pickup time (riders waiting 5+ minutes can be charged)</li>
@@ -117,7 +117,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">6. Drops (In-App Currency)</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">6. Drops (In-App Currency)</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Drops are non-refundable once purchased (except within 7 days)</li>
                   <li>Drops don't expire</li>
@@ -128,7 +128,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">7. Rides & Cancellations</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">7. Rides & Cancellations</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Riders can cancel free before driver arrives or within 60 seconds of pickup</li>
                   <li>Drivers can only cancel if they have an emergency (cancellation fee applied)</li>
@@ -138,7 +138,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">8. Liability & Disclaimer</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">8. Liability & Disclaimer</h3>
                 <p className="mb-2"><strong>TOVEDROP is not liable for:</strong></p>
                 <ul className="list-disc list-inside space-y-1 mb-4">
                   <li>Injuries from accidents (drivers carry insurance; not TOVEDROP's responsibility)</li>
@@ -155,7 +155,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">9. Independent Contractor Status</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">9. Independent Contractor Status</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Drivers are not TOVEDROP employees</li>
                   <li>TOVEDROP doesn't control HOW drivers drive, only that they follow traffic laws</li>
@@ -164,7 +164,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">10. Dispute Resolution</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">10. Dispute Resolution</h3>
                 <ul className="list-decimal list-inside space-y-1">
                   <li>First step: contact support@tovedrop.app</li>
                   <li>Second step: mediation (neutral third party)</li>
@@ -174,7 +174,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">11. Prohibited Conduct</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">11. Prohibited Conduct</h3>
                 <p className="mb-2">You can't:</p>
                 <ul className="list-disc list-inside space-y-1 mb-3">
                   <li>Make false safety reports</li>
@@ -189,7 +189,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">12. Termination</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">12. Termination</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>You can delete your account anytime (no penalty)</li>
                   <li>TOVEDROP can suspend/ban you for violating these terms</li>
@@ -198,7 +198,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">13. Changes to These Terms</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">13. Changes to These Terms</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>We may update these terms</li>
                   <li>Continued use of TOVEDROP means you accept updates</li>
@@ -207,7 +207,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">14. Governing Law</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">14. Governing Law</h3>
                 <ul className="list-disc list-inside space-y-1">
                   <li>These terms are governed by the laws of Nigeria</li>
                   <li>Any disputes are resolved in Lagos jurisdiction</li>
@@ -215,7 +215,7 @@ export default function TermsPage() {
               </div>
 
               <div>
-                <h3 className="text-xl font-bold text-white mb-3">15. Contact</h3>
+                <h3 className="text-xl font-bold text-foreground mb-3">15. Contact</h3>
                 <p>Questions about these terms? Email: <a href="mailto:legal@tovedrop.app" className="text-orange-brand font-semibold hover:underline">legal@tovedrop.app</a></p>
               </div>
 
@@ -225,7 +225,7 @@ export default function TermsPage() {
           {/* Section 4: CTA */}
           <section className="py-12 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             <button
-              className="inline-flex items-center gap-2 font-bold text-[14px] text-white px-6 py-3 rounded-full border transition-all duration-200 hover:bg-white/5"
+              className="inline-flex items-center gap-2 font-bold text-[14px] text-foreground px-6 py-3 rounded-full border transition-all duration-200 hover:bg-white/5"
               style={{ borderColor: 'rgba(255,255,255,0.2)' }}
             >
               <FileText className="w-4 h-4" /> Download terms as PDF

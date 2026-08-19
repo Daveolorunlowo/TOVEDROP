@@ -95,7 +95,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-background/60 backdrop-blur-sm animate-in fade-in duration-200">
       <div 
         className="w-full sm:max-w-md h-[80vh] sm:h-[600px] bg-surface-elevated flex flex-col rounded-t-2xl sm:rounded-2xl overflow-hidden animate-in slide-in-from-bottom-10 sm:slide-in-from-bottom-5"
         style={{ border: '1px solid #222' }}

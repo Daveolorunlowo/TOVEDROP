@@ -61,10 +61,10 @@ export default function ConfirmPage() {
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Link href="/dashboard" className={buttonVariants({ variant: "default", className: "bg-primary hover:bg-primary/90 text-white font-semibold" })}>
+              <Link href="/dashboard" className={buttonVariants({ variant: "default", className: "bg-primary hover:bg-primary/90 text-foreground font-semibold" })}>
                 View in My Trips
               </Link>
-              <Link href="/" className={buttonVariants({ variant: "outline", className: "border-secondary text-secondary hover:bg-secondary hover:text-white" })}>
+              <Link href="/" className={buttonVariants({ variant: "outline", className: "border-secondary text-secondary hover:bg-secondary hover:text-foreground" })}>
                 Back to Home
               </Link>
             </div>
@@ -138,7 +138,7 @@ export default function ConfirmPage() {
                     </AvatarFallback>
                   </Avatar>
                   <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center bg-status-success border-2 border-surface-elevated">
-                    <CheckCircle className="w-2.5 h-2.5 text-white" />
+                    <CheckCircle className="w-2.5 h-2.5 text-foreground" />
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
@@ -178,7 +178,7 @@ export default function ConfirmPage() {
               href="/book/drivers" 
               className={buttonVariants({ 
                 variant: "outline", 
-                className: "border-border-default text-text-secondary hover:border-purple-brand/40 hover:text-white bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
+                className: "border-border-default text-text-secondary hover:border-purple-brand/40 hover:text-foreground bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
               })}
             >
               <ArrowLeft className="w-4 h-4" /> Change Driver
@@ -186,7 +186,7 @@ export default function ConfirmPage() {
             <Button
               onClick={() => setConfirmed(true)}
               size="lg"
-              className="bg-purple-brand hover:bg-purple-brand/90 text-white font-semibold flex-1"
+              className="bg-purple-brand hover:bg-purple-brand/90 text-foreground font-semibold flex-1"
             >
               <CheckCircle className="w-4 h-4 mr-2" /> Confirm Booking
             </Button>

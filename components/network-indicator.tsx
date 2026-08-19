@@ -41,7 +41,7 @@ export function NetworkIndicator() {
     <div 
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 text-xs font-semibold py-1.5 px-4 text-center flex items-center justify-center gap-2",
-        !isOnline ? "bg-red-500/90 text-white" : "bg-green-500/90 text-white"
+        !isOnline ? "bg-red-500/90 text-foreground" : "bg-green-500/90 text-foreground"
       )}
     >
       {!isOnline ? (

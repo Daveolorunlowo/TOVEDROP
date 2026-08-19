@@ -59,11 +59,11 @@ export default function UpdatesPage() {
   return (
     <div className="w-full max-w-2xl mx-auto pt-8 pb-32 px-4">
       <div className="mb-8 animate-fade-in-up">
-        <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
           <Bell className="w-6 h-6 text-orange-brand" />
           Updates & Announcements
         </h1>
-        <p className="text-[#888] mt-1 text-sm">
+        <p className="text-muted-foreground mt-1 text-sm">
           Stay in the loop with what's new on TOVEDROP.
         </p>
       </div>
@@ -71,7 +71,7 @@ export default function UpdatesPage() {
       <div className="space-y-4">
         {loading ? (
           Array(3).fill(0).map((_, i) => (
-            <div key={i} className="bg-[#111] p-5 rounded-xl border border-[#222]">
+            <div key={i} className="bg-[#111] p-5 rounded-xl border border-border">
               <Skeleton className="w-24 h-5 mb-3" />
               <Skeleton className="w-3/4 h-6 mb-3" />
               <Skeleton className="w-full h-4 mb-2" />
@@ -79,18 +79,18 @@ export default function UpdatesPage() {
             </div>
           ))
         ) : updates.length === 0 ? (
-          <div className="bg-[#111] p-8 rounded-xl border border-[#222] text-center flex flex-col items-center justify-center animate-fade-in">
-            <div className="w-12 h-12 rounded-full bg-[#1e1e1e] flex items-center justify-center mb-4">
+          <div className="bg-[#111] p-8 rounded-xl border border-border text-center flex flex-col items-center justify-center animate-fade-in">
+            <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center mb-4">
               <AlertCircle className="w-6 h-6 text-[#555]" />
             </div>
-            <h3 className="text-lg font-semibold text-white">No updates yet</h3>
-            <p className="text-sm text-[#888] mt-1">Check back soon for news and features.</p>
+            <h3 className="text-lg font-semibold text-foreground">No updates yet</h3>
+            <p className="text-sm text-muted-foreground mt-1">Check back soon for news and features.</p>
           </div>
         ) : (
           updates.map((update, i) => (
             <div 
               key={update.id} 
-              className="bg-[#111] p-5 rounded-xl border border-[#222] hover:border-[#333] transition-colors animate-fade-in-up"
+              className="bg-[#111] p-5 rounded-xl border border-border hover:border-border transition-colors animate-fade-in-up"
               style={{ animationDelay: `${i * 50}ms` }}
             >
               <div className="flex items-start justify-between gap-4 mb-3">
@@ -109,11 +109,11 @@ export default function UpdatesPage() {
                 </div>
               </div>
 
-              <h2 className="text-[17px] font-bold text-white mb-2 leading-tight">
+              <h2 className="text-[17px] font-bold text-foreground mb-2 leading-tight">
                 {update.title}
               </h2>
               
-              <div className="text-sm text-[#888] whitespace-pre-wrap leading-relaxed">
+              <div className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
                 {update.body}
               </div>
             </div>

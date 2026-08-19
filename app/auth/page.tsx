@@ -202,7 +202,7 @@ function AuthForm() {
               </div>
             )}
 
-            <Button type="submit" size="lg" className="w-full text-white font-semibold mt-1"
+            <Button type="submit" size="lg" className="w-full text-foreground font-semibold mt-1"
               style={{ background: 'linear-gradient(135deg, var(--purple-brand), var(--purple-light))' }}>
               {tab === 'login' ? 'Log In' : 'Create Account'}
             </Button>

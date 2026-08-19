@@ -88,14 +88,14 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
     <div className="relative w-full sm:w-auto">
       {/* Outer Wrapper for fixed positioning and safe area */}
       <div className={cn(
-        "z-50 bg-[#111111] sm:bg-transparent sm:rounded-none border-t sm:border-0 border-[#222]",
+        "z-50 bg-background sm:bg-transparent sm:rounded-none border-t sm:border-0 border-border",
         "fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto sm:left-auto sm:right-auto sm:inline-flex flex-col",
         "pb-[env(safe-area-inset-bottom,0px)] sm:pb-0 shadow-2xl sm:shadow-none"
       )}>
         {/* INNER WRAPPER */}
         <div 
           ref={navRef}
-          className="relative w-full sm:w-auto sm:bg-[#1a1a1a] sm:rounded-full sm:border border-[#222]"
+          className="relative w-full sm:w-auto sm:bg-[#1a1a1a] sm:rounded-full sm:border border-border"
         >
           {/* SLIDING PILL BACKGROUND (Hardware Accelerated) */}
           <div 
@@ -128,7 +128,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
                     "relative flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2",
                     "flex-1 sm:flex-none px-2 py-1.5 sm:px-5 sm:py-2 rounded-full",
                     "transition-colors duration-200 outline-none focus-visible:ring-2 focus-visible:ring-orange-brand",
-                    isActive ? "text-white" : "text-[#888] hover:text-white"
+                    isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                   )}
                 >
                   <Icon 

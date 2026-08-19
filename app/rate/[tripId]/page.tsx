@@ -121,7 +121,7 @@ export default function RatePage() {
             <p className="text-sm font-semibold text-secondary mb-6">
               You rated {trip.driver?.name || 'your driver'} {rating} star{rating !== 1 ? 's' : ''} — {LABELS[rating]}
             </p>
-            <a href="/dashboard" className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-white font-semibold w-full" })}>
+            <a href="/dashboard" className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-foreground font-semibold w-full" })}>
               Back to My Trips
             </a>
           </div>
@@ -154,7 +154,7 @@ export default function RatePage() {
                   </AvatarFallback>
                 </Avatar>
                 <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center bg-status-success border-2 border-surface-card">
-                  <CheckCircle className="w-2.5 h-2.5 text-white" />
+                  <CheckCircle className="w-2.5 h-2.5 text-foreground" />
                 </span>
               </div>
               <div>
@@ -221,7 +221,7 @@ export default function RatePage() {
             <Button
               onClick={handleSubmit}
               size="lg"
-              className="w-full bg-purple-brand hover:bg-purple-brand/90 text-white font-semibold"
+              className="w-full bg-purple-brand hover:bg-purple-brand/90 text-foreground font-semibold"
             >
               <Send className="w-4 h-4 mr-2" />
               Submit Rating

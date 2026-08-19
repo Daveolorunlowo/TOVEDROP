@@ -31,7 +31,7 @@ export function DriverTripListener() {
       </div>
       <button 
         onClick={() => setToastMessage(null)}
-        className="opacity-50 hover:opacity-100 transition-opacity p-1 rounded-full border border-[#222] hover:border-[#555] shrink-0"
+        className="opacity-50 hover:opacity-100 transition-opacity p-1 rounded-full border border-border hover:border-[#555] shrink-0"
         aria-label="Close"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>

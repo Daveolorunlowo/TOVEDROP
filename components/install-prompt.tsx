@@ -69,7 +69,7 @@ export function InstallPrompt() {
         
         <Button 
           onClick={handleInstall}
-          className="w-full sm:w-auto bg-purple-brand hover:bg-purple-brand/90 text-white font-semibold"
+          className="w-full sm:w-auto bg-purple-brand hover:bg-purple-brand/90 text-foreground font-semibold"
           size="sm"
         >
           Install App

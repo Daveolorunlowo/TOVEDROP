@@ -154,9 +154,9 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
               data-node-index={index}
               onClick={() => setIsOpen(false)}
               className={cn(
-                "absolute top-1/2 left-1/2 flex items-center justify-center w-12 h-12 -mt-6 -ml-6 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-purple-400 bg-[#1e1e1e] border hover:bg-[#2a2a2a] transition-colors",
+                "absolute top-1/2 left-1/2 flex items-center justify-center w-12 h-12 -mt-6 -ml-6 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-purple-400 bg-card border hover:bg-[#2a2a2a] transition-colors",
                 isOpen ? "pointer-events-auto" : "pointer-events-none",
-                isActive ? "border-purple-500 shadow-[0_0_12px_rgba(139,92,246,0.3)]" : "border-[#333]"
+                isActive ? "border-purple-500 shadow-[0_0_12px_rgba(139,92,246,0.3)]" : "border-border"
               )}
               style={{
                 transform: isOpen ? `translate(${x}px, ${y}px) scale(1)` : `translate(0px, 0px) scale(0.3)`,
@@ -169,7 +169,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
               aria-current={isActive ? 'page' : undefined}
             >
               <tab.icon 
-                className={cn("w-5 h-5", isActive ? "text-purple-400" : "text-white")} 
+                className={cn("w-5 h-5", isActive ? "text-purple-400" : "text-foreground")} 
                 strokeWidth={isActive ? 2.5 : 2} 
               />
               
@@ -201,21 +201,21 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
         >
           {isOpen ? (
-            <div className="w-6 h-6 flex items-center justify-center text-white" style={{ transform: 'rotate(-135deg)' }}>
+            <div className="w-6 h-6 flex items-center justify-center text-foreground" style={{ transform: 'rotate(-135deg)' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
             </div>
           ) : (
-            <ActiveIcon className="w-6 h-6 text-white" strokeWidth={2.5} />
+            <ActiveIcon className="w-6 h-6 text-foreground" strokeWidth={2.5} />
           )}
 
           {/* Hub Notification Badge (hidden when open) */}
           {!isOpen && hasAnyNotification && (
             <span className="absolute top-0 right-0 flex h-4 w-4">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-              <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-orange-brand border-2 border-[#111] text-[9px] font-bold text-white">
+              <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-orange-brand border-2 border-[#111] text-[9px] font-bold text-foreground">
                 {unreadCount > 0 ? (unreadCount > 9 ? '9+' : unreadCount) : ''}
               </span>
             </span>

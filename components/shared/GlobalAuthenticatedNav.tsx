@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { Car, Wallet, User, MapPin, Gift, Search, Bell } from 'lucide-react'
 import { NavTab, OrbitalNav } from '@/components/shared/OrbitalNav'
 import { SignOutButton } from '@/components/sign-out-button'
-
+import { ThemeToggle } from '@/components/theme-toggle'
 const riderTabs: NavTab[] = [
   { id: 'book', label: 'Book', icon: Search, href: '/book', matchPrefix: true },
   { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard' },
@@ -53,7 +53,7 @@ export function GlobalAuthenticatedNav() {
   const tabs = isDriver ? driverTabs : riderTabs
 
   return (
-    <div className="w-full flex flex-col items-center pt-4 pb-2 px-4 sm:pt-6 sm:pb-4 pointer-events-none sticky top-0 z-40 bg-gradient-to-b from-[#111111] to-transparent">
+    <div className="w-full flex flex-col items-center pt-4 pb-2 px-4 sm:pt-6 sm:pb-4 pointer-events-none sticky top-0 z-40 bg-gradient-to-b from-background to-transparent">
       {/* Slim Top Bar */}
       <div className="w-full max-w-5xl flex items-center justify-between mb-4 pointer-events-auto">
         <Link
@@ -61,19 +61,18 @@ export function GlobalAuthenticatedNav() {
           className="text-lg sm:text-xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
           style={{ letterSpacing: '-0.02em' }}
         >
-          <span className="text-white">TOVE</span>
+          <span className="text-foreground">TOVE</span>
           <span className="text-orange-brand">DROP</span>
         </Link>
-        <div className="flex items-center gap-3">
-          <Link href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-[#1e1e1e] border border-[#333] flex items-center justify-center hover:border-orange-brand/50 transition-colors">
-            <User className="w-4 h-4 text-[#888]" />
+        <div className="flex items-center gap-3 pointer-events-auto">
+          <ThemeToggle />
+          <Link href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center hover:border-orange-brand/50 transition-colors">
+            <User className="w-4 h-4 text-muted-foreground" />
           </Link>
-          <div className="pointer-events-auto">
-            <SignOutButton
-              variant="outline"
-              className="text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5 !text-[#555] h-8"
-            />
-          </div>
+          <SignOutButton
+            variant="outline"
+            className="text-xs border-border bg-transparent hover:bg-card rounded-md px-3 py-1.5 !text-muted-foreground h-8"
+          />
         </div>
       </div>
 

@@ -92,7 +92,7 @@ export default function EarningsPage() {
   }
 
   if (loading) {
-    return <div className="min-h-screen bg-[#111111] flex items-center justify-center text-[#555]">Loading...</div>
+    return <div className="min-h-screen bg-background flex items-center justify-center text-[#555]">Loading...</div>
   }
 
   if (!data) return null
@@ -209,7 +209,7 @@ export default function EarningsPage() {
               {data.withdrawalRequests.map((req: any) => (
                 <div key={req.id} className="flex items-center justify-between p-3 rounded-md" style={{ background: '#111', border: '1px solid #1e1e1e' }}>
                   <div>
-                    <p className="text-sm font-bold text-white">₦{req.amount.toLocaleString()}</p>
+                    <p className="text-sm font-bold text-foreground">₦{req.amount.toLocaleString()}</p>
                     <p className="text-[10px] text-[#555]">{new Date(req.createdAt).toLocaleString()}</p>
                   </div>
                   <span className="text-[10px] font-bold px-2 py-1 rounded" style={{
@@ -228,10 +228,10 @@ export default function EarningsPage() {
 
       {/* Withdraw Modal */}
       {showWithdrawModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-lg p-6" style={{ background: '#171717', border: '1px solid #333' }}>
-            <h2 className="text-lg font-bold text-white mb-1">Request Withdrawal</h2>
-            <p className="text-xs text-[#888] mb-6">Enter the amount you wish to withdraw to {bankName}.</p>
+            <h2 className="text-lg font-bold text-foreground mb-1">Request Withdrawal</h2>
+            <p className="text-xs text-muted-foreground mb-6">Enter the amount you wish to withdraw to {bankName}.</p>
             
             <form onSubmit={handleWithdraw} className="space-y-4">
               <div>

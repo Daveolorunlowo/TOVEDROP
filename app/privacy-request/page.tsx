@@ -33,18 +33,18 @@ export default function PrivacyRequestPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-bg-deep text-white">
+    <div className="flex flex-col min-h-screen bg-bg-deep text-foreground">
       <Navbar />
       
       <main className="flex-1 pt-32 pb-20">
         <div className="max-w-xl mx-auto px-6">
-          <Link href="/privacy" className="inline-flex items-center gap-2 text-sm text-[#888] hover:text-white mb-8 transition-colors">
+          <Link href="/privacy" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-8 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Privacy Policy
           </Link>
 
           <div className="mb-10">
             <h1 className="text-3xl font-extrabold mb-3 tracking-tight">Data Subject Request</h1>
-            <p className="text-[#888] text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               Exercise your data rights. You can request an export of all personal data we hold about you, or request a complete account and data deletion in accordance with NDPR guidelines.
             </p>
           </div>
@@ -55,7 +55,7 @@ export default function PrivacyRequestPage() {
                 <CheckCircle2 className="w-8 h-8 text-green-500" />
               </div>
               <h2 className="text-xl font-bold mb-2">Request Received</h2>
-              <p className="text-[#888] text-sm mb-6">
+              <p className="text-muted-foreground text-sm mb-6">
                 We have received your {form.type === 'DOWNLOAD_DATA' ? 'Data Export' : 'Data Deletion'} request for {form.email}. 
                 Our compliance team will process this and email you within 30 days.
               </p>
@@ -69,7 +69,7 @@ export default function PrivacyRequestPage() {
           ) : (
             <form onSubmit={handleSubmit} className="glass-card p-6 sm:p-8 rounded-2xl space-y-6">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#888] mb-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                   Account Email
                 </label>
                 <input
@@ -77,24 +77,24 @@ export default function PrivacyRequestPage() {
                   required
                   value={form.email}
                   onChange={e => setForm({...form, email: e.target.value})}
-                  className="w-full bg-[#111] border border-[#222] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-orange-brand transition-colors"
+                  className="w-full bg-[#111] border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-orange-brand transition-colors"
                   placeholder="your@email.com"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#888] mb-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                   Request Type
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DOWNLOAD_DATA' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-[#111] border-[#222] text-[#888] hover:border-white/20'}`}>
+                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DOWNLOAD_DATA' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-[#111] border-border text-muted-foreground hover:border-white/20'}`}>
                     <input type="radio" name="type" value="DOWNLOAD_DATA" checked={form.type === 'DOWNLOAD_DATA'} onChange={() => setForm({...form, type: 'DOWNLOAD_DATA'})} className="sr-only" />
                     <DownloadCloud className={`w-5 h-5 mb-2 ${form.type === 'DOWNLOAD_DATA' ? 'text-blue-400' : 'text-[#555]'}`} />
                     <span className="font-semibold text-sm">Export Data</span>
                     <span className="text-[10px] mt-1 opacity-80">Get a copy of your info</span>
                   </label>
 
-                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DELETE_ACCOUNT' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-[#111] border-[#222] text-[#888] hover:border-white/20'}`}>
+                  <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DELETE_ACCOUNT' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-[#111] border-border text-muted-foreground hover:border-white/20'}`}>
                     <input type="radio" name="type" value="DELETE_ACCOUNT" checked={form.type === 'DELETE_ACCOUNT'} onChange={() => setForm({...form, type: 'DELETE_ACCOUNT'})} className="sr-only" />
                     <Trash2 className={`w-5 h-5 mb-2 ${form.type === 'DELETE_ACCOUNT' ? 'text-red-400' : 'text-[#555]'}`} />
                     <span className="font-semibold text-sm">Delete Account</span>
@@ -104,13 +104,13 @@ export default function PrivacyRequestPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[#888] mb-2">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
                   Additional Details (Optional)
                 </label>
                 <textarea
                   value={form.details}
                   onChange={e => setForm({...form, details: e.target.value})}
-                  className="w-full bg-[#111] border border-[#222] rounded-xl px-4 py-3 text-white focus:outline-none focus:border-orange-brand transition-colors h-24 resize-none"
+                  className="w-full bg-[#111] border border-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-orange-brand transition-colors h-24 resize-none"
                   placeholder="Any specific data you're looking for?"
                 />
               </div>

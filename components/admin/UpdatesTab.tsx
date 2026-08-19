@@ -67,28 +67,28 @@ export function UpdatesTab() {
   }
 
   if (loading) {
-    return <div className="text-[#888] text-sm animate-pulse">Loading updates...</div>
+    return <div className="text-muted-foreground text-sm animate-pulse">Loading updates...</div>
   }
 
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Updates & Announcements</h2>
-          <p className="text-sm text-[#888] mt-1">Publish news and features to users.</p>
+          <h2 className="text-xl font-bold text-foreground tracking-tight">Updates & Announcements</h2>
+          <p className="text-sm text-muted-foreground mt-1">Publish news and features to users.</p>
         </div>
         <button
           onClick={() => { setEditingUpdate(null); setModalOpen(true); }}
-          className="bg-orange-brand hover:bg-orange-600 text-white px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 transition-colors"
+          className="bg-orange-brand hover:bg-orange-600 text-foreground px-4 py-2 rounded-md text-sm font-semibold flex items-center gap-2 transition-colors"
         >
           <Plus className="w-4 h-4" />
           New Update
         </button>
       </div>
 
-      <div className="bg-[#171717] rounded-lg border border-[#222] overflow-hidden">
+      <div className="bg-[#171717] rounded-lg border border-border overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-[#888]">
+          <table className="w-full text-left text-sm text-muted-foreground">
             <thead className="bg-[#111] text-[#555] uppercase text-[10px] tracking-wider">
               <tr>
                 <th className="px-4 py-3 font-semibold">Title</th>
@@ -111,7 +111,7 @@ export function UpdatesTab() {
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-2">
                         {update.isPinned && <Pin className="w-3.5 h-3.5 text-orange-brand" />}
-                        <span className="font-medium text-white truncate max-w-[200px]" title={update.title}>
+                        <span className="font-medium text-foreground truncate max-w-[200px]" title={update.title}>
                           {update.title}
                         </span>
                       </div>
@@ -143,28 +143,28 @@ export function UpdatesTab() {
                       <div className="flex items-center justify-end gap-3">
                         <button
                           onClick={() => handleTogglePin(update)}
-                          className="text-[#888] hover:text-orange-brand transition-colors"
+                          className="text-muted-foreground hover:text-orange-brand transition-colors"
                           title={update.isPinned ? "Unpin" : "Pin"}
                         >
                           <Pin className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleTogglePublish(update)}
-                          className="text-[#888] hover:text-white transition-colors"
+                          className="text-muted-foreground hover:text-foreground transition-colors"
                           title={update.publishedAt ? "Unpublish" : "Publish Now"}
                         >
                           {update.publishedAt ? <AlertCircle className="w-4 h-4" /> : <Send className="w-4 h-4" />}
                         </button>
                         <button
                           onClick={() => { setEditingUpdate(update); setModalOpen(true); }}
-                          className="text-[#888] hover:text-white transition-colors"
+                          className="text-muted-foreground hover:text-foreground transition-colors"
                           title="Edit"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(update.id)}
-                          className="text-[#888] hover:text-red-500 transition-colors"
+                          className="text-muted-foreground hover:text-red-500 transition-colors"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />

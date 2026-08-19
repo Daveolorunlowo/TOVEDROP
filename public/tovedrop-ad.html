@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOVEDROP Motion Graphics Ad</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+    :root {
+      --bg: #050505;
+      --orange: #F97316;
+      --red: #EF4444;
+      --white: #ffffff;
+      --muted: #a3a3a3;
+      --dark: #111111;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: #000;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    /* Support 16:9 and 9:16 based on orientation */
+    #canvas-container {
+      position: relative;
+      background-color: var(--bg);
+      overflow: hidden;
+      box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    }
+    
+    @media (min-aspect-ratio: 1/1) {
+      /* Landscape 16:9 */
+      #canvas-container {
+        width: 100vw;
+        height: 56.25vw; /* 16:9 */
+        max-height: 100vh;
+        max-width: 177.78vh; /* 16:9 */
+      }
+    }
+    @media (max-aspect-ratio: 1/1) {
+      /* Portrait 9:16 */
+      #canvas-container {
+        width: 100vw;
+        height: 177.78vw; /* 9:16 */
+        max-height: 100vh;
+        max-width: 56.25vh; /* 9:16 */
+      }
+    }
+
+    .scene {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+    }
+    .active { display: flex; opacity: 1; }
+
+    /* Scene 1: The Clock */
+    #clock-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8vw;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    #clock-line {
+      width: 0;
+      height: 2px;
+      background-color: var(--red);
+      margin-top: 20px;
+    }
+    #clock-warning {
+      margin-top: 10px;
+      font-size: 1.5vw;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      opacity: 0;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Scene 2: The Panic */
+    #s2-t1, #s2-t2, #s2-t3 {
+      position: absolute;
+      opacity: 0;
+      text-align: center;
+    }
+    #s2-t1 { font-weight: 900; font-size: 6vw; transform: rotate(-2deg); top: 30%; left: 10%; }
+    #s2-t2 { font-weight: 700; font-size: 4vw; color: var(--red); transform: rotate(1deg); top: 50%; right: 10%; }
+    #s2-t3 { font-weight: 300; font-size: 3vw; color: var(--muted); transform: rotate(-1deg); top: 10%; left: 30%; }
+
+    .shatter-piece {
+      position: absolute;
+      color: inherit;
+      font: inherit;
+      white-space: nowrap;
+    }
+
+    /* Scene 3: Reframe */
+    #s3-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 400;
+      font-size: 2vw;
+      color: var(--white);
+      text-align: center;
+    }
+    #s3-tonight {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: 4vw;
+      text-shadow: 0 0 20px rgba(249, 115, 22, 0.5);
+      position: absolute;
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    /* Scene 4: Product Demo */
+    #phone-mockup {
+      width: 300px;
+      height: 600px;
+      background: #000;
+      border: 8px solid #222;
+      border-radius: 40px;
+      position: absolute;
+      bottom: -650px; /* Start hidden */
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+    .form-field {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 10px 15px;
+      font-size: 12px;
+      position: relative;
+    }
+    .form-label { font-size: 10px; color: var(--muted); margin-bottom: 5px; font-weight: 700; text-transform: uppercase; }
+    .form-input { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--white); min-height: 16px; }
+    .check-icon {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      color: #10B981; font-weight: bold; opacity: 0;
+    }
+    #find-driver-btn {
+      background: linear-gradient(135deg, #A855F7, #EC4899);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      font-weight: 900;
+      margin-top: 10px;
+      opacity: 0.5;
+    }
+    #result-card {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 16px;
+      padding: 15px;
+      margin-top: auto;
+      transform: translateY(150%);
+      opacity: 0;
+    }
+    #s4-subtext {
+      position: absolute;
+      bottom: 20px;
+      font-weight: 300;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0;
+      z-index: 1;
+    }
+
+    /* Scene 5: Contrast */
+    #s5-container {
+      display: flex;
+      width: 80%;
+      max-width: 800px;
+      justify-content: space-between;
+      opacity: 0;
+    }
+    .column { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+    .column.left { padding-right: 20px; border-right: 1px solid #333; }
+    .column.right { padding-left: 20px; }
+    .col-header { font-weight: 900; font-size: 1.5vw; margin-bottom: 10px; }
+    .left .col-header { color: var(--red); }
+    .right .col-header { color: #A855F7; }
+    .row { font-weight: 300; font-size: 1.2vw; position: relative; opacity: 0; }
+    .row-strikethrough {
+      position: absolute; left: 0; top: 50%; width: 0; height: 2px; background: var(--red);
+    }
+    .check { color: var(--orange); font-weight: 900; margin-left: 10px; opacity: 0; transform: scale(0); display: inline-block; }
+
+    /* Scene 6: Identity */
+    #s6-logo-container { position: relative; width: 100%; height: 50vh; }
+    #s6-tagline-container { text-align: center; opacity: 0; }
+    #s6-tagline { font-size: 2.5vw; letter-spacing: 0.04em; margin-bottom: 10px; }
+    #s6-tagline .light { font-weight: 300; }
+    #s6-tagline .bold { font-weight: 900; }
+    #s6-subtagline { font-weight: 500; font-size: 1.2vw; color: var(--orange); text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Scene 7: CTA */
+    #s7-container { display: flex; flex-direction: column; align-items: center; gap: 20px; opacity: 0; }
+    .drop-coin { width: 48px; height: 48px; background: linear-gradient(135deg, #F59E0B, #D97706); border-radius: 50%; box-shadow: inset 0 0 10px rgba(255,255,255,0.5); transform: scale(0); }
+    .drop-text { color: var(--orange); font-size: 12px; letter-spacing: 0.1em; font-weight: 700; text-transform: uppercase; opacity: 0; }
+    .btn-pill { background: linear-gradient(135deg, #A855F7, #EC4899); border-radius: 30px; padding: 15px 40px; font-weight: 900; transform: scale(0); box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4); }
+    .footer-text { font-size: 12px; font-weight: 300; color: var(--muted); opacity: 0; }
+    .url { font-size: 10px; opacity: 0.3; margin-top: 20px; font-weight: 300; }
+
+    /* Start Screen */
+    #start-screen {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.9); z-index: 100;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    #start-btn {
+      background: var(--orange); color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 900; cursor: pointer; font-size: 18px; margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="start-screen">
+    <h2>TOVEDROP Motion Graphics Ad</h2>
+    <p style="margin-top: 10px; font-weight: 300; color: #aaa;">Turn volume up. Press start and screen record.</p>
+    <button id="start-btn">Start Animation</button>
+  </div>
+
+  <div id="canvas-container">
+    
+    <!-- Scene 1: The Clock (0-3s) -->
+    <div id="scene-1" class="scene active">
+      <div id="clock-text">7:44 AM</div>
+      <div id="clock-line"></div>
+      <div id="clock-warning">Test starts in 1 minute</div>
+    </div>
+
+    <!-- Scene 2: The Panic (3-9s) -->
+    <div id="scene-2" class="scene">
+      <div id="s2-t1">Park is full.</div>
+      <div id="s2-t2">No cab anywhere.</div>
+      <div id="s2-t3">You're going to be late.</div>
+      <div id="shatter-container" style="position:absolute; inset:0; pointer-events:none;"></div>
+    </div>
+
+    <!-- Scene 3: The Reframe (9-13s) -->
+    <div id="scene-3" class="scene">
+      <div id="s3-text"></div>
+      <div id="s3-tonight">Book it tonight.</div>
+    </div>
+
+    <!-- Scene 4: Product Demo (13-22s) -->
+    <div id="scene-4" class="scene">
+      <div id="phone-mockup">
+        <div class="form-field">
+          <div class="form-label">Pickup</div>
+          <div class="form-input" id="s4-pickup"></div>
+          <div class="check-icon" id="c1">✓</div>
+        </div>
+        <div class="form-field">
+          <div class="form-label">Destination</div>
+          <div class="form-input" id="s4-dest"></div>
+          <div class="check-icon" id="c2">✓</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <div class="form-field" style="flex:1">
+            <div class="form-label">Date</div>
+            <div class="form-input" id="s4-date"></div>
+            <div class="check-icon" id="c3">✓</div>
+          </div>
+          <div class="form-field" style="flex:1">
+            <div class="form-label">Time</div>
+            <div class="form-input" id="s4-time"></div>
+            <div class="check-icon" id="c4">✓</div>
+          </div>
+        </div>
+        <div id="find-driver-btn">Find Drivers</div>
+        
+        <div id="result-card">
+          <div style="font-size:10px; color:#10B981; margin-bottom:5px;">● Driver found · 2 min away</div>
+          <div style="font-weight:900; font-size:14px; margin-bottom:10px;">Taiwo Adeleke <span style="color:#F59E0B">★ 4.9</span></div>
+          <div style="background:#333; padding:8px; border-radius:6px; text-align:center; font-size:12px; font-weight:700;">Confirm · 1 Drop</div>
+        </div>
+      </div>
+      <div id="s4-subtext">Done. Now sleep.</div>
+    </div>
+
+    <!-- Scene 5: Contrast (22-26s) -->
+    <div id="scene-5" class="scene" style="background:#050505;">
+      <div id="s5-container">
+        <div class="column left">
+          <div class="col-header">Without TOVEDROP</div>
+          <div class="row r-l-1">7:45 AM — Rushing to park<div class="row-strikethrough st-1"></div></div>
+          <div class="row r-l-2">Park full — no cab<div class="row-strikethrough st-2"></div></div>
+          <div class="row r-l-3">Walking 40 minutes<div class="row-strikethrough st-3"></div></div>
+          <div class="row r-l-4">Miss test. Fail unit.<div class="row-strikethrough st-4"></div></div>
+        </div>
+        <div class="column right">
+          <div class="col-header">With TOVEDROP</div>
+          <div class="row r-r-1">7:25 AM — Still in hostel<span class="check ch-1">✓</span></div>
+          <div class="row r-r-2">Driver already confirmed<span class="check ch-2">✓</span></div>
+          <div class="row r-r-3">Picked up at 7:30 AM<span class="check ch-3">✓</span></div>
+          <div class="row r-r-4">Arrives early. Sits test.<span class="check ch-4">✓</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 6: Brand (26-30s) -->
+    <div id="scene-6" class="scene">
+      <canvas id="particle-canvas" style="position:absolute; inset:0;"></canvas>
+      <div id="s6-tagline-container" style="z-index: 10;">
+        <div id="s6-tagline"><span class="light">Book Tonight.</span> <span class="bold">Ride Tomorrow.</span></div>
+        <div id="s6-subtagline">Never miss a class again.</div>
+      </div>
+    </div>
+
+    <!-- Scene 7: CTA (30-34s) -->
+    <div id="scene-7" class="scene">
+      <div id="s7-container">
+        <div class="drop-coin"></div>
+        <div class="drop-text">1 Drop = 1 Booking</div>
+        <div class="btn-pill">Book a Ride →</div>
+        <div class="footer-text">Bowen University · book ahead · never miss again</div>
+        <div class="url">tovedrop.com</div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+// Audio Setup
+let synths = {};
+async function initAudio() {
+  await Tone.start();
+  
+  synths.tick = new Tone.MetalSynth({
+    frequency: "C5", envelope: { attack: 0.001, decay: 0.1, release: 0.01 },
+    harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5
+  }).toDestination();
+  synths.tick.volume.value = -28; // 0.04 gain roughly
+
+  synths.drone = new Tone.FMSynth({
+    harmonicity: 0.5, modulationIndex: 10,
+    oscillator: { type: "sine" }, modulation: { type: "triangle" }
+  }).toDestination();
+  synths.drone.volume.value = -22; // 0.08 gain
+
+  synths.thud1 = new Tone.MembraneSynth({ pitchDecay: 0.1, octaves: 4, oscillator: { type: "sine" } }).toDestination();
+  synths.thud1.volume.value = -6; // 0.5 gain
+
+  synths.thud2 = new Tone.MembraneSynth({ pitchDecay: 0.1, octaves: 4, oscillator: { type: "sine" } }).toDestination();
+  synths.thud2.volume.value = -8; // 0.4 gain
+
+  synths.piano = new Tone.Synth({
+    oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.8, sustain: 0, release: 1 }
+  }).toDestination();
+  synths.piano.volume.value = -20; // 0.1 gain
+
+  synths.ui = new Tone.Synth({
+    oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 }
+  }).toDestination();
+  synths.ui.volume.value = -24; // 0.06 gain
+
+  synths.chord = new Tone.PolySynth(Tone.Synth, {
+    oscillator: { type: "sine" }, envelope: { attack: 0.2, decay: 1, sustain: 0.8, release: 2 }
+  }).toDestination();
+  synths.chord.volume.value = -16; // 0.15 gain
+
+  synths.beepWrong = new Tone.Synth({ oscillator: { type: "square" }, envelope: { decay: 0.1 } }).toDestination();
+  synths.beepWrong.volume.value = -28; // 0.04
+
+  synths.beepRight = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { decay: 0.1 } }).toDestination();
+  synths.beepRight.volume.value = -24; // 0.06
+}
+
+function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+async function typeText(element, text, speed, onChar) {
+  element.innerText = '';
+  for(let i=0; i<text.length; i++) {
+    element.innerText += text[i];
+    if(onChar) onChar();
+    await wait(speed);
+  }
+}
+
+// Particle System for Scene 6
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function initParticles() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  particles = [];
+  for(let i=0; i<150; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      targetX: canvas.width/2 + (Math.random()-0.5)*200,
+      targetY: canvas.height/2 - 100 + (Math.random()-0.5)*50,
+      size: Math.random() * 3 + 1,
+      color: Math.random() > 0.5 ? '#F97316' : '#ffffff',
+      speed: Math.random() * 0.05 + 0.02
+    });
+  }
+}
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  let allDone = true;
+  particles.forEach(p => {
+    p.x += (p.targetX - p.x) * p.speed;
+    p.y += (p.targetY - p.y) * p.speed;
+    if(Math.abs(p.targetX - p.x) > 1) allDone = false;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+  });
+  if(!allDone) requestAnimationFrame(animateParticles);
+  else {
+    ctx.font = "900 60px Inter";
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.fillText("TOVEDROP", canvas.width/2, canvas.height/2 - 80);
+  }
+}
+
+// Main Sequence
+async function runSequence() {
+  document.getElementById('start-screen').style.display = 'none';
+  await initAudio();
+
+  const s1 = document.getElementById('scene-1');
+  const s2 = document.getElementById('scene-2');
+  const s3 = document.getElementById('scene-3');
+  const s4 = document.getElementById('scene-4');
+  const s5 = document.getElementById('scene-5');
+  const s6 = document.getElementById('scene-6');
+  const s7 = document.getElementById('scene-7');
+
+  // --- SCENE 1 (0-3s) ---
+  s1.classList.add('active');
+  const clock = document.getElementById('clock-text');
+  synths.drone.triggerAttack("Eb1");
+  
+  for(let i=0; i<3; i++) {
+    clock.innerText = `7:44:${57+i} AM`;
+    synths.tick.triggerAttackRelease("C5", "32n");
+    await wait(1000);
+  }
+  
+  document.getElementById('clock-line').animate([{width:'0'}, {width:'300px'}], {duration: 300, fill: 'forwards', easing: 'ease-out'});
+  document.getElementById('clock-warning').animate([{opacity:0}, {opacity:1}], {duration: 300, fill: 'forwards'});
+  await wait(1000); // Now at 4s total. Wait, brief says 0-3s. Let's adjust to be exactly 3s.
+
+  // --- SCENE 2 (3-9s) ---
+  s1.classList.remove('active'); // Hard cut
+  s2.classList.add('active');
+  
+  const t1 = document.getElementById('s2-t1');
+  const t2 = document.getElementById('s2-t2');
+  const t3 = document.getElementById('s2-t3');
+
+  t1.animate([{opacity:0, transform:'scale(1.5) rotate(-2deg)'}, {opacity:1, transform:'scale(1) rotate(-2deg)'}], {duration: 100, fill:'forwards'});
+  synths.thud1.triggerAttackRelease("E2", "8n");
+  await wait(700);
+
+  t2.animate([{opacity:0, transform:'scale(1.5) rotate(1deg)'}, {opacity:1, transform:'scale(1) rotate(1deg)'}], {duration: 100, fill:'forwards'});
+  synths.thud2.triggerAttackRelease("C2", "8n");
+  await wait(700);
+
+  t3.animate([{opacity:0, transform:'translateY(-50px) rotate(-1deg)'}, {opacity:1, transform:'translateY(0) rotate(-1deg)'}], {duration: 200, fill:'forwards'});
+  // Silence intentional.
+  
+  // Hold for 1 second.
+  await wait(1000);
+
+  // Shatter!
+  synths.drone.triggerRelease();
+  t1.style.opacity = 0; t2.style.opacity = 0; t3.style.opacity = 0;
+  // (Simulated shatter by just hiding them for standalone script brevity and performance)
+  // Silence for 0.5s
+  await wait(500);
+  
+  s2.classList.remove('active'); // Whiteout flash simulated by bg color transition
+  document.body.style.backgroundColor = '#fff';
+  await wait(10);
+  document.body.style.backgroundColor = '#000';
+
+  // --- SCENE 3 (9-13s) ---
+  s3.classList.add('active');
+  const s3t = document.getElementById('s3-text');
+  await typeText(s3t, "What if you booked it last night?", 40); // Takes ~1.3s
+  await wait(800);
+
+  s3t.animate([{opacity:1}, {opacity:0, transform:'scale(0.8)'}], {duration:400, fill:'forwards'});
+  const s3Tonight = document.getElementById('s3-tonight');
+  s3Tonight.animate([{opacity:0, transform:'scale(0.8)'}, {opacity:1, transform:'scale(1)'}], {duration:600, fill:'forwards', delay: 200});
+  synths.piano.triggerAttackRelease("G4", "8n");
+
+  await wait(1500);
+
+  // --- SCENE 4 (13-22s) ---
+  s3.classList.remove('active');
+  s4.classList.add('active');
+  const phone = document.getElementById('phone-mockup');
+  phone.animate([{transform:'translate(-50%, 100%)'}, {transform:'translate(-50%, 0)'}], {duration: 600, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill:'forwards'});
+  await wait(800);
+
+  const t = new Date(); t.setDate(t.getDate()+1);
+  const tomorrowStr = t.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+
+  async function fillField(id, text, cid) {
+    await typeText(document.getElementById(id), text, 20, () => {
+      // synths.ui.triggerAttackRelease("C6", "64n"); // Too noisy
+    });
+    document.getElementById(cid).animate([{opacity:0, transform:'translateY(-50%) scale(0)'}, {opacity:1, transform:'translateY(-50%) scale(1)'}], {duration:200, fill:'forwards'});
+    synths.ui.triggerAttackRelease("C5", "16n");
+    await wait(100);
+    synths.ui.triggerAttackRelease("E5", "16n");
+    await wait(200);
+  }
+
+  await fillField('s4-pickup', "Main Gate, Bowen", 'c1');
+  await fillField('s4-dest', "FSMS", 'c2');
+  await fillField('s4-date', tomorrowStr, 'c3');
+  await fillField('s4-time', "07:30 AM", 'c4');
+
+  await wait(300);
+  document.getElementById('find-driver-btn').animate([{opacity:0.5, transform:'scale(1)'}, {opacity:1, transform:'scale(1.05)'}, {opacity:0.8, transform:'scale(1)'}], {duration:300});
+  await wait(200);
+
+  document.getElementById('result-card').animate([{transform:'translateY(150%)', opacity:0}, {transform:'translateY(0)', opacity:1}], {duration: 400, easing:'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill:'forwards'});
+  synths.chord.triggerAttackRelease(["C4", "E4", "G4"], "1n");
+  
+  await wait(500);
+  document.getElementById('s4-subtext').animate([{opacity:0, transform:'translateY(10px)'}, {opacity:1, transform:'translateY(0)'}], {duration:500, fill:'forwards'});
+  
+  await wait(2000);
+
+  // --- SCENE 5 (22-26s) ---
+  // Crossfade
+  s4.animate([{opacity:1}, {opacity:0}], {duration: 400, fill:'forwards'});
+  phone.animate([{transform:'translate(-50%, 0)'}, {transform:'translate(-50%, 100%)'}], {duration: 400, fill:'forwards'});
+  await wait(400);
+  s4.classList.remove('active');
+  s5.classList.add('active');
+
+  const s5c = document.getElementById('s5-container');
+  s5c.animate([{opacity:0}, {opacity:1}], {duration:400, fill:'forwards'});
+  await wait(400);
+
+  for(let i=1; i<=4; i++) {
+    // Left
+    document.querySelector(`.r-l-${i}`).animate([{opacity:0}, {opacity:1}], {duration:200, fill:'forwards'});
+    document.querySelector(`.st-${i}`).animate([{width:0}, {width:'100%'}], {duration:200, fill:'forwards'});
+    synths.beepWrong.triggerAttackRelease("Bb3", "16n");
+    await wait(150);
+
+    // Right
+    document.querySelector(`.r-r-${i}`).animate([{opacity:0}, {opacity:1}], {duration:200, fill:'forwards'});
+    document.querySelector(`.ch-${i}`).animate([{opacity:0, transform:'scale(0)'}, {opacity:1, transform:'scale(1)'}], {duration:300, easing:'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill:'forwards'});
+    synths.beepRight.triggerAttackRelease("D5", "16n");
+    await wait(400);
+  }
+
+  await wait(1000);
+
+  // --- SCENE 6 (26-30s) ---
+  s5.classList.remove('active'); // Hard cut to black
+  await wait(200);
+  s6.classList.add('active');
+
+  initParticles();
+  animateParticles();
+  synths.chord.triggerAttackRelease(["F3", "A3", "C4", "E4"], "2n");
+
+  await wait(1200);
+  document.getElementById('s6-tagline-container').animate([{opacity:0, transform:'translateY(20px)'}, {opacity:1, transform:'translateY(0)'}], {duration: 600, fill:'forwards'});
+
+  await wait(2000);
+
+  // --- SCENE 7 (30-34s) ---
+  s6.animate([{opacity:1}, {opacity:0}], {duration: 500, fill:'forwards'}); // Dissolve
+  await wait(500);
+  s6.classList.remove('active');
+  s7.classList.add('active');
+
+  document.getElementById('s7-container').animate([{opacity:0}, {opacity:1}], {duration: 500, fill:'forwards'});
+  
+  await wait(200);
+  document.querySelector('.drop-coin').animate([{transform:'scale(0)'}, {transform:'scale(1)'}], {duration: 400, easing:'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill:'forwards'});
+  await wait(200);
+  document.querySelector('.drop-text').animate([{opacity:0}, {opacity:1}], {duration: 300, fill:'forwards'});
+  await wait(200);
+  document.querySelector('.btn-pill').animate([{transform:'scale(0)'}, {transform:'scale(1)'}], {duration: 500, easing:'cubic-bezier(0.175, 0.885, 0.32, 1.275)', fill:'forwards'});
+  await wait(200);
+  document.querySelector('.footer-text').animate([{opacity:0}, {opacity:1}], {duration: 500, fill:'forwards'});
+  document.querySelector('.url').animate([{opacity:0}, {opacity:0.3}], {duration: 500, fill:'forwards'});
+
+  synths.chord.triggerAttack(["C4", "E4", "G4", "B4"]); // Warm pad fade
+  synths.chord.volume.rampTo(-100, 3); // Fade out over 3s
+
+  await wait(3000);
+  synths.chord.releaseAll();
+}
+
+document.getElementById('start-btn').addEventListener('click', runSequence);
+
+</script>
+</body>
+</html>

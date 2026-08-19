@@ -131,7 +131,7 @@ export function ChatInterface({
           <Button 
             size="sm" 
             onClick={handleArrived}
-            className="bg-green-600 hover:bg-green-700 text-white"
+            className="bg-green-600 hover:bg-green-700 text-foreground"
           >
             <MapPin className="w-4 h-4 mr-1.5" />
             I've Arrived
@@ -153,7 +153,7 @@ export function ChatInterface({
                 <div 
                   className={`max-w-[75%] px-3 py-2 rounded-2xl ${
                     isMe 
-                      ? 'bg-purple-brand text-white rounded-br-sm' 
+                      ? 'bg-purple-brand text-foreground rounded-br-sm' 
                       : 'bg-secondary/10 text-foreground rounded-bl-sm'
                   } ${msg.status === 'sending' ? 'opacity-50' : ''} ${msg.status === 'failed' ? 'border border-red-500 bg-red-500/10 text-red-500' : ''}`}
                 >
@@ -180,7 +180,7 @@ export function ChatInterface({
           className="flex-1"
           disabled={loading}
         />
-        <Button type="submit" disabled={!newMessage.trim() || loading} size="icon" className="bg-purple-brand hover:bg-purple-brand/90 text-white shrink-0">
+        <Button type="submit" disabled={!newMessage.trim() || loading} size="icon" className="bg-purple-brand hover:bg-purple-brand/90 text-foreground shrink-0">
           <Send className="w-4 h-4" />
         </Button>
       </form>

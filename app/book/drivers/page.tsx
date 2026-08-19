@@ -92,7 +92,7 @@ export default function DriversPage() {
                         </Avatar>
                         {driver.verified && (
                           <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center bg-status-success border-2 border-surface-elevated">
-                            <CheckCircle className="w-2.5 h-2.5 text-white" />
+                            <CheckCircle className="w-2.5 h-2.5 text-foreground" />
                           </span>
                         )}
                       </div>
@@ -142,7 +142,7 @@ export default function DriversPage() {
                           href="/book/confirm"
                           className={buttonVariants({ 
                             size: "sm", 
-                            className: "bg-purple-brand hover:bg-purple-brand/90 text-white font-semibold rounded-lg h-8 px-4" 
+                            className: "bg-purple-brand hover:bg-purple-brand/90 text-foreground font-semibold rounded-lg h-8 px-4" 
                           })}
                         >
                           Continue →
@@ -151,7 +151,7 @@ export default function DriversPage() {
                         <Button
                           size="sm"
                           variant="outline"
-                          className="border-border-default text-text-secondary hover:text-white hover:border-purple-brand/40 bg-surface-card rounded-lg h-8 px-4"
+                          className="border-border-default text-text-secondary hover:text-foreground hover:border-purple-brand/40 bg-surface-card rounded-lg h-8 px-4"
                           onClick={() => setSelected(driver.id)}
                         >
                           Select
@@ -173,7 +173,7 @@ export default function DriversPage() {
               <Link 
                 href="/book" 
                 className={buttonVariants({ 
-                  className: "mt-5 bg-primary hover:bg-primary/90 text-white" 
+                  className: "mt-5 bg-primary hover:bg-primary/90 text-foreground" 
                 })}
               >
                 Change Trip Details

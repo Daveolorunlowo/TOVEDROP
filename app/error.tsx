@@ -33,36 +33,36 @@ export default function ErrorPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700 relative">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center animate-in fade-in duration-700 relative">
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-md">
         
         <div className="mb-6">
-          <HollowDropCoin className="w-20 h-20 md:w-28 md:h-28 text-white/40 mx-auto" />
+          <HollowDropCoin className="w-20 h-20 md:w-28 md:h-28 text-foreground/40 mx-auto" />
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tighter">
+        <h1 className="text-4xl md:text-5xl font-black text-foreground mb-4 tracking-tighter">
           Something went wrong
         </h1>
 
-        <h2 className="text-xl md:text-2xl font-bold text-white mb-3">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground mb-3">
           An unexpected error occurred.
         </h2>
         
-        <p className="text-sm md:text-base text-[#888] mb-10 max-w-[400px]">
+        <p className="text-sm md:text-base text-muted-foreground mb-10 max-w-[400px]">
           Try refreshing the page or navigating back home. Let's get you back on route.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <button 
             onClick={() => reset()}
-            className="w-full sm:w-auto px-6 py-3 rounded-md text-white font-semibold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 transition-colors"
+            className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 transition-colors"
           >
             Try Again
           </button>
           
           <Link 
             href={dashboardPath}
-            className="w-full sm:w-auto px-6 py-3 rounded-md text-white font-semibold text-sm border border-[#333] hover:bg-[#1a1a24] transition-colors"
+            className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm border border-border hover:bg-[#1a1a24] transition-colors"
           >
             {session?.user ? 'Go to Dashboard' : 'Back to Home'}
           </Link>

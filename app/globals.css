@@ -46,16 +46,17 @@
 }
 
 :root {
-  color-scheme: dark;
-  /* TOVEDROP single source of truth brand tokens */
-  --bg-deep: #0A0A0F;
-  --surface-card: #131318;
-  --surface-elevated: #1A1A21;
-  --border-subtle: rgba(255,255,255,0.08);
-  --border-default: rgba(255,255,255,0.12);
-  --text-primary: #FFFFFF;
-  --text-secondary: #A1A1AA;
-  --text-muted: #6B6B76;
+  color-scheme: light;
+  /* TOVEDROP single source of truth brand tokens - LIGHT MODE */
+  --bg-deep: #FAFAFA;
+  --surface-card: #FFFFFF;
+  --surface-elevated: #F4F4F5;
+  --border-subtle: rgba(0,0,0,0.08);
+  --border-default: rgba(0,0,0,0.12);
+  --text-primary: #0A0A0F;
+  --text-secondary: #52525B;
+  --text-muted: #A1A1AA;
+  
   --purple-brand: #8B5CF6;
   --purple-light: #A78BFA;
   --orange-brand: #F97316;
@@ -63,7 +64,7 @@
   --status-success: #22C55E;
   --status-warning: #F97316;
   --status-danger: #EF4444;
-  --status-neutral: #6B6B76;
+  --status-neutral: #A1A1AA;
   --status-info: #8B5CF6;
 
   /* Shadcn Baseline mapped to new tokens */
@@ -95,6 +96,20 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border-default);
   --sidebar-ring: var(--purple-brand);
+}
+
+.dark {
+  color-scheme: dark;
+  /* TOVEDROP single source of truth brand tokens - DARK MODE */
+  --bg-deep: #0A0A0F;
+  --surface-card: #131318;
+  --surface-elevated: #1A1A21;
+  --border-subtle: rgba(255,255,255,0.08);
+  --border-default: rgba(255,255,255,0.12);
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-muted: #6B6B76;
+  --status-neutral: #6B6B76;
 }
 
 @layer base {

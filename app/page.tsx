@@ -113,16 +113,16 @@ function PhoneMockup() {
         style={{ width: '160px', top: '130px', left: '-20px', transform: 'rotate(-5deg)', animation: 'float-driver 5.5s ease-in-out infinite' }}
       >
         <div className="flex items-center gap-2 mb-2">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0"
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-foreground text-[10px] font-bold shrink-0"
             style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>AO</div>
           <div className="min-w-0">
-            <p className="text-[11px] font-bold text-white truncate">Ade Okafor</p>
+            <p className="text-[11px] font-bold text-foreground truncate">Ade Okafor</p>
             <p className="text-[10px] text-purple-brand font-medium">✓ Verified Driver</p>
           </div>
         </div>
         <div className="flex items-center gap-1">
           <Star className="w-3 h-3 fill-purple-brand text-purple-brand" />
-          <span className="text-[11px] text-white font-semibold">4.8</span>
+          <span className="text-[11px] text-foreground font-semibold">4.8</span>
         </div>
       </div>
 
@@ -135,7 +135,7 @@ function PhoneMockup() {
           <span className="absolute inset-0 rounded-full bg-purple-brand animate-ping opacity-75" />
           <span className="relative rounded-full w-2 h-2 bg-purple-brand" />
         </span>
-        <span className="text-[11px] text-white font-medium whitespace-nowrap">3 drivers near you</span>
+        <span className="text-[11px] text-foreground font-medium whitespace-nowrap">3 drivers near you</span>
       </div>
 
       {/* Main phone */}
@@ -144,15 +144,15 @@ function PhoneMockup() {
         style={{ animation: 'float 4s ease-in-out infinite', height: '420px', marginLeft: 'auto' }}
       >
         <div className="flex items-center justify-between px-5 pt-3 pb-1">
-          <span className="text-[10px] text-white/50 font-medium">9:41</span>
+          <span className="text-[10px] text-foreground/50 font-medium">9:41</span>
           <div className="flex gap-1 items-center">
             <div className="w-3 h-1.5 rounded-sm bg-white/40" />
             <div className="w-1 h-1.5 rounded-sm bg-orange-brand" />
           </div>
         </div>
         <div className="px-4 pt-1 pb-3 border-b border-white/5">
-          <p className="text-[10px] text-white/40 uppercase tracking-widest mb-0.5">TOVEDROP</p>
-          <p className="text-xs font-bold text-white">Booking Confirmed</p>
+          <p className="text-[10px] text-foreground/40 uppercase tracking-widest mb-0.5">TOVEDROP</p>
+          <p className="text-xs font-bold text-foreground">Booking Confirmed</p>
         </div>
         <div className="relative mx-3 mt-3 h-28 rounded-xl overflow-hidden bg-surface-card">
           <svg className="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
@@ -170,15 +170,15 @@ function PhoneMockup() {
           <div className="absolute right-8 top-5 w-2 h-2 rounded-full bg-orange-brand shadow-[0_0_6px_rgba(217,119,6,0.8)]" />
         </div>
         <div className="mx-3 mt-3 bg-[#1A1A30] rounded-xl p-3 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-[10px] font-bold shrink-0"
+          <div className="w-8 h-8 rounded-full flex items-center justify-center text-foreground text-[10px] font-bold shrink-0"
             style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>EO</div>
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold text-white truncate">Emeka Obi</p>
-            <p className="text-[10px] text-white/40">Toyota Corolla · LAG-123AA</p>
+            <p className="text-[11px] font-semibold text-foreground truncate">Emeka Obi</p>
+            <p className="text-[10px] text-foreground/40">Toyota Corolla · LAG-123AA</p>
           </div>
           <div className="flex items-center gap-0.5 shrink-0">
             <Star className="w-2.5 h-2.5 fill-purple-brand text-purple-brand" />
-            <span className="text-[10px] text-white/70">4.9</span>
+            <span className="text-[10px] text-foreground/70">4.9</span>
           </div>
         </div>
         <div className="mx-3 mt-2 mb-3 flex items-center justify-center gap-2 bg-orange-brand/10 border border-orange-brand/20 rounded-full py-2">
@@ -187,7 +187,7 @@ function PhoneMockup() {
         </div>
         {/* Drops indicator */}
         <div className="mx-3 flex items-center justify-between bg-[#1A1A30] rounded-xl px-4 py-2.5">
-          <span className="text-[10px] text-white/40">Cost</span>
+          <span className="text-[10px] text-foreground/40">Cost</span>
           <div className="flex items-center gap-1">
             <DropCoin size={12} />
             <span className="text-[12px] font-bold text-orange-brand">1 Drop</span>
@@ -201,8 +201,8 @@ function PhoneMockup() {
         style={{ bottom: '80px', left: '0', animation: 'float-badge 6s ease-in-out 1s infinite' }}
       >
         <Star className="w-3.5 h-3.5 fill-purple-brand text-purple-brand shrink-0" />
-        <span className="text-[12px] font-semibold text-white">4.9</span>
-        <span className="text-[11px] text-white/45">· 200+ verified drivers</span>
+        <span className="text-[12px] font-semibold text-foreground">4.9</span>
+        <span className="text-[11px] text-foreground/45">· 200+ verified drivers</span>
       </div>
 
       {/* Floating trip card */}
@@ -210,8 +210,8 @@ function PhoneMockup() {
         className="absolute z-20 bg-surface-card border-l-2 border-orange-brand border-t border-r border-b border-white/10 rounded-xl px-3 py-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
         style={{ bottom: '20px', right: '20px', transform: 'rotate(-3deg)', animation: 'float-badge 7s ease-in-out 2s infinite' }}
       >
-        <p className="text-[10px] text-white/40 font-medium">Tomorrow · 8:00 AM</p>
-        <p className="text-[12px] font-bold text-white mt-0.5">Campus → City Mall</p>
+        <p className="text-[10px] text-foreground/40 font-medium">Tomorrow · 8:00 AM</p>
+        <p className="text-[12px] font-bold text-foreground mt-0.5">Campus → City Mall</p>
       </div>
     </div>
   )
@@ -284,7 +284,7 @@ function HeroSection() {
       {/* Vertical side label */}
       <div className="absolute left-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-2" aria-hidden="true">
         <div className="w-px h-16 bg-white/10" />
-        <span className="text-white/20 font-semibold" style={{ fontSize: '9px', letterSpacing: '0.18em', writingMode: 'vertical-rl', textTransform: 'uppercase' }}>EST. 2024 · CAMPUS RIDES</span>
+        <span className="text-foreground/20 font-semibold" style={{ fontSize: '9px', letterSpacing: '0.18em', writingMode: 'vertical-rl', textTransform: 'uppercase' }}>EST. 2024 · CAMPUS RIDES</span>
         <div className="w-px h-16 bg-white/10" />
       </div>
 
@@ -295,7 +295,7 @@ function HeroSection() {
 
 
             {/* Headline */}
-            <h1 className="font-extrabold text-white leading-[1.04] text-balance" style={{ fontSize: 'clamp(40px, 6.5vw, 76px)', letterSpacing: '-0.03em' }}>
+            <h1 className="font-extrabold text-foreground leading-[1.04] text-balance" style={{ fontSize: 'clamp(40px, 6.5vw, 76px)', letterSpacing: '-0.03em' }}>
               <span style={{ fontWeight: 300, display: 'block' }}>Your trusted ride,</span>
               <span style={{ display: 'block' }}>perfectly{' '}
                 <span style={{
@@ -312,7 +312,7 @@ function HeroSection() {
               <span className="font-extrabold text-orange-brand/20 select-none" style={{ fontSize: 'clamp(60px, 9vw, 120px)', lineHeight: 0.6, letterSpacing: '-0.04em' }}>...</span>
             </div>
 
-            <p className="mt-6 text-white/50 leading-relaxed max-w-sm" style={{ fontSize: '15px' }}>
+            <p className="mt-6 text-foreground/50 leading-relaxed max-w-sm" style={{ fontSize: '15px' }}>
               All drivers are trusted. The goal is<br />
               to make transportation easier,<br />
               and organized for the campus.
@@ -322,7 +322,7 @@ function HeroSection() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
               <button
                 onClick={handleBookRideClick}
-                className="relative inline-flex items-center gap-2.5 font-bold text-[14px] text-white px-7 py-3.5 rounded-full overflow-hidden group transition-all duration-200 hover:scale-[1.03]"
+                className="relative inline-flex items-center gap-2.5 font-bold text-[14px] text-foreground px-7 py-3.5 rounded-full overflow-hidden group transition-all duration-200 hover:scale-[1.03]"
                 style={{
                   background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
                   boxShadow: '0 4px 24px rgba(217,119,6,0.45), inset 0 1px 0 rgba(255,255,255,0.15)',
@@ -340,7 +340,7 @@ function HeroSection() {
 
               <Link
                 href="/apply"
-                className="inline-flex items-center gap-2 font-semibold text-[14px] text-white/85 hover:text-white px-6 py-3.5 rounded-full border transition-all duration-200 hover:border-white/45"
+                className="inline-flex items-center gap-2 font-semibold text-[14px] text-foreground/85 hover:text-foreground px-6 py-3.5 rounded-full border transition-all duration-200 hover:border-white/45"
                 style={{ borderColor: 'rgba(255,255,255,0.28)', background: 'rgba(255,255,255,0.04)' }}
               >
                 Become a Driver
@@ -357,7 +357,7 @@ function HeroSection() {
               ].map(({ label, rotate, isDrops, isCyan }) => (
                 <div
                   key={label}
-                  className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 text-[12px] font-medium text-white/70 hover:text-white hover:border-white/25 transition-all duration-200 cursor-default"
+                  className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 text-[12px] font-medium text-foreground/70 hover:text-foreground hover:border-white/25 transition-all duration-200 cursor-default"
                   style={{ transform: `rotate(${rotate})`, transition: 'transform 0.2s, color 0.2s, border-color 0.2s' }}
                 >
                   {isDrops && <DropCoin size={13} />}
@@ -447,7 +447,7 @@ function HowItWorksSection() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="text-center mb-20">
           <p className="text-[11px] font-semibold text-orange-brand uppercase tracking-widest mb-3">The Process</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white text-balance" style={{ letterSpacing: '-0.02em' }}>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
             How TOVEDROP Works
           </h2>
           <div className="mx-auto mt-3 w-12 h-1 rounded-full bg-orange-brand" />
@@ -481,7 +481,7 @@ function HowItWorksSection() {
                   className={cn('relative flex', isRight ? 'lg:justify-end' : 'lg:justify-start')}
                 >
                   <span
-                    className="absolute top-1/2 -translate-y-1/2 font-extrabold text-white select-none pointer-events-none"
+                    className="absolute top-1/2 -translate-y-1/2 font-extrabold text-foreground select-none pointer-events-none"
                     style={{ fontSize: '200px', lineHeight: 1, opacity: 0.04, left: isRight ? 'auto' : '-0.1em', right: isRight ? '-0.1em' : 'auto', letterSpacing: '-0.04em' }}
                     aria-hidden="true"
                   >
@@ -499,8 +499,8 @@ function HowItWorksSection() {
                     <div className="w-11 h-11 rounded-xl bg-orange-brand/10 border border-orange-brand/20 flex items-center justify-center mb-4">
                       <step.Icon className="w-5 h-5 text-orange-brand" />
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">{step.title}</h3>
-                    <p className="text-sm text-white/50 leading-relaxed">{step.desc}</p>
+                    <h3 className="text-xl font-bold text-foreground mb-2">{step.title}</h3>
+                    <p className="text-sm text-foreground/50 leading-relaxed">{step.desc}</p>
                   </div>
                 </div>
               )
@@ -558,7 +558,7 @@ function DropsSection() {
       <div ref={ref} className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className={cn('text-center mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
           <p className="text-[11px] font-semibold text-orange-brand uppercase tracking-widest mb-4">In-Platform Currency</p>
-          <h2 className="text-white font-extrabold leading-[1.05] text-balance" style={{ fontSize: 'clamp(32px, 5vw, 58px)', letterSpacing: '-0.025em' }}>
+          <h2 className="text-foreground font-extrabold leading-[1.05] text-balance" style={{ fontSize: 'clamp(32px, 5vw, 58px)', letterSpacing: '-0.025em' }}>
             Book with
           </h2>
           <h2
@@ -574,7 +574,7 @@ function DropsSection() {
           >
             Drops.
           </h2>
-          <p className="mt-4 text-white/40 max-w-sm mx-auto text-sm leading-relaxed">
+          <p className="mt-4 text-foreground/40 max-w-sm mx-auto text-sm leading-relaxed">
             Buy Drops once. Use them to book rides.<br />You still pay your driver directly for the trip.
           </p>
         </div>
@@ -608,8 +608,8 @@ function DropsSection() {
                   </div>
                 )}
 
-                <p className="text-xs font-bold text-white/60 uppercase tracking-widest">{pkg.name}</p>
-                <p className="text-lg font-semibold text-white/40">{pkg.price}</p>
+                <p className="text-xs font-bold text-foreground/60 uppercase tracking-widest">{pkg.name}</p>
+                <p className="text-lg font-semibold text-foreground/40">{pkg.price}</p>
 
                 {/* Drop count */}
                 <div>
@@ -617,7 +617,7 @@ function DropsSection() {
                     {pkg.drops}
                   </span>
                   <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--purple-brand)' }}>Drops</p>
-                  <p className="text-[11px] text-white/30 mt-0.5">= {pkg.bookings} bookings</p>
+                  <p className="text-[11px] text-foreground/30 mt-0.5">= {pkg.bookings} bookings</p>
                 </div>
 
                 {/* Coin row */}
@@ -627,12 +627,12 @@ function DropsSection() {
                       <DropCoin size={14} />
                     </div>
                   ))}
-                  {pkg.coins > 10 && <span className="text-[10px] text-white/30">+more</span>}
+                  {pkg.coins > 10 && <span className="text-[10px] text-foreground/30">+more</span>}
                 </div>
 
                 <button
                   type="button"
-                  className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:scale-[1.03]"
+                  className="w-full py-2.5 rounded-xl text-sm font-bold text-foreground transition-all duration-200 hover:scale-[1.03]"
                   style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: isPopular ? '0 4px 20px rgba(217,119,6,0.35)' : undefined }}
                 >
                   Buy Now
@@ -644,7 +644,7 @@ function DropsSection() {
 
         {/* Bottom note */}
         <div className={cn('mt-10 text-center transition-all duration-700', visible ? 'opacity-100' : 'opacity-0')}>
-          <p className="text-sm text-white/30 flex items-center justify-center gap-2">
+          <p className="text-sm text-foreground/30 flex items-center justify-center gap-2">
             <DropCoin size={14} />
             <span>New users get <strong className="text-orange-brand">3 free Drops</strong> on sign up — no purchase needed</span>
           </p>
@@ -684,11 +684,11 @@ function TrustSection() {
       <div ref={ref} className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className={cn('text-center mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
           <p className="text-[11px] font-semibold text-purple-brand uppercase tracking-widest mb-3">Safety First</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white text-balance" style={{ letterSpacing: '-0.02em' }}>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
             Built on{' '}
             <span style={{ background: 'linear-gradient(135deg, var(--purple-brand), #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>verified.</span>
           </h2>
-          <p className="mt-3 text-white/45 max-w-md mx-auto text-sm leading-relaxed">
+          <p className="mt-3 text-foreground/45 max-w-md mx-auto text-sm leading-relaxed">
             Every person on TOVEDROP — rider or driver — has been verified.
             <br />No strangers. No guesswork. Just trusted campus connections.
           </p>
@@ -705,8 +705,8 @@ function TrustSection() {
               <div className="w-10 h-10 rounded-xl bg-purple-brand/10 border border-purple-brand/20 flex items-center justify-center mb-4">
                 <Icon className="w-5 h-5 text-purple-brand" />
               </div>
-              <h3 className="text-sm font-bold text-white mb-2">{title}</h3>
-              <p className="text-xs text-white/45 leading-relaxed">{desc}</p>
+              <h3 className="text-sm font-bold text-foreground mb-2">{title}</h3>
+              <p className="text-xs text-foreground/45 leading-relaxed">{desc}</p>
             </div>
           ))}
         </div>
@@ -731,7 +731,7 @@ function StatsSection() {
       <div ref={ref} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
         <div className={cn('text-center mb-12 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
           <p className="text-[11px] font-semibold text-orange-brand uppercase tracking-widest mb-3">By the Numbers</p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white text-balance" style={{ letterSpacing: '-0.02em' }}>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
             Growing Every Week
           </h2>
           <div className="mx-auto mt-3 w-12 h-1 rounded-full bg-orange-brand" />
@@ -742,8 +742,8 @@ function StatsSection() {
           {/* Trips completed — wide */}
           <div className="col-span-2 bg-surface-card border border-white/5 rounded-2xl p-7 flex flex-col justify-between overflow-hidden relative group hover:border-orange-brand/25 hover:shadow-[0_0_32px_rgba(217,119,6,0.08)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
             <div className="relative z-10">
-              <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-2">Trips Completed</p>
-              <p className="text-5xl font-extrabold text-white tabular-nums" style={{ letterSpacing: '-0.03em' }}>
+              <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Trips Completed</p>
+              <p className="text-5xl font-extrabold text-foreground tabular-nums" style={{ letterSpacing: '-0.03em' }}>
                 {trips.toLocaleString()}<span className="text-orange-brand">+</span>
               </p>
             </div>
@@ -759,14 +759,14 @@ function StatsSection() {
           {/* Students */}
           <div className="bg-[#0E0E24] border border-white/5 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-orange-brand/25 hover:shadow-[0_0_32px_rgba(217,119,6,0.08)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
             <div>
-              <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-2">Students</p>
-              <p className="text-4xl font-extrabold text-white tabular-nums" style={{ letterSpacing: '-0.03em' }}>
+              <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Students</p>
+              <p className="text-4xl font-extrabold text-foreground tabular-nums" style={{ letterSpacing: '-0.03em' }}>
                 {students}<span className="text-orange-brand">+</span>
               </p>
             </div>
             <div className="flex -space-x-2 mt-3">
               {['var(--orange-brand)','#3B82F6','var(--purple-brand)','var(--orange-brand)','#8B5CF6'].map((c, j) => (
-                <div key={j} className="w-7 h-7 rounded-full border-2 border-[#0E0E24] flex items-center justify-center text-white text-[9px] font-bold shrink-0" style={{ background: c }}>
+                <div key={j} className="w-7 h-7 rounded-full border-2 border-[#0E0E24] flex items-center justify-center text-foreground text-[9px] font-bold shrink-0" style={{ background: c }}>
                   {String.fromCharCode(65 + j)}
                 </div>
               ))}
@@ -776,8 +776,8 @@ function StatsSection() {
           {/* Rating */}
           <div className="bg-[#0A0A18] border border-white/5 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-purple-brand/25 hover:shadow-[0_0_32px_rgba(6,182,212,0.08)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
             <div>
-              <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-2">Avg Rating</p>
-              <p className="text-4xl font-extrabold text-white" style={{ letterSpacing: '-0.03em' }}>
+              <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Avg Rating</p>
+              <p className="text-4xl font-extrabold text-foreground" style={{ letterSpacing: '-0.03em' }}>
                 4.9<span className="text-purple-brand text-2xl">★</span>
               </p>
             </div>
@@ -793,13 +793,13 @@ function StatsSection() {
             <div className="flex items-center gap-3">
               <DropCoin size={28} />
               <div>
-                <p className="text-[11px] font-semibold text-white/30 uppercase tracking-widest mb-1">Platform Fee</p>
-                <p className="text-3xl font-extrabold text-white" style={{ letterSpacing: '-0.02em' }}>
+                <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-1">Platform Fee</p>
+                <p className="text-3xl font-extrabold text-foreground" style={{ letterSpacing: '-0.02em' }}>
                   1 Drop · 1 Ride
                 </p>
               </div>
             </div>
-            <p className="text-sm text-white/35 max-w-xs text-right hidden sm:block leading-relaxed">
+            <p className="text-sm text-foreground/35 max-w-xs text-right hidden sm:block leading-relaxed">
               No card at checkout. Buy Drops once and use them for every booking.
             </p>
           </div>
@@ -860,10 +860,10 @@ function DriverCTASection() {
       >
         <div>
           <p className="text-[11px] font-semibold text-orange-brand uppercase tracking-widest mb-4">Join the Fleet</p>
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-white leading-tight text-balance" style={{ letterSpacing: '-0.025em' }}>
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-foreground leading-tight text-balance" style={{ letterSpacing: '-0.025em' }}>
             Drive with TOVEDROP
           </h2>
-          <p className="mt-5 text-white/55 leading-relaxed max-w-md">
+          <p className="mt-5 text-foreground/55 leading-relaxed max-w-md">
             Join our vetted driver community and get consistent bookings from
             verified university students. Flexible hours, fair earnings.
           </p>
@@ -892,18 +892,18 @@ function DriverCTASection() {
         <div className="flex justify-center lg:justify-end">
           <div className="bg-surface-card border border-white/8 rounded-2xl p-6 w-72 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-base shrink-0"
+              <div className="w-12 h-12 rounded-full flex items-center justify-center text-foreground font-bold text-base shrink-0"
                 style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}>EO</div>
               <div>
-                <p className="text-sm font-semibold text-white">Emeka Obi</p>
-                <p className="text-xs text-white/45">Verified Driver · Lagos</p>
+                <p className="text-sm font-semibold text-foreground">Emeka Obi</p>
+                <p className="text-xs text-foreground/45">Verified Driver · Lagos</p>
               </div>
             </div>
             <div className="grid grid-cols-3 gap-3 text-center">
               {[{ value: '4.9', label: 'Rating' }, { value: '218', label: 'Bookings' }, { value: '₦450k', label: 'Earned' }].map((stat) => (
                 <div key={stat.label} className="bg-bg-deep/80 rounded-xl py-3">
-                  <p className="text-base font-extrabold text-white">{stat.value}</p>
-                  <p className="text-[10px] text-white/40 mt-0.5">{stat.label}</p>
+                  <p className="text-base font-extrabold text-foreground">{stat.value}</p>
+                  <p className="text-[10px] text-foreground/40 mt-0.5">{stat.label}</p>
                 </div>
               ))}
             </div>

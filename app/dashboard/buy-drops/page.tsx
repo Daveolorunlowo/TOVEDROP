@@ -300,7 +300,7 @@ export default function BuyDropsPage() {
                     {/* First Time Badge */}
                     {isFirstTime && (
                       <div className="absolute -left-2 top-3 animate-badge-slide" style={{ animationDelay: `${idx * 100}ms`, opacity: 0 }}>
-                        <div className="bg-orange-brand text-white text-[10px] font-bold uppercase px-3 py-1 rounded-r-full shadow-md relative overflow-hidden">
+                        <div className="bg-orange-brand text-foreground text-[10px] font-bold uppercase px-3 py-1 rounded-r-full shadow-md relative overflow-hidden">
                           <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:4px_4px]"></div>
                           <span className="relative z-10">{FIRST_PURCHASE_DISCOUNT_PERCENTAGE * 100}% OFF — First Purchase</span>
                         </div>
@@ -354,7 +354,7 @@ export default function BuyDropsPage() {
               onClick={handleCheckout}
               disabled={!selectedPackage || isCheckingOut}
               className={`
-                w-full md:w-auto min-w-[240px] py-4 px-8 rounded-xl font-bold text-lg text-white
+                w-full md:w-auto min-w-[240px] py-4 px-8 rounded-xl font-bold text-lg text-foreground
                 flex items-center justify-center gap-2 transition-all duration-200
                 active:scale-97
                 ${!selectedPackage ? 'bg-border-default text-text-muted cursor-not-allowed' : 'bg-orange-brand shadow-lg hover:bg-orange-dark shadow-orange-brand/20'}
@@ -452,7 +452,7 @@ export default function BuyDropsPage() {
             </div>
 
             <p className="text-xs font-bold uppercase tracking-widest text-text-muted mb-2">Purchase Successful</p>
-            <h2 className="text-4xl font-black text-white tracking-tight mb-2">
+            <h2 className="text-4xl font-black text-foreground tracking-tight mb-2">
               +{useCountUp(celebrationData.drops, 600)} Drops
             </h2>
             <p className="text-text-secondary text-sm font-medium mb-6">
@@ -468,7 +468,7 @@ export default function BuyDropsPage() {
             <div className="space-y-3">
               <button 
                 onClick={() => router.push('/book')}
-                className="w-full bg-purple-brand hover:bg-purple-light text-white font-bold py-3 rounded-xl transition-colors"
+                className="w-full bg-purple-brand hover:bg-purple-light text-foreground font-bold py-3 rounded-xl transition-colors"
               >
                 Book a Ride Now →
               </button>

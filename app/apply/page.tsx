@@ -181,7 +181,7 @@ export default function ApplyPage() {
                 ? "Your driver account is active. Log in with your email and password to start accepting rides immediately." 
                 : "Thank you for applying to join our trusted driver community. Our team will review your documents within 2–3 business days and contact you via email with next steps."}
             </p>
-            <a href={autoApproved ? "/driver" : "/"} className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-white font-semibold" })}>
+            <a href={autoApproved ? "/driver" : "/"} className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-foreground font-semibold" })}>
               {autoApproved ? "Log in & go to Dashboard" : "Back to Home"}
             </a>
           </div>
@@ -390,7 +390,7 @@ export default function ApplyPage() {
                           className={cn(
                             'px-3 py-1.5 rounded-full text-sm font-medium border transition-colors',
                             selectedDays.includes(day)
-                              ? 'bg-primary text-white border-primary'
+                              ? 'bg-primary text-foreground border-primary'
                               : 'bg-card text-foreground border-border hover:border-primary/40'
                           )}
                         >
@@ -435,7 +435,7 @@ export default function ApplyPage() {
                     type="button"
                     variant="outline"
                     onClick={() => setStep((s) => s - 1)}
-                    className="border-secondary text-secondary hover:bg-secondary hover:text-white"
+                    className="border-secondary text-secondary hover:bg-secondary hover:text-foreground"
                   >
                     <ChevronLeft className="w-4 h-4 mr-1" /> Back
                   </Button>
@@ -443,7 +443,7 @@ export default function ApplyPage() {
                 <Button
                   type="submit"
                   disabled={processing}
-                  className="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold"
+                  className="flex-1 bg-primary hover:bg-primary/90 text-foreground font-semibold"
                   size="lg"
                 >
                   {step < 3 ? (

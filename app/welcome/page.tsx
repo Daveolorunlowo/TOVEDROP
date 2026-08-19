@@ -28,13 +28,13 @@ export default function WelcomePage() {
             </div>
           ))}
         </div>
-        <h1 className="text-3xl font-extrabold text-white mb-2" style={{ letterSpacing: '-0.02em' }}>
+        <h1 className="text-3xl font-extrabold text-foreground mb-2" style={{ letterSpacing: '-0.02em' }}>
           Welcome to TOVEDROP
         </h1>
         <p className="text-purple-brand font-bold text-lg mb-4">
           You&apos;ve been gifted 3 FREE Drops to get started.
         </p>
-        <p className="text-white/50 text-sm leading-relaxed mb-8">
+        <p className="text-foreground/50 text-sm leading-relaxed mb-8">
           Use them to book your first 3 rides.<br />
           No card needed — just open the app and go.
         </p>
@@ -48,7 +48,7 @@ export default function WelcomePage() {
         </div>
         <Link
           href="/dashboard"
-          className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-purple-brand text-white font-bold text-sm transition-all hover:scale-[1.02] hover:bg-purple-light"
+          className="inline-flex items-center justify-center gap-2 w-full py-3.5 rounded-full bg-purple-brand text-foreground font-bold text-sm transition-all hover:scale-[1.02] hover:bg-purple-light"
         >
           Book Your First Ride
         </Link>

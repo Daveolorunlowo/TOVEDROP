@@ -291,7 +291,7 @@ export default function AdminPage() {
   const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
   return (
-    <div className="flex min-h-screen admin-mesh-bg text-white">
+    <div className="flex min-h-screen admin-mesh-bg text-foreground">
       <CommandPalette activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* ── Sidebar ── */}
@@ -351,7 +351,7 @@ export default function AdminPage() {
       </aside>
 
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-background/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
       {/* ── Main ── */}
@@ -412,7 +412,7 @@ export default function AdminPage() {
                     className="relative overflow-hidden rounded-xl p-5 glass-card group cursor-default"
                   >
                     <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 rounded-full bg-orange-brand/10 blur-2xl group-hover:bg-orange-brand/20 transition-all duration-500" />
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-[#888] group-hover:text-[#aaa] transition-colors">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-muted-foreground group-hover:text-muted-foreground transition-colors">
                       {s.label}
                     </p>
                     <p
@@ -435,7 +435,7 @@ export default function AdminPage() {
                   className="lg:col-span-2 rounded-xl p-5 relative overflow-hidden glass-card neon-border"
                 >
                   <div className="absolute top-0 left-1/4 w-1/2 h-40 bg-orange-brand/10 blur-[120px] pointer-events-none" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-6 text-[#888]">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-6 text-muted-foreground">
                     Platform Growth (Last 7 Days)
                   </p>
                   <div className="h-[220px] w-full relative z-10">
@@ -471,7 +471,7 @@ export default function AdminPage() {
                   className="rounded-xl p-5 glass-card flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#888] flex items-center gap-2">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
                       Live Activity
                     </p>
@@ -491,8 +491,8 @@ export default function AdminPage() {
                               {activity.type === 'TRIP' ? <Car className="w-4 h-4" /> : <Banknote className="w-4 h-4" />}
                             </div>
                             <div>
-                              <p className="text-xs font-semibold text-white leading-tight">{activity.title}</p>
-                              <p className="text-[11px] text-[#aaa] mt-0.5 line-clamp-1">{activity.desc}</p>
+                              <p className="text-xs font-semibold text-foreground leading-tight">{activity.title}</p>
+                              <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{activity.desc}</p>
                               <p className="text-[9px] text-[#666] mt-1">{new Date(activity.time).toLocaleTimeString()}</p>
                             </div>
                           </motion.div>
@@ -526,7 +526,7 @@ export default function AdminPage() {
                     className="rounded-xl p-5 glass-card flex flex-col"
                   >
                     <div className="flex items-center justify-between mb-4 relative z-10">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-[#888]">
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
                         Pending Approvals
                       </p>
                       <button
@@ -538,15 +538,15 @@ export default function AdminPage() {
                     </div>
                     <div className="flex-1 overflow-y-auto space-y-3 relative z-10 pr-2">
                       {pendingDrivers.map((d: any) => (
-                        <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-white/5 hover:border-orange-brand/30 transition-colors group cursor-pointer" onClick={() => setActiveTab('approvals')}>
+                        <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-background/20 border border-white/5 hover:border-orange-brand/30 transition-colors group cursor-pointer" onClick={() => setActiveTab('approvals')}>
                           <Avatar className="w-8 h-8 shrink-0">
                             <AvatarFallback className="text-[10px] font-bold bg-white/10 text-[#fff]">
                               {initials(d.user.name)}
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1 min-w-0">
-                            <p className="text-xs font-medium text-white truncate group-hover:text-orange-brand transition-colors">{d.user.name}</p>
-                            <p className="text-[10px] text-[#888] truncate">{d.vehicleMake}</p>
+                            <p className="text-xs font-medium text-foreground truncate group-hover:text-orange-brand transition-colors">{d.user.name}</p>
+                            <p className="text-[10px] text-muted-foreground truncate">{d.vehicleMake}</p>
                           </div>
                           <StatusChip status="pending" />
                         </div>
@@ -581,13 +581,13 @@ export default function AdminPage() {
             >
               <div className="flex items-center justify-between glass-card p-4 rounded-xl mb-6 neon-border">
                 <div>
-                  <p className="text-sm font-bold text-white tracking-wide">Financial Command Center</p>
+                  <p className="text-sm font-bold text-foreground tracking-wide">Financial Command Center</p>
                   <p className="text-[11px] text-gray-400 mt-1">Real-time overview of platform revenue, liabilities, and payouts.</p>
                 </div>
                 <button
                   onClick={exportFinancesCSV}
                   disabled={!financesData || financesLoading}
-                  className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-white/10 disabled:opacity-50 glass-panel border border-white/10 text-white"
+                  className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-white/10 disabled:opacity-50 glass-panel border border-white/10 text-foreground"
                 >
                   <FileText className="w-3.5 h-3.5 text-orange-brand" />
                   Export CSV Report
@@ -608,7 +608,7 @@ export default function AdminPage() {
                       <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
                         <TrendingUp className="w-5 h-5" />
                       </div>
-                      <h2 className="text-lg font-bold text-white tracking-tight">Platform Position</h2>
+                      <h2 className="text-lg font-bold text-foreground tracking-tight">Platform Position</h2>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
@@ -627,7 +627,7 @@ export default function AdminPage() {
                         >
                           <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`} />
                           <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2 relative z-10">{stat.label}</p>
-                          <p className="text-2xl font-bold text-white tabular-nums tracking-tight relative z-10">{stat.value}</p>
+                          <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight relative z-10">{stat.value}</p>
                           <p className="text-[10px] text-gray-500 mt-2 relative z-10">{stat.sub}</p>
                         </motion.div>
                       ))}
@@ -645,20 +645,20 @@ export default function AdminPage() {
                         </thead>
                         <tbody className="divide-y divide-white/5">
                           <tr className="hover:bg-white/5 transition-colors">
-                            <td className="px-5 py-4 text-sm font-medium text-white">This Week</td>
+                            <td className="px-5 py-4 text-sm font-medium text-foreground">This Week</td>
                             <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisWeek.cashCollected.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisWeek.recognizedRevenue.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisWeek.driverPayouts.toLocaleString()}</td>
                           </tr>
                           <tr className="hover:bg-white/5 transition-colors">
-                            <td className="px-5 py-4 text-sm font-medium text-white">This Month</td>
+                            <td className="px-5 py-4 text-sm font-medium text-foreground">This Month</td>
                             <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisMonth.cashCollected.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisMonth.recognizedRevenue.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisMonth.driverPayouts.toLocaleString()}</td>
                           </tr>
                           <tr className="bg-white/5 border-t-2 border-white/10">
-                            <td className="px-5 py-4 text-sm font-bold text-white uppercase tracking-wider">All-Time</td>
-                            <td className="px-5 py-4 text-sm text-right font-bold text-white">₦{financesData.company.totalCashCollected.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm font-bold text-foreground uppercase tracking-wider">All-Time</td>
+                            <td className="px-5 py-4 text-sm text-right font-bold text-foreground">₦{financesData.company.totalCashCollected.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-bold text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]">+₦{financesData.company.recognizedRevenue.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-bold text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">-₦{financesData.company.totalDriverPayouts.toLocaleString()}</td>
                           </tr>
@@ -673,13 +673,13 @@ export default function AdminPage() {
                       <div className="p-2 rounded-lg bg-orange-brand/20 text-orange-brand shadow-[0_0_15px_rgba(249,115,22,0.2)]">
                         <Car className="w-5 h-5" />
                       </div>
-                      <h2 className="text-lg font-bold text-white tracking-tight">Driver Balances</h2>
+                      <h2 className="text-lg font-bold text-foreground tracking-tight">Driver Balances</h2>
                     </div>
 
                     <div className="glass-card rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center gap-6">
                       <div>
                         <p className="text-[10px] font-semibold uppercase tracking-wider text-orange-400 mb-1">Total Outstanding Driver Balances</p>
-                        <p className="text-3xl font-bold text-white tabular-nums tracking-tight">₦{financesData.drivers.totalBalances.toLocaleString()}</p>
+                        <p className="text-3xl font-bold text-foreground tabular-nums tracking-tight">₦{financesData.drivers.totalBalances.toLocaleString()}</p>
                       </div>
                       <div className="h-10 w-px bg-white/10 hidden sm:block"></div>
                       <p className="text-xs text-gray-400 max-w-xs leading-relaxed">
@@ -702,7 +702,7 @@ export default function AdminPage() {
                         <tbody className="divide-y divide-white/5">
                           {financesData.drivers.list.map((d: any, i: number) => (
                             <tr key={d.id} className="cursor-pointer hover:bg-white/5 transition-colors group" onClick={() => router.push(`/admin/drivers/${d.id}`)}>
-                              <td className="px-5 py-4 text-sm font-medium text-white group-hover:text-orange-brand transition-colors">{d.name}</td>
+                              <td className="px-5 py-4 text-sm font-medium text-foreground group-hover:text-orange-brand transition-colors">{d.name}</td>
                               <td className="px-5 py-4"><StatusChip status={d.status} /></td>
                               <td className="px-5 py-4 text-sm text-right font-bold text-orange-400">₦{d.walletBalance.toLocaleString()}</td>
                               <td className="px-5 py-4 text-sm text-right text-gray-300">{d.totalTrips}</td>
@@ -726,21 +726,21 @@ export default function AdminPage() {
                       <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
                         <Users className="w-5 h-5" />
                       </div>
-                      <h2 className="text-lg font-bold text-white tracking-tight">Rider Drops Economy</h2>
+                      <h2 className="text-lg font-bold text-foreground tracking-tight">Rider Drops Economy</h2>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
                       <div className="glass-card rounded-xl p-5 border border-blue-500/20 hover:border-blue-500/40 transition-colors">
                         <p className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 mb-1">Total Drops in Circulation</p>
-                        <p className="text-2xl font-bold text-white tabular-nums tracking-tight">{financesData.riders.totalDrops.toLocaleString()} <span className="text-sm font-medium text-gray-500">drops</span></p>
+                        <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">{financesData.riders.totalDrops.toLocaleString()} <span className="text-sm font-medium text-gray-500">drops</span></p>
                       </div>
                       <div className="glass-card rounded-xl p-5">
                         <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Est. Naira Value of Drops</p>
-                        <p className="text-2xl font-bold text-white tabular-nums tracking-tight">₦{financesData.riders.totalNairaValue.toLocaleString()}</p>
+                        <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">₦{financesData.riders.totalNairaValue.toLocaleString()}</p>
                       </div>
                       <div className="glass-card rounded-xl p-5">
                         <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Avg Drops / Active Rider</p>
-                        <p className="text-2xl font-bold text-white tabular-nums tracking-tight">{financesData.riders.avgDropsPerRider.toFixed(1)} <span className="text-sm font-medium text-gray-500">drops</span></p>
+                        <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">{financesData.riders.avgDropsPerRider.toFixed(1)} <span className="text-sm font-medium text-gray-500">drops</span></p>
                       </div>
                     </div>
 
@@ -758,7 +758,7 @@ export default function AdminPage() {
                         <tbody className="divide-y divide-white/5">
                           {financesData.riders.list.map((r: any) => (
                             <tr key={r.id} className="hover:bg-white/5 transition-colors">
-                              <td className="px-5 py-4 text-sm font-medium text-white">{r.name}</td>
+                              <td className="px-5 py-4 text-sm font-medium text-foreground">{r.name}</td>
                               <td className="px-5 py-4 text-sm text-gray-400">{r.email}</td>
                               <td className="px-5 py-4 text-sm text-right font-bold text-blue-400">{r.dropsBalance}</td>
                               <td className="px-5 py-4 text-sm text-right text-gray-300">
@@ -958,9 +958,9 @@ export default function AdminPage() {
                         <div>
                           <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{req.driver.user.name}</p>
                           <div className="text-[11px] mt-1 space-y-0.5" style={{ color: '#888' }}>
-                            <p>Bank: <span className="text-white">{req.driver.bankName}</span></p>
-                            <p>Acct: <span className="text-white">{req.driver.accountNumber}</span></p>
-                            <p>Name: <span className="text-white">{req.driver.accountName}</span></p>
+                            <p>Bank: <span className="text-foreground">{req.driver.bankName}</span></p>
+                            <p>Acct: <span className="text-foreground">{req.driver.accountNumber}</span></p>
+                            <p>Name: <span className="text-foreground">{req.driver.accountName}</span></p>
                             <p className="mt-1" style={{ color: '#555' }}>Requested: {new Date(req.createdAt).toLocaleString()}</p>
                           </div>
                         </div>
@@ -1057,7 +1057,7 @@ export default function AdminPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold tracking-tight text-[#f5f5f5]">User Feedback</h2>
-                  <p className="text-sm text-[#888] mt-1">Review issues and feature suggestions from riders and drivers.</p>
+                  <p className="text-sm text-muted-foreground mt-1">Review issues and feature suggestions from riders and drivers.</p>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -1065,7 +1065,7 @@ export default function AdminPage() {
                   <p className="text-sm text-[#555]">No feedback received yet.</p>
                 ) : (
                   data.feedbacks.map((fb: any) => (
-                    <div key={fb.id} className="bg-[#111] border border-[#222] rounded-xl p-5 shadow-sm">
+                    <div key={fb.id} className="bg-[#111] border border-border rounded-xl p-5 shadow-sm">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="text-sm font-medium text-[#f5f5f5]">{fb.user?.name || 'Anonymous'}</p>
@@ -1081,14 +1081,14 @@ export default function AdminPage() {
                           {fb.type}
                         </span>
                       </div>
-                      <p className="text-sm text-[#888] whitespace-pre-wrap mb-5">{fb.content}</p>
+                      <p className="text-sm text-muted-foreground whitespace-pre-wrap mb-5">{fb.content}</p>
                       
                       {fb.status === 'OPEN' && (
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleFeedbackAction(fb.id, 'review')}
                             disabled={processing === fb.id}
-                            className="flex-1 bg-[#1e1e1e] hover:bg-[#252525] border border-[#333] text-xs font-semibold py-2 rounded-md transition-colors"
+                            className="flex-1 bg-card hover:bg-[#252525] border border-border text-xs font-semibold py-2 rounded-md transition-colors"
                           >
                             {processing === fb.id ? <Loader2 className="w-3 h-3 mx-auto animate-spin" /> : 'Mark Reviewed'}
                           </button>
@@ -1203,7 +1203,7 @@ export default function AdminPage() {
                       <div className="flex items-center justify-end gap-3 text-right">
                         <button
                           onClick={() => setSelectedActivityUser(user)}
-                          className="text-[#888] hover:text-orange-brand transition-colors"
+                          className="text-muted-foreground hover:text-orange-brand transition-colors"
                           title="View Activity"
                         >
                           <Activity className="w-4 h-4" />

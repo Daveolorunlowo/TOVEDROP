@@ -79,7 +79,7 @@ export default function UniversityOnboarding() {
             <Button
               type="submit"
               size="lg"
-              className="w-full text-white font-semibold mt-4"
+              className="w-full text-foreground font-semibold mt-4"
               disabled={loading}
               style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}
             >

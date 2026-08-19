@@ -66,7 +66,7 @@ export function LiveMap() {
   }, [])
 
   if (!mounted || !L) {
-    return <div className="w-full h-full min-h-[300px] flex items-center justify-center text-sm text-gray-500 animate-pulse bg-black/20 rounded-xl">Initializing Map...</div>
+    return <div className="w-full h-full min-h-[300px] flex items-center justify-center text-sm text-gray-500 animate-pulse bg-background/20 rounded-xl">Initializing Map...</div>
   }
 
   // Default center Lagos, Nigeria

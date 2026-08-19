@@ -18,7 +18,7 @@ export function ShareTripButton({ shareToken }: { shareToken: string }) {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors hover:bg-[#1e1e1e]"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors hover:bg-card"
         style={{ color: 'var(--orange-brand)', border: '1px solid var(--orange-brand)' }}
       >
         <Share className="w-3.5 h-3.5" />
@@ -58,7 +58,7 @@ export function ShareTripButton({ shareToken }: { shareToken: string }) {
                 href={`https://wa.me/?text=${encodeURIComponent(`I'm on a TOVEDROP ride — here's my trip details: ${shareUrl}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-foreground transition-opacity hover:opacity-90"
                 style={{ background: '#25D366' }}
               >
                 Share via WhatsApp

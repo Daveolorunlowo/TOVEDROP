@@ -23,7 +23,7 @@ export default async function NotFound() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-center relative selection:bg-purple-900 selection:text-white">
+    <div className="min-h-screen bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-center relative selection:bg-purple-900 selection:text-foreground">
       {/* Weird ambient background */}
       <div className="absolute inset-0 z-0 opacity-30">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-700/50 rounded-full mix-blend-screen filter blur-[100px] animate-blob" />
@@ -38,7 +38,7 @@ export default async function NotFound() {
         
         {/* Glitching 404 */}
         <div className="relative group">
-          <h1 className="text-[8rem] md:text-[12rem] lg:text-[15rem] font-black text-white/90 tracking-tighter leading-none select-none relative" 
+          <h1 className="text-[8rem] md:text-[12rem] lg:text-[15rem] font-black text-foreground/90 tracking-tighter leading-none select-none relative" 
               style={{
                 textShadow: '0 0 30px rgba(168, 85, 247, 0.4)'
               }}>
@@ -54,7 +54,7 @@ export default async function NotFound() {
         </div>
 
         <div className="mt-4 md:mt-12 relative z-20">
-          <h2 className="text-xl md:text-3xl font-bold text-white mb-4 uppercase tracking-[0.3em] animate-pulse">
+          <h2 className="text-xl md:text-3xl font-bold text-foreground mb-4 uppercase tracking-[0.3em] animate-pulse">
             <span className="text-[var(--purple-brand)]">Void</span> Discovered
           </h2>
           
@@ -65,7 +65,7 @@ export default async function NotFound() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link 
               href="/"
-              className="relative px-8 py-4 rounded-full text-white font-bold text-sm bg-transparent overflow-hidden group border border-purple-500/30 hover:border-purple-500 transition-colors backdrop-blur-sm"
+              className="relative px-8 py-4 rounded-full text-foreground font-bold text-sm bg-transparent overflow-hidden group border border-purple-500/30 hover:border-purple-500 transition-colors backdrop-blur-sm"
             >
               <div className="absolute inset-0 bg-purple-600/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-in-out" />
               <span className="relative z-10">Abort Mission (Home)</span>
@@ -82,7 +82,7 @@ export default async function NotFound() {
       </div>
 
       <div className="absolute bottom-6 w-full flex justify-center z-10 opacity-30 hover:opacity-100 transition-opacity duration-1000">
-        <p className="text-[10px] font-bold tracking-[0.4em] text-white uppercase" style={{ textShadow: '0 0 10px white' }}>
+        <p className="text-[10px] font-bold tracking-[0.4em] text-foreground uppercase" style={{ textShadow: '0 0 10px white' }}>
           T O V E D R O P _ E R R O R _ X _ 4 0 4
         </p>
       </div>

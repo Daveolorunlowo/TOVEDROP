@@ -63,7 +63,7 @@ export function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="shrink-0 select-none" style={{ letterSpacing: '-0.025em' }} aria-label="TOVEDROP home">
-              <span className="text-white font-black" style={{ fontSize: '22px' }}>TOVE</span>
+              <span className="text-foreground font-black" style={{ fontSize: '22px' }}>TOVE</span>
               <span className="text-orange-brand font-black" style={{ fontSize: '25px' }}>DROP</span>
             </Link>
 
@@ -74,7 +74,7 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={link.isBookRide ? handleBookRideClick : undefined}
-                  className="text-[13.5px] font-medium text-white/60 hover:text-white transition-colors duration-200 tracking-wide"
+                  className="text-[13.5px] font-medium text-foreground/60 hover:text-foreground transition-colors duration-200 tracking-wide"
                 >
                   {link.label}
                 </Link>
@@ -93,7 +93,7 @@ export function Navbar() {
                       <span className="text-[12px] font-bold text-text-primary tabular-nums">{dropsBalance ?? session.user.dropsBalance ?? 0}</span>
                     )}
                     <span className="text-[11px] text-purple-brand font-semibold mr-0.5">Drops</span>
-                    <span className="text-[10px] font-black text-white bg-purple-brand rounded-full w-3.5 h-3.5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="text-[10px] font-black text-foreground bg-purple-brand rounded-full w-3.5 h-3.5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                       +
                     </span>
                   </Link>
@@ -110,7 +110,7 @@ export function Navbar() {
                       <span
                         className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full flex items-center justify-center bg-status-success border-2 border-bg-deep"
                       >
-                        <Check className="w-2 h-2 text-white" />
+                        <Check className="w-2 h-2 text-foreground" />
                       </span>
                     )}
                   </div>
@@ -121,7 +121,7 @@ export function Navbar() {
               ) : status === 'authenticated' ? (
                 <button
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="text-[13px] font-semibold text-white/65 hover:text-white border border-white/12 hover:border-white/35 px-5 py-2 rounded-full transition-all duration-200 hover:bg-white/5"
+                  className="text-[13px] font-semibold text-foreground/65 hover:text-foreground border border-white/12 hover:border-white/35 px-5 py-2 rounded-full transition-all duration-200 hover:bg-white/5"
                 >
                   Sign Out
                 </button>
@@ -129,13 +129,13 @@ export function Navbar() {
                 <>
                   <Link
                     href="/auth"
-                    className="text-[13px] font-semibold text-white/65 hover:text-white transition-colors duration-200 px-2"
+                    className="text-[13px] font-semibold text-foreground/65 hover:text-foreground transition-colors duration-200 px-2"
                   >
                     Log In
                   </Link>
                   <Link
                     href="/auth?tab=signup"
-                    className="text-[13px] font-bold text-white px-5 py-2 rounded-full transition-all duration-200 hover:brightness-110 hover:scale-[1.03] active:scale-[0.98]"
+                    className="text-[13px] font-bold text-foreground px-5 py-2 rounded-full transition-all duration-200 hover:brightness-110 hover:scale-[1.03] active:scale-[0.98]"
                     style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 14px rgba(217,119,6,0.4)' }}
                   >
                     Sign Up
@@ -146,7 +146,7 @@ export function Navbar() {
 
             {/* Mobile hamburger */}
             <button
-              className="md:hidden p-2 text-white/70 hover:text-white transition-colors"
+              className="md:hidden p-2 text-foreground/70 hover:text-foreground transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={mobileOpen}
@@ -164,10 +164,10 @@ export function Navbar() {
       >
         <div className="flex items-center justify-between px-6 pt-6 pb-5 border-b border-white/8">
           <Link href="/" onClick={() => setMobileOpen(false)} style={{ letterSpacing: '-0.025em' }}>
-            <span className="text-white font-black text-xl">TOVE</span>
+            <span className="text-foreground font-black text-xl">TOVE</span>
             <span className="text-orange-brand font-black" style={{ fontSize: '22px' }}>DROP</span>
           </Link>
-          <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-full text-white/50 hover:text-white transition-colors">
+          <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-full text-foreground/50 hover:text-foreground transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -178,7 +178,7 @@ export function Navbar() {
                   handleBookRideClick(e);
                 }
                 setMobileOpen(false);
-              }} className="px-4 py-3 rounded-xl text-sm font-medium text-white/65 hover:text-white hover:bg-white/5 transition-all">
+              }} className="px-4 py-3 rounded-xl text-sm font-medium text-foreground/65 hover:text-foreground hover:bg-white/5 transition-all">
               {link.label}
             </Link>
           ))}
@@ -189,23 +189,23 @@ export function Navbar() {
                 <span className="text-sm font-bold text-text-primary">{session.user.dropsBalance || 0}</span>
                 <span className="text-xs text-purple-brand font-semibold">Drops</span>
               </div>
-              <span className="text-[10px] font-bold text-white bg-purple-brand px-2 py-1 rounded">Buy More +</span>
+              <span className="text-[10px] font-bold text-foreground bg-purple-brand px-2 py-1 rounded">Buy More +</span>
             </Link>
           )}
           <div className="flex flex-col gap-2 mt-5 pt-5 border-t border-white/8">
             {!mounted || status === 'loading' ? null : status === 'authenticated' ? (
-              <button onClick={() => { setMobileOpen(false); signOut({ callbackUrl: '/' }) }} className="text-center text-sm font-semibold text-white/75 border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Sign Out</button>
+              <button onClick={() => { setMobileOpen(false); signOut({ callbackUrl: '/' }) }} className="text-center text-sm font-semibold text-foreground/75 border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Sign Out</button>
             ) : (
               <>
-                <Link href="/auth" onClick={() => setMobileOpen(false)} className="text-center text-sm font-semibold text-white border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Log In</Link>
-                <Link href="/auth?tab=signup" onClick={() => setMobileOpen(false)} className="text-center text-sm font-bold text-white px-4 py-2.5 rounded-xl" style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 10px rgba(217,119,6,0.35)' }}>Sign Up</Link>
+                <Link href="/auth" onClick={() => setMobileOpen(false)} className="text-center text-sm font-semibold text-foreground border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Log In</Link>
+                <Link href="/auth?tab=signup" onClick={() => setMobileOpen(false)} className="text-center text-sm font-bold text-foreground px-4 py-2.5 rounded-xl" style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 10px rgba(217,119,6,0.35)' }}>Sign Up</Link>
               </>
             )}
           </div>
         </nav>
       </div>
 
-      {mobileOpen && <div className="fixed inset-0 z-30 bg-black/60 md:hidden backdrop-blur-sm" onClick={() => setMobileOpen(false)} aria-hidden="true" />}
+      {mobileOpen && <div className="fixed inset-0 z-30 bg-background/60 md:hidden backdrop-blur-sm" onClick={() => setMobileOpen(false)} aria-hidden="true" />}
     </>
   )
 }
