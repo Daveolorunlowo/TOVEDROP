@@ -17,10 +17,7 @@ import { getCampusLandmarks } from '@/lib/campus-landmarks'
 const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 import { useDropsBalance } from '@/hooks/useDropsBalance'
 
-const MapPicker = dynamic(() => import('@/components/map-picker'), {
-  ssr: false,
-  loading: () => <div className="w-full h-full bg-muted/50 flex items-center justify-center text-muted-foreground">Loading interactive map...</div>
-})
+
 
 export default function BookPage() {
   const router = useRouter()
@@ -269,11 +266,7 @@ export default function BookPage() {
               </form>
             </div>
 
-            {/* Map Area */}
-            <div id="map-container" className="flex flex-col gap-4 lg:sticky lg:top-24 scroll-mt-24">
               <div className="bg-card rounded-2xl border border-border p-4 shadow-sm flex flex-col gap-4">
-
-
                 <div>
                   <p className="text-sm font-semibold mb-3">Quick Landmarks</p>
                   <div className="flex flex-wrap gap-2">
@@ -289,23 +282,6 @@ export default function BookPage() {
                   ))}
                   </div>
                 </div>
-              </div>
-              
-              <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm h-[400px]">
-                <MapPicker 
-                  pickup={pickupPoint}
-                  destination={destinationPoint}
-                  onPickupChange={(p) => { 
-                    setPickupPoint(p); 
-                    setPickupText(p.label); 
-                    if(!destinationPoint) setSelectingMode('destination'); 
-                  }}
-                  onDestinationChange={(p) => {
-                    setDestinationPoint(p);
-                    setDestinationText(p.label);
-                  }}
-                  selectingMode={selectingMode}
-                />
               </div>
             </div>
           </div>
