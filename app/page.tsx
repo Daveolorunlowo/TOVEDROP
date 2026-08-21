@@ -274,12 +274,6 @@ function HeroSection() {
         />
       </svg>
 
-      {/* Ghost "SAFE" text */}
-      <div className="absolute top-[28%] left-0 select-none pointer-events-none" aria-hidden="true" style={{ opacity: 0.022 }}>
-        <span className="font-extrabold" style={{ fontSize: 'clamp(120px, 18vw, 240px)', WebkitTextStroke: '1px rgba(255,255,255,0.8)', color: 'transparent', letterSpacing: '-0.04em', lineHeight: 1, display: 'block' }}>
-          SAFE
-        </span>
-      </div>
 
       {/* Vertical side label */}
       <div className="absolute left-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-2" aria-hidden="true">
