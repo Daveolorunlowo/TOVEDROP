@@ -74,7 +74,9 @@ export const ModelName = {
   SystemSettings: 'SystemSettings',
   Update: 'Update',
   UpdateRead: 'UpdateRead',
-  PrivacyRequest: 'PrivacyRequest'
+  PrivacyRequest: 'PrivacyRequest',
+  AlarmLog: 'AlarmLog',
+  TripReminder: 'TripReminder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -168,7 +170,11 @@ export const DriverProfileScalarFieldEnum = {
   status: 'status',
   totalTrips: 'totalTrips',
   rating: 'rating',
-  walletBalance: 'walletBalance'
+  walletBalance: 'walletBalance',
+  alarmEnabled: 'alarmEnabled',
+  alarmTimes: 'alarmTimes',
+  alarmSound: 'alarmSound',
+  alarmVibrate: 'alarmVibrate'
 } as const
 
 export type DriverProfileScalarFieldEnum = (typeof DriverProfileScalarFieldEnum)[keyof typeof DriverProfileScalarFieldEnum]
@@ -411,6 +417,32 @@ export const PrivacyRequestScalarFieldEnum = {
 } as const
 
 export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
+
+
+export const AlarmLogScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  driverId: 'driverId',
+  minutesBefore: 'minutesBefore',
+  firedAt: 'firedAt',
+  snoozedAt: 'snoozedAt',
+  dismissed: 'dismissed'
+} as const
+
+export type AlarmLogScalarFieldEnum = (typeof AlarmLogScalarFieldEnum)[keyof typeof AlarmLogScalarFieldEnum]
+
+
+export const TripReminderScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  driverId: 'driverId',
+  remindAt: 'remindAt',
+  type: 'type',
+  sent: 'sent',
+  createdAt: 'createdAt'
+} as const
+
+export type TripReminderScalarFieldEnum = (typeof TripReminderScalarFieldEnum)[keyof typeof TripReminderScalarFieldEnum]
 
 
 export const SortOrder = {

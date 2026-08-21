@@ -88,6 +88,29 @@ export async function POST(req: Request) {
         rating,
         isPool: trip.isPool
       }).catch(err => console.error("Pusher trigger failed:", err))
+
+      // Schedule driver alarm push notifications
+      if (driverProfile.alarmEnabled && driverProfile.alarmTimes?.length > 0) {
+        // Assume trip.date is YYYY-MM-DD and trip.time is HH:MM
+        const scheduledAt = new Date(`${trip.date}T${trip.time}`);
+        if (!isNaN(scheduledAt.getTime())) {
+          for (const mins of driverProfile.alarmTimes) {
+            const remindAt = new Date(scheduledAt.getTime() - mins * 60 * 1000);
+            
+            if (remindAt > new Date()) { // only future times
+              await prisma.tripReminder.create({
+                data: {
+                  tripId: trip.id,
+                  driverId: session.user.id,
+                  remindAt,
+                  type: `${mins}min`,
+                  sent: false
+                }
+              }).catch(err => console.error("Failed to create trip reminder:", err));
+            }
+          }
+        }
+      }
     }
 
     return NextResponse.json({ message: "Trip(s) accepted successfully", shareToken, count: result.count }, { status: 200 })

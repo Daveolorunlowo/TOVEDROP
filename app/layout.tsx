@@ -9,6 +9,7 @@ import { GlobalAuthenticatedNav } from '@/components/shared/GlobalAuthenticatedN
 import { NetworkIndicator } from '@/components/network-indicator'
 
 import { GlobalMessageListener } from '@/components/global-message-listener'
+import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -81,6 +82,7 @@ export default function RootLayout({
           <InstallPrompt />
           <ReferralTracker />
           <GlobalMessageListener />
+          <WelcomeOverlay />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </Providers>
         <NetworkIndicator />

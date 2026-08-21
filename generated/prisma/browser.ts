@@ -137,3 +137,13 @@ export type UpdateRead = Prisma.UpdateReadModel
  * 
  */
 export type PrivacyRequest = Prisma.PrivacyRequestModel
+/**
+ * Model AlarmLog
+ * 
+ */
+export type AlarmLog = Prisma.AlarmLogModel
+/**
+ * Model TripReminder
+ * 
+ */
+export type TripReminder = Prisma.TripReminderModel

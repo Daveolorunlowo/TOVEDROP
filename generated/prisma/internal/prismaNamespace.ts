@@ -420,7 +420,9 @@ export const ModelName = {
   SystemSettings: 'SystemSettings',
   Update: 'Update',
   UpdateRead: 'UpdateRead',
-  PrivacyRequest: 'PrivacyRequest'
+  PrivacyRequest: 'PrivacyRequest',
+  AlarmLog: 'AlarmLog',
+  TripReminder: 'TripReminder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -436,7 +438,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2216,6 +2218,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AlarmLog: {
+      payload: Prisma.$AlarmLogPayload<ExtArgs>
+      fields: Prisma.AlarmLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AlarmLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AlarmLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>
+        }
+        findFirst: {
+          args: Prisma.AlarmLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AlarmLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>
+        }
+        findMany: {
+          args: Prisma.AlarmLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>[]
+        }
+        create: {
+          args: Prisma.AlarmLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>
+        }
+        createMany: {
+          args: Prisma.AlarmLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AlarmLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>[]
+        }
+        delete: {
+          args: Prisma.AlarmLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>
+        }
+        update: {
+          args: Prisma.AlarmLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.AlarmLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AlarmLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AlarmLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.AlarmLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AlarmLogPayload>
+        }
+        aggregate: {
+          args: Prisma.AlarmLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAlarmLog>
+        }
+        groupBy: {
+          args: Prisma.AlarmLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlarmLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AlarmLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AlarmLogCountAggregateOutputType> | number
+        }
+      }
+    }
+    TripReminder: {
+      payload: Prisma.$TripReminderPayload<ExtArgs>
+      fields: Prisma.TripReminderFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripReminderFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripReminderFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>
+        }
+        findFirst: {
+          args: Prisma.TripReminderFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripReminderFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>
+        }
+        findMany: {
+          args: Prisma.TripReminderFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>[]
+        }
+        create: {
+          args: Prisma.TripReminderCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>
+        }
+        createMany: {
+          args: Prisma.TripReminderCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TripReminderCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>[]
+        }
+        delete: {
+          args: Prisma.TripReminderDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>
+        }
+        update: {
+          args: Prisma.TripReminderUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>
+        }
+        deleteMany: {
+          args: Prisma.TripReminderDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripReminderUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TripReminderUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>[]
+        }
+        upsert: {
+          args: Prisma.TripReminderUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripReminderPayload>
+        }
+        aggregate: {
+          args: Prisma.TripReminderAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripReminder>
+        }
+        groupBy: {
+          args: Prisma.TripReminderGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripReminderGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripReminderCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripReminderCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2330,7 +2480,11 @@ export const DriverProfileScalarFieldEnum = {
   status: 'status',
   totalTrips: 'totalTrips',
   rating: 'rating',
-  walletBalance: 'walletBalance'
+  walletBalance: 'walletBalance',
+  alarmEnabled: 'alarmEnabled',
+  alarmTimes: 'alarmTimes',
+  alarmSound: 'alarmSound',
+  alarmVibrate: 'alarmVibrate'
 } as const
 
 export type DriverProfileScalarFieldEnum = (typeof DriverProfileScalarFieldEnum)[keyof typeof DriverProfileScalarFieldEnum]
@@ -2573,6 +2727,32 @@ export const PrivacyRequestScalarFieldEnum = {
 } as const
 
 export type PrivacyRequestScalarFieldEnum = (typeof PrivacyRequestScalarFieldEnum)[keyof typeof PrivacyRequestScalarFieldEnum]
+
+
+export const AlarmLogScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  driverId: 'driverId',
+  minutesBefore: 'minutesBefore',
+  firedAt: 'firedAt',
+  snoozedAt: 'snoozedAt',
+  dismissed: 'dismissed'
+} as const
+
+export type AlarmLogScalarFieldEnum = (typeof AlarmLogScalarFieldEnum)[keyof typeof AlarmLogScalarFieldEnum]
+
+
+export const TripReminderScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  driverId: 'driverId',
+  remindAt: 'remindAt',
+  type: 'type',
+  sent: 'sent',
+  createdAt: 'createdAt'
+} as const
+
+export type TripReminderScalarFieldEnum = (typeof TripReminderScalarFieldEnum)[keyof typeof TripReminderScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2870,6 +3050,8 @@ export type GlobalOmitConfig = {
   update?: Prisma.UpdateOmit
   updateRead?: Prisma.UpdateReadOmit
   privacyRequest?: Prisma.PrivacyRequestOmit
+  alarmLog?: Prisma.AlarmLogOmit
+  tripReminder?: Prisma.TripReminderOmit
 }
 
 /* Types for Logging */

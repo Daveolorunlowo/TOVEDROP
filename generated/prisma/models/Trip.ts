@@ -368,6 +368,8 @@ export type TripWhereInput = {
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
   platformRevenue?: Prisma.XOR<Prisma.PlatformRevenueNullableScalarRelationFilter, Prisma.PlatformRevenueWhereInput> | null
   adminRevenue?: Prisma.XOR<Prisma.AdminRevenueNullableScalarRelationFilter, Prisma.AdminRevenueWhereInput> | null
+  alarmLogs?: Prisma.AlarmLogListRelationFilter
+  tripReminders?: Prisma.TripReminderListRelationFilter
 }
 
 export type TripOrderByWithRelationInput = {
@@ -400,6 +402,8 @@ export type TripOrderByWithRelationInput = {
   walletTransactions?: Prisma.WalletTransactionOrderByRelationAggregateInput
   platformRevenue?: Prisma.PlatformRevenueOrderByWithRelationInput
   adminRevenue?: Prisma.AdminRevenueOrderByWithRelationInput
+  alarmLogs?: Prisma.AlarmLogOrderByRelationAggregateInput
+  tripReminders?: Prisma.TripReminderOrderByRelationAggregateInput
 }
 
 export type TripWhereUniqueInput = Prisma.AtLeast<{
@@ -435,6 +439,8 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
   platformRevenue?: Prisma.XOR<Prisma.PlatformRevenueNullableScalarRelationFilter, Prisma.PlatformRevenueWhereInput> | null
   adminRevenue?: Prisma.XOR<Prisma.AdminRevenueNullableScalarRelationFilter, Prisma.AdminRevenueWhereInput> | null
+  alarmLogs?: Prisma.AlarmLogListRelationFilter
+  tripReminders?: Prisma.TripReminderListRelationFilter
 }, "id" | "shareToken">
 
 export type TripOrderByWithAggregationInput = {
@@ -520,6 +526,8 @@ export type TripCreateInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateInput = {
@@ -549,6 +557,8 @@ export type TripUncheckedCreateInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripUpdateInput = {
@@ -578,6 +588,8 @@ export type TripUpdateInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateInput = {
@@ -607,6 +619,8 @@ export type TripUncheckedUpdateInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateManyInput = {
@@ -992,6 +1006,34 @@ export type TripUpdateOneRequiredWithoutAdminRevenueNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutAdminRevenueInput, Prisma.TripUpdateWithoutAdminRevenueInput>, Prisma.TripUncheckedUpdateWithoutAdminRevenueInput>
 }
 
+export type TripCreateNestedOneWithoutAlarmLogsInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutAlarmLogsInput, Prisma.TripUncheckedCreateWithoutAlarmLogsInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutAlarmLogsInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneRequiredWithoutAlarmLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutAlarmLogsInput, Prisma.TripUncheckedCreateWithoutAlarmLogsInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutAlarmLogsInput
+  upsert?: Prisma.TripUpsertWithoutAlarmLogsInput
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutAlarmLogsInput, Prisma.TripUpdateWithoutAlarmLogsInput>, Prisma.TripUncheckedUpdateWithoutAlarmLogsInput>
+}
+
+export type TripCreateNestedOneWithoutTripRemindersInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutTripRemindersInput, Prisma.TripUncheckedCreateWithoutTripRemindersInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripRemindersInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneRequiredWithoutTripRemindersNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutTripRemindersInput, Prisma.TripUncheckedCreateWithoutTripRemindersInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripRemindersInput
+  upsert?: Prisma.TripUpsertWithoutTripRemindersInput
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutTripRemindersInput, Prisma.TripUpdateWithoutTripRemindersInput>, Prisma.TripUncheckedUpdateWithoutTripRemindersInput>
+}
+
 export type TripCreateWithoutRiderInput = {
   id?: string
   status?: string
@@ -1018,6 +1060,8 @@ export type TripCreateWithoutRiderInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutRiderInput = {
@@ -1046,6 +1090,8 @@ export type TripUncheckedCreateWithoutRiderInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutRiderInput = {
@@ -1084,6 +1130,8 @@ export type TripCreateWithoutDriverInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutDriverInput = {
@@ -1112,6 +1160,8 @@ export type TripUncheckedCreateWithoutDriverInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutDriverInput = {
@@ -1209,6 +1259,8 @@ export type TripCreateWithoutReviewInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutReviewInput = {
@@ -1237,6 +1289,8 @@ export type TripUncheckedCreateWithoutReviewInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutReviewInput = {
@@ -1281,6 +1335,8 @@ export type TripUpdateWithoutReviewInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutReviewInput = {
@@ -1309,6 +1365,8 @@ export type TripUncheckedUpdateWithoutReviewInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutMessagesInput = {
@@ -1337,6 +1395,8 @@ export type TripCreateWithoutMessagesInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutMessagesInput = {
@@ -1365,6 +1425,8 @@ export type TripUncheckedCreateWithoutMessagesInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutMessagesInput = {
@@ -1409,6 +1471,8 @@ export type TripUpdateWithoutMessagesInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutMessagesInput = {
@@ -1437,6 +1501,8 @@ export type TripUncheckedUpdateWithoutMessagesInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutDropLotInput = {
@@ -1465,6 +1531,8 @@ export type TripCreateWithoutDropLotInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutDropLotInput = {
@@ -1493,6 +1561,8 @@ export type TripUncheckedCreateWithoutDropLotInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutDropLotInput = {
@@ -1547,6 +1617,8 @@ export type TripCreateWithoutWalletTransactionsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutWalletTransactionsInput = {
@@ -1575,6 +1647,8 @@ export type TripUncheckedCreateWithoutWalletTransactionsInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutWalletTransactionsInput = {
@@ -1619,6 +1693,8 @@ export type TripUpdateWithoutWalletTransactionsInput = {
   messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -1647,6 +1723,8 @@ export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutPlatformRevenueInput = {
@@ -1675,6 +1753,8 @@ export type TripCreateWithoutPlatformRevenueInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutPlatformRevenueInput = {
@@ -1703,6 +1783,8 @@ export type TripUncheckedCreateWithoutPlatformRevenueInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutPlatformRevenueInput = {
@@ -1747,6 +1829,8 @@ export type TripUpdateWithoutPlatformRevenueInput = {
   messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
@@ -1775,6 +1859,8 @@ export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutAdminRevenueInput = {
@@ -1803,6 +1889,8 @@ export type TripCreateWithoutAdminRevenueInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutAdminRevenueInput = {
@@ -1831,6 +1919,8 @@ export type TripUncheckedCreateWithoutAdminRevenueInput = {
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutAdminRevenueInput = {
@@ -1875,6 +1965,8 @@ export type TripUpdateWithoutAdminRevenueInput = {
   messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutAdminRevenueInput = {
@@ -1903,6 +1995,280 @@ export type TripUncheckedUpdateWithoutAdminRevenueInput = {
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutAlarmLogsInput = {
+  id?: string
+  status?: string
+  pickup: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  destination: string
+  destinationLat?: number | null
+  destinationLng?: number | null
+  date: string
+  time: string
+  notes?: string | null
+  driverArrivedAt?: Date | string | null
+  isPool?: boolean
+  poolGroupId?: string | null
+  bookingFeeNaira?: number | null
+  shareToken?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
+  driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
+  dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutTripInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTripInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
+  platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
+  adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutAlarmLogsInput = {
+  id?: string
+  status?: string
+  pickup: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  destination: string
+  destinationLat?: number | null
+  destinationLng?: number | null
+  date: string
+  time: string
+  notes?: string | null
+  riderId: string
+  driverId?: string | null
+  driverArrivedAt?: Date | string | null
+  isPool?: boolean
+  poolGroupId?: string | null
+  bookingFeeNaira?: number | null
+  dropLotId?: string | null
+  shareToken?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
+  platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
+  adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutAlarmLogsInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutAlarmLogsInput, Prisma.TripUncheckedCreateWithoutAlarmLogsInput>
+}
+
+export type TripUpsertWithoutAlarmLogsInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutAlarmLogsInput, Prisma.TripUncheckedUpdateWithoutAlarmLogsInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutAlarmLogsInput, Prisma.TripUncheckedCreateWithoutAlarmLogsInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutAlarmLogsInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutAlarmLogsInput, Prisma.TripUncheckedUpdateWithoutAlarmLogsInput>
+}
+
+export type TripUpdateWithoutAlarmLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  date?: Prisma.StringFieldUpdateOperationsInput | string
+  time?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
+  driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
+  dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
+  platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
+  adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutAlarmLogsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  date?: Prisma.StringFieldUpdateOperationsInput | string
+  time?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  riderId?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
+  platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
+  adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutTripRemindersInput = {
+  id?: string
+  status?: string
+  pickup: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  destination: string
+  destinationLat?: number | null
+  destinationLng?: number | null
+  date: string
+  time: string
+  notes?: string | null
+  driverArrivedAt?: Date | string | null
+  isPool?: boolean
+  poolGroupId?: string | null
+  bookingFeeNaira?: number | null
+  shareToken?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
+  driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
+  dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
+  review?: Prisma.ReviewCreateNestedOneWithoutTripInput
+  messages?: Prisma.MessageCreateNestedManyWithoutTripInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
+  platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
+  adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutTripRemindersInput = {
+  id?: string
+  status?: string
+  pickup: string
+  pickupLat?: number | null
+  pickupLng?: number | null
+  destination: string
+  destinationLat?: number | null
+  destinationLng?: number | null
+  date: string
+  time: string
+  notes?: string | null
+  riderId: string
+  driverId?: string | null
+  driverArrivedAt?: Date | string | null
+  isPool?: boolean
+  poolGroupId?: string | null
+  bookingFeeNaira?: number | null
+  dropLotId?: string | null
+  shareToken?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
+  platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
+  adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutTripRemindersInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutTripRemindersInput, Prisma.TripUncheckedCreateWithoutTripRemindersInput>
+}
+
+export type TripUpsertWithoutTripRemindersInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutTripRemindersInput, Prisma.TripUncheckedUpdateWithoutTripRemindersInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutTripRemindersInput, Prisma.TripUncheckedCreateWithoutTripRemindersInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutTripRemindersInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutTripRemindersInput, Prisma.TripUncheckedUpdateWithoutTripRemindersInput>
+}
+
+export type TripUpdateWithoutTripRemindersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  date?: Prisma.StringFieldUpdateOperationsInput | string
+  time?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
+  driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
+  dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
+  review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
+  platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
+  adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutTripRemindersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  pickup?: Prisma.StringFieldUpdateOperationsInput | string
+  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destination?: Prisma.StringFieldUpdateOperationsInput | string
+  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  date?: Prisma.StringFieldUpdateOperationsInput | string
+  time?: Prisma.StringFieldUpdateOperationsInput | string
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  riderId?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  dropLotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
+  platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
+  adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateManyRiderInput = {
@@ -1977,6 +2343,8 @@ export type TripUpdateWithoutRiderInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutRiderInput = {
@@ -2005,6 +2373,8 @@ export type TripUncheckedUpdateWithoutRiderInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutRiderInput = {
@@ -2056,6 +2426,8 @@ export type TripUpdateWithoutDriverInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutDriverInput = {
@@ -2084,6 +2456,8 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutDriverInput = {
@@ -2158,6 +2532,8 @@ export type TripUpdateWithoutDropLotInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutDropLotInput = {
@@ -2186,6 +2562,8 @@ export type TripUncheckedUpdateWithoutDropLotInput = {
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutDropLotInput = {
@@ -2219,11 +2597,15 @@ export type TripUncheckedUpdateManyWithoutDropLotInput = {
 export type TripCountOutputType = {
   messages: number
   walletTransactions: number
+  alarmLogs: number
+  tripReminders: number
 }
 
 export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | TripCountOutputTypeCountMessagesArgs
   walletTransactions?: boolean | TripCountOutputTypeCountWalletTransactionsArgs
+  alarmLogs?: boolean | TripCountOutputTypeCountAlarmLogsArgs
+  tripReminders?: boolean | TripCountOutputTypeCountTripRemindersArgs
 }
 
 /**
@@ -2248,6 +2630,20 @@ export type TripCountOutputTypeCountMessagesArgs<ExtArgs extends runtime.Types.E
  */
 export type TripCountOutputTypeCountWalletTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.WalletTransactionWhereInput
+}
+
+/**
+ * TripCountOutputType without action
+ */
+export type TripCountOutputTypeCountAlarmLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AlarmLogWhereInput
+}
+
+/**
+ * TripCountOutputType without action
+ */
+export type TripCountOutputTypeCountTripRemindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TripReminderWhereInput
 }
 
 
@@ -2281,6 +2677,8 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   walletTransactions?: boolean | Prisma.Trip$walletTransactionsArgs<ExtArgs>
   platformRevenue?: boolean | Prisma.Trip$platformRevenueArgs<ExtArgs>
   adminRevenue?: boolean | Prisma.Trip$adminRevenueArgs<ExtArgs>
+  alarmLogs?: boolean | Prisma.Trip$alarmLogsArgs<ExtArgs>
+  tripReminders?: boolean | Prisma.Trip$tripRemindersArgs<ExtArgs>
   _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trip"]>
 
@@ -2372,6 +2770,8 @@ export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   walletTransactions?: boolean | Prisma.Trip$walletTransactionsArgs<ExtArgs>
   platformRevenue?: boolean | Prisma.Trip$platformRevenueArgs<ExtArgs>
   adminRevenue?: boolean | Prisma.Trip$adminRevenueArgs<ExtArgs>
+  alarmLogs?: boolean | Prisma.Trip$alarmLogsArgs<ExtArgs>
+  tripReminders?: boolean | Prisma.Trip$tripRemindersArgs<ExtArgs>
   _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TripIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2396,6 +2796,8 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     walletTransactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
     platformRevenue: Prisma.$PlatformRevenuePayload<ExtArgs> | null
     adminRevenue: Prisma.$AdminRevenuePayload<ExtArgs> | null
+    alarmLogs: Prisma.$AlarmLogPayload<ExtArgs>[]
+    tripReminders: Prisma.$TripReminderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2821,6 +3223,8 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   walletTransactions<T extends Prisma.Trip$walletTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$walletTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   platformRevenue<T extends Prisma.Trip$platformRevenueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$platformRevenueArgs<ExtArgs>>): Prisma.Prisma__PlatformRevenueClient<runtime.Types.Result.GetResult<Prisma.$PlatformRevenuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   adminRevenue<T extends Prisma.Trip$adminRevenueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$adminRevenueArgs<ExtArgs>>): Prisma.Prisma__AdminRevenueClient<runtime.Types.Result.GetResult<Prisma.$AdminRevenuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  alarmLogs<T extends Prisma.Trip$alarmLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$alarmLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  tripReminders<T extends Prisma.Trip$tripRemindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$tripRemindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3412,6 +3816,54 @@ export type Trip$adminRevenueArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.AdminRevenueInclude<ExtArgs> | null
   where?: Prisma.AdminRevenueWhereInput
+}
+
+/**
+ * Trip.alarmLogs
+ */
+export type Trip$alarmLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AlarmLog
+   */
+  select?: Prisma.AlarmLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AlarmLog
+   */
+  omit?: Prisma.AlarmLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AlarmLogInclude<ExtArgs> | null
+  where?: Prisma.AlarmLogWhereInput
+  orderBy?: Prisma.AlarmLogOrderByWithRelationInput | Prisma.AlarmLogOrderByWithRelationInput[]
+  cursor?: Prisma.AlarmLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AlarmLogScalarFieldEnum | Prisma.AlarmLogScalarFieldEnum[]
+}
+
+/**
+ * Trip.tripReminders
+ */
+export type Trip$tripRemindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the TripReminder
+   */
+  select?: Prisma.TripReminderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the TripReminder
+   */
+  omit?: Prisma.TripReminderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.TripReminderInclude<ExtArgs> | null
+  where?: Prisma.TripReminderWhereInput
+  orderBy?: Prisma.TripReminderOrderByWithRelationInput | Prisma.TripReminderOrderByWithRelationInput[]
+  cursor?: Prisma.TripReminderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.TripReminderScalarFieldEnum | Prisma.TripReminderScalarFieldEnum[]
 }
 
 /**

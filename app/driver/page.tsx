@@ -12,6 +12,9 @@ import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/Skeleton
 import { DriverTripListener } from '@/components/driver-trip-listener'
 import { ChatModal } from '@/components/chat-modal'
 import { Skeleton } from '@/components/shared/Skeleton'
+import { useDriverAlarms } from '@/hooks/useDriverAlarms'
+import { AlarmModal } from '@/components/driver/AlarmModal'
+import { AlarmSettings } from '@/components/driver/AlarmSettings'
 import { useLocationBroadcaster } from '@/hooks/useLocationBroadcaster'
 import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/sign-out-button'
@@ -110,74 +113,13 @@ function downloadICS(trip: any, scheduledAt: Date) {
   URL.revokeObjectURL(url);
 }
 
-// Fire an alarm push notification via the server
-async function fireAlarm(tripId: string, minutesUntilPickup: number) {
-  try {
-    await fetch('/api/driver/trips/alarm', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tripId, minutesUntilPickup }),
-    })
-  } catch (err) {
-    console.error('Failed to fire alarm:', err)
-  }
-}
-
-// Play a short beep using Web Audio API (in-app alert when screen is open)
-function playAlarmSound() {
-  try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
-    const oscillator = ctx.createOscillator()
-    const gainNode = ctx.createGain()
-    oscillator.connect(gainNode)
-    gainNode.connect(ctx.destination)
-    oscillator.type = 'sine'
-    oscillator.frequency.setValueAtTime(880, ctx.currentTime)
-    oscillator.frequency.setValueAtTime(660, ctx.currentTime + 0.2)
-    oscillator.frequency.setValueAtTime(880, ctx.currentTime + 0.4)
-    gainNode.gain.setValueAtTime(0.5, ctx.currentTime)
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8)
-    oscillator.start(ctx.currentTime)
-    oscillator.stop(ctx.currentTime + 0.8)
-    if (navigator.vibrate) navigator.vibrate([300, 100, 300, 100, 300])
-  } catch (e) {
-    // AudioContext might not be available in all environments
-  }
-}
-
 function ConfirmedTripCard({ trip, isLast, onComplete, onChat, processing }: { trip: any, isLast: boolean, onComplete: (id: string) => void, onChat: (trip: any) => void, processing: string | null }) {
   const [now, setNow] = useState(new Date());
-  const firedAlarms = useRef<Set<string>>(new Set());
 
   useEffect(() => {
-    // Update every minute and check alarm thresholds
+    // Update every minute
     const tick = () => {
-      const current = new Date();
-      setNow(current);
-
-      const scheduledAt = new Date(`${trip.date}T${trip.time}:00`);
-      const diffMs = scheduledAt.getTime() - current.getTime();
-      const diffMins = Math.floor(diffMs / 60000);
-
-      // Check localStorage for already-fired alarms to survive re-renders
-      const alarmKey30 = `alarm_30_${trip.id}`;
-      const alarmKey15 = `alarm_15_${trip.id}`;
-
-      // 30-minute alarm (fires between 31 and 29 minutes)
-      if (diffMins <= 31 && diffMins >= 29 && !firedAlarms.current.has(alarmKey30) && !localStorage.getItem(alarmKey30)) {
-        firedAlarms.current.add(alarmKey30);
-        localStorage.setItem(alarmKey30, '1');
-        fireAlarm(trip.id, 30);
-        playAlarmSound();
-      }
-
-      // 15-minute alarm (fires between 16 and 14 minutes)
-      if (diffMins <= 16 && diffMins >= 14 && !firedAlarms.current.has(alarmKey15) && !localStorage.getItem(alarmKey15)) {
-        firedAlarms.current.add(alarmKey15);
-        localStorage.setItem(alarmKey15, '1');
-        fireAlarm(trip.id, 15);
-        playAlarmSound();
-      }
+      setNow(new Date());
     };
 
     tick(); // run immediately
@@ -293,6 +235,7 @@ export default function DriverDashboardPage() {
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
   const [showNotifBanner, setShowNotifBanner] = useState(false)
+  const [driverSettings, setDriverSettings] = useState<any>(null)
 
   // Start tracking location if the driver is loaded and approved
   const driverId = data?.driverProfile?.userId
@@ -334,7 +277,18 @@ export default function DriverDashboardPage() {
     const start = Date.now()
     try {
       const res = await fetch('/api/driver/trips')
-      if (res.ok) setData(await res.json())
+      if (res.ok) {
+        const d = await res.json()
+        setData(d)
+        if (!driverSettings && d.driverProfile) {
+          setDriverSettings({
+            alarmEnabled: d.driverProfile.alarmEnabled,
+            alarmTimes: d.driverProfile.alarmTimes,
+            alarmSound: d.driverProfile.alarmSound,
+            alarmVibrate: d.driverProfile.alarmVibrate
+          })
+        }
+      }
       else if (res.status === 401) router.push('/auth/login')
     } catch (e) {
       console.error(e)
@@ -350,6 +304,11 @@ export default function DriverDashboardPage() {
     const id = setInterval(fetchData, 15000)
     return () => clearInterval(id)
   }, [router])
+
+  const { activeAlarm, dismissAlarm } = useDriverAlarms(
+    data?.confirmedTrips || [],
+    driverSettings || {}
+  );
 
   const handleAccept = async (id: string) => {
     const tripToAccept = data.pendingTrips.find((t: any) => t.id === id)
@@ -780,6 +739,15 @@ export default function DriverDashboardPage() {
           </div>
         </div>
 
+        {/* ── Alarm Settings ── */}
+        {driverSettings && driverId && (
+          <AlarmSettings 
+            driverId={driverId} 
+            initialSettings={driverSettings} 
+            onSave={(newSettings) => setDriverSettings(newSettings)}
+          />
+        )}
+
         {/* ── Incoming Requests ── */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
@@ -910,6 +878,27 @@ export default function DriverDashboardPage() {
           currentUserId={data.driverProfile.userId}
           otherPartyName={activeChatTrip.rider?.name || "Rider"}
           onClose={() => setActiveChatTrip(null)}
+        />
+      )}
+
+      {activeAlarm && (
+        <AlarmModal
+          trip={activeAlarm.trip}
+          minutesBefore={activeAlarm.minutesBefore}
+          alarmSound={driverSettings?.alarmSound || 'default'}
+          alarmVibrate={driverSettings?.alarmVibrate ?? true}
+          onDismiss={dismissAlarm}
+          onSnooze={() => {
+            fetch('/api/alarms/snooze', { 
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                tripId: activeAlarm.trip.id,
+                minutesBefore: activeAlarm.minutesBefore 
+              })
+            });
+            dismissAlarm();
+          }}
         />
       )}
     </div>
