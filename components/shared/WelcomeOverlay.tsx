@@ -5,219 +5,179 @@ import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Car, Gift, ChevronRight, Check } from 'lucide-react';
 
-const getThemeColors = (hour: number) => {
-  if (hour >= 5 && hour < 12) {
-    return {
-      bg: 'bg-gradient-to-br from-orange-100 via-rose-100 to-amber-50',
-      blob1: 'bg-orange-300',
-      blob2: 'bg-rose-300',
-      blob3: 'bg-amber-300',
-      text: 'text-zinc-900',
-      greeting: 'Good Morning',
-      icon: '🌅',
-      overlay: 'bg-white/30'
-    };
-  } else if (hour >= 12 && hour < 17) {
-    return {
-      bg: 'bg-gradient-to-br from-blue-50 via-cyan-50 to-sky-100',
-      blob1: 'bg-blue-300',
-      blob2: 'bg-cyan-300',
-      blob3: 'bg-sky-300',
-      text: 'text-zinc-900',
-      greeting: 'Good Afternoon',
-      icon: '☀️',
-      overlay: 'bg-white/30'
-    };
-  } else if (hour >= 17 && hour < 21) {
-    return {
-      bg: 'bg-gradient-to-br from-indigo-950 via-purple-900 to-orange-950',
-      blob1: 'bg-purple-500',
-      blob2: 'bg-orange-500',
-      blob3: 'bg-rose-600',
-      text: 'text-white',
-      greeting: 'Good Evening',
-      icon: '🌇',
-      overlay: 'bg-black/40'
-    };
-  } else {
-    return {
-      bg: 'bg-gradient-to-br from-slate-950 via-indigo-950 to-zinc-950',
-      blob1: 'bg-indigo-600',
-      blob2: 'bg-blue-600',
-      blob3: 'bg-violet-600',
-      text: 'text-white',
-      greeting: 'Good Night',
-      icon: '🌙',
-      overlay: 'bg-black/60'
-    };
-  }
+const getGreeting = () => {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'GOOD MORNING';
+  if (hour < 17) return 'GOOD AFTERNOON';
+  if (hour < 21) return 'GOOD EVENING';
+  return 'GOOD NIGHT';
 };
 
-const StaggeredText = ({ text, className }: { text: string, className?: string }) => {
-  const words = text.split(" ");
+// Generates random stars for the background
+const Stars = () => {
+  const [stars, setStars] = useState<{ id: number; x: number; y: number; size: number; delay: number; duration: number }[]>([]);
   
-  const container: any = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.12, delayChildren: 0.3 }
-    }
-  };
-  
-  const item: any = {
-    hidden: { opacity: 0, y: 50, filter: 'blur(10px)', scale: 0.9 },
-    show: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, transition: { type: 'spring', damping: 14, stiffness: 100 } }
-  };
-  
+  useEffect(() => {
+    setStars(Array.from({ length: 70 }).map((_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 3 + 1,
+      delay: Math.random() * 2,
+      duration: Math.random() * 3 + 2,
+    })));
+  }, []);
+
   return (
-    <motion.div 
-      variants={container} 
-      initial="hidden" 
-      animate="show" 
-      exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)', transition: { duration: 0.4 } }} 
-      className={`flex flex-wrap justify-center gap-x-[0.3em] ${className}`}
-    >
-      {words.map((word, i) => (
-        <motion.span key={i} variants={item} className="inline-block drop-shadow-2xl">
-          {word}
-        </motion.span>
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {stars.map((star) => (
+        <motion.div
+          key={star.id}
+          className="absolute rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]"
+          style={{ left: `${star.x}%`, top: `${star.y}%`, width: star.size, height: star.size }}
+          animate={{
+            opacity: [0, 1, 0],
+            scale: [0, 1.5, 0],
+            y: [0, -30],
+          }}
+          transition={{
+            duration: star.duration,
+            repeat: Infinity,
+            delay: star.delay,
+            ease: "easeInOut",
+          }}
+        />
       ))}
-    </motion.div>
+    </div>
   );
 };
 
 export function WelcomeOverlay() {
   const { data: session, status } = useSession();
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
+  const [phase, setPhase] = useState<'idle' | 'dot' | 'laser' | 'void' | 'text' | 'zoom' | 'guide' | 'done'>('idle');
   const [guideStep, setGuideStep] = useState(0);
-  const [theme, setTheme] = useState(getThemeColors(12));
+  const greeting = getGreeting();
+  const firstName = session?.user?.name?.split(' ')[0] || 'RIDER';
 
   useEffect(() => {
     if (status === 'authenticated') {
-      const hasSeenWelcome = sessionStorage.getItem('hasSeenWelcome');
       const hasSeenGuide = localStorage.getItem('hasSeenGuide');
 
-      setTheme(getThemeColors(new Date().getHours()));
-
-      if (!hasSeenWelcome) {
-        setShowWelcome(true);
-        sessionStorage.setItem('hasSeenWelcome', 'true');
-        
-        setTimeout(() => {
-          setShowWelcome(false);
-          if (!hasSeenGuide) {
-            setTimeout(() => setShowGuide(true), 800); 
-          }
-        }, 3200); // Wait longer so they can appreciate the animation
-      } else if (!hasSeenGuide) {
-        setShowGuide(true);
-      }
+      // Sequence timeline (Plays on EVERY app entry)
+      setPhase('dot');
+      setTimeout(() => setPhase('laser'), 600);
+      setTimeout(() => setPhase('void'), 1200);
+      setTimeout(() => setPhase('text'), 1800);
+      setTimeout(() => setPhase('zoom'), 4000);
+      
+      setTimeout(() => {
+        if (!hasSeenGuide) setPhase('guide');
+        else setPhase('done');
+      }, 4800);
     }
   }, [status]);
 
-  const finishGuide = () => {
-    localStorage.setItem('hasSeenGuide', 'true');
-    setShowGuide(false);
-  };
+  if (status !== 'authenticated' || phase === 'idle' || phase === 'done') return null;
 
-  const steps = [
-    {
-      icon: <MapPin className="w-12 h-12 text-violet-500" />,
-      title: 'Request a Ride',
-      desc: 'Enter your pickup and destination on campus. We will match you with a trusted student driver.'
-    },
-    {
-      icon: <Car className="w-12 h-12 text-orange-500" />,
-      title: 'Meet Your Driver',
-      desc: 'Track your driver in real-time. All drivers are verified students for your safety.'
-    },
-    {
-      icon: <Gift className="w-12 h-12 text-green-500" />,
-      title: 'Earn Free Drops',
-      desc: 'Refer friends to earn free drops and save on your daily commutes!'
-    }
-  ];
-
-  if (status !== 'authenticated') return null;
+  const isWelcomeActive = ['dot', 'laser', 'void', 'text', 'zoom'].includes(phase);
 
   return (
     <>
       <AnimatePresence>
-        {showWelcome && (
+        {isWelcomeActive && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: 'easeInOut' }}
-            className={`fixed inset-0 z-[200] flex items-center justify-center overflow-hidden ${theme.bg}`}
+            transition={{ duration: 0.8 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black overflow-hidden"
           >
-            {/* Ambient Background Blobs */}
-            <div className={`absolute inset-0 ${theme.overlay} backdrop-blur-[60px] z-10`}></div>
-            
+            {/* The Void Background */}
             <motion.div 
+              className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/40 via-black to-black"
+              initial={{ opacity: 0, scale: 0.8 }}
               animate={{ 
-                x: [0, 100, -50, 0], 
-                y: [0, -100, 50, 0],
-                scale: [1, 1.2, 0.9, 1]
+                opacity: (phase === 'void' || phase === 'text' || phase === 'zoom') ? 1 : 0,
+                scale: phase === 'zoom' ? 3 : 1 
               }}
-              transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-              className={`absolute top-1/4 left-1/4 w-[40vw] h-[40vw] rounded-full blur-[80px] opacity-60 ${theme.blob1} z-0`}
-            />
-            
-            <motion.div 
-              animate={{ 
-                x: [0, -100, 100, 0], 
-                y: [0, 100, -50, 0],
-                scale: [1, 0.8, 1.3, 1]
-              }}
-              transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-              className={`absolute bottom-1/4 right-1/4 w-[45vw] h-[45vw] rounded-full blur-[90px] opacity-60 ${theme.blob2} z-0`}
-            />
-            
-            <motion.div 
-              animate={{ 
-                x: [0, 50, -100, 0], 
-                y: [0, -50, 100, 0],
-                scale: [1, 1.1, 0.8, 1]
-              }}
-              transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-              className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] rounded-full blur-[100px] opacity-40 ${theme.blob3} z-0`}
-            />
+              transition={{ duration: phase === 'zoom' ? 0.8 : 1, ease: 'easeInOut' }}
+            >
+              <Stars />
+            </motion.div>
 
-            {/* Foreground Content */}
-            <div className="z-20 text-center flex flex-col items-center justify-center px-6">
-              <motion.div 
-                initial={{ scale: 0, rotate: -45, opacity: 0 }}
-                animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                exit={{ scale: 0.5, opacity: 0 }}
-                transition={{ type: 'spring', damping: 12, stiffness: 100, delay: 0.1 }}
-                className="text-6xl md:text-8xl mb-8 drop-shadow-2xl"
-              >
-                {theme.icon}
-              </motion.div>
-              
-              <StaggeredText 
-                text={`${theme.greeting}, ${session?.user?.name?.split(' ')[0] || 'there'}!`} 
-                className={`text-5xl md:text-7xl lg:text-8xl font-black ${theme.text} tracking-tight leading-tight`}
-              />
-              
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: 1.2, duration: 0.8 }}
-                className={`mt-6 ${theme.text} opacity-70 font-medium tracking-widest uppercase text-xs md:text-sm`}
-              >
-                Let's get you moving
-              </motion.div>
-            </div>
+            {/* Phase 1: Glowing Dot */}
+            <AnimatePresence>
+              {phase === 'dot' && (
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: [1, 1.5, 1], opacity: 1, boxShadow: "0 0 40px 10px rgba(139, 92, 246, 0.8)" }}
+                  exit={{ scale: 0, opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="w-2 h-2 bg-white rounded-full absolute z-10"
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Phase 2: Horizontal Laser */}
+            <AnimatePresence>
+              {phase === 'laser' && (
+                <motion.div
+                  initial={{ scaleX: 0, height: '4px', opacity: 1 }}
+                  animate={{ scaleX: 1, height: '4px', opacity: 1, boxShadow: "0 0 60px 20px rgba(139, 92, 246, 0.8)" }}
+                  exit={{ height: '100vh', opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "circOut" }}
+                  className="w-full bg-violet-400 absolute z-10 origin-center"
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Phase 3 & 4: Cinematic Text Reveal */}
+            <AnimatePresence>
+              {phase === 'text' && (
+                <div className="relative z-20 flex flex-col items-center justify-center w-full h-full perspective-1000">
+                  <motion.div
+                    initial={{ opacity: 0, rotateX: 45, scale: 2, y: 100 }}
+                    animate={{ opacity: 1, rotateX: 0, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 5, filter: 'blur(20px)' }}
+                    transition={{ type: 'spring', damping: 12, stiffness: 60 }}
+                    className="flex flex-col items-center"
+                  >
+                    <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-zinc-300 via-white to-zinc-300 text-6xl md:text-8xl font-black tracking-[0.2em] mb-4 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
+                      {greeting}
+                    </h1>
+                    
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: '100%' }}
+                      transition={{ delay: 0.5, duration: 0.8, ease: "circOut" }}
+                      className="h-[1px] bg-gradient-to-r from-transparent via-violet-500 to-transparent mb-6 relative"
+                    >
+                      {/* Scanning light across the line */}
+                      <motion.div 
+                        animate={{ left: ['0%', '100%'] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                        className="absolute top-0 w-20 h-[2px] bg-white blur-[2px] -translate-y-1/2"
+                      />
+                    </motion.div>
+
+                    <motion.h2 
+                      initial={{ opacity: 0, y: 20, letterSpacing: '0em' }}
+                      animate={{ opacity: 1, y: 0, letterSpacing: '0.3em' }}
+                      transition={{ delay: 0.8, duration: 1.5, ease: "easeOut" }}
+                      className="text-violet-400 text-3xl md:text-5xl font-bold uppercase drop-shadow-[0_0_15px_rgba(139,92,246,0.6)]"
+                    >
+                      {firstName}
+                    </motion.h2>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Automated Guide (unchanged premium glassmorphism) */}
       <AnimatePresence>
-        {showGuide && (
+        {phase === 'guide' && (
           <motion.div
             initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
             animate={{ opacity: 1, backdropFilter: 'blur(10px)' }}
@@ -235,16 +195,14 @@ export function WelcomeOverlay() {
                 <motion.div 
                   className="h-full bg-violet-500" 
                   initial={{ width: '0%' }}
-                  animate={{ width: `${((guideStep + 1) / steps.length) * 100}%` }}
+                  animate={{ width: `${((guideStep + 1) / 3) * 100}%` }}
                 />
               </div>
 
               <div className="p-8">
                 <div className="flex justify-center mb-6">
                   <div className="w-24 h-24 rounded-full bg-zinc-900 flex items-center justify-center shadow-inner relative overflow-hidden">
-                    {/* Inner glowing blob for the icon */}
                     <div className="absolute inset-0 bg-violet-500/20 blur-xl rounded-full animate-pulse" />
-                    
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={guideStep}
@@ -254,7 +212,9 @@ export function WelcomeOverlay() {
                         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                         className="relative z-10"
                       >
-                        {steps[guideStep].icon}
+                        {guideStep === 0 && <MapPin className="w-12 h-12 text-violet-500" />}
+                        {guideStep === 1 && <Car className="w-12 h-12 text-orange-500" />}
+                        {guideStep === 2 && <Gift className="w-12 h-12 text-green-500" />}
                       </motion.div>
                     </AnimatePresence>
                   </div>
@@ -268,8 +228,16 @@ export function WelcomeOverlay() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}
                     >
-                      <h2 className="text-2xl font-bold text-white mb-2 tracking-tight">{steps[guideStep].title}</h2>
-                      <p className="text-zinc-400 text-sm leading-relaxed">{steps[guideStep].desc}</p>
+                      <h2 className="text-2xl font-bold text-white mb-2 tracking-tight">
+                        {guideStep === 0 && 'Request a Ride'}
+                        {guideStep === 1 && 'Meet Your Driver'}
+                        {guideStep === 2 && 'Earn Free Drops'}
+                      </h2>
+                      <p className="text-zinc-400 text-sm leading-relaxed">
+                        {guideStep === 0 && 'Enter your pickup and destination on campus. We will match you with a trusted student driver.'}
+                        {guideStep === 1 && 'Track your driver in real-time. All drivers are verified students for your safety.'}
+                        {guideStep === 2 && 'Refer friends to earn free drops and save on your daily commutes!'}
+                      </p>
                     </motion.div>
                   </AnimatePresence>
                 </div>
@@ -277,7 +245,7 @@ export function WelcomeOverlay() {
 
               <div className="p-4 bg-zinc-950 flex justify-between items-center border-t border-zinc-900">
                 <div className="flex gap-1.5 ml-2">
-                  {steps.map((_, i) => (
+                  {[0, 1, 2].map((i) => (
                     <div 
                       key={i} 
                       className={`h-1.5 rounded-full transition-all duration-300 ${i === guideStep ? 'w-4 bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)]' : 'w-1.5 bg-zinc-700'}`} 
@@ -287,12 +255,15 @@ export function WelcomeOverlay() {
                 
                 <button
                   onClick={() => {
-                    if (guideStep < steps.length - 1) setGuideStep(s => s + 1);
-                    else finishGuide();
+                    if (guideStep < 2) setGuideStep(s => s + 1);
+                    else {
+                      localStorage.setItem('hasSeenGuide', 'true');
+                      setPhase('done');
+                    }
                   }}
                   className="bg-white hover:bg-zinc-200 text-black px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all active:scale-95 shadow-[0_4px_14px_0_rgba(255,255,255,0.2)] hover:shadow-[0_6px_20px_rgba(255,255,255,0.3)]"
                 >
-                  {guideStep < steps.length - 1 ? (
+                  {guideStep < 2 ? (
                     <>Next <ChevronRight className="w-4 h-4" /></>
                   ) : (
                     <>Get Started <Check className="w-4 h-4" /></>
