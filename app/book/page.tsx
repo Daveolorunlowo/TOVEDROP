@@ -1,29 +1,26 @@
 "use client"
 
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { MapPin, Navigation, Calendar, Clock, Search } from 'lucide-react'
+import { MapPin, Navigation, Calendar, Clock, Search, CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { addToOfflineQueue } from '@/lib/offline-queue'
-
 import { Footer } from '@/components/footer'
 import type { MapPoint } from '@/components/map-picker'
 import { LocationSearchInput } from '@/components/shared/LocationSearchInput'
 import { getCampusLandmarks } from '@/lib/campus-landmarks'
 import { ConfirmModal } from '@/components/shared/ConfirmModal'
-
-const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 import { useDropsBalance } from '@/hooks/useDropsBalance'
 
+const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 
-
-import { CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react'
-
-export default function BookPage() {
+function BookWizard() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState<boolean>(false)
   const { balance: dropsBalance, loading: dropsLoading } = useDropsBalance()
@@ -37,20 +34,32 @@ export default function BookPage() {
   const [destinationText, setDestinationText] = useState<string>('')
   const [selectingMode, setSelectingMode] = useState<'pickup' | 'destination'>('pickup')
   const [isPool, setIsPool] = useState<boolean>(false)
-  const [isScheduled, setIsScheduled] = useState<boolean>(false)
+  const isScheduled = true
   const [noteStr, setNoteStr] = useState<string>('')
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   
   // Wizard state
   const [step, setStep] = useState<number>(1)
-
   const [dateStr, setDateStr] = useState<string>('')
   const [timeStr, setTimeStr] = useState<string>('')
 
-  // Set default date/time to now on mount
+  // Set default date/time to now on mount, and prefill destination from URL
   useEffect(() => {
     setQuickTime(0)
-  }, [])
+    
+    const urlDest = searchParams.get('destination')
+    if (urlDest) {
+      setDestinationText(urlDest)
+      // Attempt to match with campus landmarks to get lat/lng
+      const matched = CAMPUS_LANDMARKS.find(l => l.name.toLowerCase() === urlDest.toLowerCase())
+      if (matched) {
+        setDestinationPoint({ lat: matched.lat, lng: matched.lng, label: matched.name })
+      } else {
+        // Just use text for now, geocoding would be better but we rely on the component for selection
+        setDestinationPoint({ lat: 0, lng: 0, label: urlDest })
+      }
+    }
+  }, [searchParams])
 
   const setQuickTime = (minutesToAdd: number) => {
     const d = new Date()
@@ -109,7 +118,7 @@ export default function BookPage() {
         setErrors({ general: 'Insufficient Drops to book a trip.' })
         return
       }
-      setShowConfirm(true)
+      confirmBooking()
     }
   }
 
@@ -170,7 +179,7 @@ export default function BookPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <>
       <main className="flex-1 py-10 px-4">
         <div className="max-w-4xl mx-auto">
           {/* Progress Indicator */}
@@ -251,25 +260,7 @@ export default function BookPage() {
                 {/* STEP 2: Date & Time */}
                 {step === 2 && (
                   <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="flex gap-4 p-1 bg-surface-elevated rounded-lg border border-border-subtle">
-                      <button 
-                        type="button" 
-                        onClick={() => setIsScheduled(false)} 
-                        className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${!isScheduled ? 'bg-orange-brand text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-                      >
-                        Leave Now
-                      </button>
-                      <button 
-                        type="button" 
-                        onClick={() => setIsScheduled(true)} 
-                        className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${isScheduled ? 'bg-orange-brand text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
-                      >
-                        Schedule for Later
-                      </button>
-                    </div>
-
-                    {isScheduled ? (
-                      <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
+                    <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1.5">
                             <Label htmlFor="date">Date</Label>
@@ -313,14 +304,7 @@ export default function BookPage() {
                           </div>
                         </div>
                       </div>
-                    ) : (
-                      <div className="flex items-center justify-center py-8 text-center text-muted-foreground">
-                        <div className="space-y-2">
-                          <Clock className="w-10 h-10 mx-auto text-orange-brand opacity-80" />
-                          <p className="text-sm font-medium">Your ride will be requested immediately.</p>
-                        </div>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 )}
 
@@ -470,18 +454,17 @@ export default function BookPage() {
           </div>
         </div>
       </main>
-      <Footer />
+    </>
+  )
+}
 
-      <ConfirmModal
-        isOpen={showConfirm}
-        title="Confirm Booking"
-        description={<>Are you sure you want to book a ride from <strong>{pickupText}</strong> to <strong>{destinationText}</strong> on <strong>{dateStr} at {timeStr}</strong>? This will cost 1 Drop.</>}
-        confirmText="Confirm & Book"
-        isDestructive={false}
-        isLoading={submitting}
-        onCancel={() => setShowConfirm(false)}
-        onConfirm={confirmBooking}
-      />
+export default function BookPage() {
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Suspense fallback={<div className="flex-1 flex items-center justify-center py-20"><div className="w-8 h-8 border-4 border-orange-brand border-t-transparent rounded-full animate-spin" /></div>}>
+        <BookWizard />
+      </Suspense>
+      <Footer />
     </div>
   )
 }

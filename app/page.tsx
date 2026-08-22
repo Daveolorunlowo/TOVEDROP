@@ -222,7 +222,17 @@ function PhoneMockup() {
 ───────────────────────────────────────────── */
 function HeroSection() {
   const [btnHover, setBtnHover] = useState(false)
+  const [destination, setDestination] = useState('')
   const handleBookRideClick = useBookRideNavigation()
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (destination.trim()) {
+      handleBookRideClick(destination.trim());
+    } else {
+      handleBookRideClick();
+    }
+  }
 
   return (
     <section
@@ -287,62 +297,47 @@ function HeroSection() {
           {/* Left — copy */}
           <div>
 
-
-            {/* Headline */}
-            <h1 className="font-extrabold text-foreground leading-[1.04] text-balance" style={{ fontSize: 'clamp(40px, 6.5vw, 76px)', letterSpacing: '-0.03em' }}>
-              <span style={{ fontWeight: 300, display: 'block' }}>Your trusted ride,</span>
-              <span style={{ display: 'block' }}>perfectly{' '}
-                <span style={{
-                  background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  filter: 'drop-shadow(0 0 24px rgba(217,119,6,0.4))',
-                }}>organized.</span>
-              </span>
+            <h1 className="font-extrabold text-foreground leading-[1.04] text-balance mb-8" style={{ fontSize: 'clamp(44px, 7vw, 76px)', letterSpacing: '-0.03em' }}>
+              Where can we <br /> drop you?
             </h1>
 
-            {/* Red editorial period */}
-            <div className="mt-1" aria-hidden="true">
-              <span className="font-extrabold text-orange-brand/20 select-none" style={{ fontSize: 'clamp(60px, 9vw, 120px)', lineHeight: 0.6, letterSpacing: '-0.04em' }}>...</span>
-            </div>
-
-            <p className="mt-6 text-foreground/50 leading-relaxed max-w-sm" style={{ fontSize: '15px' }}>
-              All drivers are trusted. The goal is<br />
-              to make transportation easier,<br />
-              and organized for the campus.
-            </p>
-
-            {/* CTAs */}
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-              <button
-                onClick={handleBookRideClick}
-                className="relative inline-flex items-center gap-2.5 font-bold text-[14px] text-foreground px-7 py-3.5 rounded-full overflow-hidden group transition-all duration-200 hover:scale-[1.03]"
-                style={{
-                  background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
-                  boxShadow: '0 4px 24px rgba(217,119,6,0.45), inset 0 1px 0 rgba(255,255,255,0.15)',
-                }}
+            <form onSubmit={handleSubmit} className="relative w-full max-w-lg mb-8">
+              <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center justify-center">
+                <MapPin className="w-6 h-6 text-orange-brand" />
+              </div>
+              <input 
+                type="text"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                placeholder="Enter your destination..."
+                className="w-full bg-surface-card border border-white/10 rounded-3xl py-5 pl-14 pr-16 text-xl text-foreground focus:outline-none focus:border-orange-brand/50 focus:ring-2 focus:ring-orange-brand/20 transition-all placeholder:text-foreground/30 shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+                required
+              />
+              <button 
+                type="submit"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center rounded-2xl text-foreground hover:scale-105 transition-all shadow-lg"
+                style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))' }}
+                aria-label="Search destination"
                 onMouseEnter={() => setBtnHover(true)}
                 onMouseLeave={() => setBtnHover(false)}
               >
-                <span className="relative flex w-2 h-2 shrink-0">
-                  <span className="absolute inset-0 rounded-full bg-white animate-ping opacity-60" />
-                  <span className="relative rounded-full w-2 h-2 bg-white" />
-                </span>
-                Book a Ride · 1 Drop
-                <ArrowRight className="w-4 h-4 transition-transform duration-200" style={{ transform: btnHover ? 'translateX(4px)' : 'translateX(0)' }} />
+                <ArrowRight className="w-6 h-6 transition-transform duration-200" style={{ transform: btnHover ? 'translateX(3px)' : 'translateX(0)' }} />
               </button>
+            </form>
 
-              <Link
-                href="/apply"
-                className="inline-flex items-center gap-2 font-semibold text-[14px] text-foreground/85 hover:text-foreground px-6 py-3.5 rounded-full border transition-all duration-200 hover:border-white/45"
-                style={{ borderColor: 'rgba(255,255,255,0.28)', background: 'rgba(255,255,255,0.04)' }}
-              >
-                Become a Driver
-              </Link>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 mt-6">
+               <p className="text-foreground/50 text-sm font-medium">Want to earn instead?</p>
+               <Link
+                 href="/apply"
+                 className="inline-flex items-center gap-2 font-semibold text-[14px] text-foreground px-6 py-3 rounded-full border transition-all duration-200 hover:border-white/45 bg-white/5 hover:bg-white/10"
+               >
+                 <Car className="w-4 h-4 text-orange-brand" />
+                 Drive with TOVEDROP
+               </Link>
             </div>
 
             {/* Trust chips */}
-            <div className="mt-7 flex flex-wrap gap-2.5">
+            <div className="mt-12 flex flex-wrap gap-2.5">
               {[
                 { label: 'Verified Drivers', rotate: '-1.2deg' },
                 { label: '100% Student Network', rotate: '0.8deg' },
