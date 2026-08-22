@@ -75,6 +75,7 @@ model User {
 
   alarmLogs        AlarmLog[]
   tripReminders    TripReminder[]
+  guideProgress    GuideProgress[]
 }
 
 model VerificationToken {
@@ -466,3 +467,14 @@ enum TransferStatus {
   CANCELLED
 }
 
+model GuideProgress {
+  id          String    @id @default(cuid())
+  userId      String
+  pageKey     String
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  skipped     Boolean   @default(false)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, pageKey])
+}

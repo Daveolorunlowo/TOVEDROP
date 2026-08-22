@@ -1,7 +1,6 @@
 import { LiveMap } from '@/components/admin/LiveMap'
 import { Card } from '@/components/ui/card'
 import { Users, Car, TrendingUp, CheckCircle, Activity } from 'lucide-react'
-import CountUp from 'react-countup'
 import { formatDistanceToNow } from 'date-fns'
 
 export async function AdminOverviewTab({ stats, chartData, recentActivity }: any) {
@@ -64,7 +63,7 @@ function StatCard({ title, value, icon }: { title: string, value: string | numbe
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">{title}</p>
         <p className="text-2xl font-bold text-foreground">
-          {typeof value === 'number' ? <CountUp end={value} separator="," /> : value}
+          {typeof value === 'number' ? value.toLocaleString() : value}
         </p>
       </div>
     </div>

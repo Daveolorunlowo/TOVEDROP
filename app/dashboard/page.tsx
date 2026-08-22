@@ -7,13 +7,15 @@ import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath'
 import { TripPoller } from '@/components/trip-poller'
 import { DashboardTabs } from '@/components/dashboard/Tabs'
 import { Suspense } from 'react'
+import { GuideTrigger } from '@/components/guide/GuideTrigger'
 
 // Tab Components (to be created)
 import { OverviewTab } from '@/components/dashboard/OverviewTab'
 import { MyTripsTab } from '@/components/dashboard/MyTripsTab'
 import { DropsHistoryTab } from '@/components/dashboard/DropsHistoryTab'
 
-export default async function DashboardPage({ searchParams }: { searchParams: { tab?: string, subtab?: string, page?: string, filter?: string } }) {
+export default async function DashboardPage(props: { searchParams: Promise<{ tab?: string, subtab?: string, page?: string, filter?: string }> }) {
+  const searchParams = await props.searchParams;
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/auth')
 
@@ -47,7 +49,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
         </div>
 
         {/* ── Persistent Drops Balance Card ── */}
-        <div className="rounded-2xl mb-8 bg-surface-elevated border border-border px-6 py-6 shadow-sm">
+        <div id="guide-drops-card" className="rounded-2xl mb-8 bg-surface-elevated border border-border px-6 py-6 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-muted-foreground">
@@ -79,6 +81,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: { 
             </div>
           </div>
         </div>
+
+        <GuideTrigger pageKey="rider-dashboard" />
 
         {/* ── Tabs Navigation ── */}
         <DashboardTabs />

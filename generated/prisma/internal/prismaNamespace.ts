@@ -425,7 +425,8 @@ export const ModelName = {
   PrivacyRequest: 'PrivacyRequest',
   AlarmLog: 'AlarmLog',
   TripReminder: 'TripReminder',
-  TripTransfer: 'TripTransfer'
+  TripTransfer: 'TripTransfer',
+  GuideProgress: 'GuideProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -441,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder" | "tripTransfer"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder" | "tripTransfer" | "guideProgress"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2591,6 +2592,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GuideProgress: {
+      payload: Prisma.$GuideProgressPayload<ExtArgs>
+      fields: Prisma.GuideProgressFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GuideProgressFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GuideProgressFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>
+        }
+        findFirst: {
+          args: Prisma.GuideProgressFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GuideProgressFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>
+        }
+        findMany: {
+          args: Prisma.GuideProgressFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>[]
+        }
+        create: {
+          args: Prisma.GuideProgressCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>
+        }
+        createMany: {
+          args: Prisma.GuideProgressCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GuideProgressCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>[]
+        }
+        delete: {
+          args: Prisma.GuideProgressDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>
+        }
+        update: {
+          args: Prisma.GuideProgressUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>
+        }
+        deleteMany: {
+          args: Prisma.GuideProgressDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GuideProgressUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GuideProgressUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>[]
+        }
+        upsert: {
+          args: Prisma.GuideProgressUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuideProgressPayload>
+        }
+        aggregate: {
+          args: Prisma.GuideProgressAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGuideProgress>
+        }
+        groupBy: {
+          args: Prisma.GuideProgressGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuideProgressGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GuideProgressCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuideProgressCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3031,6 +3106,18 @@ export const TripTransferScalarFieldEnum = {
 export type TripTransferScalarFieldEnum = (typeof TripTransferScalarFieldEnum)[keyof typeof TripTransferScalarFieldEnum]
 
 
+export const GuideProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  pageKey: 'pageKey',
+  completed: 'completed',
+  completedAt: 'completedAt',
+  skipped: 'skipped'
+} as const
+
+export type GuideProgressScalarFieldEnum = (typeof GuideProgressScalarFieldEnum)[keyof typeof GuideProgressScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3359,6 +3446,7 @@ export type GlobalOmitConfig = {
   alarmLog?: Prisma.AlarmLogOmit
   tripReminder?: Prisma.TripReminderOmit
   tripTransfer?: Prisma.TripTransferOmit
+  guideProgress?: Prisma.GuideProgressOmit
 }
 
 /* Types for Logging */

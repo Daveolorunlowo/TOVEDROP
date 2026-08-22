@@ -73,7 +73,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
         </div>
 
         {nextTrip ? (
-          <div className="bg-card border border-border rounded-xl p-0 shadow-sm relative overflow-hidden">
+          <div id="guide-upcoming-trip" className="bg-card border border-border rounded-xl p-0 shadow-sm relative overflow-hidden">
             {isRecentlyTransferred && (
               <div className="bg-orange-brand/10 border-b border-orange-brand/20 p-4">
                 <p className="text-sm font-bold text-orange-brand mb-1 flex items-center gap-1.5">
@@ -96,7 +96,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
                   <Clock className="w-3.5 h-3.5" />
                   {nextTrip.date} at {nextTrip.time}
                 </p>
-                <p className="text-sm font-medium text-muted-foreground">
+                <p id="guide-trip-status" className="text-sm font-medium text-muted-foreground w-max px-2 py-0.5 rounded-full bg-surface-elevated border border-border">
                   Status: <span className="text-foreground">{nextTrip.status}</span>
                 </p>
               </div>
@@ -129,6 +129,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
             <h3 className="text-base font-bold text-foreground mb-1">No upcoming rides</h3>
             <p className="text-sm text-muted-foreground mb-5">Ready to head to class or back to your hostel?</p>
             <Link 
+              id="guide-book-ride-btn"
               href="/book" 
               className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg text-sm font-bold bg-orange-brand text-primary-foreground hover:brightness-110 transition-all"
             >

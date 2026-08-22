@@ -10,6 +10,7 @@ import { NetworkIndicator } from '@/components/network-indicator'
 
 import { GlobalMessageListener } from '@/components/global-message-listener'
 import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
+import GuideProvider from '@/components/guide/GuideProvider'
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -77,13 +78,15 @@ export default function RootLayout({
     <html lang="en" className="bg-background">
       <body className={`${dmSans.className} antialiased`}>
         <Providers>
-          <GlobalAuthenticatedNav />
-          {children}
-          <InstallPrompt />
-          <ReferralTracker />
-          <GlobalMessageListener />
-          <WelcomeOverlay />
-          {process.env.NODE_ENV === 'production' && <Analytics />}
+          <GuideProvider>
+            <GlobalAuthenticatedNav />
+            {children}
+            <InstallPrompt />
+            <ReferralTracker />
+            <GlobalMessageListener />
+            <WelcomeOverlay />
+            {process.env.NODE_ENV === 'production' && <Analytics />}
+          </GuideProvider>
         </Providers>
         <NetworkIndicator />
       </body>

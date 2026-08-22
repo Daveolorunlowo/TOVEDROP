@@ -162,3 +162,8 @@ export type TripReminder = Prisma.TripReminderModel
  * 
  */
 export type TripTransfer = Prisma.TripTransferModel
+/**
+ * Model GuideProgress
+ * 
+ */
+export type GuideProgress = Prisma.GuideProgressModel

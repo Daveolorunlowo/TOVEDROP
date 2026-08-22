@@ -150,6 +150,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
           return (
             <Link
               key={tab.id}
+              id={`guide-nav-${tab.id}`}
               href={tab.href}
               data-node-index={index}
               onClick={() => setIsOpen(false)}

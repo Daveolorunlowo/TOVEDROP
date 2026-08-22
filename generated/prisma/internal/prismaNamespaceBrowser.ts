@@ -79,7 +79,8 @@ export const ModelName = {
   PrivacyRequest: 'PrivacyRequest',
   AlarmLog: 'AlarmLog',
   TripReminder: 'TripReminder',
-  TripTransfer: 'TripTransfer'
+  TripTransfer: 'TripTransfer',
+  GuideProgress: 'GuideProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -497,6 +498,18 @@ export const TripTransferScalarFieldEnum = {
 } as const
 
 export type TripTransferScalarFieldEnum = (typeof TripTransferScalarFieldEnum)[keyof typeof TripTransferScalarFieldEnum]
+
+
+export const GuideProgressScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  pageKey: 'pageKey',
+  completed: 'completed',
+  completedAt: 'completedAt',
+  skipped: 'skipped'
+} as const
+
+export type GuideProgressScalarFieldEnum = (typeof GuideProgressScalarFieldEnum)[keyof typeof GuideProgressScalarFieldEnum]
 
 
 export const SortOrder = {

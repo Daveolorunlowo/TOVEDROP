@@ -8,6 +8,7 @@ import { Car, Wallet, User, MapPin, Gift, Search, Bell } from 'lucide-react'
 import { NavTab, OrbitalNav } from '@/components/shared/OrbitalNav'
 import { SignOutButton } from '@/components/sign-out-button'
 import { ThemeToggle } from '@/components/theme-toggle'
+import { useGuide } from '@/hooks/useGuide'
 const riderTabs: NavTab[] = [
   { id: 'book', label: 'Book', icon: Search, href: '/book', matchPrefix: true },
   { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard' },
@@ -39,6 +40,14 @@ export function GlobalAuthenticatedNav() {
     }
   }, [status, session?.user, pathname])
 
+  const { checkAndStartGuide } = useGuide()
+
+  useEffect(() => {
+    if (status === 'authenticated' && session?.user && pathname !== '/' && !pathname.startsWith('/auth')) {
+      checkAndStartGuide('welcome')
+    }
+  }, [status, session?.user, pathname, checkAndStartGuide])
+
   if (status !== 'authenticated' || !session?.user) return null
 
   // Don't show on admin or auth pages
@@ -57,6 +66,7 @@ export function GlobalAuthenticatedNav() {
       {/* Slim Top Bar */}
       <div className="w-full max-w-5xl flex items-center justify-between mb-4 pointer-events-auto">
         <Link
+          id="guide-nav-logo"
           href="/"
           className="text-lg sm:text-xl font-extrabold tracking-tight transition-opacity hover:opacity-80"
           style={{ letterSpacing: '-0.02em' }}
@@ -66,7 +76,7 @@ export function GlobalAuthenticatedNav() {
         </Link>
         <div className="flex items-center gap-3 pointer-events-auto">
           <ThemeToggle />
-          <Link href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center hover:border-orange-brand/50 transition-colors">
+          <Link id="guide-nav-profile" href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center hover:border-orange-brand/50 transition-colors">
             <User className="w-4 h-4 text-muted-foreground" />
           </Link>
           <SignOutButton

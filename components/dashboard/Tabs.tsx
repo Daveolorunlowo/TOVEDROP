@@ -58,13 +58,14 @@ export function DashboardTabs({
 
 
   return (
-    <div className="flex overflow-x-auto hide-scrollbar gap-6 mb-6 border-b border-border">
+    <div id="guide-dash-tabs" className="flex overflow-x-auto hide-scrollbar gap-6 mb-6 border-b border-border">
       {tabs.map(tab => {
         const isActive = currentTab === tab.id
         const Icon = tab.icon
         return (
           <button
             key={tab.id}
+            id={`guide-tab-${tab.id}`}
             onClick={() => setTab(tab.id)}
             className={`flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
               isActive

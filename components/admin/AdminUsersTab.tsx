@@ -23,11 +23,11 @@ export async function AdminUsersTab({ searchParams }: { searchParams: { page?: s
     prisma.user.count({ where: where as any }),
     prisma.user.findMany({
       where: where as any,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { id: 'desc' },
       skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
       select: {
-        id: true, name: true, email: true, createdAt: true, dropsBalance: true, _count: { select: { tripsAsRider: true } }
+        id: true, name: true, email: true, dropsBalance: true, _count: { select: { tripsAsRider: true } }
       }
     })
   ])
@@ -93,7 +93,8 @@ export async function AdminUsersTab({ searchParams }: { searchParams: { page?: s
                       </div>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {/* CreatedAt not available in schema, default to Unknown */}
+                      Unknown
                     </td>
                     <td className="px-6 py-4 font-medium">
                       {user.dropsBalance} Drops

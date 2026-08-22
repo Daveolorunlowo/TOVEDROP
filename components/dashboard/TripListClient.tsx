@@ -241,6 +241,7 @@ export function TripListClient({
                       )}
                       {(trip.status === 'PENDING' || trip.status === 'CONFIRMED') && (
                         <button
+                          id={i === 0 ? "guide-cancel-trip-btn" : undefined}
                           disabled={processing === trip.id}
                           onClick={() => setTripToCancel(trip.id)}
                           className="p-1.5 rounded bg-surface-elevated hover:bg-white/10 transition-colors text-red-500/80"
