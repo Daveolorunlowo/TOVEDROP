@@ -1,12 +1,14 @@
 import PusherClient from 'pusher-js'
 import { useEffect, useState, useRef } from 'react'
 
-export const pusherClient = new PusherClient(
-  process.env.NEXT_PUBLIC_PUSHER_KEY || '',
-  {
-    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'mt1',
-  }
-)
+export const pusherClient = process.env.NEXT_PUBLIC_PUSHER_KEY
+  ? new PusherClient(
+      process.env.NEXT_PUBLIC_PUSHER_KEY,
+      {
+        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER || 'mt1',
+      }
+    )
+  : null
 
 /**
  * useResilientChannel
@@ -23,6 +25,8 @@ export function useResilientChannel(
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
+    if (!pusherClient) return
+
     // 1. Bind to the event
     const channel = pusherClient.subscribe(channelName)
     channel.bind(eventName, onEvent)

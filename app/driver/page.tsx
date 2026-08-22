@@ -533,7 +533,7 @@ export default function DriverDashboardPage() {
   
   // Sort by created time or something? Let's just leave it.
   const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
-  const firstName = driverProfile.user.name?.split(' ')[0] ?? 'Driver'
+  const firstName = driverProfile?.user?.name?.split(' ')[0] ?? 'Driver'
 
   return (
     <div style={{ background: 'var(--background)', minHeight: '100vh' }}>

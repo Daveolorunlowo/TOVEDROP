@@ -9,6 +9,7 @@ export function DriverTripListener() {
   const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!pusherClient) return
     const channel = pusherClient.subscribe('global-trips')
     
     channel.bind('new-trip', (data: any) => {
@@ -17,7 +18,7 @@ export function DriverTripListener() {
     })
 
     return () => {
-      pusherClient.unsubscribe('global-trips')
+      if (pusherClient) pusherClient.unsubscribe('global-trips')
     }
   }, [router])
 
