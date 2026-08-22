@@ -1,30 +1,19 @@
 import Link from 'next/link'
-import { MapPin, Calendar, Clock, Star, Car, Plus, X, TrendingUp } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { SignOutButton } from '@/components/sign-out-button'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath'
 import { TripPoller } from '@/components/trip-poller'
-import { TripList } from '@/components/dashboard/TripList'
+import { DashboardTabs } from '@/components/dashboard/Tabs'
+import { Suspense } from 'react'
 
-// ─── Design tokens ─────────────────────────────────────
-// bg:       #111111
-// surface:  #171717
-// border:   1px solid #222
-// divider:  #1e1e1e
-// label:    11px / uppercase / tracking-[0.05em] / #555
-// text:     #f5f5f5 (primary) / #888 (secondary) / #555 (muted)
-// accent:   var(--orange-brand) (amber — CTA + Drops only)
-// radius:   8px cards / 4px badges
-// padding:  16-20px cards
-// ──────────────────────────────────────────────────────
+// Tab Components (to be created)
+import { OverviewTab } from '@/components/dashboard/OverviewTab'
+import { MyTripsTab } from '@/components/dashboard/MyTripsTab'
+import { DropsHistoryTab } from '@/components/dashboard/DropsHistoryTab'
 
-// UI components moved to TripList.tsx
-
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: { tab?: string, subtab?: string, page?: string, filter?: string } }) {
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/auth')
 
@@ -35,31 +24,13 @@ export default async function DashboardPage() {
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
   if (!user) redirect('/auth')
 
-  const trips = await prisma.trip.findMany({
-    where: { riderId: user.id },
-    include: { 
-      driver: {
-        include: { driverProfile: true }
-      }, 
-      review: true 
-    },
-    orderBy: { createdAt: 'desc' },
-  })
-
-  const upcomingTrips = trips.filter(t => t.status === 'PENDING' || t.status === 'CONFIRMED')
-  const pastTrips     = trips.filter(t => t.status === 'COMPLETED' || t.status === 'CANCELLED')
-  const pendingIds    = upcomingTrips.filter(t => t.status === 'PENDING').map(t => t.id)
-  const tripsTaken    = pastTrips.filter(t => t.status === 'COMPLETED').length
-
-  const initials = (name: string) =>
-    name ? name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase() : '?'
+  const tab = searchParams.tab || 'overview'
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="bg-background min-h-screen pb-20">
       <TripPoller userId={user.id} />
 
       <div className="max-w-5xl mx-auto px-5 py-8">
-
         {/* ── Header ── */}
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
           <div className="min-w-0 max-w-full">
@@ -73,57 +44,57 @@ export default async function DashboardPage() {
               <p className="text-xs mt-0.5 text-muted-foreground">{user.university}</p>
             )}
           </div>
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Header actions can go here */}
-          </div>
         </div>
 
-        {/* ── Active Trips ── */}
-        <div
-          className="rounded-lg mb-6 bg-card border border-border px-5 py-4"
-        >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4 text-muted-foreground">
-            Account Stats
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 divide-x divide-border">
-            {[
-              { label: 'Trips Taken',   value: String(tripsTaken) },
-              { label: 'Upcoming',      value: String(upcomingTrips.length) },
-              { label: 'Avg. Rating',   value: '—' },
-              { label: 'Drops Balance', value: String(user.dropsBalance), accent: true },
-            ].map((s, i) => (
-              <div key={s.label} className={`${i > 0 ? 'pl-6' : ''} ${i < 3 ? 'pr-6' : ''}`}>
-                <p className="text-[11px] font-medium uppercase tracking-[0.05em] mb-1 text-muted-foreground">
-                  {s.label}
-                </p>
-                <p
-                  className="text-2xl font-bold tabular-nums"
-                  style={{ color: s.accent ? 'var(--orange-brand)' : 'var(--foreground)', letterSpacing: '-0.02em' }}
-                >
-                  {s.value}
-                </p>
+        {/* ── Persistent Drops Balance Card ── */}
+        <div className="rounded-2xl mb-8 bg-surface-elevated border border-border px-6 py-6 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-muted-foreground">
+                Drops Balance
+              </p>
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-extrabold text-orange-brand tracking-tight">{user.dropsBalance}</span>
+                <span className="text-sm font-medium text-muted-foreground">Drops available</span>
               </div>
-            ))}
-          </div>
-          <div className="border-t border-border mt-3.5" style={{ paddingTop: user.dropsBalance === 0 ? '14px' : '10px' }}>
-            {user.dropsBalance === 0 ? (
-              <Link
-                href="/dashboard/buy-drops"
-                className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-primary-foreground shadow-lg transition-transform active:scale-[0.98] hover:brightness-110"
-                style={{ background: 'linear-gradient(to right, var(--purple-brand), var(--purple-light))' }}
-              >
-                You're out of Drops — Buy more to book a ride
-              </Link>
-            ) : (
-              <Link href="/dashboard/buy-drops" className="text-[11px] font-semibold hover:opacity-80 transition-opacity" style={{ color: 'var(--orange-brand)' }}>
-                Buy more Drops →
-              </Link>
-            )}
+            </div>
+            <div className="flex-shrink-0 w-full sm:w-auto">
+              {user.dropsBalance === 0 ? (
+                <Link
+                  href="/dashboard/buy-drops"
+                  className="flex w-full sm:w-auto items-center justify-center py-3 px-6 rounded-xl text-sm font-bold text-primary-foreground shadow-lg transition-transform active:scale-[0.98] hover:brightness-110"
+                  style={{ background: 'linear-gradient(to right, var(--purple-brand), var(--purple-light))' }}
+                >
+                  Buy more Drops to book rides
+                </Link>
+              ) : (
+                <Link 
+                  href="/dashboard/buy-drops" 
+                  className="flex w-full sm:w-auto items-center justify-center py-2.5 px-5 rounded-lg text-xs font-bold transition-all hover:bg-orange-brand/10 border border-orange-brand/20" 
+                  style={{ color: 'var(--orange-brand)' }}
+                >
+                  Get More Drops
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* ── Main grid ── */}
-        <TripList initialUpcoming={upcomingTrips} initialPast={pastTrips} userId={user.id} />
+        {/* ── Tabs Navigation ── */}
+        <DashboardTabs />
+
+        {/* ── Tab Content ── */}
+        <Suspense fallback={
+          <div className="py-10 flex flex-col gap-4">
+            <div className="h-32 bg-muted/20 animate-pulse rounded-xl" />
+            <div className="h-32 bg-muted/20 animate-pulse rounded-xl" />
+          </div>
+        } key={tab + (searchParams.page || '') + (searchParams.subtab || '')}>
+          {tab === 'overview' && <OverviewTab userId={user.id} />}
+          {tab === 'trips' && <MyTripsTab userId={user.id} searchParams={searchParams} />}
+          {tab === 'history' && <DropsHistoryTab userId={user.id} searchParams={searchParams} />}
+        </Suspense>
+
       </div>
     </div>
   )

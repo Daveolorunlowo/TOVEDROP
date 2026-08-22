@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { Check, User, FileText, CalendarDays, Upload, ChevronRight, ChevronLeft, Shield, Zap } from 'lucide-react'
+import { Check, User, FileText, CalendarDays, Upload, ChevronRight, ChevronLeft, Shield, Zap, Car } from 'lucide-react'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -18,8 +18,9 @@ import { signIn } from 'next-auth/react'
 
 const STEPS = [
   { number: 1, label: 'Personal Info', icon: User },
-  { number: 2, label: 'Documents', icon: FileText },
-  { number: 3, label: 'Availability', icon: CalendarDays },
+  { number: 2, label: 'Vehicle Info', icon: Car },
+  { number: 3, label: 'Documents', icon: FileText },
+  { number: 4, label: 'Availability', icon: CalendarDays },
 ]
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -67,9 +68,14 @@ export default function ApplyPage() {
 
   const validateStep2 = () => {
     const errs: Record<string, string> = {}
-    if (!formData.license.trim()) errs.license = 'License number is required.'
     if (!formData.make.trim()) errs.make = 'Vehicle make/model is required.'
     if (!formData.plate.trim()) errs.plate = 'Plate number is required.'
+    return errs
+  }
+
+  const validateStep3 = () => {
+    const errs: Record<string, string> = {}
+    if (!formData.license.trim()) errs.license = 'License number is required.'
     return errs
   }
 
@@ -78,13 +84,14 @@ export default function ApplyPage() {
     let errs: Record<string, string> = {}
     if (step === 1) errs = validateStep1()
     if (step === 2) errs = validateStep2()
-    if (step === 3) {
+    if (step === 3) errs = validateStep3()
+    if (step === 4) {
       if (selectedDays.length === 0) errs.days = 'Please select at least one day.'
     }
     setErrors(errs)
     
     if (Object.keys(errs).length === 0) {
-      if (step === 2) {
+      if (step === 3) {
         if (!idFile) {
           setErrors({ ...errs, license: 'Please upload an ID card for KYC verification.' })
           return
@@ -115,9 +122,9 @@ export default function ApplyPage() {
           // Default to PENDING if Python service is down
         } finally {
           setProcessing(false)
-          setStep(3)
+          setStep(4)
         }
-      } else if (step < 3) {
+      } else if (step < 4) {
         setStep((s) => s + 1)
       } else {
         setProcessing(true)
@@ -290,11 +297,37 @@ export default function ApplyPage() {
                 </>
               )}
 
-              {/* Step 2: Documents */}
+              {/* Step 2: Vehicle Info */}
               {step === 2 && (
                 <>
                   <div>
-                    <h2 className="text-lg font-bold text-secondary mb-0.5">Documents & Vehicle</h2>
+                    <h2 className="text-lg font-bold text-secondary mb-0.5">Vehicle Information</h2>
+                    <p className="text-sm text-muted-foreground">What will you be driving?</p>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label htmlFor="make" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Vehicle Make & Model</Label>
+                    <Input id="make" name="make" value={formData.make} onChange={handleInputChange} placeholder="e.g. Toyota Camry" className={errors.make ? 'border-red-500' : ''} />
+                    {errors.make && <p className="text-xs text-red-600">{errors.make}</p>}
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="year" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Year <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
+                      <Input id="year" name="year" value={formData.year} onChange={handleInputChange} placeholder="e.g. 2018" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="plate" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">License Plate</Label>
+                      <Input id="plate" name="plate" value={formData.plate} onChange={handleInputChange} placeholder="e.g. GR-1234-21" className={errors.plate ? 'border-red-500' : ''} />
+                      {errors.plate && <p className="text-xs text-red-600">{errors.plate}</p>}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Step 3: Documents */}
+              {step === 3 && (
+                <>
+                  <div>
+                    <h2 className="text-lg font-bold text-secondary mb-0.5">Documents</h2>
                     <p className="text-sm text-muted-foreground">All documents are reviewed by our team and kept secure.</p>
                   </div>
                   <div className="space-y-1.5">
@@ -367,12 +400,12 @@ export default function ApplyPage() {
                 </>
               )}
 
-              {/* Step 3: Availability */}
-              {step === 3 && (
+              {/* Step 4: Availability */}
+              {step === 4 && (
                 <>
                   <div>
-                    <h2 className="text-lg font-bold text-secondary mb-0.5">Availability</h2>
-                    <p className="text-sm text-muted-foreground">When can students book you for trips?</p>
+                    <h2 className="text-lg font-bold text-secondary mb-0.5">Availability & Route</h2>
+                    <p className="text-sm text-muted-foreground">When and where do you usually drive?</p>
                   </div>
 
                   <div className="space-y-2">
@@ -412,8 +445,6 @@ export default function ApplyPage() {
                     </div>
                   </div>
 
-
-
                   <div className="space-y-1.5">
                     <Label htmlFor="notes" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Additional Notes <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
                     <Textarea
@@ -429,29 +460,19 @@ export default function ApplyPage() {
               )}
 
               {/* Nav buttons */}
-              <div className="flex gap-3 pt-2">
+              <div className="flex gap-4 pt-4">
                 {step > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setStep((s) => s - 1)}
-                    className="border-secondary text-secondary hover:bg-secondary hover:text-foreground"
-                  >
-                    <ChevronLeft className="w-4 h-4 mr-1" /> Back
+                  <Button type="button" variant="outline" className="flex-1 border-border-default hover:bg-surface-elevated" onClick={() => setStep(s => s - 1)} disabled={processing}>
+                    <ChevronLeft className="w-4 h-4 mr-2" /> Back
                   </Button>
                 )}
-                <Button
-                  type="submit"
-                  disabled={processing}
-                  className="flex-1 bg-primary hover:bg-primary/90 text-foreground font-semibold"
-                  size="lg"
-                >
-                  {step < 3 ? (
-                    <>Next <ChevronRight className="w-4 h-4 ml-1" /></>
-                  ) : processing ? (
-                    <>Submitting...</>
-                  ) : (
-                    <>Submit Application <Check className="w-4 h-4 ml-1" /></>
+                <Button type="submit" className="flex-1 bg-orange-brand hover:brightness-110 text-primary-foreground font-bold shadow-sm" disabled={processing}>
+                  {processing ? (
+                    <span className="flex items-center">
+                      <Zap className="w-4 h-4 mr-2 animate-pulse" /> Processing...
+                    </span>
+                  ) : step === 4 ? 'Submit Application' : (
+                    <span className="flex items-center">Next <ChevronRight className="w-4 h-4 ml-1" /></span>
                   )}
                 </Button>
               </div>
