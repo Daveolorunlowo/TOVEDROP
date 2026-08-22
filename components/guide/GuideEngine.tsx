@@ -4,6 +4,17 @@ import { useEffect, useState, useMemo } from "react";
 import { useGuide } from "@/hooks/useGuide";
 import { motion, AnimatePresence } from "framer-motion";
 import { GuideElementType } from "@/lib/guide-steps";
+import { MousePointerClick, Navigation, Square, TextCursor, Tag, Star, LayoutGrid } from "lucide-react";
+
+const TYPE_META: Record<GuideElementType, { label: string; Icon: any; color: string }> = {
+  BUTTON: { label: "Button", Icon: MousePointerClick, color: "text-orange-400" },
+  CARD: { label: "Card", Icon: LayoutGrid, color: "text-purple-400" },
+  INPUT: { label: "Input Field", Icon: TextCursor, color: "text-cyan-400" },
+  NAVIGATION: { label: "Navigation", Icon: Navigation, color: "text-blue-400" },
+  BADGE: { label: "Badge", Icon: Tag, color: "text-yellow-400" },
+  ICON: { label: "Icon", Icon: Star, color: "text-purple-400" },
+  INTERACTIVE: { label: "Interactive", Icon: MousePointerClick, color: "text-orange-400" },
+};
 
 export default function GuideEngine() {
   const { 
@@ -198,18 +209,41 @@ export default function GuideEngine() {
             </div>
           </div>
 
+          {/* Type indicator */}
+          {(() => {
+            const meta = TYPE_META[step.type];
+            const { Icon } = meta;
+            return (
+              <div className={`flex items-center gap-1.5 ${meta.color}`}>
+                <Icon size={11} />
+                <span className="text-[10px] font-semibold uppercase tracking-wider">{meta.label}</span>
+              </div>
+            );
+          })()}
+
           {/* Title & Body */}
           <div>
-            <h3 className="text-base font-bold text-white mb-1">{step.title}</h3>
-            <p className="text-[13px] text-white/70 font-light leading-relaxed">
+            <h3 className="text-[15px] font-bold text-white mb-1.5 leading-tight">{step.title}</h3>
+            <p className="text-[12.5px] text-white/65 leading-relaxed">
               {step.body}
             </p>
           </div>
 
+          {/* Visual Button Preview */}
+          {step.type === "BUTTON" && step.buttonLabel && (
+            <div className="mt-0.5">
+              <div className="text-[10px] text-white/30 uppercase tracking-widest mb-1.5">Look for this button ↓</div>
+              <div className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-orange-500/15 border border-orange-500/30 text-orange-400 text-xs font-semibold shadow-sm shadow-orange-500/10">
+                <MousePointerClick size={11} />
+                {step.buttonLabel}
+              </div>
+            </div>
+          )}
+
           {/* Interactive Prompt */}
           {step.requiresInteraction && !interactionSatisfied && (
-            <div className="mt-1">
-              <span className="text-xs text-orange-brand font-medium">
+            <div className="rounded-lg bg-orange-500/10 border border-orange-500/20 px-3 py-2">
+              <span className="text-xs text-orange-400 font-medium">
                 👉 {step.interactivePrompt || "Action required to continue"}
               </span>
             </div>
