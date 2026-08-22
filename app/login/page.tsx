@@ -11,7 +11,9 @@ import { PasswordInput } from '@/components/shared/PasswordInput'
 import { LoadingButton } from '@/components/shared/LoadingButton'
 import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath'
 
-export default function LoginPage() {
+import { Suspense } from 'react'
+
+function LoginContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const intent = searchParams.get('intent')
@@ -129,3 +131,12 @@ export default function LoginPage() {
     </div>
   )
 }
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-deep" />}>
+      <LoginContent />
+    </Suspense>
+  )
+}
+

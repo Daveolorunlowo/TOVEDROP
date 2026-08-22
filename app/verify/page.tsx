@@ -6,7 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { LoadingButton } from '@/components/shared/LoadingButton'
 
-export default function VerifyPage() {
+import { Suspense } from 'react'
+
+function VerifyContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const phone = searchParams.get('phone') || '+233 24 123 4567'
@@ -171,3 +173,12 @@ export default function VerifyPage() {
     </div>
   )
 }
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-deep" />}>
+      <VerifyContent />
+    </Suspense>
+  )
+}
+

@@ -10,7 +10,9 @@ import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/shared/PasswordInput'
 import { LoadingButton } from '@/components/shared/LoadingButton'
 
-export default function SignupPage() {
+import { Suspense } from 'react'
+
+function SignupContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const intent = searchParams.get('intent')
@@ -229,3 +231,12 @@ export default function SignupPage() {
     </div>
   )
 }
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-bg-deep" />}>
+      <SignupContent />
+    </Suspense>
+  )
+}
+
