@@ -88,8 +88,25 @@ function BookWizard() {
 
   const validateStep2 = () => {
     const newErrors: Record<string, string> = {}
-    if (!dateStr) newErrors.date = 'Please select a date.'
-    if (!timeStr) newErrors.time = 'Please select a time.'
+    if (!dateStr) {
+      newErrors.date = 'Please select a date.'
+    }
+    if (!timeStr) {
+      newErrors.time = 'Please select a time.'
+    }
+
+    if (dateStr && timeStr) {
+      const selectedDate = new Date(`${dateStr}T${timeStr}:00`)
+      const now = new Date()
+      const twoHoursFromNow = new Date(now.getTime() + 2 * 60 * 60 * 1000)
+
+      if (selectedDate < now) {
+        newErrors.time = 'You cannot select a time in the past.'
+      } else if (selectedDate < twoHoursFromNow) {
+        newErrors.time = 'Pickup time must be at least 2 hours from now.'
+      }
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }

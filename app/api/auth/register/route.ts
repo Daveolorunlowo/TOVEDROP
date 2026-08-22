@@ -2,6 +2,8 @@ import { NextResponse, NextRequest } from "next/server"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { cookies } from "next/headers"
+import { sendWelcomeEmail } from "@/lib/email"
 
 export async function POST(req: NextRequest) {
   try {
@@ -41,8 +43,41 @@ export async function POST(req: NextRequest) {
         university,
         password: hashedPassword,
         role: "RIDER", // Default
+        dropsBalance: 3,
       }
     })
+
+    // 1. Generate referral code
+    const code = Math.random().toString(36).substring(2, 8).toUpperCase()
+    await prisma.referralCode.create({
+      data: {
+        userId: user.id,
+        code
+      }
+    })
+
+    // 2. Process referral cookie
+    const cookieStore = await cookies()
+    const refCookie = cookieStore.get('tovedrop_ref')
+    if (refCookie?.value) {
+      const referrerCode = await prisma.referralCode.findUnique({
+        where: { code: refCookie.value }
+      })
+      if (referrerCode && referrerCode.userId !== user.id) {
+        await prisma.referral.create({
+          data: {
+            referrerId: referrerCode.userId,
+            referredId: user.id,
+            status: "PENDING"
+          }
+        })
+      }
+    }
+
+    // 3. Send welcome email
+    if (user.email) {
+      await sendWelcomeEmail(user.email, user.name || 'Rider')
+    }
 
     return NextResponse.json({ message: "User registered successfully" }, { status: 201 })
   } catch (error) {
