@@ -12,7 +12,7 @@ export async function middleware(request: any) {
 
   // No session, trying to access protected area
   if (!token && isProtected) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+    return NextResponse.redirect(new URL('/auth', request.url))
   }
 
   // Has session, on a page meant for logged-out users
