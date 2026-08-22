@@ -13,7 +13,8 @@ import { OverviewTab } from '@/components/dashboard/OverviewTab'
 import { MyTripsTab } from '@/components/dashboard/MyTripsTab'
 import { DropsHistoryTab } from '@/components/dashboard/DropsHistoryTab'
 
-export default async function DashboardPage({ searchParams }: { searchParams: { tab?: string, subtab?: string, page?: string, filter?: string } }) {
+export default async function DashboardPage(props: { searchParams: Promise<{ tab?: string, subtab?: string, page?: string, filter?: string }> }) {
+  const searchParams = await props.searchParams
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/auth')
 

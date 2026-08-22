@@ -6,9 +6,9 @@ import { Loader2, Plus, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from '@/lib/config'
 import '@/app/dashboard/buy-drops/buy-drops.css'
 
-function DropCoinIcon({ className = "" }: { className?: string }) {
+function DropCoinIcon({ className = "", style }: { className?: string, style?: React.CSSProperties }) {
   return (
-    <svg className={className} width="24" height="24" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <svg className={className} style={style} width="24" height="24" viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <circle cx="10" cy="10" r="9" fill="url(#bdc_buy)" />
       <path d="M10 5 C10 5 7 9 7 11.5 A3 3 0 0 0 13 11.5 C13 9 10 5 10 5Z" fill="white" opacity="0.85" />
       <defs>

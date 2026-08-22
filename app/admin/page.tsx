@@ -13,11 +13,10 @@ import { ShieldAlert, LayoutDashboard, TrendingUp, Users, Car, MessageSquare, Fl
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminPage({
-  searchParams
-}: {
-  searchParams: { tab?: string, page?: string, q?: string, status?: string }
+export default async function AdminPage(props: {
+  searchParams: Promise<{ tab?: string, page?: string, q?: string, status?: string }>
 }) {
+  const searchParams = await props.searchParams
   const session = await getServerSession(authOptions)
   if (!session?.user || session.user.role !== 'ADMIN') {
     redirect('/auth')

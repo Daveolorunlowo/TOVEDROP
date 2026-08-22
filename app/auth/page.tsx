@@ -30,6 +30,7 @@ function AuthForm() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // Read initial tab and intent
@@ -69,6 +70,7 @@ function AuthForm() {
     setErrors(newErrors);
     
     if (Object.keys(newErrors).length === 0) {
+      setIsLoading(true);
       if (tab === 'signup') {
         fetch('/api/auth/register', {
           method: 'POST',
@@ -84,9 +86,12 @@ function AuthForm() {
               }
             });
           } else {
-            res.json().then((data) => setErrors({ email: data.message || 'Registration failed' }));
+            res.json().then((data) => {
+              setErrors({ email: data.message || 'Registration failed' });
+              setIsLoading(false);
+            });
           }
-        });
+        }).catch(() => setIsLoading(false));
       } else {
         signIn('credentials', { email, password, redirect: false }).then(async (res) => {
           if (res?.error) {
@@ -104,13 +109,82 @@ function AuthForm() {
               router.push('/dashboard');
             }
           }
-        });
+        }).catch(() => setIsLoading(false));
       }
     }
   };
 
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-12">
+      <style>{`
+        .btn-drop-rain {
+          position: relative;
+          height: 48px;
+          background: #f97316;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 600;
+          color: #0d0d0f;
+          font-family: inherit;
+          overflow: hidden;
+          transition: background 0.2s ease;
+        }
+
+        .btn-drop-rain:hover:not(:disabled) {
+          background: #f5841f;
+        }
+
+        .btn-drop-rain:disabled {
+          cursor: wait;
+          pointer-events: none;
+        }
+
+        /* Individual rain drops */
+        .rain-drop {
+          position: absolute;
+          width: 4px;
+          height: 8px;
+          background: #0d0d0f;
+          border-radius: 50%;
+          opacity: 0.6;
+          animation: rainFall 1.2s ease-in infinite;
+        }
+
+        .rain-drop:nth-child(1) { left: 15%; animation-delay: 0s; }
+        .rain-drop:nth-child(2) { left: 35%; animation-delay: 0.3s; }
+        .rain-drop:nth-child(3) { left: 50%; animation-delay: 0.6s; }
+        .rain-drop:nth-child(4) { left: 65%; animation-delay: 0.9s; }
+        .rain-drop:nth-child(5) { left: 85%; animation-delay: 1.2s; }
+
+        @keyframes rainFall {
+          0% { 
+            top: -8px;
+            opacity: 0;
+          }
+          10% {
+            opacity: 0.8;
+          }
+          90% {
+            opacity: 0.8;
+          }
+          100% { 
+            top: 48px;
+            opacity: 0;
+          }
+        }
+
+        /* Text layer */
+        .rain-text {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+        }
+      `}</style>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="text-3xl font-extrabold inline-block" style={{ letterSpacing: '-0.02em' }}>
@@ -202,10 +276,26 @@ function AuthForm() {
               </div>
             )}
 
-            <Button type="submit" size="lg" className="w-full text-foreground font-semibold mt-1"
-              style={{ background: 'linear-gradient(135deg, var(--purple-brand), var(--purple-light))' }}>
-              {tab === 'login' ? 'Log In' : 'Create Account'}
-            </Button>
+            <button 
+              type="submit" 
+              className="btn-drop-rain w-full mt-1" 
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <div className="rain-drop"></div>
+                  <div className="rain-drop"></div>
+                  <div className="rain-drop"></div>
+                  <div className="rain-drop"></div>
+                  <div className="rain-drop"></div>
+                  <span className="rain-text">Connecting…</span>
+                </>
+              ) : (
+                <span className="rain-text text-white">
+                  {tab === 'login' ? 'Log In' : 'Create Account'}
+                </span>
+              )}
+            </button>
           </form>
 
           {tab === 'signup' && (

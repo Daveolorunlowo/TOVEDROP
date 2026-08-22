@@ -18,7 +18,11 @@ function getReasonText(reason: string, note?: string | null) {
   return map[reason] || "Unforeseen circumstances"
 }
 
-export async function POST(req: Request, { params }: { params: { shareToken: string } }) {
+export async function POST(
+  req: Request,
+  props: { params: Promise<{ shareToken: string }> }
+) {
+  const params = await props.params;
   try {
     const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'DRIVER') {
