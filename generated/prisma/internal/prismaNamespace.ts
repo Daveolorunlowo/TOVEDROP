@@ -403,6 +403,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   DriverProfile: 'DriverProfile',
   Trip: 'Trip',
+  CancellationLog: 'CancellationLog',
   Review: 'Review',
   VerificationCode: 'VerificationCode',
   AdminLoginLog: 'AdminLoginLog',
@@ -441,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder" | "tripTransfer"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "cancellationLog" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder" | "tripTransfer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -886,6 +887,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.TripCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.TripCountAggregateOutputType> | number
+        }
+      }
+    }
+    CancellationLog: {
+      payload: Prisma.$CancellationLogPayload<ExtArgs>
+      fields: Prisma.CancellationLogFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CancellationLogFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CancellationLogFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>
+        }
+        findFirst: {
+          args: Prisma.CancellationLogFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CancellationLogFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>
+        }
+        findMany: {
+          args: Prisma.CancellationLogFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>[]
+        }
+        create: {
+          args: Prisma.CancellationLogCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>
+        }
+        createMany: {
+          args: Prisma.CancellationLogCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CancellationLogCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>[]
+        }
+        delete: {
+          args: Prisma.CancellationLogDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>
+        }
+        update: {
+          args: Prisma.CancellationLogUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>
+        }
+        deleteMany: {
+          args: Prisma.CancellationLogDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CancellationLogUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CancellationLogUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>[]
+        }
+        upsert: {
+          args: Prisma.CancellationLogUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CancellationLogPayload>
+        }
+        aggregate: {
+          args: Prisma.CancellationLogAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCancellationLog>
+        }
+        groupBy: {
+          args: Prisma.CancellationLogGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CancellationLogGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CancellationLogCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CancellationLogCountAggregateOutputType> | number
         }
       }
     }
@@ -2740,10 +2815,30 @@ export const TripScalarFieldEnum = {
   dropLotId: 'dropLotId',
   shareToken: 'shareToken',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  cancellationRequestedAt: 'cancellationRequestedAt',
+  cancellationConfirmedAt: 'cancellationConfirmedAt',
+  cancellationReason: 'cancellationReason',
+  dropsRefunded: 'dropsRefunded',
+  refundAmount: 'refundAmount',
+  cancelledBy: 'cancelledBy'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
+
+
+export const CancellationLogScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  cancelledBy: 'cancelledBy',
+  tripStateAtCancellation: 'tripStateAtCancellation',
+  dropsRefunded: 'dropsRefunded',
+  refundAmount: 'refundAmount',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type CancellationLogScalarFieldEnum = (typeof CancellationLogScalarFieldEnum)[keyof typeof CancellationLogScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {
@@ -3336,6 +3431,7 @@ export type GlobalOmitConfig = {
   verificationToken?: Prisma.VerificationTokenOmit
   driverProfile?: Prisma.DriverProfileOmit
   trip?: Prisma.TripOmit
+  cancellationLog?: Prisma.CancellationLogOmit
   review?: Prisma.ReviewOmit
   verificationCode?: Prisma.VerificationCodeOmit
   adminLoginLog?: Prisma.AdminLoginLogOmit

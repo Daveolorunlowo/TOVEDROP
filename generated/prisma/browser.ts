@@ -48,6 +48,11 @@ export type DriverProfile = Prisma.DriverProfileModel
  */
 export type Trip = Prisma.TripModel
 /**
+ * Model CancellationLog
+ * 
+ */
+export type CancellationLog = Prisma.CancellationLogModel
+/**
  * Model Review
  * 
  */

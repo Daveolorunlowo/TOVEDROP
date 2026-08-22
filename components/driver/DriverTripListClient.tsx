@@ -118,9 +118,8 @@ export function DriverTripListClient({
           <p className="text-sm font-medium text-muted-foreground">No {subtab} trips found</p>
         </div>
       ) : (
-        <div className="rounded-xl overflow-hidden shadow-sm" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {trips.map((trip, i) => {
-            const isLast = i === trips.length - 1
             const scheduledAt = new Date(`${trip.date} ${trip.time}`).getTime()
             const now = Date.now()
             const msUntil = scheduledAt - now
@@ -143,97 +142,124 @@ export function DriverTripListClient({
             return (
               <div
                 key={trip.id}
-                className={cn("flex flex-col gap-3 px-4 py-4 transition-all")}
-                style={{ 
-                  borderBottom: isLast ? 'none' : '1px solid var(--border)',
-                  borderLeft: subtab === 'upcoming' && statusLevel === 2 ? '3px solid var(--orange-brand)' : '3px solid transparent',
-                  background: subtab === 'upcoming' && statusLevel === 2 ? 'rgba(217,119,6,0.02)' : 'transparent',
-                  opacity: processing === trip.id ? 0.5 : 1
-                }}
+                className={cn("relative flex flex-col p-5 rounded-2xl border transition-all duration-300", 
+                  subtab === 'upcoming' && statusLevel === 2 
+                    ? 'border-orange-brand/50 bg-orange-brand/5 shadow-[0_0_20px_rgba(249,115,22,0.05)]'
+                    : 'border-border-default bg-surface-card hover:border-border hover:shadow-sm'
+                )}
+                style={{ opacity: processing === trip.id ? 0.5 : 1 }}
               >
-                <div className="flex items-start justify-between w-full">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <Avatar className="w-9 h-9 shrink-0 shadow-sm border border-border">
-                      <AvatarFallback className="text-[10px] font-bold bg-surface-elevated text-muted-foreground">
+                {/* Header: Rider & Status */}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-10 h-10 border border-border/50 shadow-sm">
+                      <AvatarFallback className="bg-surface-elevated text-sm font-bold text-foreground">
                         {initials(trip.rider.name)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-semibold ${trip.status === 'CANCELLED' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                    <div>
+                      <p className={`font-bold ${trip.status === 'CANCELLED' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                         {trip.rider.name}
                       </p>
-                      <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.pickup}</span>
-                        <span className="text-[10px] text-muted-foreground/60">→</span>
-                        <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.destination}</span>
-                      </div>
-                      <p className="text-[10px] text-muted-foreground mt-1">{trip.date} · {trip.time}</p>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        {trip.date} • {trip.time}
+                      </p>
                     </div>
                   </div>
                   
+                  {/* Status Indicator */}
                   {subtab === 'upcoming' && (
-                    <div className="shrink-0 flex flex-col items-end">
+                    <div className="text-right flex flex-col items-end">
                       {statusLevel === 0 && (
-                        <span className="text-[11px] font-medium text-muted-foreground">In {timeStr}</span>
+                        <div className="bg-surface-elevated border border-border text-muted-foreground text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">
+                          In {timeStr}
+                        </div>
                       )}
                       {statusLevel === 1 && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full animate-pulse bg-orange-brand"></span>
-                          <span className="text-xs font-semibold text-orange-brand">In {timeStr}</span>
+                        <div className="flex items-center gap-1.5 bg-orange-brand/10 border border-orange-brand/20 text-orange-brand text-[10px] font-bold uppercase px-2.5 py-1 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-orange-brand animate-pulse"></span>
+                          In {timeStr}
                         </div>
                       )}
                       {statusLevel === 2 && (
                         <div className="flex flex-col items-end">
-                          <span className="text-[10px] font-bold uppercase tracking-wider mb-0.5 text-orange-brand">Trip starting soon</span>
-                          <span className="text-xs font-bold text-foreground">{timeStr}</span>
+                          <span className="bg-orange-brand text-white text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full mb-1">
+                            STARTING SOON
+                          </span>
+                          <span className="text-xs font-bold text-orange-brand">{timeStr}</span>
                         </div>
                       )}
                     </div>
                   )}
                   {subtab === 'past' && (
-                    <div className="shrink-0">
-                      <span className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded ${
-                        trip.status === 'COMPLETED' ? 'bg-foreground/10 text-foreground' : 'bg-red-500/10 text-red-500'
-                      }`}>
-                        {trip.status}
-                      </span>
+                    <div className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
+                      trip.status === 'COMPLETED' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20'
+                    }`}>
+                      {trip.status}
                     </div>
                   )}
                 </div>
 
+                {/* Route */}
+                <div className="bg-surface-elevated/50 rounded-xl p-3 mb-4 flex items-center gap-3 border border-border/50">
+                  <div className="flex flex-col items-center justify-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-orange-brand border-2 border-background shadow-sm z-10" />
+                    <div className="w-[1.5px] h-6 bg-border" />
+                    <div className="w-2 h-2 rounded-sm bg-purple-brand border-2 border-background shadow-sm z-10" />
+                  </div>
+                  <div className="flex flex-col justify-between h-full py-0.5 min-w-0">
+                    <p className="text-sm font-medium truncate text-foreground mb-4">{trip.pickup}</p>
+                    <p className="text-sm font-medium truncate text-foreground">{trip.destination}</p>
+                  </div>
+                </div>
+
+                {/* Actions */}
                 {subtab === 'upcoming' && (
-                  <div className="flex items-center gap-2 mt-2 justify-end">
-                    <button
-                      onClick={() => downloadICS(trip, scheduledAt)}
-                      className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded bg-surface-elevated hover:bg-white/5 border border-border transition-colors text-foreground"
-                    >
-                      <Calendar className="w-3 h-3" />
-                      Add to Calendar
-                    </button>
-                    {minsUntil > 15 ? (
+                  <div className="mt-auto pt-2 flex flex-col gap-2">
+                    {/* Primary Actions (Row 1) */}
+                    <div className="flex items-center gap-2">
                       <button
-                        onClick={() => setTransferringTrip(trip)}
-                        className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5 text-muted-foreground border border-border"
+                        onClick={() => setActiveChatTrip(trip)}
+                        className="flex-[0.4] flex items-center justify-center gap-2 text-xs font-bold py-2.5 rounded-lg transition-colors bg-surface-elevated hover:bg-surface-elevated/80 border border-border text-foreground"
                       >
-                        Transfer Trip
+                        <MessageSquare className="w-3.5 h-3.5 text-orange-brand" />
+                        Chat
                       </button>
-                    ) : (
-                      <span className="text-[9px] text-muted-foreground/60 mr-1 max-w-[80px] text-right leading-tight">Transfer unavailable — too close to pickup</span>
-                    )}
-                    <button
-                      onClick={() => setActiveChatTrip(trip)}
-                      className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5 text-green-500 border border-green-500/20"
-                    >
-                      <MessageSquare className="w-3 h-3" />
-                      Message
-                    </button>
-                    <button
-                      disabled={processing === trip.id}
-                      onClick={() => handleComplete(trip.id)}
-                      className="text-[11px] font-semibold px-2.5 py-1.5 rounded bg-green-500/10 text-green-500 border border-green-500/20 transition-all hover:bg-green-500/20 disabled:opacity-50"
-                    >
-                      {processing === trip.id ? '…' : 'Mark Complete'}
-                    </button>
+                      <button
+                        disabled={processing === trip.id}
+                        onClick={() => handleComplete(trip.id)}
+                        className="flex-1 text-xs font-bold py-2.5 rounded-lg bg-green-500/10 hover:bg-green-500/20 text-green-600 border border-green-500/20 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
+                      >
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        {processing === trip.id ? 'Processing…' : 'Mark Complete'}
+                      </button>
+                    </div>
+
+                    {/* Secondary Actions (Row 2) */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => downloadICS(trip, scheduledAt)}
+                        className="flex-[0.4] flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-surface-elevated rounded-lg py-2 transition-colors border border-transparent hover:border-border"
+                        title="Add to Calendar"
+                      >
+                        <Calendar className="w-4 h-4" />
+                      </button>
+                      
+                      <div className="flex-1">
+                        {minsUntil > 15 ? (
+                          <button
+                            onClick={() => setTransferringTrip(trip)}
+                            className="w-full text-[11px] font-semibold py-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors hover:bg-surface-elevated border border-transparent hover:border-border"
+                          >
+                            Transfer to another driver
+                          </button>
+                        ) : (
+                          <p className="text-[10px] text-muted-foreground/50 text-center px-2 py-2">
+                            Transfer unavailable (too close)
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>

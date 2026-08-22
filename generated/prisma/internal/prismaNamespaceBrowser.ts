@@ -57,6 +57,7 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   DriverProfile: 'DriverProfile',
   Trip: 'Trip',
+  CancellationLog: 'CancellationLog',
   Review: 'Review',
   VerificationCode: 'VerificationCode',
   AdminLoginLog: 'AdminLoginLog',
@@ -208,10 +209,30 @@ export const TripScalarFieldEnum = {
   dropLotId: 'dropLotId',
   shareToken: 'shareToken',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  cancellationRequestedAt: 'cancellationRequestedAt',
+  cancellationConfirmedAt: 'cancellationConfirmedAt',
+  cancellationReason: 'cancellationReason',
+  dropsRefunded: 'dropsRefunded',
+  refundAmount: 'refundAmount',
+  cancelledBy: 'cancelledBy'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
+
+
+export const CancellationLogScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  cancelledBy: 'cancelledBy',
+  tripStateAtCancellation: 'tripStateAtCancellation',
+  dropsRefunded: 'dropsRefunded',
+  refundAmount: 'refundAmount',
+  reason: 'reason',
+  createdAt: 'createdAt'
+} as const
+
+export type CancellationLogScalarFieldEnum = (typeof CancellationLogScalarFieldEnum)[keyof typeof CancellationLogScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {

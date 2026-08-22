@@ -113,6 +113,11 @@ export async function POST(req: Request) {
       }
     }
 
+    // Trigger global event so it disappears from other drivers' Requests tab immediately
+    await pusherServer.trigger('global-trips', 'trip-removed', {
+      tripId: tripId
+    }).catch(err => console.error("Global pusher trigger failed:", err))
+
     return NextResponse.json({ message: "Trip(s) accepted successfully", shareToken, count: result.count }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error accepting trip", error: error.message }, { status: 500 })
