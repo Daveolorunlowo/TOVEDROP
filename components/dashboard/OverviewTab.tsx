@@ -13,7 +13,14 @@ export async function OverviewTab({ userId }: { userId: string }) {
         riderId: userId, 
         status: { in: ['PENDING', 'CONFIRMED'] }
       },
-      include: { driver: true },
+      include: { 
+        driver: { include: { driverProfile: true } },
+        tripTransfers: {
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+          include: { fromDriver: { select: { name: true } } }
+        }
+      },
       orderBy: [
         { date: 'asc' },
         { time: 'asc' }
@@ -24,6 +31,22 @@ export async function OverviewTab({ userId }: { userId: string }) {
   // Mocking "Drops used" for now since we don't track drop expenditure explicitly by month easily without a transaction model
   // If we want exact, we'd need to query DropTransaction or just use tripsTaken. Let's use tripsTaken as drops used for simplicity, 
   // or just omit it and show trips taken.
+
+  const recentTransfer = nextTrip?.tripTransfers?.[0]
+  const isRecentlyTransferred = recentTransfer?.status === 'ACCEPTED'
+
+  function getReasonText(reason: string, note?: string | null) {
+    const map: any = {
+      VEHICLE_BREAKDOWN: "Vehicle breakdown",
+      FAMILY_EMERGENCY: "Family emergency",
+      MEDICAL_EMERGENCY: "Medical emergency",
+      FUEL_ISSUE: "Fuel shortage",
+      STUCK_IN_TRAFFIC: "Unavoidably delayed",
+      PERSONAL_EMERGENCY: "Personal emergency",
+      OTHER: note || "Unforeseen circumstances"
+    }
+    return map[reason] || "Unforeseen circumstances"
+  }
   
   return (
     <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
@@ -50,9 +73,24 @@ export async function OverviewTab({ userId }: { userId: string }) {
         </div>
 
         {nextTrip ? (
-          <div className="bg-card border border-border rounded-xl p-5 shadow-sm relative overflow-hidden">
+          <div className="bg-card border border-border rounded-xl p-0 shadow-sm relative overflow-hidden">
+            {isRecentlyTransferred && (
+              <div className="bg-orange-brand/10 border-b border-orange-brand/20 p-4">
+                <p className="text-sm font-bold text-orange-brand mb-1 flex items-center gap-1.5">
+                  <span className="text-lg">⚠</span> Your driver for {nextTrip.time} has been changed
+                </p>
+                <p className="text-xs text-foreground mt-2 leading-relaxed">
+                  <strong>{recentTransfer.fromDriver.name}</strong> transferred your trip to <strong>{nextTrip.driver?.name}</strong> due to: <span className="italic">{getReasonText(recentTransfer.reason, recentTransfer.reasonNote)}</span>
+                </p>
+                <div className="mt-3 pt-3 border-t border-orange-brand/10 flex flex-wrap gap-x-4 gap-y-1">
+                  <span className="text-xs font-semibold">New driver: {nextTrip.driver?.name}</span>
+                  <span className="text-xs text-muted-foreground">{nextTrip.driver?.driverProfile?.vehicleMake} {nextTrip.driver?.driverProfile?.vehicleModel}</span>
+                </div>
+              </div>
+            )}
+            <div className="p-5">
             <div className="absolute top-0 left-0 w-1 h-full bg-orange-brand" />
-            <div className="flex justify-between items-start mb-4">
+            <div className="flex justify-between items-start mb-4 pl-2">
               <div>
                 <p className="text-xs font-semibold text-orange-brand mb-1 flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5" />
@@ -80,6 +118,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
                   <p className="text-sm font-medium text-foreground">{nextTrip.destination}</p>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         ) : (

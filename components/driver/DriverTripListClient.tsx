@@ -7,6 +7,7 @@ import { Calendar, MessageSquare, CheckCircle, Car } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PaginationControls } from '@/components/shared/PaginationControls'
 import { ChatModal } from '@/components/chat-modal'
+import { TransferTripModal } from '@/components/driver/TransferTripModal'
 import { cn } from '@/lib/utils'
 
 const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
@@ -59,6 +60,7 @@ export function DriverTripListClient({
   const [trips, setTrips] = useState(initialTrips)
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any | null>(null)
+  const [transferringTrip, setTransferringTrip] = useState<any | null>(null)
 
   useEffect(() => {
     setTrips(initialTrips)
@@ -208,6 +210,16 @@ export function DriverTripListClient({
                       <Calendar className="w-3 h-3" />
                       Add to Calendar
                     </button>
+                    {minsUntil > 15 ? (
+                      <button
+                        onClick={() => setTransferringTrip(trip)}
+                        className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5 text-muted-foreground border border-border"
+                      >
+                        Transfer Trip
+                      </button>
+                    ) : (
+                      <span className="text-[9px] text-muted-foreground/60 mr-1 max-w-[80px] text-right leading-tight">Transfer unavailable — too close to pickup</span>
+                    )}
                     <button
                       onClick={() => setActiveChatTrip(trip)}
                       className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5 text-green-500 border border-green-500/20"
@@ -245,6 +257,13 @@ export function DriverTripListClient({
           currentUserId={driverId}
           otherPartyName={activeChatTrip.rider?.name ?? 'Rider'}
           onClose={() => setActiveChatTrip(null)}
+        />
+      )}
+
+      {transferringTrip && (
+        <TransferTripModal
+          trip={transferringTrip}
+          onClose={() => setTransferringTrip(null)}
         />
       )}
     </div>

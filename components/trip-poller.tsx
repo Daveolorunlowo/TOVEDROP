@@ -10,11 +10,17 @@ export function TripPoller({ userId }: { userId: string }) {
   const handleEvent = (data: any, type: string) => {
     if (type === 'accepted') setToastMessage(`🎉 ${data.driverName || "A driver"} accepted your ride!`)
     if (type === 'completed') setToastMessage(`✅ Your ride is complete! Don't forget to leave a review.`)
+    if (type === 'transferred') {
+      // For transferred, we just refresh so the banner appears natively. We don't need a toast unless desired.
+      // But we can show a toast too just in case.
+      setToastMessage(`⚠ Your driver has been changed for your upcoming trip.`)
+    }
     router.refresh()
   }
 
   useResilientChannel(`user-trips-${userId}`, 'trip-accepted', (data) => handleEvent(data, 'accepted'), () => router.refresh())
   useResilientChannel(`user-trips-${userId}`, 'trip-completed', (data) => handleEvent(data, 'completed'))
+  useResilientChannel(`user-trips-${userId}`, 'trip-transferred', (data) => handleEvent(data, 'transferred'))
 
   if (!toastMessage) return null
 

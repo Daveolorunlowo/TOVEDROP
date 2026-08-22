@@ -70,6 +70,9 @@ model User {
   updateReads      UpdateRead[]
   privacyRequests  PrivacyRequest[]
 
+  transfersGiven TripTransfer[] @relation("TransferFrom")
+  transfersTaken TripTransfer[] @relation("TransferTo")
+
   alarmLogs        AlarmLog[]
   tripReminders    TripReminder[]
 }
@@ -112,6 +115,8 @@ model DriverProfile {
 
   walletTransactions WalletTransaction[]
   withdrawalRequests WithdrawalRequest[]
+  
+  transferCount   Int   @default(0)
 
   alarmEnabled        Boolean  @default(true)
   alarmTimes          Int[]    @default([30, 10, 2])
@@ -160,6 +165,8 @@ model Trip {
   shareToken         String?             @unique
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
+  
+  tripTransfers      TripTransfer[]
 
   alarmLogs          AlarmLog[]
   tripReminders      TripReminder[]
@@ -422,3 +429,40 @@ model TripReminder {
   trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
   driver    User     @relation(fields: [driverId], references: [id], onDelete: Cascade)
 }
+
+model TripTransfer {
+  id              String         @id @default(cuid())
+  tripId          String
+  fromDriverId    String
+  toDriverId      String?
+  reason          TransferReason
+  reasonNote      String?
+  shareToken      String         @unique
+  status          TransferStatus @default(PENDING)
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  expiredAt       DateTime?
+  createdAt       DateTime       @default(now())
+  
+  trip            Trip           @relation(fields: [tripId], references: [id])
+  fromDriver      User           @relation("TransferFrom", fields: [fromDriverId], references: [id])
+  toDriver        User?          @relation("TransferTo", fields: [toDriverId], references: [id])
+}
+
+enum TransferReason {
+  VEHICLE_BREAKDOWN
+  FAMILY_EMERGENCY
+  MEDICAL_EMERGENCY
+  FUEL_ISSUE
+  STUCK_IN_TRAFFIC
+  PERSONAL_EMERGENCY
+  OTHER
+}
+
+enum TransferStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+  CANCELLED
+}
+

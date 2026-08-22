@@ -17,7 +17,7 @@ export function DriverTabs() {
     const urlTab = searchParams.get('tab')
     
     if (!urlTab && savedTab && savedTab !== 'requests') {
-      router.replace(`?tab=${savedTab}`, { scroll: false })
+      router.replace(`${window.location.pathname}?tab=${savedTab}`, { scroll: false })
     }
   }, [searchParams, router])
 
@@ -27,7 +27,7 @@ export function DriverTabs() {
     params.set('tab', tab)
     params.delete('page') 
     params.delete('subtab')
-    router.push(`?${params.toString()}`, { scroll: false })
+    router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false })
   }
 
   if (!mounted) {

@@ -30,7 +30,7 @@ export function DashboardTabs({
     const urlTab = searchParams.get('tab')
     
     if (!urlTab && savedTab && savedTab !== defaultTab) {
-      router.replace(`?tab=${savedTab}`, { scroll: false })
+      router.replace(`${window.location.pathname}?tab=${savedTab}`, { scroll: false })
     }
   }, [searchParams, router, storageKey, defaultTab])
 
@@ -40,7 +40,7 @@ export function DashboardTabs({
     params.set('tab', tab)
     params.delete('page') // Reset pagination on tab change
     params.delete('subtab')
-    router.push(`?${params.toString()}`, { scroll: false })
+    router.push(`${window.location.pathname}?${params.toString()}`, { scroll: false })
   }
 
   // Prevent hydration mismatch by not rendering the active state until mounted
