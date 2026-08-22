@@ -10,7 +10,6 @@ import { ChatModal } from '@/components/chat-modal'
 import { ConfirmModal } from '@/components/shared/ConfirmModal'
 import { SpotifyPlayer } from '@/components/trip/SpotifyPlayer'
 import { pusherClient } from '@/lib/pusher-client'
-import { TripCancelButton } from './TripCancelButton'
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; 
@@ -241,9 +240,14 @@ export function TripListClient({
                         </>
                       )}
                       {(trip.status === 'PENDING' || trip.status === 'CONFIRMED') && (
-                        <div className="p-1.5 rounded bg-surface-elevated flex items-center justify-center cursor-default">
-                          <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">Active</span>
-                        </div>
+                        <button
+                          disabled={processing === trip.id}
+                          onClick={() => setTripToCancel(trip.id)}
+                          className="p-1.5 rounded bg-surface-elevated hover:bg-white/10 transition-colors text-red-500/80"
+                          aria-label="Cancel"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
                       )}
                     </div>
                   )}
@@ -291,31 +295,6 @@ export function TripListClient({
                   <SpotifyPlayer tripId={trip.id} />
                 </div>
               )}
-
-              {/* Action Buttons at the bottom of the card */}
-              <div className="px-4 pb-4 pt-2 border-t border-border-default/30 flex items-center justify-between gap-3">
-                <div className="flex gap-2">
-                  <TripCancelButton 
-                    trip={trip} 
-                    onCancelSuccess={(data) => {
-                      setTrips(prev => prev.map(t => 
-                        t.id === trip.id 
-                          ? { ...t, status: 'CANCELLED' } 
-                          : t
-                      ))
-                    }} 
-                  />
-                  {trip.status === 'CONFIRMED' && (
-                    <button 
-                      onClick={() => setActiveChatTrip(trip)}
-                      className="px-4 py-2 rounded-lg text-sm font-bold bg-surface-elevated text-foreground hover:bg-white/10 transition-colors flex items-center gap-2"
-                    >
-                      <MessageSquare className="w-4 h-4" />
-                      Contact
-                    </button>
-                  )}
-                </div>
-              </div>
             </div>
           )
         })}

@@ -32,7 +32,6 @@ export type TripAvgAggregateOutputType = {
   destinationLat: number | null
   destinationLng: number | null
   bookingFeeNaira: number | null
-  refundAmount: number | null
 }
 
 export type TripSumAggregateOutputType = {
@@ -41,7 +40,6 @@ export type TripSumAggregateOutputType = {
   destinationLat: number | null
   destinationLng: number | null
   bookingFeeNaira: number | null
-  refundAmount: number | null
 }
 
 export type TripMinAggregateOutputType = {
@@ -68,12 +66,6 @@ export type TripMinAggregateOutputType = {
   shareToken: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  cancellationRequestedAt: Date | null
-  cancellationConfirmedAt: Date | null
-  cancellationReason: string | null
-  dropsRefunded: boolean | null
-  refundAmount: number | null
-  cancelledBy: string | null
 }
 
 export type TripMaxAggregateOutputType = {
@@ -100,12 +92,6 @@ export type TripMaxAggregateOutputType = {
   shareToken: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  cancellationRequestedAt: Date | null
-  cancellationConfirmedAt: Date | null
-  cancellationReason: string | null
-  dropsRefunded: boolean | null
-  refundAmount: number | null
-  cancelledBy: string | null
 }
 
 export type TripCountAggregateOutputType = {
@@ -132,12 +118,6 @@ export type TripCountAggregateOutputType = {
   shareToken: number
   createdAt: number
   updatedAt: number
-  cancellationRequestedAt: number
-  cancellationConfirmedAt: number
-  cancellationReason: number
-  dropsRefunded: number
-  refundAmount: number
-  cancelledBy: number
   _all: number
 }
 
@@ -148,7 +128,6 @@ export type TripAvgAggregateInputType = {
   destinationLat?: true
   destinationLng?: true
   bookingFeeNaira?: true
-  refundAmount?: true
 }
 
 export type TripSumAggregateInputType = {
@@ -157,7 +136,6 @@ export type TripSumAggregateInputType = {
   destinationLat?: true
   destinationLng?: true
   bookingFeeNaira?: true
-  refundAmount?: true
 }
 
 export type TripMinAggregateInputType = {
@@ -184,12 +162,6 @@ export type TripMinAggregateInputType = {
   shareToken?: true
   createdAt?: true
   updatedAt?: true
-  cancellationRequestedAt?: true
-  cancellationConfirmedAt?: true
-  cancellationReason?: true
-  dropsRefunded?: true
-  refundAmount?: true
-  cancelledBy?: true
 }
 
 export type TripMaxAggregateInputType = {
@@ -216,12 +188,6 @@ export type TripMaxAggregateInputType = {
   shareToken?: true
   createdAt?: true
   updatedAt?: true
-  cancellationRequestedAt?: true
-  cancellationConfirmedAt?: true
-  cancellationReason?: true
-  dropsRefunded?: true
-  refundAmount?: true
-  cancelledBy?: true
 }
 
 export type TripCountAggregateInputType = {
@@ -248,12 +214,6 @@ export type TripCountAggregateInputType = {
   shareToken?: true
   createdAt?: true
   updatedAt?: true
-  cancellationRequestedAt?: true
-  cancellationConfirmedAt?: true
-  cancellationReason?: true
-  dropsRefunded?: true
-  refundAmount?: true
-  cancelledBy?: true
   _all?: true
 }
 
@@ -367,12 +327,6 @@ export type TripGroupByOutputType = {
   shareToken: string | null
   createdAt: Date
   updatedAt: Date
-  cancellationRequestedAt: Date | null
-  cancellationConfirmedAt: Date | null
-  cancellationReason: string | null
-  dropsRefunded: boolean
-  refundAmount: number | null
-  cancelledBy: string | null
   _count: TripCountAggregateOutputType | null
   _avg: TripAvgAggregateOutputType | null
   _sum: TripSumAggregateOutputType | null
@@ -422,12 +376,6 @@ export type TripWhereInput = {
   shareToken?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
-  cancellationRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  cancellationConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  cancellationReason?: Prisma.StringNullableFilter<"Trip"> | string | null
-  dropsRefunded?: Prisma.BoolFilter<"Trip"> | boolean
-  refundAmount?: Prisma.IntNullableFilter<"Trip"> | number | null
-  cancelledBy?: Prisma.StringNullableFilter<"Trip"> | string | null
   rider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   driver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   dropLot?: Prisma.XOR<Prisma.DropLotNullableScalarRelationFilter, Prisma.DropLotWhereInput> | null
@@ -436,10 +384,8 @@ export type TripWhereInput = {
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
   platformRevenue?: Prisma.XOR<Prisma.PlatformRevenueNullableScalarRelationFilter, Prisma.PlatformRevenueWhereInput> | null
   adminRevenue?: Prisma.XOR<Prisma.AdminRevenueNullableScalarRelationFilter, Prisma.AdminRevenueWhereInput> | null
-  tripTransfers?: Prisma.TripTransferListRelationFilter
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
-  cancellationLogs?: Prisma.CancellationLogListRelationFilter
 }
 
 export type TripOrderByWithRelationInput = {
@@ -466,12 +412,6 @@ export type TripOrderByWithRelationInput = {
   shareToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  cancellationRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  cancellationConfirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  dropsRefunded?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  cancelledBy?: Prisma.SortOrderInput | Prisma.SortOrder
   rider?: Prisma.UserOrderByWithRelationInput
   driver?: Prisma.UserOrderByWithRelationInput
   dropLot?: Prisma.DropLotOrderByWithRelationInput
@@ -480,10 +420,8 @@ export type TripOrderByWithRelationInput = {
   walletTransactions?: Prisma.WalletTransactionOrderByRelationAggregateInput
   platformRevenue?: Prisma.PlatformRevenueOrderByWithRelationInput
   adminRevenue?: Prisma.AdminRevenueOrderByWithRelationInput
-  tripTransfers?: Prisma.TripTransferOrderByRelationAggregateInput
   alarmLogs?: Prisma.AlarmLogOrderByRelationAggregateInput
   tripReminders?: Prisma.TripReminderOrderByRelationAggregateInput
-  cancellationLogs?: Prisma.CancellationLogOrderByRelationAggregateInput
 }
 
 export type TripWhereUniqueInput = Prisma.AtLeast<{
@@ -513,12 +451,6 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   dropLotId?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
-  cancellationRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  cancellationConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  cancellationReason?: Prisma.StringNullableFilter<"Trip"> | string | null
-  dropsRefunded?: Prisma.BoolFilter<"Trip"> | boolean
-  refundAmount?: Prisma.IntNullableFilter<"Trip"> | number | null
-  cancelledBy?: Prisma.StringNullableFilter<"Trip"> | string | null
   rider?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   driver?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   dropLot?: Prisma.XOR<Prisma.DropLotNullableScalarRelationFilter, Prisma.DropLotWhereInput> | null
@@ -527,10 +459,8 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
   platformRevenue?: Prisma.XOR<Prisma.PlatformRevenueNullableScalarRelationFilter, Prisma.PlatformRevenueWhereInput> | null
   adminRevenue?: Prisma.XOR<Prisma.AdminRevenueNullableScalarRelationFilter, Prisma.AdminRevenueWhereInput> | null
-  tripTransfers?: Prisma.TripTransferListRelationFilter
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
-  cancellationLogs?: Prisma.CancellationLogListRelationFilter
 }, "id" | "shareToken">
 
 export type TripOrderByWithAggregationInput = {
@@ -557,12 +487,6 @@ export type TripOrderByWithAggregationInput = {
   shareToken?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  cancellationRequestedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  cancellationConfirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
-  cancellationReason?: Prisma.SortOrderInput | Prisma.SortOrder
-  dropsRefunded?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrderInput | Prisma.SortOrder
-  cancelledBy?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TripCountOrderByAggregateInput
   _avg?: Prisma.TripAvgOrderByAggregateInput
   _max?: Prisma.TripMaxOrderByAggregateInput
@@ -597,12 +521,6 @@ export type TripScalarWhereWithAggregatesInput = {
   shareToken?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Trip"> | Date | string
-  cancellationRequestedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
-  cancellationConfirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
-  cancellationReason?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
-  dropsRefunded?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
-  refundAmount?: Prisma.IntNullableWithAggregatesFilter<"Trip"> | number | null
-  cancelledBy?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
 }
 
 export type TripCreateInput = {
@@ -626,12 +544,6 @@ export type TripCreateInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -640,10 +552,8 @@ export type TripCreateInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateInput = {
@@ -670,21 +580,13 @@ export type TripUncheckedCreateInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripUpdateInput = {
@@ -708,12 +610,6 @@ export type TripUpdateInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -722,10 +618,8 @@ export type TripUpdateInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateInput = {
@@ -752,21 +646,13 @@ export type TripUncheckedUpdateInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateManyInput = {
@@ -793,12 +679,6 @@ export type TripCreateManyInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
 }
 
 export type TripUpdateManyMutationInput = {
@@ -822,12 +702,6 @@ export type TripUpdateManyMutationInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TripUncheckedUpdateManyInput = {
@@ -854,12 +728,6 @@ export type TripUncheckedUpdateManyInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TripListRelationFilter = {
@@ -896,12 +764,6 @@ export type TripCountOrderByAggregateInput = {
   shareToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  cancellationRequestedAt?: Prisma.SortOrder
-  cancellationConfirmedAt?: Prisma.SortOrder
-  cancellationReason?: Prisma.SortOrder
-  dropsRefunded?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrder
-  cancelledBy?: Prisma.SortOrder
 }
 
 export type TripAvgOrderByAggregateInput = {
@@ -910,7 +772,6 @@ export type TripAvgOrderByAggregateInput = {
   destinationLat?: Prisma.SortOrder
   destinationLng?: Prisma.SortOrder
   bookingFeeNaira?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrder
 }
 
 export type TripMaxOrderByAggregateInput = {
@@ -937,12 +798,6 @@ export type TripMaxOrderByAggregateInput = {
   shareToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  cancellationRequestedAt?: Prisma.SortOrder
-  cancellationConfirmedAt?: Prisma.SortOrder
-  cancellationReason?: Prisma.SortOrder
-  dropsRefunded?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrder
-  cancelledBy?: Prisma.SortOrder
 }
 
 export type TripMinOrderByAggregateInput = {
@@ -969,12 +824,6 @@ export type TripMinOrderByAggregateInput = {
   shareToken?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  cancellationRequestedAt?: Prisma.SortOrder
-  cancellationConfirmedAt?: Prisma.SortOrder
-  cancellationReason?: Prisma.SortOrder
-  dropsRefunded?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrder
-  cancelledBy?: Prisma.SortOrder
 }
 
 export type TripSumOrderByAggregateInput = {
@@ -983,7 +832,6 @@ export type TripSumOrderByAggregateInput = {
   destinationLat?: Prisma.SortOrder
   destinationLng?: Prisma.SortOrder
   bookingFeeNaira?: Prisma.SortOrder
-  refundAmount?: Prisma.SortOrder
 }
 
 export type TripScalarRelationFilter = {
@@ -1086,20 +934,6 @@ export type NullableFloatFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
-}
-
-export type TripCreateNestedOneWithoutCancellationLogsInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutCancellationLogsInput, Prisma.TripUncheckedCreateWithoutCancellationLogsInput>
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutCancellationLogsInput
-  connect?: Prisma.TripWhereUniqueInput
-}
-
-export type TripUpdateOneRequiredWithoutCancellationLogsNestedInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutCancellationLogsInput, Prisma.TripUncheckedCreateWithoutCancellationLogsInput>
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutCancellationLogsInput
-  upsert?: Prisma.TripUpsertWithoutCancellationLogsInput
-  connect?: Prisma.TripWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutCancellationLogsInput, Prisma.TripUpdateWithoutCancellationLogsInput>, Prisma.TripUncheckedUpdateWithoutCancellationLogsInput>
 }
 
 export type TripCreateNestedOneWithoutReviewInput = {
@@ -1244,20 +1078,6 @@ export type TripUpdateOneRequiredWithoutTripRemindersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutTripRemindersInput, Prisma.TripUpdateWithoutTripRemindersInput>, Prisma.TripUncheckedUpdateWithoutTripRemindersInput>
 }
 
-export type TripCreateNestedOneWithoutTripTransfersInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutTripTransfersInput, Prisma.TripUncheckedCreateWithoutTripTransfersInput>
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripTransfersInput
-  connect?: Prisma.TripWhereUniqueInput
-}
-
-export type TripUpdateOneRequiredWithoutTripTransfersNestedInput = {
-  create?: Prisma.XOR<Prisma.TripCreateWithoutTripTransfersInput, Prisma.TripUncheckedCreateWithoutTripTransfersInput>
-  connectOrCreate?: Prisma.TripCreateOrConnectWithoutTripTransfersInput
-  upsert?: Prisma.TripUpsertWithoutTripTransfersInput
-  connect?: Prisma.TripWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutTripTransfersInput, Prisma.TripUpdateWithoutTripTransfersInput>, Prisma.TripUncheckedUpdateWithoutTripTransfersInput>
-}
-
 export type TripCreateWithoutRiderInput = {
   id?: string
   status?: string
@@ -1279,12 +1099,6 @@ export type TripCreateWithoutRiderInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
   review?: Prisma.ReviewCreateNestedOneWithoutTripInput
@@ -1292,10 +1106,8 @@ export type TripCreateWithoutRiderInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutRiderInput = {
@@ -1321,21 +1133,13 @@ export type TripUncheckedCreateWithoutRiderInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutRiderInput = {
@@ -1369,12 +1173,6 @@ export type TripCreateWithoutDriverInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
   review?: Prisma.ReviewCreateNestedOneWithoutTripInput
@@ -1382,10 +1180,8 @@ export type TripCreateWithoutDriverInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutDriverInput = {
@@ -1411,21 +1207,13 @@ export type TripUncheckedCreateWithoutDriverInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutDriverInput = {
@@ -1481,12 +1269,6 @@ export type TripScalarWhereInput = {
   shareToken?: Prisma.StringNullableFilter<"Trip"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Trip"> | Date | string
-  cancellationRequestedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  cancellationConfirmedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
-  cancellationReason?: Prisma.StringNullableFilter<"Trip"> | string | null
-  dropsRefunded?: Prisma.BoolFilter<"Trip"> | boolean
-  refundAmount?: Prisma.IntNullableFilter<"Trip"> | number | null
-  cancelledBy?: Prisma.StringNullableFilter<"Trip"> | string | null
 }
 
 export type TripUpsertWithWhereUniqueWithoutDriverInput = {
@@ -1503,182 +1285,6 @@ export type TripUpdateWithWhereUniqueWithoutDriverInput = {
 export type TripUpdateManyWithWhereWithoutDriverInput = {
   where: Prisma.TripScalarWhereInput
   data: Prisma.XOR<Prisma.TripUpdateManyMutationInput, Prisma.TripUncheckedUpdateManyWithoutDriverInput>
-}
-
-export type TripCreateWithoutCancellationLogsInput = {
-  id?: string
-  status?: string
-  pickup: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  destination: string
-  destinationLat?: number | null
-  destinationLng?: number | null
-  date: string
-  time: string
-  notes?: string | null
-  driverArrivedAt?: Date | string | null
-  isPool?: boolean
-  poolGroupId?: string | null
-  isScheduled?: boolean
-  scheduledDateTime?: Date | string | null
-  bookingFeeNaira?: number | null
-  shareToken?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
-  rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
-  driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
-  dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
-  review?: Prisma.ReviewCreateNestedOneWithoutTripInput
-  messages?: Prisma.MessageCreateNestedManyWithoutTripInput
-  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
-  platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
-  adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
-  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
-  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-}
-
-export type TripUncheckedCreateWithoutCancellationLogsInput = {
-  id?: string
-  status?: string
-  pickup: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  destination: string
-  destinationLat?: number | null
-  destinationLng?: number | null
-  date: string
-  time: string
-  notes?: string | null
-  riderId: string
-  driverId?: string | null
-  driverArrivedAt?: Date | string | null
-  isPool?: boolean
-  poolGroupId?: string | null
-  isScheduled?: boolean
-  scheduledDateTime?: Date | string | null
-  bookingFeeNaira?: number | null
-  dropLotId?: string | null
-  shareToken?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
-  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
-  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
-  platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
-  adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
-  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
-  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-}
-
-export type TripCreateOrConnectWithoutCancellationLogsInput = {
-  where: Prisma.TripWhereUniqueInput
-  create: Prisma.XOR<Prisma.TripCreateWithoutCancellationLogsInput, Prisma.TripUncheckedCreateWithoutCancellationLogsInput>
-}
-
-export type TripUpsertWithoutCancellationLogsInput = {
-  update: Prisma.XOR<Prisma.TripUpdateWithoutCancellationLogsInput, Prisma.TripUncheckedUpdateWithoutCancellationLogsInput>
-  create: Prisma.XOR<Prisma.TripCreateWithoutCancellationLogsInput, Prisma.TripUncheckedCreateWithoutCancellationLogsInput>
-  where?: Prisma.TripWhereInput
-}
-
-export type TripUpdateToOneWithWhereWithoutCancellationLogsInput = {
-  where?: Prisma.TripWhereInput
-  data: Prisma.XOR<Prisma.TripUpdateWithoutCancellationLogsInput, Prisma.TripUncheckedUpdateWithoutCancellationLogsInput>
-}
-
-export type TripUpdateWithoutCancellationLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destination?: Prisma.StringFieldUpdateOperationsInput | string
-  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  time?: Prisma.StringFieldUpdateOperationsInput | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  scheduledDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
-  driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
-  dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
-  review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
-  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
-  platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
-  adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
-  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
-  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-}
-
-export type TripUncheckedUpdateWithoutCancellationLogsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destination?: Prisma.StringFieldUpdateOperationsInput | string
-  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  time?: Prisma.StringFieldUpdateOperationsInput | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riderId?: Prisma.StringFieldUpdateOperationsInput | string
-  driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  scheduledDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
-  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
-  platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
-  adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
-  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
-  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutReviewInput = {
@@ -1702,12 +1308,6 @@ export type TripCreateWithoutReviewInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -1715,10 +1315,8 @@ export type TripCreateWithoutReviewInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutReviewInput = {
@@ -1745,20 +1343,12 @@ export type TripUncheckedCreateWithoutReviewInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutReviewInput = {
@@ -1798,12 +1388,6 @@ export type TripUpdateWithoutReviewInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -1811,10 +1395,8 @@ export type TripUpdateWithoutReviewInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutReviewInput = {
@@ -1841,20 +1423,12 @@ export type TripUncheckedUpdateWithoutReviewInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutMessagesInput = {
@@ -1878,12 +1452,6 @@ export type TripCreateWithoutMessagesInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -1891,10 +1459,8 @@ export type TripCreateWithoutMessagesInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutMessagesInput = {
@@ -1921,20 +1487,12 @@ export type TripUncheckedCreateWithoutMessagesInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutMessagesInput = {
@@ -1974,12 +1532,6 @@ export type TripUpdateWithoutMessagesInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -1987,10 +1539,8 @@ export type TripUpdateWithoutMessagesInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutMessagesInput = {
@@ -2017,20 +1567,12 @@ export type TripUncheckedUpdateWithoutMessagesInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutDropLotInput = {
@@ -2054,12 +1596,6 @@ export type TripCreateWithoutDropLotInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   review?: Prisma.ReviewCreateNestedOneWithoutTripInput
@@ -2067,10 +1603,8 @@ export type TripCreateWithoutDropLotInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutDropLotInput = {
@@ -2096,21 +1630,13 @@ export type TripUncheckedCreateWithoutDropLotInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutDropLotInput = {
@@ -2160,12 +1686,6 @@ export type TripCreateWithoutWalletTransactionsInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -2173,10 +1693,8 @@ export type TripCreateWithoutWalletTransactionsInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutWalletTransactionsInput = {
@@ -2203,20 +1721,12 @@ export type TripUncheckedCreateWithoutWalletTransactionsInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutWalletTransactionsInput = {
@@ -2256,12 +1766,6 @@ export type TripUpdateWithoutWalletTransactionsInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -2269,10 +1773,8 @@ export type TripUpdateWithoutWalletTransactionsInput = {
   messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -2299,20 +1801,12 @@ export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutPlatformRevenueInput = {
@@ -2336,12 +1830,6 @@ export type TripCreateWithoutPlatformRevenueInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -2349,10 +1837,8 @@ export type TripCreateWithoutPlatformRevenueInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutPlatformRevenueInput = {
@@ -2379,20 +1865,12 @@ export type TripUncheckedCreateWithoutPlatformRevenueInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutPlatformRevenueInput = {
@@ -2432,12 +1910,6 @@ export type TripUpdateWithoutPlatformRevenueInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -2445,10 +1917,8 @@ export type TripUpdateWithoutPlatformRevenueInput = {
   messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
@@ -2475,20 +1945,12 @@ export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutAdminRevenueInput = {
@@ -2512,12 +1974,6 @@ export type TripCreateWithoutAdminRevenueInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -2525,10 +1981,8 @@ export type TripCreateWithoutAdminRevenueInput = {
   messages?: Prisma.MessageCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutAdminRevenueInput = {
@@ -2555,20 +2009,12 @@ export type TripUncheckedCreateWithoutAdminRevenueInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutAdminRevenueInput = {
@@ -2608,12 +2054,6 @@ export type TripUpdateWithoutAdminRevenueInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -2621,10 +2061,8 @@ export type TripUpdateWithoutAdminRevenueInput = {
   messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutAdminRevenueInput = {
@@ -2651,20 +2089,12 @@ export type TripUncheckedUpdateWithoutAdminRevenueInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutAlarmLogsInput = {
@@ -2688,12 +2118,6 @@ export type TripCreateWithoutAlarmLogsInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -2702,9 +2126,7 @@ export type TripCreateWithoutAlarmLogsInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutAlarmLogsInput = {
@@ -2731,20 +2153,12 @@ export type TripUncheckedCreateWithoutAlarmLogsInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutAlarmLogsInput = {
@@ -2784,12 +2198,6 @@ export type TripUpdateWithoutAlarmLogsInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -2798,9 +2206,7 @@ export type TripUpdateWithoutAlarmLogsInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutAlarmLogsInput = {
@@ -2827,20 +2233,12 @@ export type TripUncheckedUpdateWithoutAlarmLogsInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutTripRemindersInput = {
@@ -2864,12 +2262,6 @@ export type TripCreateWithoutTripRemindersInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
   driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
   dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
@@ -2878,9 +2270,7 @@ export type TripCreateWithoutTripRemindersInput = {
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutTripRemindersInput = {
@@ -2907,20 +2297,12 @@ export type TripUncheckedCreateWithoutTripRemindersInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
   review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
   adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  tripTransfers?: Prisma.TripTransferUncheckedCreateNestedManyWithoutTripInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutTripRemindersInput = {
@@ -2960,12 +2342,6 @@ export type TripUpdateWithoutTripRemindersInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
@@ -2974,9 +2350,7 @@ export type TripUpdateWithoutTripRemindersInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutTripRemindersInput = {
@@ -3003,196 +2377,12 @@ export type TripUncheckedUpdateWithoutTripRemindersInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
-  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
-  platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
-  adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
-  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
-}
-
-export type TripCreateWithoutTripTransfersInput = {
-  id?: string
-  status?: string
-  pickup: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  destination: string
-  destinationLat?: number | null
-  destinationLng?: number | null
-  date: string
-  time: string
-  notes?: string | null
-  driverArrivedAt?: Date | string | null
-  isPool?: boolean
-  poolGroupId?: string | null
-  isScheduled?: boolean
-  scheduledDateTime?: Date | string | null
-  bookingFeeNaira?: number | null
-  shareToken?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
-  rider: Prisma.UserCreateNestedOneWithoutTripsAsRiderInput
-  driver?: Prisma.UserCreateNestedOneWithoutTripsAsDriverInput
-  dropLot?: Prisma.DropLotCreateNestedOneWithoutTripsInput
-  review?: Prisma.ReviewCreateNestedOneWithoutTripInput
-  messages?: Prisma.MessageCreateNestedManyWithoutTripInput
-  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutTripInput
-  platformRevenue?: Prisma.PlatformRevenueCreateNestedOneWithoutTripInput
-  adminRevenue?: Prisma.AdminRevenueCreateNestedOneWithoutTripInput
-  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutTripInput
-  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogCreateNestedManyWithoutTripInput
-}
-
-export type TripUncheckedCreateWithoutTripTransfersInput = {
-  id?: string
-  status?: string
-  pickup: string
-  pickupLat?: number | null
-  pickupLng?: number | null
-  destination: string
-  destinationLat?: number | null
-  destinationLng?: number | null
-  date: string
-  time: string
-  notes?: string | null
-  riderId: string
-  driverId?: string | null
-  driverArrivedAt?: Date | string | null
-  isPool?: boolean
-  poolGroupId?: string | null
-  isScheduled?: boolean
-  scheduledDateTime?: Date | string | null
-  bookingFeeNaira?: number | null
-  dropLotId?: string | null
-  shareToken?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
-  review?: Prisma.ReviewUncheckedCreateNestedOneWithoutTripInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutTripInput
-  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutTripInput
-  platformRevenue?: Prisma.PlatformRevenueUncheckedCreateNestedOneWithoutTripInput
-  adminRevenue?: Prisma.AdminRevenueUncheckedCreateNestedOneWithoutTripInput
-  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutTripInput
-  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutTripInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedCreateNestedManyWithoutTripInput
-}
-
-export type TripCreateOrConnectWithoutTripTransfersInput = {
-  where: Prisma.TripWhereUniqueInput
-  create: Prisma.XOR<Prisma.TripCreateWithoutTripTransfersInput, Prisma.TripUncheckedCreateWithoutTripTransfersInput>
-}
-
-export type TripUpsertWithoutTripTransfersInput = {
-  update: Prisma.XOR<Prisma.TripUpdateWithoutTripTransfersInput, Prisma.TripUncheckedUpdateWithoutTripTransfersInput>
-  create: Prisma.XOR<Prisma.TripCreateWithoutTripTransfersInput, Prisma.TripUncheckedCreateWithoutTripTransfersInput>
-  where?: Prisma.TripWhereInput
-}
-
-export type TripUpdateToOneWithWhereWithoutTripTransfersInput = {
-  where?: Prisma.TripWhereInput
-  data: Prisma.XOR<Prisma.TripUpdateWithoutTripTransfersInput, Prisma.TripUncheckedUpdateWithoutTripTransfersInput>
-}
-
-export type TripUpdateWithoutTripTransfersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destination?: Prisma.StringFieldUpdateOperationsInput | string
-  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  time?: Prisma.StringFieldUpdateOperationsInput | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  scheduledDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
-  driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
-  dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
-  review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutTripNestedInput
-  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
-  platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
-  adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
-  tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
-}
-
-export type TripUncheckedUpdateWithoutTripTransfersInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
-  pickup?: Prisma.StringFieldUpdateOperationsInput | string
-  pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  pickupLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destination?: Prisma.StringFieldUpdateOperationsInput | string
-  destinationLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  destinationLng?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  date?: Prisma.StringFieldUpdateOperationsInput | string
-  time?: Prisma.StringFieldUpdateOperationsInput | string
-  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  riderId?: Prisma.StringFieldUpdateOperationsInput | string
-  driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  scheduledDateTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  bookingFeeNaira?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  dropLotId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
-  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateManyRiderInput = {
@@ -3218,12 +2408,6 @@ export type TripCreateManyRiderInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
 }
 
 export type TripCreateManyDriverInput = {
@@ -3249,12 +2433,6 @@ export type TripCreateManyDriverInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
 }
 
 export type TripUpdateWithoutRiderInput = {
@@ -3278,12 +2456,6 @@ export type TripUpdateWithoutRiderInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
   review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
@@ -3291,10 +2463,8 @@ export type TripUpdateWithoutRiderInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutRiderInput = {
@@ -3320,21 +2490,13 @@ export type TripUncheckedUpdateWithoutRiderInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutRiderInput = {
@@ -3360,12 +2522,6 @@ export type TripUncheckedUpdateManyWithoutRiderInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TripUpdateWithoutDriverInput = {
@@ -3389,12 +2545,6 @@ export type TripUpdateWithoutDriverInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   dropLot?: Prisma.DropLotUpdateOneWithoutTripsNestedInput
   review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
@@ -3402,10 +2552,8 @@ export type TripUpdateWithoutDriverInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutDriverInput = {
@@ -3431,21 +2579,13 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutDriverInput = {
@@ -3471,12 +2611,6 @@ export type TripUncheckedUpdateManyWithoutDriverInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type TripCreateManyDropLotInput = {
@@ -3502,12 +2636,6 @@ export type TripCreateManyDropLotInput = {
   shareToken?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  cancellationRequestedAt?: Date | string | null
-  cancellationConfirmedAt?: Date | string | null
-  cancellationReason?: string | null
-  dropsRefunded?: boolean
-  refundAmount?: number | null
-  cancelledBy?: string | null
 }
 
 export type TripUpdateWithoutDropLotInput = {
@@ -3531,12 +2659,6 @@ export type TripUpdateWithoutDropLotInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rider?: Prisma.UserUpdateOneRequiredWithoutTripsAsRiderNestedInput
   driver?: Prisma.UserUpdateOneWithoutTripsAsDriverNestedInput
   review?: Prisma.ReviewUpdateOneWithoutTripNestedInput
@@ -3544,10 +2666,8 @@ export type TripUpdateWithoutDropLotInput = {
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutDropLotInput = {
@@ -3573,21 +2693,13 @@ export type TripUncheckedUpdateWithoutDropLotInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   review?: Prisma.ReviewUncheckedUpdateOneWithoutTripNestedInput
   messages?: Prisma.MessageUncheckedUpdateManyWithoutTripNestedInput
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutTripNestedInput
   platformRevenue?: Prisma.PlatformRevenueUncheckedUpdateOneWithoutTripNestedInput
   adminRevenue?: Prisma.AdminRevenueUncheckedUpdateOneWithoutTripNestedInput
-  tripTransfers?: Prisma.TripTransferUncheckedUpdateManyWithoutTripNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutTripNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutTripNestedInput
-  cancellationLogs?: Prisma.CancellationLogUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateManyWithoutDropLotInput = {
@@ -3613,12 +2725,6 @@ export type TripUncheckedUpdateManyWithoutDropLotInput = {
   shareToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  cancellationRequestedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationConfirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  cancellationReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dropsRefunded?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  refundAmount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -3629,19 +2735,15 @@ export type TripUncheckedUpdateManyWithoutDropLotInput = {
 export type TripCountOutputType = {
   messages: number
   walletTransactions: number
-  tripTransfers: number
   alarmLogs: number
   tripReminders: number
-  cancellationLogs: number
 }
 
 export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | TripCountOutputTypeCountMessagesArgs
   walletTransactions?: boolean | TripCountOutputTypeCountWalletTransactionsArgs
-  tripTransfers?: boolean | TripCountOutputTypeCountTripTransfersArgs
   alarmLogs?: boolean | TripCountOutputTypeCountAlarmLogsArgs
   tripReminders?: boolean | TripCountOutputTypeCountTripRemindersArgs
-  cancellationLogs?: boolean | TripCountOutputTypeCountCancellationLogsArgs
 }
 
 /**
@@ -3671,13 +2773,6 @@ export type TripCountOutputTypeCountWalletTransactionsArgs<ExtArgs extends runti
 /**
  * TripCountOutputType without action
  */
-export type TripCountOutputTypeCountTripTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TripTransferWhereInput
-}
-
-/**
- * TripCountOutputType without action
- */
 export type TripCountOutputTypeCountAlarmLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AlarmLogWhereInput
 }
@@ -3687,13 +2782,6 @@ export type TripCountOutputTypeCountAlarmLogsArgs<ExtArgs extends runtime.Types.
  */
 export type TripCountOutputTypeCountTripRemindersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.TripReminderWhereInput
-}
-
-/**
- * TripCountOutputType without action
- */
-export type TripCountOutputTypeCountCancellationLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CancellationLogWhereInput
 }
 
 
@@ -3721,12 +2809,6 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   shareToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  cancellationRequestedAt?: boolean
-  cancellationConfirmedAt?: boolean
-  cancellationReason?: boolean
-  dropsRefunded?: boolean
-  refundAmount?: boolean
-  cancelledBy?: boolean
   rider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.Trip$driverArgs<ExtArgs>
   dropLot?: boolean | Prisma.Trip$dropLotArgs<ExtArgs>
@@ -3735,10 +2817,8 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   walletTransactions?: boolean | Prisma.Trip$walletTransactionsArgs<ExtArgs>
   platformRevenue?: boolean | Prisma.Trip$platformRevenueArgs<ExtArgs>
   adminRevenue?: boolean | Prisma.Trip$adminRevenueArgs<ExtArgs>
-  tripTransfers?: boolean | Prisma.Trip$tripTransfersArgs<ExtArgs>
   alarmLogs?: boolean | Prisma.Trip$alarmLogsArgs<ExtArgs>
   tripReminders?: boolean | Prisma.Trip$tripRemindersArgs<ExtArgs>
-  cancellationLogs?: boolean | Prisma.Trip$cancellationLogsArgs<ExtArgs>
   _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trip"]>
 
@@ -3766,12 +2846,6 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   shareToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  cancellationRequestedAt?: boolean
-  cancellationConfirmedAt?: boolean
-  cancellationReason?: boolean
-  dropsRefunded?: boolean
-  refundAmount?: boolean
-  cancelledBy?: boolean
   rider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.Trip$driverArgs<ExtArgs>
   dropLot?: boolean | Prisma.Trip$dropLotArgs<ExtArgs>
@@ -3801,12 +2875,6 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   shareToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  cancellationRequestedAt?: boolean
-  cancellationConfirmedAt?: boolean
-  cancellationReason?: boolean
-  dropsRefunded?: boolean
-  refundAmount?: boolean
-  cancelledBy?: boolean
   rider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.Trip$driverArgs<ExtArgs>
   dropLot?: boolean | Prisma.Trip$dropLotArgs<ExtArgs>
@@ -3836,15 +2904,9 @@ export type TripSelectScalar = {
   shareToken?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  cancellationRequestedAt?: boolean
-  cancellationConfirmedAt?: boolean
-  cancellationReason?: boolean
-  dropsRefunded?: boolean
-  refundAmount?: boolean
-  cancelledBy?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "status" | "pickup" | "pickupLat" | "pickupLng" | "destination" | "destinationLat" | "destinationLng" | "date" | "time" | "notes" | "riderId" | "driverId" | "driverArrivedAt" | "isPool" | "poolGroupId" | "isScheduled" | "scheduledDateTime" | "bookingFeeNaira" | "dropLotId" | "shareToken" | "createdAt" | "updatedAt" | "cancellationRequestedAt" | "cancellationConfirmedAt" | "cancellationReason" | "dropsRefunded" | "refundAmount" | "cancelledBy", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "status" | "pickup" | "pickupLat" | "pickupLng" | "destination" | "destinationLat" | "destinationLng" | "date" | "time" | "notes" | "riderId" | "driverId" | "driverArrivedAt" | "isPool" | "poolGroupId" | "isScheduled" | "scheduledDateTime" | "bookingFeeNaira" | "dropLotId" | "shareToken" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.Trip$driverArgs<ExtArgs>
@@ -3854,10 +2916,8 @@ export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   walletTransactions?: boolean | Prisma.Trip$walletTransactionsArgs<ExtArgs>
   platformRevenue?: boolean | Prisma.Trip$platformRevenueArgs<ExtArgs>
   adminRevenue?: boolean | Prisma.Trip$adminRevenueArgs<ExtArgs>
-  tripTransfers?: boolean | Prisma.Trip$tripTransfersArgs<ExtArgs>
   alarmLogs?: boolean | Prisma.Trip$alarmLogsArgs<ExtArgs>
   tripReminders?: boolean | Prisma.Trip$tripRemindersArgs<ExtArgs>
-  cancellationLogs?: boolean | Prisma.Trip$cancellationLogsArgs<ExtArgs>
   _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TripIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3882,10 +2942,8 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     walletTransactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
     platformRevenue: Prisma.$PlatformRevenuePayload<ExtArgs> | null
     adminRevenue: Prisma.$AdminRevenuePayload<ExtArgs> | null
-    tripTransfers: Prisma.$TripTransferPayload<ExtArgs>[]
     alarmLogs: Prisma.$AlarmLogPayload<ExtArgs>[]
     tripReminders: Prisma.$TripReminderPayload<ExtArgs>[]
-    cancellationLogs: Prisma.$CancellationLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3911,12 +2969,6 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     shareToken: string | null
     createdAt: Date
     updatedAt: Date
-    cancellationRequestedAt: Date | null
-    cancellationConfirmedAt: Date | null
-    cancellationReason: string | null
-    dropsRefunded: boolean
-    refundAmount: number | null
-    cancelledBy: string | null
   }, ExtArgs["result"]["trip"]>
   composites: {}
 }
@@ -4319,10 +3371,8 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   walletTransactions<T extends Prisma.Trip$walletTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$walletTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   platformRevenue<T extends Prisma.Trip$platformRevenueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$platformRevenueArgs<ExtArgs>>): Prisma.Prisma__PlatformRevenueClient<runtime.Types.Result.GetResult<Prisma.$PlatformRevenuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   adminRevenue<T extends Prisma.Trip$adminRevenueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$adminRevenueArgs<ExtArgs>>): Prisma.Prisma__AdminRevenueClient<runtime.Types.Result.GetResult<Prisma.$AdminRevenuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  tripTransfers<T extends Prisma.Trip$tripTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$tripTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   alarmLogs<T extends Prisma.Trip$alarmLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$alarmLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tripReminders<T extends Prisma.Trip$tripRemindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$tripRemindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  cancellationLogs<T extends Prisma.Trip$cancellationLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$cancellationLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CancellationLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4375,12 +3425,6 @@ export interface TripFieldRefs {
   readonly shareToken: Prisma.FieldRef<"Trip", 'String'>
   readonly createdAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Trip", 'DateTime'>
-  readonly cancellationRequestedAt: Prisma.FieldRef<"Trip", 'DateTime'>
-  readonly cancellationConfirmedAt: Prisma.FieldRef<"Trip", 'DateTime'>
-  readonly cancellationReason: Prisma.FieldRef<"Trip", 'String'>
-  readonly dropsRefunded: Prisma.FieldRef<"Trip", 'Boolean'>
-  readonly refundAmount: Prisma.FieldRef<"Trip", 'Int'>
-  readonly cancelledBy: Prisma.FieldRef<"Trip", 'String'>
 }
     
 
@@ -4925,30 +3969,6 @@ export type Trip$adminRevenueArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * Trip.tripTransfers
- */
-export type Trip$tripTransfersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TripTransfer
-   */
-  select?: Prisma.TripTransferSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TripTransfer
-   */
-  omit?: Prisma.TripTransferOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TripTransferInclude<ExtArgs> | null
-  where?: Prisma.TripTransferWhereInput
-  orderBy?: Prisma.TripTransferOrderByWithRelationInput | Prisma.TripTransferOrderByWithRelationInput[]
-  cursor?: Prisma.TripTransferWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TripTransferScalarFieldEnum | Prisma.TripTransferScalarFieldEnum[]
-}
-
-/**
  * Trip.alarmLogs
  */
 export type Trip$alarmLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4994,30 +4014,6 @@ export type Trip$tripRemindersArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.TripReminderScalarFieldEnum | Prisma.TripReminderScalarFieldEnum[]
-}
-
-/**
- * Trip.cancellationLogs
- */
-export type Trip$cancellationLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the CancellationLog
-   */
-  select?: Prisma.CancellationLogSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the CancellationLog
-   */
-  omit?: Prisma.CancellationLogOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.CancellationLogInclude<ExtArgs> | null
-  where?: Prisma.CancellationLogWhereInput
-  orderBy?: Prisma.CancellationLogOrderByWithRelationInput | Prisma.CancellationLogOrderByWithRelationInput[]
-  cursor?: Prisma.CancellationLogWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.CancellationLogScalarFieldEnum | Prisma.CancellationLogScalarFieldEnum[]
 }
 
 /**

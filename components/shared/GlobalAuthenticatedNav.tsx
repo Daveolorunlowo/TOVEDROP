@@ -10,17 +10,17 @@ import { SignOutButton } from '@/components/sign-out-button'
 import { ThemeToggle } from '@/components/theme-toggle'
 const riderTabs: NavTab[] = [
   { id: 'book', label: 'Book', icon: Search, href: '/book', matchPrefix: true },
-  { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard?tab=trips' },
+  { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard' },
   { id: 'drops', label: 'Drops', icon: Gift, href: '/dashboard/buy-drops' },
   { id: 'updates', label: 'Updates', icon: Bell, href: '/updates' },
   { id: 'profile', label: 'Profile', icon: User, href: '/dashboard/settings' },
 ]
 
 const driverTabs: NavTab[] = [
-  { id: 'requests', label: 'Requests', icon: Car, href: '/driver?tab=requests' },
-  { id: 'wallet', label: 'Wallet', icon: Wallet, href: '/driver?tab=wallet' },
+  { id: 'requests', label: 'Requests', icon: Car, href: '/driver' },
+  { id: 'wallet', label: 'Wallet', icon: Wallet, href: '/driver/earnings' },
   { id: 'updates', label: 'Updates', icon: Bell, href: '/updates' },
-  { id: 'profile', label: 'Profile', icon: User, href: '/driver?tab=profile' },
+  { id: 'profile', label: 'Profile', icon: User, href: '/driver/settings' },
 ]
 
 export function GlobalAuthenticatedNav() {

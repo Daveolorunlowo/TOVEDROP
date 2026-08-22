@@ -290,40 +290,6 @@ export type EnumUpdateAudienceWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
 }
 
-export type EnumTransferReasonFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferReason | Prisma.EnumTransferReasonFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferReasonFilter<$PrismaModel> | $Enums.TransferReason
-}
-
-export type EnumTransferStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferStatus | Prisma.EnumTransferStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferStatusFilter<$PrismaModel> | $Enums.TransferStatus
-}
-
-export type EnumTransferReasonWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferReason | Prisma.EnumTransferReasonFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferReasonWithAggregatesFilter<$PrismaModel> | $Enums.TransferReason
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumTransferReasonFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumTransferReasonFilter<$PrismaModel>
-}
-
-export type EnumTransferStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferStatus | Prisma.EnumTransferStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransferStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumTransferStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumTransferStatusFilter<$PrismaModel>
-}
-
 export type NestedStringFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -589,40 +555,6 @@ export type NestedEnumUpdateAudienceWithAggregatesFilter<$PrismaModel = never> =
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
   _max?: Prisma.NestedEnumUpdateAudienceFilter<$PrismaModel>
-}
-
-export type NestedEnumTransferReasonFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferReason | Prisma.EnumTransferReasonFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferReasonFilter<$PrismaModel> | $Enums.TransferReason
-}
-
-export type NestedEnumTransferStatusFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferStatus | Prisma.EnumTransferStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferStatusFilter<$PrismaModel> | $Enums.TransferStatus
-}
-
-export type NestedEnumTransferReasonWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferReason | Prisma.EnumTransferReasonFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferReason[] | Prisma.ListEnumTransferReasonFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferReasonWithAggregatesFilter<$PrismaModel> | $Enums.TransferReason
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumTransferReasonFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumTransferReasonFilter<$PrismaModel>
-}
-
-export type NestedEnumTransferStatusWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.TransferStatus | Prisma.EnumTransferStatusFieldRefInput<$PrismaModel>
-  in?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  notIn?: $Enums.TransferStatus[] | Prisma.ListEnumTransferStatusFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumTransferStatusWithAggregatesFilter<$PrismaModel> | $Enums.TransferStatus
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumTransferStatusFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumTransferStatusFilter<$PrismaModel>
 }
 
 

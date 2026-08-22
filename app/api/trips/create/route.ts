@@ -35,18 +35,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Locations must be within Bowen University campus bounds." }, { status: 400 })
     }
 
-    // Check for existing active trips
-    const existingActiveTrip = await prisma.trip.findFirst({
-      where: {
-        riderId: session.user.id,
-        status: { in: ['PENDING', 'CONFIRMED'] }
-      }
-    })
-
-    if (existingActiveTrip) {
-      return NextResponse.json({ message: "You already have an active ride request. Please complete or cancel it before booking another." }, { status: 400 })
-    }
-
     // Wrap in transaction: check drops, deduct, create trip
     const result = await prisma.$transaction(async (tx) => {
       const user = await tx.user.findUnique({

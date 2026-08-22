@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function GET(
-  req: Request,
-  props: { params: Promise<{ shareToken: string }> }
-) {
-  const params = await props.params;
+export async function GET(req: Request, { params }: { params: { shareToken: string } }) {
   try {
     const { shareToken } = params
 

@@ -9,15 +9,15 @@ import { AdminOverviewTab } from '@/components/admin/AdminOverviewTab'
 import { AdminUsersTab } from '@/components/admin/AdminUsersTab'
 import { AdminDriversTab } from '@/components/admin/AdminDriversTab'
 import { AdminLegacyClient } from '@/components/admin/AdminLegacyClient'
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
-import { AdminHeader } from '@/components/admin/AdminHeader'
+import { ShieldAlert, LayoutDashboard, TrendingUp, Users, Car, MessageSquare, Flag } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
-export default async function AdminPage(props: {
-  searchParams: Promise<{ tab?: string, page?: string, q?: string, status?: string }>
+export default async function AdminPage({
+  searchParams
+}: {
+  searchParams: { tab?: string, page?: string, q?: string, status?: string }
 }) {
-  const searchParams = await props.searchParams
   const session = await getServerSession(authOptions)
   if (!session?.user || session.user.role !== 'ADMIN') {
     redirect('/auth')
@@ -82,26 +82,34 @@ export default async function AdminPage(props: {
     }
   }
 
+  // Define tabs
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { id: 'users', label: 'Riders', icon: Users },
+    { id: 'drivers', label: 'Drivers', icon: Car },
+    { id: 'finances', label: 'Finances & Payouts', icon: TrendingUp },
+    { id: 'reports', label: 'Reports', icon: Flag },
+    { id: 'security', label: 'Security', icon: ShieldAlert },
+  ]
+
   return (
-    <div className="flex h-screen overflow-hidden bg-bg-deep text-primary">
-      {/* ── Fixed Sidebar ── */}
-      <AdminSidebar activeTab={tab} />
+    <div className="flex flex-col min-h-screen bg-bg-deep text-primary">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-5 py-10 relative">
+        <h1 className="text-3xl font-extrabold tracking-tight mb-2">Admin Portal</h1>
+        <p className="text-muted mb-8">Manage users, drivers, finances, and platform settings.</p>
 
-      {/* ── Main Content Area ── */}
-      <div className="flex-1 flex flex-col min-w-0 relative">
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-10 mix-blend-overlay pointer-events-none z-0" />
-        
-        {/* ── Fixed Header ── */}
-        <AdminHeader adminName={session.user.name || 'Admin'} />
+        <DashboardTabs 
+          tabs={tabs} 
+          storageKey="tovedrop_admin_tab"
+          defaultTab="overview"
+        />
 
-        {/* ── Scrollable Content ── */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-10 relative z-10">
-          <div className="max-w-6xl mx-auto">
-            <Suspense fallback={
-              <div className="py-10 flex flex-col gap-4">
-                <div className="h-32 bg-muted/10 animate-pulse rounded-xl" />
-                <div className="h-64 bg-muted/10 animate-pulse rounded-xl" />
-              </div>
+        <div className="mt-8">
+          <Suspense fallback={
+            <div className="py-10 flex flex-col gap-4">
+              <div className="h-32 bg-muted/10 animate-pulse rounded-xl" />
+              <div className="h-64 bg-muted/10 animate-pulse rounded-xl" />
+            </div>
           } key={tab + (searchParams.page || '') + (searchParams.q || '') + (searchParams.status || '')}>
             
             {tab === 'overview' && overviewStats && (
@@ -131,9 +139,8 @@ export default async function AdminPage(props: {
             )}
             
           </Suspense>
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   )
 }

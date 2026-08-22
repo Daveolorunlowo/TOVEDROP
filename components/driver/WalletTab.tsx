@@ -1,19 +1,16 @@
 import prisma from '@/lib/prisma'
 import { PaginationControls } from '@/components/shared/PaginationControls'
 import { Wallet, ArrowDownRight, ArrowUpRight, PlusCircle, AlertCircle } from 'lucide-react'
-import Link from 'next/link'
-import { WithdrawClient } from './WithdrawClient'
 
 export async function WalletTab({ 
   driverId,
   searchParams
 }: { 
   driverId: string
-  searchParams: { page?: string, action?: string }
+  searchParams: { page?: string }
 }) {
   const page = parseInt(searchParams.page || '1', 10)
   const itemsPerPage = 10
-  const isWithdraw = searchParams.action === 'withdraw'
 
   const [totalItems, transactions, driverProfile] = await Promise.all([
     prisma.walletTransaction.count({ where: { driverId } }),
@@ -23,29 +20,10 @@ export async function WalletTab({
       skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
     }),
-    prisma.driverProfile.findUnique({ 
-      where: { id: driverId }, 
-      select: { 
-        walletBalance: true,
-        bankName: true,
-        accountNumber: true,
-        accountName: true
-      } 
-    })
+    prisma.driverProfile.findUnique({ where: { id: driverId }, select: { walletBalance: true } })
   ])
 
   const totalPages = Math.ceil(totalItems / itemsPerPage)
-
-  if (isWithdraw && driverProfile) {
-    return (
-      <WithdrawClient 
-        walletBalance={driverProfile.walletBalance}
-        bankName={driverProfile.bankName}
-        accountNumber={driverProfile.accountNumber}
-        accountName={driverProfile.accountName}
-      />
-    )
-  }
 
   return (
     <div id="paginated-container" className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300 scroll-mt-24">
@@ -60,9 +38,9 @@ export async function WalletTab({
           </div>
         </div>
         
-        <Link href="/driver?tab=wallet&action=withdraw" className="px-5 py-2.5 rounded-lg text-sm font-bold bg-orange-brand text-primary-foreground hover:brightness-110 shadow-sm transition-all whitespace-nowrap">
+        <button className="px-5 py-2.5 rounded-lg text-sm font-bold bg-orange-brand text-primary-foreground hover:brightness-110 shadow-sm transition-all whitespace-nowrap">
           Request Withdrawal
-        </Link>
+        </button>
       </div>
 
       <div>

@@ -18,10 +18,11 @@ import Link from 'next/link'
 
 const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
-export default async function DriverDashboardPage(props: { 
-  searchParams: Promise<{ tab?: string, page?: string, subtab?: string }> 
+export default async function DriverDashboardPage({ 
+  searchParams 
+}: { 
+  searchParams: { tab?: string, page?: string, subtab?: string } 
 }) {
-  const searchParams = await props.searchParams
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/auth')
 

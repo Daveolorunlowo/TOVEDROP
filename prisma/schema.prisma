@@ -170,27 +170,6 @@ model Trip {
 
   alarmLogs          AlarmLog[]
   tripReminders      TripReminder[]
-
-  cancellationRequestedAt DateTime?
-  cancellationConfirmedAt DateTime?
-  cancellationReason      String?
-  dropsRefunded           Boolean   @default(false)
-  refundAmount            Int?
-  cancelledBy             String?
-
-  cancellationLogs        CancellationLog[]
-}
-
-model CancellationLog {
-  id                      String   @id @default(cuid())
-  tripId                  String
-  trip                    Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  cancelledBy             String
-  tripStateAtCancellation String
-  dropsRefunded           Boolean
-  refundAmount            Int?
-  reason                  String?
-  createdAt               DateTime @default(now())
 }
 
 model Review {

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { Check, X, MapPin, Clock, Users, ArrowRight } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PaginationControls } from '@/components/shared/PaginationControls'
-import { pusherClient } from '@/lib/pusher-client'
 
 const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
@@ -33,23 +32,6 @@ export function RequestsListClient({
     setRequests(initialRequests)
   }, [initialRequests])
 
-  useEffect(() => {
-    if (!pusherClient) return
-    const channel = pusherClient.subscribe('global-trips')
-    
-    const handleTripRemoved = (data: { tripId: string }) => {
-      setRequests(prev => prev.filter(r => r.id !== data.tripId))
-    }
-    
-    channel.bind('trip-removed', handleTripRemoved)
-    
-    return () => {
-      channel.unbind('trip-removed', handleTripRemoved)
-      // Note: we don't unsubscribe from global-trips here because DriverTripListener might need it,
-      // or we just unbind our specific event handler.
-    }
-  }, [])
-
   const handleDecline = (tripId: string) => {
     setDeclined(prev => [...prev, tripId])
   }
@@ -57,10 +39,9 @@ export function RequestsListClient({
   const handleAccept = async (tripId: string) => {
     setProcessing(tripId)
     try {
-      const res = await fetch(`/api/trips/accept`, {
+      const res = await fetch(`/api/trips/${tripId}/accept`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tripId })
       })
       if (res.ok) {
         // Optimistically remove from requests and redirect to trips tab

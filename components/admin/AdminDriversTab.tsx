@@ -28,11 +28,12 @@ export async function AdminDriversTab({ searchParams }: { searchParams: { page?:
     prisma.driverProfile.count({ where: where as any }),
     prisma.driverProfile.findMany({
       where: where as any,
-      orderBy: { id: 'desc' },
+      orderBy: { createdAt: 'desc' },
       skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
       include: {
-        user: { select: { name: true, email: true } }
+        user: { select: { name: true, email: true } },
+        _count: { select: { trips: true } }
       }
     })
   ])
@@ -120,7 +121,7 @@ export async function AdminDriversTab({ searchParams }: { searchParams: { page?:
                       <p className="text-xs text-muted-foreground uppercase">{driver.vehiclePlate}</p>
                     </td>
                     <td className="px-6 py-4 text-muted-foreground">
-                      {driver.totalTrips}
+                      {driver._count.trips}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <DriverActionsClient driverId={driver.userId} status={driver.status} />

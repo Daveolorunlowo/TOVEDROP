@@ -4,12 +4,8 @@ import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import crypto from 'crypto'
 
-export async function POST(
-  req: Request,
-  props: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: Request, { params }: { params: { id: string } }) {
   try {
-    const params = await props.params;
     const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'DRIVER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

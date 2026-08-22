@@ -288,8 +288,6 @@ export type UserWhereInput = {
   feedbacks?: Prisma.FeedbackListRelationFilter
   updateReads?: Prisma.UpdateReadListRelationFilter
   privacyRequests?: Prisma.PrivacyRequestListRelationFilter
-  transfersGiven?: Prisma.TripTransferListRelationFilter
-  transfersTaken?: Prisma.TripTransferListRelationFilter
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
 }
@@ -323,8 +321,6 @@ export type UserOrderByWithRelationInput = {
   feedbacks?: Prisma.FeedbackOrderByRelationAggregateInput
   updateReads?: Prisma.UpdateReadOrderByRelationAggregateInput
   privacyRequests?: Prisma.PrivacyRequestOrderByRelationAggregateInput
-  transfersGiven?: Prisma.TripTransferOrderByRelationAggregateInput
-  transfersTaken?: Prisma.TripTransferOrderByRelationAggregateInput
   alarmLogs?: Prisma.AlarmLogOrderByRelationAggregateInput
   tripReminders?: Prisma.TripReminderOrderByRelationAggregateInput
 }
@@ -361,8 +357,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   feedbacks?: Prisma.FeedbackListRelationFilter
   updateReads?: Prisma.UpdateReadListRelationFilter
   privacyRequests?: Prisma.PrivacyRequestListRelationFilter
-  transfersGiven?: Prisma.TripTransferListRelationFilter
-  transfersTaken?: Prisma.TripTransferListRelationFilter
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
 }, "id" | "email">
@@ -434,8 +428,6 @@ export type UserCreateInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -469,8 +461,6 @@ export type UserUncheckedCreateInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -504,8 +494,6 @@ export type UserUpdateInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -539,8 +527,6 @@ export type UserUncheckedUpdateInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -925,36 +911,6 @@ export type UserUpdateOneRequiredWithoutTripRemindersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTripRemindersInput, Prisma.UserUpdateWithoutTripRemindersInput>, Prisma.UserUncheckedUpdateWithoutTripRemindersInput>
 }
 
-export type UserCreateNestedOneWithoutTransfersGivenInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTransfersGivenInput, Prisma.UserUncheckedCreateWithoutTransfersGivenInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransfersGivenInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserCreateNestedOneWithoutTransfersTakenInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTransfersTakenInput, Prisma.UserUncheckedCreateWithoutTransfersTakenInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransfersTakenInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutTransfersGivenNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTransfersGivenInput, Prisma.UserUncheckedCreateWithoutTransfersGivenInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransfersGivenInput
-  upsert?: Prisma.UserUpsertWithoutTransfersGivenInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransfersGivenInput, Prisma.UserUpdateWithoutTransfersGivenInput>, Prisma.UserUncheckedUpdateWithoutTransfersGivenInput>
-}
-
-export type UserUpdateOneWithoutTransfersTakenNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTransfersTakenInput, Prisma.UserUncheckedCreateWithoutTransfersTakenInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTransfersTakenInput
-  upsert?: Prisma.UserUpsertWithoutTransfersTakenInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTransfersTakenInput, Prisma.UserUpdateWithoutTransfersTakenInput>, Prisma.UserUncheckedUpdateWithoutTransfersTakenInput>
-}
-
 export type UserCreateWithoutAccountsInput = {
   id?: string
   name?: string | null
@@ -983,8 +939,6 @@ export type UserCreateWithoutAccountsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1017,8 +971,6 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1067,8 +1019,6 @@ export type UserUpdateWithoutAccountsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -1101,8 +1051,6 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1135,8 +1083,6 @@ export type UserCreateWithoutSessionsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1169,8 +1115,6 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1219,8 +1163,6 @@ export type UserUpdateWithoutSessionsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -1253,8 +1195,6 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1287,8 +1227,6 @@ export type UserCreateWithoutDriverProfileInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1321,8 +1259,6 @@ export type UserUncheckedCreateWithoutDriverProfileInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1371,8 +1307,6 @@ export type UserUpdateWithoutDriverProfileInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -1405,8 +1339,6 @@ export type UserUncheckedUpdateWithoutDriverProfileInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1439,8 +1371,6 @@ export type UserCreateWithoutTripsAsRiderInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1473,8 +1403,6 @@ export type UserUncheckedCreateWithoutTripsAsRiderInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1512,8 +1440,6 @@ export type UserCreateWithoutTripsAsDriverInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1546,8 +1472,6 @@ export type UserUncheckedCreateWithoutTripsAsDriverInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1596,8 +1520,6 @@ export type UserUpdateWithoutTripsAsRiderInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -1630,8 +1552,6 @@ export type UserUncheckedUpdateWithoutTripsAsRiderInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1675,8 +1595,6 @@ export type UserUpdateWithoutTripsAsDriverInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -1709,8 +1627,6 @@ export type UserUncheckedUpdateWithoutTripsAsDriverInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1743,8 +1659,6 @@ export type UserCreateWithoutVerificationCodesInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1777,8 +1691,6 @@ export type UserUncheckedCreateWithoutVerificationCodesInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1827,8 +1739,6 @@ export type UserUpdateWithoutVerificationCodesInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -1861,8 +1771,6 @@ export type UserUncheckedUpdateWithoutVerificationCodesInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1895,8 +1803,6 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -1929,8 +1835,6 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1979,8 +1883,6 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2013,8 +1915,6 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2047,8 +1947,6 @@ export type UserCreateWithoutMessagesInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2081,8 +1979,6 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -2131,8 +2027,6 @@ export type UserUpdateWithoutMessagesInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2165,8 +2059,6 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2199,8 +2091,6 @@ export type UserCreateWithoutReferralCodeInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2233,8 +2123,6 @@ export type UserUncheckedCreateWithoutReferralCodeInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -2283,8 +2171,6 @@ export type UserUpdateWithoutReferralCodeInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2317,8 +2203,6 @@ export type UserUncheckedUpdateWithoutReferralCodeInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2351,8 +2235,6 @@ export type UserCreateWithoutReferralsGivenInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2385,8 +2267,6 @@ export type UserUncheckedCreateWithoutReferralsGivenInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -2424,8 +2304,6 @@ export type UserCreateWithoutReferredByInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2458,8 +2336,6 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -2508,8 +2384,6 @@ export type UserUpdateWithoutReferralsGivenInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2542,8 +2416,6 @@ export type UserUncheckedUpdateWithoutReferralsGivenInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2587,8 +2459,6 @@ export type UserUpdateWithoutReferredByInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2621,8 +2491,6 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2655,8 +2523,6 @@ export type UserCreateWithoutDropTransactionsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2689,8 +2555,6 @@ export type UserUncheckedCreateWithoutDropTransactionsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -2739,8 +2603,6 @@ export type UserUpdateWithoutDropTransactionsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2773,8 +2635,6 @@ export type UserUncheckedUpdateWithoutDropTransactionsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2807,8 +2667,6 @@ export type UserCreateWithoutFeedbacksInput = {
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2841,8 +2699,6 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -2891,8 +2747,6 @@ export type UserUpdateWithoutFeedbacksInput = {
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -2925,8 +2779,6 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -2959,8 +2811,6 @@ export type UserCreateWithoutDropLotsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -2993,8 +2843,6 @@ export type UserUncheckedCreateWithoutDropLotsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -3043,8 +2891,6 @@ export type UserUpdateWithoutDropLotsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -3077,8 +2923,6 @@ export type UserUncheckedUpdateWithoutDropLotsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -3111,8 +2955,6 @@ export type UserCreateWithoutUpdateReadsInput = {
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -3145,8 +2987,6 @@ export type UserUncheckedCreateWithoutUpdateReadsInput = {
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -3195,8 +3035,6 @@ export type UserUpdateWithoutUpdateReadsInput = {
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -3229,8 +3067,6 @@ export type UserUncheckedUpdateWithoutUpdateReadsInput = {
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -3263,8 +3099,6 @@ export type UserCreateWithoutPrivacyRequestsInput = {
   dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
@@ -3297,8 +3131,6 @@ export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
   dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -3347,8 +3179,6 @@ export type UserUpdateWithoutPrivacyRequestsInput = {
   dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
@@ -3381,8 +3211,6 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
   dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -3416,8 +3244,6 @@ export type UserCreateWithoutAlarmLogsInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
 }
 
@@ -3450,8 +3276,6 @@ export type UserUncheckedCreateWithoutAlarmLogsInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -3500,8 +3324,6 @@ export type UserUpdateWithoutAlarmLogsInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
 }
 
@@ -3534,8 +3356,6 @@ export type UserUncheckedUpdateWithoutAlarmLogsInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
 
@@ -3568,8 +3388,6 @@ export type UserCreateWithoutTripRemindersInput = {
   feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
 }
 
@@ -3602,8 +3420,6 @@ export type UserUncheckedCreateWithoutTripRemindersInput = {
   feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
   updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
 }
 
@@ -3652,8 +3468,6 @@ export type UserUpdateWithoutTripRemindersInput = {
   feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
 }
 
@@ -3686,313 +3500,7 @@ export type UserUncheckedUpdateWithoutTripRemindersInput = {
   feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
   updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
   privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
-}
-
-export type UserCreateWithoutTransfersGivenInput = {
-  id?: string
-  name?: string | null
-  email?: string | null
-  emailVerified?: Date | string | null
-  image?: string | null
-  phoneNumber?: string | null
-  whatsappNotificationsEnabled?: boolean
-  password?: string | null
-  university?: string | null
-  role?: string
-  dropsBalance?: number
-  hasUsedFirstTopupDiscount?: boolean
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  driverProfile?: Prisma.DriverProfileCreateNestedOneWithoutUserInput
-  tripsAsRider?: Prisma.TripCreateNestedManyWithoutRiderInput
-  tripsAsDriver?: Prisma.TripCreateNestedManyWithoutDriverInput
-  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
-  referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
-  referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
-  dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
-  dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
-  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
-  updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
-  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
-  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
-}
-
-export type UserUncheckedCreateWithoutTransfersGivenInput = {
-  id?: string
-  name?: string | null
-  email?: string | null
-  emailVerified?: Date | string | null
-  image?: string | null
-  phoneNumber?: string | null
-  whatsappNotificationsEnabled?: boolean
-  password?: string | null
-  university?: string | null
-  role?: string
-  dropsBalance?: number
-  hasUsedFirstTopupDiscount?: boolean
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  driverProfile?: Prisma.DriverProfileUncheckedCreateNestedOneWithoutUserInput
-  tripsAsRider?: Prisma.TripUncheckedCreateNestedManyWithoutRiderInput
-  tripsAsDriver?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
-  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
-  referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
-  referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
-  dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
-  dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
-  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
-  updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
-  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
-  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
-}
-
-export type UserCreateOrConnectWithoutTransfersGivenInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTransfersGivenInput, Prisma.UserUncheckedCreateWithoutTransfersGivenInput>
-}
-
-export type UserCreateWithoutTransfersTakenInput = {
-  id?: string
-  name?: string | null
-  email?: string | null
-  emailVerified?: Date | string | null
-  image?: string | null
-  phoneNumber?: string | null
-  whatsappNotificationsEnabled?: boolean
-  password?: string | null
-  university?: string | null
-  role?: string
-  dropsBalance?: number
-  hasUsedFirstTopupDiscount?: boolean
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  driverProfile?: Prisma.DriverProfileCreateNestedOneWithoutUserInput
-  tripsAsRider?: Prisma.TripCreateNestedManyWithoutRiderInput
-  tripsAsDriver?: Prisma.TripCreateNestedManyWithoutDriverInput
-  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
-  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
-  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
-  referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
-  referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
-  dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
-  dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
-  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
-  updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
-  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
-  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
-  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
-}
-
-export type UserUncheckedCreateWithoutTransfersTakenInput = {
-  id?: string
-  name?: string | null
-  email?: string | null
-  emailVerified?: Date | string | null
-  image?: string | null
-  phoneNumber?: string | null
-  whatsappNotificationsEnabled?: boolean
-  password?: string | null
-  university?: string | null
-  role?: string
-  dropsBalance?: number
-  hasUsedFirstTopupDiscount?: boolean
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  driverProfile?: Prisma.DriverProfileUncheckedCreateNestedOneWithoutUserInput
-  tripsAsRider?: Prisma.TripUncheckedCreateNestedManyWithoutRiderInput
-  tripsAsDriver?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
-  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
-  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
-  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
-  referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
-  referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
-  dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
-  dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
-  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
-  updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
-  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
-  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
-  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
-}
-
-export type UserCreateOrConnectWithoutTransfersTakenInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTransfersTakenInput, Prisma.UserUncheckedCreateWithoutTransfersTakenInput>
-}
-
-export type UserUpsertWithoutTransfersGivenInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTransfersGivenInput, Prisma.UserUncheckedUpdateWithoutTransfersGivenInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTransfersGivenInput, Prisma.UserUncheckedCreateWithoutTransfersGivenInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutTransfersGivenInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTransfersGivenInput, Prisma.UserUncheckedUpdateWithoutTransfersGivenInput>
-}
-
-export type UserUpdateWithoutTransfersGivenInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
-  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  driverProfile?: Prisma.DriverProfileUpdateOneWithoutUserNestedInput
-  tripsAsRider?: Prisma.TripUpdateManyWithoutRiderNestedInput
-  tripsAsDriver?: Prisma.TripUpdateManyWithoutDriverNestedInput
-  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
-  referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
-  referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
-  dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
-  dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
-  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
-  updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
-  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
-  tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTransfersGivenInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
-  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  driverProfile?: Prisma.DriverProfileUncheckedUpdateOneWithoutUserNestedInput
-  tripsAsRider?: Prisma.TripUncheckedUpdateManyWithoutRiderNestedInput
-  tripsAsDriver?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
-  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
-  referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
-  referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
-  dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
-  dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
-  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
-  updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
-  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
-  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
-}
-
-export type UserUpsertWithoutTransfersTakenInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTransfersTakenInput, Prisma.UserUncheckedUpdateWithoutTransfersTakenInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTransfersTakenInput, Prisma.UserUncheckedCreateWithoutTransfersTakenInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutTransfersTakenInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTransfersTakenInput, Prisma.UserUncheckedUpdateWithoutTransfersTakenInput>
-}
-
-export type UserUpdateWithoutTransfersTakenInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
-  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  driverProfile?: Prisma.DriverProfileUpdateOneWithoutUserNestedInput
-  tripsAsRider?: Prisma.TripUpdateManyWithoutRiderNestedInput
-  tripsAsDriver?: Prisma.TripUpdateManyWithoutDriverNestedInput
-  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
-  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
-  referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
-  referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
-  dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
-  dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
-  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
-  updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
-  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
-  tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
-}
-
-export type UserUncheckedUpdateWithoutTransfersTakenInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.StringFieldUpdateOperationsInput | string
-  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
-  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  driverProfile?: Prisma.DriverProfileUncheckedUpdateOneWithoutUserNestedInput
-  tripsAsRider?: Prisma.TripUncheckedUpdateManyWithoutRiderNestedInput
-  tripsAsDriver?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
-  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
-  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
-  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
-  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
-  referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
-  referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
-  dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
-  dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
-  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
-  updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
-  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
-  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
-  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
-  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 
@@ -4014,8 +3522,6 @@ export type UserCountOutputType = {
   feedbacks: number
   updateReads: number
   privacyRequests: number
-  transfersGiven: number
-  transfersTaken: number
   alarmLogs: number
   tripReminders: number
 }
@@ -4034,8 +3540,6 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   feedbacks?: boolean | UserCountOutputTypeCountFeedbacksArgs
   updateReads?: boolean | UserCountOutputTypeCountUpdateReadsArgs
   privacyRequests?: boolean | UserCountOutputTypeCountPrivacyRequestsArgs
-  transfersGiven?: boolean | UserCountOutputTypeCountTransfersGivenArgs
-  transfersTaken?: boolean | UserCountOutputTypeCountTransfersTakenArgs
   alarmLogs?: boolean | UserCountOutputTypeCountAlarmLogsArgs
   tripReminders?: boolean | UserCountOutputTypeCountTripRemindersArgs
 }
@@ -4144,20 +3648,6 @@ export type UserCountOutputTypeCountPrivacyRequestsArgs<ExtArgs extends runtime.
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountTransfersGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TripTransferWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
-export type UserCountOutputTypeCountTransfersTakenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TripTransferWhereInput
-}
-
-/**
- * UserCountOutputType without action
- */
 export type UserCountOutputTypeCountAlarmLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AlarmLogWhereInput
 }
@@ -4199,8 +3689,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   feedbacks?: boolean | Prisma.User$feedbacksArgs<ExtArgs>
   updateReads?: boolean | Prisma.User$updateReadsArgs<ExtArgs>
   privacyRequests?: boolean | Prisma.User$privacyRequestsArgs<ExtArgs>
-  transfersGiven?: boolean | Prisma.User$transfersGivenArgs<ExtArgs>
-  transfersTaken?: boolean | Prisma.User$transfersTakenArgs<ExtArgs>
   alarmLogs?: boolean | Prisma.User$alarmLogsArgs<ExtArgs>
   tripReminders?: boolean | Prisma.User$tripRemindersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4269,8 +3757,6 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   feedbacks?: boolean | Prisma.User$feedbacksArgs<ExtArgs>
   updateReads?: boolean | Prisma.User$updateReadsArgs<ExtArgs>
   privacyRequests?: boolean | Prisma.User$privacyRequestsArgs<ExtArgs>
-  transfersGiven?: boolean | Prisma.User$transfersGivenArgs<ExtArgs>
-  transfersTaken?: boolean | Prisma.User$transfersTakenArgs<ExtArgs>
   alarmLogs?: boolean | Prisma.User$alarmLogsArgs<ExtArgs>
   tripReminders?: boolean | Prisma.User$tripRemindersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -4297,8 +3783,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     feedbacks: Prisma.$FeedbackPayload<ExtArgs>[]
     updateReads: Prisma.$UpdateReadPayload<ExtArgs>[]
     privacyRequests: Prisma.$PrivacyRequestPayload<ExtArgs>[]
-    transfersGiven: Prisma.$TripTransferPayload<ExtArgs>[]
-    transfersTaken: Prisma.$TripTransferPayload<ExtArgs>[]
     alarmLogs: Prisma.$AlarmLogPayload<ExtArgs>[]
     tripReminders: Prisma.$TripReminderPayload<ExtArgs>[]
   }
@@ -4725,8 +4209,6 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   feedbacks<T extends Prisma.User$feedbacksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedbacksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedbackPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   updateReads<T extends Prisma.User$updateReadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$updateReadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UpdateReadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   privacyRequests<T extends Prisma.User$privacyRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$privacyRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PrivacyRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  transfersGiven<T extends Prisma.User$transfersGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transfersGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  transfersTaken<T extends Prisma.User$transfersTakenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transfersTakenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   alarmLogs<T extends Prisma.User$alarmLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tripReminders<T extends Prisma.User$tripRemindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tripRemindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -5529,54 +5011,6 @@ export type User$privacyRequestsArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.PrivacyRequestScalarFieldEnum | Prisma.PrivacyRequestScalarFieldEnum[]
-}
-
-/**
- * User.transfersGiven
- */
-export type User$transfersGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TripTransfer
-   */
-  select?: Prisma.TripTransferSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TripTransfer
-   */
-  omit?: Prisma.TripTransferOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TripTransferInclude<ExtArgs> | null
-  where?: Prisma.TripTransferWhereInput
-  orderBy?: Prisma.TripTransferOrderByWithRelationInput | Prisma.TripTransferOrderByWithRelationInput[]
-  cursor?: Prisma.TripTransferWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TripTransferScalarFieldEnum | Prisma.TripTransferScalarFieldEnum[]
-}
-
-/**
- * User.transfersTaken
- */
-export type User$transfersTakenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the TripTransfer
-   */
-  select?: Prisma.TripTransferSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the TripTransfer
-   */
-  omit?: Prisma.TripTransferOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.TripTransferInclude<ExtArgs> | null
-  where?: Prisma.TripTransferWhereInput
-  orderBy?: Prisma.TripTransferOrderByWithRelationInput | Prisma.TripTransferOrderByWithRelationInput[]
-  cursor?: Prisma.TripTransferWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.TripTransferScalarFieldEnum | Prisma.TripTransferScalarFieldEnum[]
 }
 
 /**

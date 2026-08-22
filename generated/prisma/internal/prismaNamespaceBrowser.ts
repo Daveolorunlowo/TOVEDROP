@@ -57,7 +57,6 @@ export const ModelName = {
   VerificationToken: 'VerificationToken',
   DriverProfile: 'DriverProfile',
   Trip: 'Trip',
-  CancellationLog: 'CancellationLog',
   Review: 'Review',
   VerificationCode: 'VerificationCode',
   AdminLoginLog: 'AdminLoginLog',
@@ -79,8 +78,7 @@ export const ModelName = {
   UpdateRead: 'UpdateRead',
   PrivacyRequest: 'PrivacyRequest',
   AlarmLog: 'AlarmLog',
-  TripReminder: 'TripReminder',
-  TripTransfer: 'TripTransfer'
+  TripReminder: 'TripReminder'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -175,7 +173,6 @@ export const DriverProfileScalarFieldEnum = {
   totalTrips: 'totalTrips',
   rating: 'rating',
   walletBalance: 'walletBalance',
-  transferCount: 'transferCount',
   alarmEnabled: 'alarmEnabled',
   alarmTimes: 'alarmTimes',
   alarmSound: 'alarmSound',
@@ -209,30 +206,10 @@ export const TripScalarFieldEnum = {
   dropLotId: 'dropLotId',
   shareToken: 'shareToken',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  cancellationRequestedAt: 'cancellationRequestedAt',
-  cancellationConfirmedAt: 'cancellationConfirmedAt',
-  cancellationReason: 'cancellationReason',
-  dropsRefunded: 'dropsRefunded',
-  refundAmount: 'refundAmount',
-  cancelledBy: 'cancelledBy'
+  updatedAt: 'updatedAt'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
-
-
-export const CancellationLogScalarFieldEnum = {
-  id: 'id',
-  tripId: 'tripId',
-  cancelledBy: 'cancelledBy',
-  tripStateAtCancellation: 'tripStateAtCancellation',
-  dropsRefunded: 'dropsRefunded',
-  refundAmount: 'refundAmount',
-  reason: 'reason',
-  createdAt: 'createdAt'
-} as const
-
-export type CancellationLogScalarFieldEnum = (typeof CancellationLogScalarFieldEnum)[keyof typeof CancellationLogScalarFieldEnum]
 
 
 export const ReviewScalarFieldEnum = {
@@ -500,24 +477,6 @@ export const TripReminderScalarFieldEnum = {
 } as const
 
 export type TripReminderScalarFieldEnum = (typeof TripReminderScalarFieldEnum)[keyof typeof TripReminderScalarFieldEnum]
-
-
-export const TripTransferScalarFieldEnum = {
-  id: 'id',
-  tripId: 'tripId',
-  fromDriverId: 'fromDriverId',
-  toDriverId: 'toDriverId',
-  reason: 'reason',
-  reasonNote: 'reasonNote',
-  shareToken: 'shareToken',
-  status: 'status',
-  expiresAt: 'expiresAt',
-  acceptedAt: 'acceptedAt',
-  expiredAt: 'expiredAt',
-  createdAt: 'createdAt'
-} as const
-
-export type TripTransferScalarFieldEnum = (typeof TripTransferScalarFieldEnum)[keyof typeof TripTransferScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -26,7 +26,7 @@ function DropCoin({ className }: { className?: string }) {
 }
 
 const navLinks = [
-  { href: '/book', label: 'Book a Ride', isBookRide: true },
+  { href: '/dashboard', label: 'Book a Ride', isBookRide: true },
   { href: '/apply', label: 'Become a Driver' },
 ]
 

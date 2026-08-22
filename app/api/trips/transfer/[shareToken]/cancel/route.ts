@@ -3,12 +3,8 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 
-export async function POST(
-  req: Request,
-  props: { params: Promise<{ shareToken: string }> }
-) {
+export async function POST(req: Request, { params }: { params: { shareToken: string } }) {
   try {
-    const params = await props.params;
     const session = await getServerSession(authOptions)
     if (!session?.user || session.user.role !== 'DRIVER') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

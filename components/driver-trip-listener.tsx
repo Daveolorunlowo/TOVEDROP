@@ -17,11 +17,6 @@ export function DriverTripListener() {
       router.refresh()
     })
 
-    channel.bind('trip-removed', (data: any) => {
-      // Refresh silently so it disappears from the list
-      router.refresh()
-    })
-
     return () => {
       if (pusherClient) pusherClient.unsubscribe('global-trips')
     }
