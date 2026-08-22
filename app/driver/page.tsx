@@ -291,7 +291,7 @@ export default function DriverDashboardPage() {
           })
         }
       }
-      else if (res.status === 401) router.push('/auth/login')
+      else if (res.status === 401) router.push('/auth')
     } catch (e) {
       console.error(e)
     } finally {

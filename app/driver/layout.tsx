@@ -7,7 +7,7 @@ export default async function DriverLayout({ children }: { children: React.React
   const session = await getServerSession(authOptions)
   
   if (!session?.user) {
-    redirect('/auth/login')
+    redirect('/auth')
   }
 
   if (session.user.role !== 'DRIVER') {
