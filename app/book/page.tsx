@@ -305,7 +305,6 @@ function BookWizard() {
                         </div>
                       </div>
                     </div>
-                  </div>
                 )}
 
                 {/* STEP 3: Details & Review */}
