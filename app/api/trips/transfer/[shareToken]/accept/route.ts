@@ -3,7 +3,6 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
-import { sendWhatsAppMessage } from '@/lib/whatsapp'
 import { pusherServer } from '@/lib/pusher'
 
 function getReasonText(reason: string, note?: string | null) {
@@ -107,13 +106,6 @@ If you have any concerns about this change, please contact us.
 
 — The TOVEDROP Team`
       ).catch(e => console.error("Email send failed", e))
-    }
-
-    if (rider.phoneNumber && rider.whatsappNotificationsEnabled) {
-      await sendWhatsAppMessage(
-        rider.phoneNumber,
-        `⚠ TOVEDROP: Your driver for ${transferCheck.trip.time} has changed.\nNew driver: ${newDriverDetails}\nReason: ${reasonText}. Same pickup time and location. No action needed from you.`
-      ).catch(e => console.error("WhatsApp send failed", e))
     }
 
     // Trigger Pusher for Rider

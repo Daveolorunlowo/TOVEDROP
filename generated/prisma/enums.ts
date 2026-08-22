@@ -27,3 +27,26 @@ export const UpdateAudience = {
 } as const
 
 export type UpdateAudience = (typeof UpdateAudience)[keyof typeof UpdateAudience]
+
+
+export const TransferReason = {
+  VEHICLE_BREAKDOWN: 'VEHICLE_BREAKDOWN',
+  FAMILY_EMERGENCY: 'FAMILY_EMERGENCY',
+  MEDICAL_EMERGENCY: 'MEDICAL_EMERGENCY',
+  FUEL_ISSUE: 'FUEL_ISSUE',
+  STUCK_IN_TRAFFIC: 'STUCK_IN_TRAFFIC',
+  PERSONAL_EMERGENCY: 'PERSONAL_EMERGENCY',
+  OTHER: 'OTHER'
+} as const
+
+export type TransferReason = (typeof TransferReason)[keyof typeof TransferReason]
+
+
+export const TransferStatus = {
+  PENDING: 'PENDING',
+  ACCEPTED: 'ACCEPTED',
+  EXPIRED: 'EXPIRED',
+  CANCELLED: 'CANCELLED'
+} as const
+
+export type TransferStatus = (typeof TransferStatus)[keyof typeof TransferStatus]

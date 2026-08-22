@@ -78,7 +78,8 @@ export const ModelName = {
   UpdateRead: 'UpdateRead',
   PrivacyRequest: 'PrivacyRequest',
   AlarmLog: 'AlarmLog',
-  TripReminder: 'TripReminder'
+  TripReminder: 'TripReminder',
+  TripTransfer: 'TripTransfer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -173,6 +174,7 @@ export const DriverProfileScalarFieldEnum = {
   totalTrips: 'totalTrips',
   rating: 'rating',
   walletBalance: 'walletBalance',
+  transferCount: 'transferCount',
   alarmEnabled: 'alarmEnabled',
   alarmTimes: 'alarmTimes',
   alarmSound: 'alarmSound',
@@ -477,6 +479,24 @@ export const TripReminderScalarFieldEnum = {
 } as const
 
 export type TripReminderScalarFieldEnum = (typeof TripReminderScalarFieldEnum)[keyof typeof TripReminderScalarFieldEnum]
+
+
+export const TripTransferScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  fromDriverId: 'fromDriverId',
+  toDriverId: 'toDriverId',
+  reason: 'reason',
+  reasonNote: 'reasonNote',
+  shareToken: 'shareToken',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  expiredAt: 'expiredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TripTransferScalarFieldEnum = (typeof TripTransferScalarFieldEnum)[keyof typeof TripTransferScalarFieldEnum]
 
 
 export const SortOrder = {

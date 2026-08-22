@@ -181,3 +181,8 @@ export type AlarmLog = Prisma.AlarmLogModel
  * 
  */
 export type TripReminder = Prisma.TripReminderModel
+/**
+ * Model TripTransfer
+ * 
+ */
+export type TripTransfer = Prisma.TripTransferModel

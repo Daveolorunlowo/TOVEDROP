@@ -2,10 +2,8 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Textarea } from '@/components/ui/textarea'
 import { Copy, Share2, Clock, MapPin, Navigation } from 'lucide-react'
 
@@ -99,16 +97,15 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
   }
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md bg-surface text-foreground border-border">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 animate-in fade-in">
+      <div className="w-full max-w-md bg-surface text-foreground border border-border rounded-xl shadow-2xl overflow-hidden relative">
         {!transferData ? (
           <>
-            <DialogHeader>
-              <DialogTitle className="uppercase text-sm font-bold tracking-wider text-muted-foreground">Transfer This Trip</DialogTitle>
-              <DialogDescription className="sr-only">Transfer trip details</DialogDescription>
-            </DialogHeader>
+            <div className="p-5 border-b border-border">
+              <h2 className="uppercase text-sm font-bold tracking-wider text-muted-foreground">Transfer This Trip</h2>
+            </div>
 
-            <div className="space-y-4 py-2">
+            <div className="space-y-4 py-4 px-5 max-h-[70vh] overflow-y-auto">
               <div className="p-3 bg-surface-elevated rounded-lg border border-border text-sm flex flex-col gap-2">
                 <div className="flex items-center gap-2"><MapPin className="w-3 h-3 text-muted-foreground" /> {trip.pickup}</div>
                 <div className="flex items-center gap-2"><Navigation className="w-3 h-3 text-muted-foreground" /> {trip.destination}</div>
@@ -122,14 +119,21 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
 
               <div className="space-y-3">
                 <Label className="text-xs font-semibold uppercase text-muted-foreground">Reason for transfer (Required)</Label>
-                <RadioGroup value={reason} onValueChange={setReason} className="grid grid-cols-1 gap-2">
+                <div className="grid grid-cols-1 gap-2">
                   {REASONS.map(r => (
-                    <div key={r.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={r.value} id={`reason-${r.value}`} className="border-border text-orange-brand" />
-                      <Label htmlFor={`reason-${r.value}`} className="text-sm">{r.label}</Label>
-                    </div>
+                    <label key={r.value} className="flex items-center space-x-2 cursor-pointer">
+                      <input 
+                        type="radio"
+                        name="transferReason"
+                        value={r.value}
+                        checked={reason === r.value}
+                        onChange={(e) => setReason(e.target.value)}
+                        className="w-4 h-4 text-orange-brand border-border focus:ring-orange-brand bg-surface-elevated"
+                      />
+                      <span className="text-sm font-medium">{r.label}</span>
+                    </label>
                   ))}
-                </RadioGroup>
+                </div>
               </div>
 
               <div className="space-y-2 mt-4">
@@ -143,7 +147,7 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
               </div>
             </div>
 
-            <DialogFooter className="sm:justify-end gap-2 mt-2">
+            <div className="px-5 py-4 border-t border-border flex justify-end gap-2 bg-surface">
               <Button type="button" variant="outline" onClick={onClose} className="border-border hover:bg-surface-elevated">
                 Cancel
               </Button>
@@ -155,20 +159,20 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
               >
                 {isGenerating ? 'Generating...' : 'Generate Transfer Link →'}
               </Button>
-            </DialogFooter>
+            </div>
           </>
         ) : (
           <>
-            <DialogHeader>
-              <DialogTitle className="uppercase text-sm font-bold tracking-wider text-green-500 flex items-center gap-2">
+            <div className="p-5 border-b border-border">
+              <h2 className="uppercase text-sm font-bold tracking-wider text-green-500 flex items-center gap-2">
                 <span>✓</span> Transfer link generated!
-              </DialogTitle>
-              <DialogDescription className="text-sm mt-2 text-muted-foreground">
+              </h2>
+              <p className="text-sm mt-2 text-muted-foreground">
                 Send this link to a fellow TOVEDROP driver. The first driver to accept gets the trip.
-              </DialogDescription>
-            </DialogHeader>
+              </p>
+            </div>
 
-            <div className="space-y-6 py-4">
+            <div className="space-y-6 py-6 px-5">
               <div className="p-3 bg-surface-elevated border border-border rounded flex items-center justify-between">
                 <code className="text-xs text-muted-foreground truncate mr-2">{transferData.transferUrl}</code>
               </div>
@@ -188,14 +192,14 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
               </div>
             </div>
 
-            <DialogFooter className="sm:justify-center border-t border-border pt-4">
+            <div className="px-5 py-4 border-t border-border flex justify-center bg-surface">
               <Button type="button" variant="ghost" onClick={handleCancelTransfer} className="text-red-500 hover:text-red-400 hover:bg-red-500/10 w-full text-xs uppercase font-bold tracking-wider">
                 Cancel Transfer
               </Button>
-            </DialogFooter>
+            </div>
           </>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   )
 }

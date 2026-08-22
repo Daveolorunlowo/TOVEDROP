@@ -30,6 +30,7 @@ export type DriverProfileAvgAggregateOutputType = {
   totalTrips: number | null
   rating: number | null
   walletBalance: number | null
+  transferCount: number | null
   alarmTimes: number | null
 }
 
@@ -37,6 +38,7 @@ export type DriverProfileSumAggregateOutputType = {
   totalTrips: number | null
   rating: number | null
   walletBalance: number | null
+  transferCount: number | null
   alarmTimes: number[]
 }
 
@@ -61,6 +63,7 @@ export type DriverProfileMinAggregateOutputType = {
   totalTrips: number | null
   rating: number | null
   walletBalance: number | null
+  transferCount: number | null
   alarmEnabled: boolean | null
   alarmSound: string | null
   alarmVibrate: boolean | null
@@ -88,6 +91,7 @@ export type DriverProfileMaxAggregateOutputType = {
   totalTrips: number | null
   rating: number | null
   walletBalance: number | null
+  transferCount: number | null
   alarmEnabled: boolean | null
   alarmSound: string | null
   alarmVibrate: boolean | null
@@ -115,6 +119,7 @@ export type DriverProfileCountAggregateOutputType = {
   totalTrips: number
   rating: number
   walletBalance: number
+  transferCount: number
   alarmEnabled: number
   alarmTimes: number
   alarmSound: number
@@ -128,6 +133,7 @@ export type DriverProfileAvgAggregateInputType = {
   totalTrips?: true
   rating?: true
   walletBalance?: true
+  transferCount?: true
   alarmTimes?: true
 }
 
@@ -135,6 +141,7 @@ export type DriverProfileSumAggregateInputType = {
   totalTrips?: true
   rating?: true
   walletBalance?: true
+  transferCount?: true
   alarmTimes?: true
 }
 
@@ -159,6 +166,7 @@ export type DriverProfileMinAggregateInputType = {
   totalTrips?: true
   rating?: true
   walletBalance?: true
+  transferCount?: true
   alarmEnabled?: true
   alarmSound?: true
   alarmVibrate?: true
@@ -186,6 +194,7 @@ export type DriverProfileMaxAggregateInputType = {
   totalTrips?: true
   rating?: true
   walletBalance?: true
+  transferCount?: true
   alarmEnabled?: true
   alarmSound?: true
   alarmVibrate?: true
@@ -213,6 +222,7 @@ export type DriverProfileCountAggregateInputType = {
   totalTrips?: true
   rating?: true
   walletBalance?: true
+  transferCount?: true
   alarmEnabled?: true
   alarmTimes?: true
   alarmSound?: true
@@ -328,6 +338,7 @@ export type DriverProfileGroupByOutputType = {
   totalTrips: number
   rating: number
   walletBalance: number
+  transferCount: number
   alarmEnabled: boolean
   alarmTimes: number[]
   alarmSound: string
@@ -379,6 +390,7 @@ export type DriverProfileWhereInput = {
   totalTrips?: Prisma.IntFilter<"DriverProfile"> | number
   rating?: Prisma.FloatFilter<"DriverProfile"> | number
   walletBalance?: Prisma.FloatFilter<"DriverProfile"> | number
+  transferCount?: Prisma.IntFilter<"DriverProfile"> | number
   alarmEnabled?: Prisma.BoolFilter<"DriverProfile"> | boolean
   alarmTimes?: Prisma.IntNullableListFilter<"DriverProfile">
   alarmSound?: Prisma.StringFilter<"DriverProfile"> | string
@@ -410,6 +422,7 @@ export type DriverProfileOrderByWithRelationInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmEnabled?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
@@ -444,6 +457,7 @@ export type DriverProfileWhereUniqueInput = Prisma.AtLeast<{
   totalTrips?: Prisma.IntFilter<"DriverProfile"> | number
   rating?: Prisma.FloatFilter<"DriverProfile"> | number
   walletBalance?: Prisma.FloatFilter<"DriverProfile"> | number
+  transferCount?: Prisma.IntFilter<"DriverProfile"> | number
   alarmEnabled?: Prisma.BoolFilter<"DriverProfile"> | boolean
   alarmTimes?: Prisma.IntNullableListFilter<"DriverProfile">
   alarmSound?: Prisma.StringFilter<"DriverProfile"> | string
@@ -475,6 +489,7 @@ export type DriverProfileOrderByWithAggregationInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmEnabled?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
@@ -511,6 +526,7 @@ export type DriverProfileScalarWhereWithAggregatesInput = {
   totalTrips?: Prisma.IntWithAggregatesFilter<"DriverProfile"> | number
   rating?: Prisma.FloatWithAggregatesFilter<"DriverProfile"> | number
   walletBalance?: Prisma.FloatWithAggregatesFilter<"DriverProfile"> | number
+  transferCount?: Prisma.IntWithAggregatesFilter<"DriverProfile"> | number
   alarmEnabled?: Prisma.BoolWithAggregatesFilter<"DriverProfile"> | boolean
   alarmTimes?: Prisma.IntNullableListFilter<"DriverProfile">
   alarmSound?: Prisma.StringWithAggregatesFilter<"DriverProfile"> | string
@@ -538,6 +554,7 @@ export type DriverProfileCreateInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -569,6 +586,7 @@ export type DriverProfileUncheckedCreateInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -598,6 +616,7 @@ export type DriverProfileUpdateInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -629,6 +648,7 @@ export type DriverProfileUncheckedUpdateInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -659,6 +679,7 @@ export type DriverProfileCreateManyInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -686,6 +707,7 @@ export type DriverProfileUpdateManyMutationInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -714,6 +736,7 @@ export type DriverProfileUncheckedUpdateManyInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -755,6 +778,7 @@ export type DriverProfileCountOrderByAggregateInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmEnabled?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
@@ -766,6 +790,7 @@ export type DriverProfileAvgOrderByAggregateInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
 }
 
@@ -790,6 +815,7 @@ export type DriverProfileMaxOrderByAggregateInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmEnabled?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
@@ -817,6 +843,7 @@ export type DriverProfileMinOrderByAggregateInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmEnabled?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
@@ -827,6 +854,7 @@ export type DriverProfileSumOrderByAggregateInput = {
   totalTrips?: Prisma.SortOrder
   rating?: Prisma.SortOrder
   walletBalance?: Prisma.SortOrder
+  transferCount?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
 }
 
@@ -932,6 +960,7 @@ export type DriverProfileCreateWithoutUserInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -961,6 +990,7 @@ export type DriverProfileUncheckedCreateWithoutUserInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -1006,6 +1036,7 @@ export type DriverProfileUpdateWithoutUserInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1035,6 +1066,7 @@ export type DriverProfileUncheckedUpdateWithoutUserInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1064,6 +1096,7 @@ export type DriverProfileCreateWithoutWalletTransactionsInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -1094,6 +1127,7 @@ export type DriverProfileUncheckedCreateWithoutWalletTransactionsInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -1138,6 +1172,7 @@ export type DriverProfileUpdateWithoutWalletTransactionsInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1168,6 +1203,7 @@ export type DriverProfileUncheckedUpdateWithoutWalletTransactionsInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1196,6 +1232,7 @@ export type DriverProfileCreateWithoutWithdrawalRequestsInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -1226,6 +1263,7 @@ export type DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput = {
   totalTrips?: number
   rating?: number
   walletBalance?: number
+  transferCount?: number
   alarmEnabled?: boolean
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
@@ -1270,6 +1308,7 @@ export type DriverProfileUpdateWithoutWithdrawalRequestsInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1300,6 +1339,7 @@ export type DriverProfileUncheckedUpdateWithoutWithdrawalRequestsInput = {
   totalTrips?: Prisma.IntFieldUpdateOperationsInput | number
   rating?: Prisma.FloatFieldUpdateOperationsInput | number
   walletBalance?: Prisma.FloatFieldUpdateOperationsInput | number
+  transferCount?: Prisma.IntFieldUpdateOperationsInput | number
   alarmEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1369,6 +1409,7 @@ export type DriverProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   totalTrips?: boolean
   rating?: boolean
   walletBalance?: boolean
+  transferCount?: boolean
   alarmEnabled?: boolean
   alarmTimes?: boolean
   alarmSound?: boolean
@@ -1401,6 +1442,7 @@ export type DriverProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   totalTrips?: boolean
   rating?: boolean
   walletBalance?: boolean
+  transferCount?: boolean
   alarmEnabled?: boolean
   alarmTimes?: boolean
   alarmSound?: boolean
@@ -1430,6 +1472,7 @@ export type DriverProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   totalTrips?: boolean
   rating?: boolean
   walletBalance?: boolean
+  transferCount?: boolean
   alarmEnabled?: boolean
   alarmTimes?: boolean
   alarmSound?: boolean
@@ -1459,6 +1502,7 @@ export type DriverProfileSelectScalar = {
   totalTrips?: boolean
   rating?: boolean
   walletBalance?: boolean
+  transferCount?: boolean
   alarmEnabled?: boolean
   alarmTimes?: boolean
   alarmSound?: boolean
@@ -1466,7 +1510,7 @@ export type DriverProfileSelectScalar = {
   spotifyRefreshToken?: boolean
 }
 
-export type DriverProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "phone" | "area" | "bio" | "licenseNumber" | "vehicleMake" | "vehicleModel" | "vehicleColor" | "vehicleType" | "vehiclePlate" | "availability" | "preferredAreas" | "bankName" | "accountNumber" | "accountName" | "status" | "totalTrips" | "rating" | "walletBalance" | "alarmEnabled" | "alarmTimes" | "alarmSound" | "alarmVibrate" | "spotifyRefreshToken", ExtArgs["result"]["driverProfile"]>
+export type DriverProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "phone" | "area" | "bio" | "licenseNumber" | "vehicleMake" | "vehicleModel" | "vehicleColor" | "vehicleType" | "vehiclePlate" | "availability" | "preferredAreas" | "bankName" | "accountNumber" | "accountName" | "status" | "totalTrips" | "rating" | "walletBalance" | "transferCount" | "alarmEnabled" | "alarmTimes" | "alarmSound" | "alarmVibrate" | "spotifyRefreshToken", ExtArgs["result"]["driverProfile"]>
 export type DriverProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.DriverProfile$walletTransactionsArgs<ExtArgs>
@@ -1508,6 +1552,7 @@ export type $DriverProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     totalTrips: number
     rating: number
     walletBalance: number
+    transferCount: number
     alarmEnabled: boolean
     alarmTimes: number[]
     alarmSound: string
@@ -1959,6 +2004,7 @@ export interface DriverProfileFieldRefs {
   readonly totalTrips: Prisma.FieldRef<"DriverProfile", 'Int'>
   readonly rating: Prisma.FieldRef<"DriverProfile", 'Float'>
   readonly walletBalance: Prisma.FieldRef<"DriverProfile", 'Float'>
+  readonly transferCount: Prisma.FieldRef<"DriverProfile", 'Int'>
   readonly alarmEnabled: Prisma.FieldRef<"DriverProfile", 'Boolean'>
   readonly alarmTimes: Prisma.FieldRef<"DriverProfile", 'Int[]'>
   readonly alarmSound: Prisma.FieldRef<"DriverProfile", 'String'>
