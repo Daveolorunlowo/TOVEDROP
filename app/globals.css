@@ -217,8 +217,16 @@
     background-attachment: fixed;
   }
 
-  /* Smooth Marker Gliding (Interpolation) */
   .leaflet-marker-icon {
     transition: transform 2s linear;
   }
+}
+
+/* Autofill fixes for dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--surface-card) inset !important;
+    -webkit-text-fill-color: white !important;
 }
