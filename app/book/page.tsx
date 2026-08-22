@@ -37,6 +37,7 @@ export default function BookPage() {
   const [destinationText, setDestinationText] = useState<string>('')
   const [selectingMode, setSelectingMode] = useState<'pickup' | 'destination'>('pickup')
   const [isPool, setIsPool] = useState<boolean>(false)
+  const [isScheduled, setIsScheduled] = useState<boolean>(false)
   const [noteStr, setNoteStr] = useState<string>('')
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   
@@ -60,6 +61,13 @@ export default function BookPage() {
     setDateStr(`${yyyy}-${mm}-${dd}`)
     setTimeStr(String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))
   }
+
+  // Effect to update time automatically if leaving now
+  useEffect(() => {
+    if (!isScheduled) {
+      setQuickTime(0)
+    }
+  }, [isScheduled])
 
   const validateStep1 = () => {
     const newErrors: Record<string, string> = {}
@@ -118,7 +126,9 @@ export default function BookPage() {
         date: dateStr, 
         time: timeStr, 
         notes: noteStr,
-        isPool 
+        isPool,
+        isScheduled,
+        scheduledDateTime: isScheduled ? new Date(`${dateStr}T${timeStr}:00`).toISOString() : undefined
       }
       
       if (!navigator.onLine) {
@@ -241,49 +251,76 @@ export default function BookPage() {
                 {/* STEP 2: Date & Time */}
                 {step === 2 && (
                   <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-300">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="date">Date</Label>
-                        <div className="relative">
-                          <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input
-                            id="date"
-                            name="date"
-                            type="date"
-                            value={dateStr}
-                            onChange={(e) => setDateStr(e.target.value)}
-                            className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
-                          />
-                        </div>
-                        {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="time">Time</Label>
-                        <div className="relative">
-                          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                          <Input
-                            id="time"
-                            name="time"
-                            type="time"
-                            value={timeStr}
-                            onChange={(e) => setTimeStr(e.target.value)}
-                            className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
-                          />
-                        </div>
-                        {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
-                      </div>
+                    <div className="flex gap-4 p-1 bg-surface-elevated rounded-lg border border-border-subtle">
+                      <button 
+                        type="button" 
+                        onClick={() => setIsScheduled(false)} 
+                        className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${!isScheduled ? 'bg-orange-brand text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                      >
+                        Leave Now
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={() => setIsScheduled(true)} 
+                        className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${isScheduled ? 'bg-orange-brand text-white shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                      >
+                        Schedule for Later
+                      </button>
                     </div>
 
-                    {/* Quick Time Selection */}
-                    <div className="space-y-2">
-                      <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
-                      <div className="flex flex-wrap gap-2">
-                        <button type="button" onClick={() => setQuickTime(0)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">Now</button>
-                        <button type="button" onClick={() => setQuickTime(15)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+15m</button>
-                        <button type="button" onClick={() => setQuickTime(30)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+30m</button>
-                        <button type="button" onClick={() => setQuickTime(60)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+1h</button>
+                    {isScheduled ? (
+                      <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-1.5">
+                            <Label htmlFor="date">Date</Label>
+                            <div className="relative">
+                              <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                              <Input
+                                id="date"
+                                name="date"
+                                type="date"
+                                value={dateStr}
+                                onChange={(e) => setDateStr(e.target.value)}
+                                className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
+                              />
+                            </div>
+                            {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label htmlFor="time">Time</Label>
+                            <div className="relative">
+                              <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                              <Input
+                                id="time"
+                                name="time"
+                                type="time"
+                                value={timeStr}
+                                onChange={(e) => setTimeStr(e.target.value)}
+                                className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
+                              />
+                            </div>
+                            {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+                          </div>
+                        </div>
+
+                        {/* Quick Time Selection */}
+                        <div className="space-y-2">
+                          <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
+                          <div className="flex flex-wrap gap-2">
+                            <button type="button" onClick={() => setQuickTime(30)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+30m</button>
+                            <button type="button" onClick={() => setQuickTime(60)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+1h</button>
+                            <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    ) : (
+                      <div className="flex items-center justify-center py-8 text-center text-muted-foreground">
+                        <div className="space-y-2">
+                          <Clock className="w-10 h-10 mx-auto text-orange-brand opacity-80" />
+                          <p className="text-sm font-medium">Your ride will be requested immediately.</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 

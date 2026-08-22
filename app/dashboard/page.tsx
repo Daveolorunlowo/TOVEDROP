@@ -37,7 +37,12 @@ export default async function DashboardPage() {
 
   const trips = await prisma.trip.findMany({
     where: { riderId: user.id },
-    include: { driver: true, review: true },
+    include: { 
+      driver: {
+        include: { driverProfile: true }
+      }, 
+      review: true 
+    },
     orderBy: { createdAt: 'desc' },
   })
 
@@ -69,12 +74,7 @@ export default async function DashboardPage() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Link
-              href="/dashboard/referrals"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground border border-border bg-card hover:bg-muted transition-colors"
-            >
-              Refer Friends
-            </Link>
+            {/* Header actions can go here */}
           </div>
         </div>
 

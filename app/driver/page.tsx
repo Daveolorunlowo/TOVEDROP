@@ -15,6 +15,7 @@ import { Skeleton } from '@/components/shared/Skeleton'
 import { useDriverAlarms } from '@/hooks/useDriverAlarms'
 import { AlarmModal } from '@/components/driver/AlarmModal'
 import { AlarmSettings } from '@/components/driver/AlarmSettings'
+import { SpotifyConnect } from '@/components/driver/SpotifyConnect'
 import { useLocationBroadcaster } from '@/hooks/useLocationBroadcaster'
 import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@/components/sign-out-button'
@@ -285,7 +286,8 @@ export default function DriverDashboardPage() {
             alarmEnabled: d.driverProfile.alarmEnabled,
             alarmTimes: d.driverProfile.alarmTimes,
             alarmSound: d.driverProfile.alarmSound,
-            alarmVibrate: d.driverProfile.alarmVibrate
+            alarmVibrate: d.driverProfile.alarmVibrate,
+            spotifyRefreshToken: d.driverProfile.spotifyRefreshToken
           })
         }
       }
@@ -305,7 +307,7 @@ export default function DriverDashboardPage() {
     return () => clearInterval(id)
   }, [router])
 
-  const { activeAlarm, dismissAlarm } = useDriverAlarms(
+  const { activeAlarm, dismissAlarm, triggerTestAlarm } = useDriverAlarms(
     data?.confirmedTrips || [],
     driverSettings || {}
   );
@@ -499,7 +501,8 @@ export default function DriverDashboardPage() {
     )
   }
 
-  const rawRequests = pendingTrips.filter((t: any) => !declined.includes(t.id))
+  const rawRequests = pendingTrips.filter((t: any) => !declined.includes(t.id) && !t.isScheduled)
+  const scheduledRequests = pendingTrips.filter((t: any) => !declined.includes(t.id) && t.isScheduled)
   
   // Group pooled trips
   const requests: any[] = []
@@ -741,18 +744,22 @@ export default function DriverDashboardPage() {
 
         {/* ── Alarm Settings ── */}
         {driverSettings && driverId && (
-          <AlarmSettings 
-            driverId={driverId} 
-            initialSettings={driverSettings} 
-            onSave={(newSettings) => setDriverSettings(newSettings)}
-          />
+          <>
+            <AlarmSettings 
+              driverId={driverId} 
+              initialSettings={driverSettings} 
+              onSave={(newSettings) => setDriverSettings(newSettings)}
+              onPreviewAlarm={triggerTestAlarm}
+            />
+            <SpotifyConnect isConnected={!!driverSettings.spotifyRefreshToken} />
+          </>
         )}
 
         {/* ── Incoming Requests ── */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
-                  Incoming Requests
+                  Live Requests
                 </p>
                 {requests.length > 0 && (
                   <span
@@ -826,6 +833,68 @@ export default function DriverDashboardPage() {
                 </div>
               )}
             </div>
+
+            {/* ── Scheduled Requests ── */}
+            {scheduledRequests.length > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
+                    Upcoming Scheduled Trips
+                  </p>
+                  <span
+                    className="text-[10px] font-semibold px-1.5 py-0.5"
+                    style={{ background: 'rgba(217,119,6,0.1)', color: 'var(--orange-brand)', borderRadius: '4px' }}
+                  >
+                    {scheduledRequests.length} available
+                  </span>
+                </div>
+                
+                <div
+                  className="rounded-lg overflow-hidden"
+                  style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
+                >
+                  {scheduledRequests.map((req: any, i: number) => (
+                    <div
+                      key={req.id}
+                      className="px-4 py-3"
+                      style={{ borderBottom: i < scheduledRequests.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-7 h-7 shrink-0">
+                          <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border)', color: 'var(--muted-foreground)' }}>
+                            {initials(req.rider.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
+                          <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
+                            {req.pickup} → {req.destination}
+                          </p>
+                          <p className="text-[11px] flex items-center gap-1 font-semibold" style={{ color: 'var(--orange-brand)' }}>
+                            <Clock className="w-3 h-3" /> Scheduled for {req.date} · {req.time}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            disabled={processing === req.id}
+                            onClick={() => handleAccept(req.id)}
+                            className="text-[11px] font-semibold px-2.5 py-1 rounded"
+                            style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', borderRadius: '4px' }}
+                          >
+                            {processing === req.id ? '…' : 'Accept Ahead'}
+                          </button>
+                        </div>
+                      </div>
+                      {req.notes && (
+                        <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--card)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
+                          Note: {req.notes}
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* ── Confirmed Trips ── */}
             <div>

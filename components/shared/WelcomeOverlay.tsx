@@ -54,9 +54,9 @@ export function WelcomeOverlay() {
         desc: 'Track your driver in real-time. All drivers are verified students for your safety.'
       },
       {
-        icon: <Gift className="w-12 h-12 text-orange-brand" />,
-        title: 'Earn Free Drops',
-        desc: 'Refer friends to earn free drops and save on your daily commutes!'
+        icon: <Star className="w-12 h-12 text-orange-brand" />,
+        title: 'Safety First',
+        desc: 'All our drivers are students verified with valid university IDs to ensure a secure ride.'
       }
     ],
     DRIVER: [

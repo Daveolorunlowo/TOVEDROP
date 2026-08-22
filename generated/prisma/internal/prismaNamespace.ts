@@ -408,6 +408,8 @@ export const ModelName = {
   AdminLoginLog: 'AdminLoginLog',
   PushSubscription: 'PushSubscription',
   Message: 'Message',
+  AnomalyReport: 'AnomalyReport',
+  AnomalyAlert: 'AnomalyAlert',
   ReferralCode: 'ReferralCode',
   Referral: 'Referral',
   DropTransaction: 'DropTransaction',
@@ -438,7 +440,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1253,6 +1255,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.MessageCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.MessageCountAggregateOutputType> | number
+        }
+      }
+    }
+    AnomalyReport: {
+      payload: Prisma.$AnomalyReportPayload<ExtArgs>
+      fields: Prisma.AnomalyReportFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AnomalyReportFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AnomalyReportFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>
+        }
+        findFirst: {
+          args: Prisma.AnomalyReportFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AnomalyReportFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>
+        }
+        findMany: {
+          args: Prisma.AnomalyReportFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>[]
+        }
+        create: {
+          args: Prisma.AnomalyReportCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>
+        }
+        createMany: {
+          args: Prisma.AnomalyReportCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AnomalyReportCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>[]
+        }
+        delete: {
+          args: Prisma.AnomalyReportDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>
+        }
+        update: {
+          args: Prisma.AnomalyReportUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>
+        }
+        deleteMany: {
+          args: Prisma.AnomalyReportDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AnomalyReportUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AnomalyReportUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>[]
+        }
+        upsert: {
+          args: Prisma.AnomalyReportUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyReportPayload>
+        }
+        aggregate: {
+          args: Prisma.AnomalyReportAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAnomalyReport>
+        }
+        groupBy: {
+          args: Prisma.AnomalyReportGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AnomalyReportGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AnomalyReportCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AnomalyReportCountAggregateOutputType> | number
+        }
+      }
+    }
+    AnomalyAlert: {
+      payload: Prisma.$AnomalyAlertPayload<ExtArgs>
+      fields: Prisma.AnomalyAlertFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AnomalyAlertFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AnomalyAlertFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>
+        }
+        findFirst: {
+          args: Prisma.AnomalyAlertFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AnomalyAlertFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>
+        }
+        findMany: {
+          args: Prisma.AnomalyAlertFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>[]
+        }
+        create: {
+          args: Prisma.AnomalyAlertCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>
+        }
+        createMany: {
+          args: Prisma.AnomalyAlertCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AnomalyAlertCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>[]
+        }
+        delete: {
+          args: Prisma.AnomalyAlertDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>
+        }
+        update: {
+          args: Prisma.AnomalyAlertUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>
+        }
+        deleteMany: {
+          args: Prisma.AnomalyAlertDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AnomalyAlertUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AnomalyAlertUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>[]
+        }
+        upsert: {
+          args: Prisma.AnomalyAlertUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AnomalyAlertPayload>
+        }
+        aggregate: {
+          args: Prisma.AnomalyAlertAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAnomalyAlert>
+        }
+        groupBy: {
+          args: Prisma.AnomalyAlertGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AnomalyAlertGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AnomalyAlertCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AnomalyAlertCountAggregateOutputType> | number
         }
       }
     }
@@ -2484,7 +2634,8 @@ export const DriverProfileScalarFieldEnum = {
   alarmEnabled: 'alarmEnabled',
   alarmTimes: 'alarmTimes',
   alarmSound: 'alarmSound',
-  alarmVibrate: 'alarmVibrate'
+  alarmVibrate: 'alarmVibrate',
+  spotifyRefreshToken: 'spotifyRefreshToken'
 } as const
 
 export type DriverProfileScalarFieldEnum = (typeof DriverProfileScalarFieldEnum)[keyof typeof DriverProfileScalarFieldEnum]
@@ -2572,6 +2723,35 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const AnomalyReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  periodAnalyzed: 'periodAnalyzed',
+  totalRides: 'totalRides',
+  totalUsers: 'totalUsers',
+  totalDrivers: 'totalDrivers'
+} as const
+
+export type AnomalyReportScalarFieldEnum = (typeof AnomalyReportScalarFieldEnum)[keyof typeof AnomalyReportScalarFieldEnum]
+
+
+export const AnomalyAlertScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  createdAt: 'createdAt',
+  category: 'category',
+  title: 'title',
+  severity: 'severity',
+  riskScore: 'riskScore',
+  details: 'details',
+  affectedUsers: 'affectedUsers',
+  recommendedAction: 'recommendedAction',
+  status: 'status'
+} as const
+
+export type AnomalyAlertScalarFieldEnum = (typeof AnomalyAlertScalarFieldEnum)[keyof typeof AnomalyAlertScalarFieldEnum]
 
 
 export const ReferralCodeScalarFieldEnum = {
@@ -3037,6 +3217,8 @@ export type GlobalOmitConfig = {
   adminLoginLog?: Prisma.AdminLoginLogOmit
   pushSubscription?: Prisma.PushSubscriptionOmit
   message?: Prisma.MessageOmit
+  anomalyReport?: Prisma.AnomalyReportOmit
+  anomalyAlert?: Prisma.AnomalyAlertOmit
   referralCode?: Prisma.ReferralCodeOmit
   referral?: Prisma.ReferralOmit
   dropTransaction?: Prisma.DropTransactionOmit

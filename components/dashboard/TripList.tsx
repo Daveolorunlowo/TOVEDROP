@@ -2,12 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, Share, Copy, Check, MessageSquare, MapPin } from 'lucide-react'
+import { X, Star, Car, TrendingUp, Share, Copy, Check, MessageSquare, MapPin, Clock } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
 import { ChatModal } from '@/components/chat-modal'
 import { ConfirmModal } from '@/components/shared/ConfirmModal'
+import { SpotifyPlayer } from '@/components/trip/SpotifyPlayer'
 import { pusherClient } from '@/lib/pusher-client'
 
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -259,7 +260,7 @@ export function TripList({
                 </div>
 
                 {/* Match Dashboard / Nearby Candidates UI for PENDING trips */}
-                {trip.status === 'PENDING' && (
+                {trip.status === 'PENDING' && !trip.isScheduled && (
                   <div className="px-4 pb-4 pt-1">
                     <div className="bg-background/40 rounded-lg border border-white/5 p-3">
                       <div className="flex items-center justify-between mb-2">
@@ -293,6 +294,24 @@ export function TripList({
                         </div>
                       )}
                     </div>
+                  </div>
+                )}
+
+                {/* Scheduled State for PENDING trips */}
+                {trip.status === 'PENDING' && trip.isScheduled && (
+                  <div className="px-4 pb-4 pt-1">
+                    <div className="bg-background/40 rounded-lg border border-white/5 p-3 flex flex-col items-center justify-center text-center">
+                      <Clock className="w-6 h-6 text-orange-brand mb-2 opacity-80" />
+                      <p className="text-xs font-medium text-foreground">Scheduled for Later</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">Drivers will be notified 15 minutes before pickup.</p>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Spotify Jukebox */}
+                {trip.status === 'CONFIRMED' && trip.driver?.driverProfile?.spotifyRefreshToken && (
+                  <div className="px-4 pb-4">
+                    <SpotifyPlayer tripId={trip.id} />
                   </div>
                 )}
               </div>

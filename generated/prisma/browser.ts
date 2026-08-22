@@ -73,6 +73,16 @@ export type PushSubscription = Prisma.PushSubscriptionModel
  */
 export type Message = Prisma.MessageModel
 /**
+ * Model AnomalyReport
+ * 
+ */
+export type AnomalyReport = Prisma.AnomalyReportModel
+/**
+ * Model AnomalyAlert
+ * 
+ */
+export type AnomalyAlert = Prisma.AnomalyAlertModel
+/**
  * Model ReferralCode
  * 
  */

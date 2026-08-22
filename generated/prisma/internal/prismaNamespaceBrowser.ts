@@ -62,6 +62,8 @@ export const ModelName = {
   AdminLoginLog: 'AdminLoginLog',
   PushSubscription: 'PushSubscription',
   Message: 'Message',
+  AnomalyReport: 'AnomalyReport',
+  AnomalyAlert: 'AnomalyAlert',
   ReferralCode: 'ReferralCode',
   Referral: 'Referral',
   DropTransaction: 'DropTransaction',
@@ -174,7 +176,8 @@ export const DriverProfileScalarFieldEnum = {
   alarmEnabled: 'alarmEnabled',
   alarmTimes: 'alarmTimes',
   alarmSound: 'alarmSound',
-  alarmVibrate: 'alarmVibrate'
+  alarmVibrate: 'alarmVibrate',
+  spotifyRefreshToken: 'spotifyRefreshToken'
 } as const
 
 export type DriverProfileScalarFieldEnum = (typeof DriverProfileScalarFieldEnum)[keyof typeof DriverProfileScalarFieldEnum]
@@ -262,6 +265,35 @@ export const MessageScalarFieldEnum = {
 } as const
 
 export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
+
+
+export const AnomalyReportScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  periodAnalyzed: 'periodAnalyzed',
+  totalRides: 'totalRides',
+  totalUsers: 'totalUsers',
+  totalDrivers: 'totalDrivers'
+} as const
+
+export type AnomalyReportScalarFieldEnum = (typeof AnomalyReportScalarFieldEnum)[keyof typeof AnomalyReportScalarFieldEnum]
+
+
+export const AnomalyAlertScalarFieldEnum = {
+  id: 'id',
+  reportId: 'reportId',
+  createdAt: 'createdAt',
+  category: 'category',
+  title: 'title',
+  severity: 'severity',
+  riskScore: 'riskScore',
+  details: 'details',
+  affectedUsers: 'affectedUsers',
+  recommendedAction: 'recommendedAction',
+  status: 'status'
+} as const
+
+export type AnomalyAlertScalarFieldEnum = (typeof AnomalyAlertScalarFieldEnum)[keyof typeof AnomalyAlertScalarFieldEnum]
 
 
 export const ReferralCodeScalarFieldEnum = {

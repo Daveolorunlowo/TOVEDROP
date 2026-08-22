@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool } = await req.json()
+    const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool, isScheduled, scheduledDateTime } = await req.json()
     
     if (!pickup || !destination || !date || !time || pickupLat === undefined || pickupLng === undefined || destinationLat === undefined || destinationLng === undefined) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
@@ -117,7 +117,9 @@ export async function POST(req: NextRequest) {
           bookingFeeNaira,
           dropLotId,
           isPool: Boolean(isPool),
-          poolGroupId
+          poolGroupId,
+          isScheduled: Boolean(isScheduled),
+          scheduledDateTime: scheduledDateTime ? new Date(scheduledDateTime) : null
         }
       })
       

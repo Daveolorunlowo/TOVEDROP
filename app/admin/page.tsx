@@ -99,6 +99,24 @@ export default function AdminPage() {
   const [settingsSaving, setSettingsSaving] = useState(false)
   const [selectedActivityUser, setSelectedActivityUser] = useState<any>(null)
   const [confirmAction, setConfirmAction] = useState<{ id: string, action: string, type: 'payout' | 'feedback' } | null>(null)
+  const [triggeringReminders, setTriggeringReminders] = useState(false)
+
+  const triggerReminders = async () => {
+    setTriggeringReminders(true)
+    try {
+      const res = await fetch('/api/admin/reminders/trigger', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        alert(`Successfully triggered ${data.remindersSent} reminders!`)
+      } else {
+        alert(`Failed to trigger reminders: ${data.error}`)
+      }
+    } catch (e) {
+      alert('Error triggering reminders')
+    } finally {
+      setTriggeringReminders(false)
+    }
+  }
 
   const fetchData = async () => {
     const start = Date.now()
@@ -409,7 +427,7 @@ export default function AdminPage() {
                   { label: 'Total Riders',       value: stats.totalUsers },
                   { label: 'Total Drivers',      value: stats.totalDrivers },
                   { label: 'Total Trips',        value: stats.totalTrips },
-                  { label: 'Successful Referrals',value: stats.successfulReferrals, accent: true },
+                  { label: 'Platform Revenue',   value: '$0.00', accent: true },
                 ].map((s, i) => (
                   <motion.div
                     key={s.label}
@@ -426,11 +444,61 @@ export default function AdminPage() {
                       className="text-3xl font-bold tabular-nums tracking-tight relative z-10"
                       style={{ color: s.accent ? 'var(--orange-brand)' : '#fff' }}
                     >
-                      <CountUp end={s.value} duration={2.5} separator="," />
+                      {typeof s.value === 'number' ? <CountUp end={s.value} duration={2.5} separator="," /> : s.value}
                     </p>
                   </motion.div>
                 ))}
               </div>
+
+              {/* Anomaly Radar Banner */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-red-950/20 border border-red-500/20 rounded-xl p-4 flex items-center justify-between shadow-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-red-500/20 rounded-lg">
+                    <ShieldAlert className="w-5 h-5 text-red-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-red-400">Anomaly Radar Scanner</h3>
+                    <p className="text-xs text-red-400/80">View automated security, fraud, and anomaly reports.</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => router.push('/admin/anomalies')}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-lg transition-colors"
+                >
+                  View Reports &rarr;
+                </button>
+              </motion.div>
+
+              {/* Manual Trigger for Trip Reminders */}
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="bg-blue-950/20 border border-blue-500/20 rounded-xl p-4 flex items-center justify-between shadow-lg"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                    <Bell className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-blue-400">Scheduled Trip Reminders</h3>
+                    <p className="text-xs text-blue-400/80">Manually fire Resend email and Web Push notifications to drivers for upcoming trips (15-20 min away).</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={triggerReminders}
+                  disabled={triggeringReminders}
+                  className="px-4 py-2 bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-2"
+                >
+                  {triggeringReminders ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                  Trigger Now &rarr;
+                </button>
+              </motion.div>
               
               {/* Chart and Quick Actions */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -9,9 +9,9 @@ export function AlarmSettings({
   initialSettings,
   onSave
 }: {
-  driverId: string;
   initialSettings: any;
   onSave: (settings: any) => void;
+  onPreviewAlarm?: () => void;
 }) {
   const [enabled, setEnabled] = useState(initialSettings?.alarmEnabled ?? true);
   const [times, setTimes] = useState<number[]>(initialSettings?.alarmTimes ?? [30, 10, 2]);
@@ -135,6 +135,15 @@ export function AlarmSettings({
         >
           {saving ? 'Saving...' : 'Save Settings'}
         </button>
+
+        {onPreviewAlarm && (
+          <button
+            onClick={onPreviewAlarm}
+            className="w-full bg-transparent border border-orange-500/50 hover:bg-orange-500/10 text-orange-500 font-medium py-2 rounded-lg transition-colors mt-2"
+          >
+            Preview Full Alarm Workflow
+          </button>
+        )}
       </div>
     </div>
   );

@@ -58,5 +58,20 @@ export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
     return () => clearInterval(interval);
   }, [driverTrips, alarmPrefs]);
 
-  return { activeAlarm, dismissAlarm: () => setActiveAlarm(null) };
+  const triggerTestAlarm = () => {
+    setActiveAlarm({
+      trip: {
+        id: 'test-trip-id',
+        date: new Date().toISOString().split('T')[0],
+        time: '12:00',
+        status: 'CONFIRMED',
+        pickupLocation: 'Test Location',
+        dropoffLocation: 'Test Dropoff',
+        rider: { name: 'Test Rider', phone: '555-0000' }
+      },
+      minutesBefore: 30
+    });
+  };
+
+  return { activeAlarm, dismissAlarm: () => setActiveAlarm(null), triggerTestAlarm };
 }

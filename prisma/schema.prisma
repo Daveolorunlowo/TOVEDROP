@@ -117,6 +117,8 @@ model DriverProfile {
   alarmTimes          Int[]    @default([30, 10, 2])
   alarmSound          String   @default("default")
   alarmVibrate        Boolean  @default(true)
+
+  spotifyRefreshToken String?
 }
 
 model Trip {
@@ -142,6 +144,9 @@ model Trip {
 
   isPool      Boolean @default(false)
   poolGroupId String?
+
+  isScheduled       Boolean   @default(false)
+  scheduledDateTime DateTime?
 
   bookingFeeNaira Float?
   dropLotId       String?
@@ -205,6 +210,34 @@ model Message {
   createdAt DateTime @default(now())
   trip      Trip     @relation(fields: [tripId], references: [id])
   sender    User     @relation(fields: [senderId], references: [id])
+}
+
+model AnomalyReport {
+  id             String         @id @default(cuid())
+  createdAt      DateTime       @default(now())
+  periodAnalyzed Int            @default(24) // hours
+  totalRides     Int            @default(0)
+  totalUsers     Int            @default(0)
+  totalDrivers   Int            @default(0)
+  alerts         AnomalyAlert[]
+}
+
+model AnomalyAlert {
+  id                String        @id @default(cuid())
+  reportId          String
+  report            AnomalyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  createdAt         DateTime      @default(now())
+  
+  category          String        // e.g. "USER_BEHAVIOR", "DRIVER_BEHAVIOR", "DATA_INTEGRITY"
+  title             String        // e.g. "Possible Fraud Ring Detected"
+  severity          String        // "CRITICAL", "INVESTIGATE", "MONITOR"
+  riskScore         Int           // 0-100
+  
+  details           String        // JSON stringified details/bullet points
+  affectedUsers     String?       // JSON stringified array of user/driver IDs
+  recommendedAction String?       // e.g. "Suspend all 8 accounts"
+  
+  status            String        @default("PENDING") // "PENDING", "DISMISSED", "RESOLVED"
 }
 
 model ReferralCode {
