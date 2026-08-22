@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath';
 import { PasswordInput } from '@/components/shared/PasswordInput';
+import { LoadingButton, LoadingEffect } from '@/components/shared/LoadingButton';
 
 function DropCoin({ size = 16 }: { size?: number }) {
   return (
@@ -31,7 +32,13 @@ function AuthForm() {
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [effect, setEffect] = useState<LoadingEffect>('fill');
   const router = useRouter();
+
+  useEffect(() => {
+    const effects: LoadingEffect[] = ['fill', 'rain', 'morph', 'pulse'];
+    setEffect(effects[Math.floor(Math.random() * effects.length)]);
+  }, []);
 
   // Read initial tab and intent
   useEffect(() => {
@@ -116,75 +123,6 @@ function AuthForm() {
 
   return (
     <div className="flex-1 flex items-center justify-center px-4 py-12">
-      <style>{`
-        .btn-drop-rain {
-          position: relative;
-          height: 48px;
-          background: #f97316;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 14px;
-          font-weight: 600;
-          color: #0d0d0f;
-          font-family: inherit;
-          overflow: hidden;
-          transition: background 0.2s ease;
-        }
-
-        .btn-drop-rain:hover:not(:disabled) {
-          background: #f5841f;
-        }
-
-        .btn-drop-rain:disabled {
-          cursor: wait;
-          pointer-events: none;
-        }
-
-        /* Individual rain drops */
-        .rain-drop {
-          position: absolute;
-          width: 4px;
-          height: 8px;
-          background: #0d0d0f;
-          border-radius: 50%;
-          opacity: 0.6;
-          animation: rainFall 1.2s ease-in infinite;
-        }
-
-        .rain-drop:nth-child(1) { left: 15%; animation-delay: 0s; }
-        .rain-drop:nth-child(2) { left: 35%; animation-delay: 0.3s; }
-        .rain-drop:nth-child(3) { left: 50%; animation-delay: 0.6s; }
-        .rain-drop:nth-child(4) { left: 65%; animation-delay: 0.9s; }
-        .rain-drop:nth-child(5) { left: 85%; animation-delay: 1.2s; }
-
-        @keyframes rainFall {
-          0% { 
-            top: -8px;
-            opacity: 0;
-          }
-          10% {
-            opacity: 0.8;
-          }
-          90% {
-            opacity: 0.8;
-          }
-          100% { 
-            top: 48px;
-            opacity: 0;
-          }
-        }
-
-        /* Text layer */
-        .rain-text {
-          position: relative;
-          z-index: 2;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          height: 100%;
-        }
-      `}</style>
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="text-3xl font-extrabold inline-block" style={{ letterSpacing: '-0.02em' }}>
@@ -276,26 +214,17 @@ function AuthForm() {
               </div>
             )}
 
-            <button 
-              type="submit" 
-              className="btn-drop-rain w-full mt-1" 
-              disabled={isLoading}
+            <LoadingButton
+              type="submit"
+              className="w-full mt-1 h-12"
+              isLoading={isLoading}
+              effect={effect}
+              loadingText="Connecting..."
             >
-              {isLoading ? (
-                <>
-                  <div className="rain-drop"></div>
-                  <div className="rain-drop"></div>
-                  <div className="rain-drop"></div>
-                  <div className="rain-drop"></div>
-                  <div className="rain-drop"></div>
-                  <span className="rain-text">Connecting…</span>
-                </>
-              ) : (
-                <span className="rain-text text-white">
-                  {tab === 'login' ? 'Log In' : 'Create Account'}
-                </span>
-              )}
-            </button>
+              <span className="text-white">
+                {tab === 'login' ? 'Log In' : 'Create Account'}
+              </span>
+            </LoadingButton>
           </form>
 
           {tab === 'signup' && (

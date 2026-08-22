@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -26,11 +26,35 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024)
   const containerRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   // Track current tab
-  const activeTabIndex = tabs.findIndex(t => 
-    t.matchPrefix ? pathname.startsWith(t.href) : pathname === t.href
-  )
+  const activeTabIndex = tabs.findIndex(t => {
+    const [tPath, tSearch] = t.href.split('?')
+    if (t.matchPrefix) {
+      return pathname.startsWith(tPath)
+    }
+    if (pathname !== tPath) return false
+    
+    // If href has a tab search param, it must match
+    if (tSearch) {
+      const tParams = new URLSearchParams(tSearch)
+      const tabParam = tParams.get('tab')
+      if (tabParam && searchParams.get('tab') !== tabParam) {
+        return false
+      }
+    } else {
+      // If href has no search param, but current URL has a tab param, then it's not a match
+      // (Unless it's the default tab, but let's just do a strict match for simplicity)
+      // Actually, if we are on /driver?tab=wallet, and href is /driver, it shouldn't match.
+      if (searchParams.get('tab')) {
+        // We assume the default tab is handled by the first item if no tab param, but if tab param exists, it must match.
+        // If href has no tab param, we consider it a match if the current tab param matches its id
+        if (searchParams.get('tab') !== t.id) return false
+      }
+    }
+    return true
+  })
   const validActiveIndex = activeTabIndex >= 0 ? activeTabIndex : 0
   const activeTab = tabs[validActiveIndex]
   const ActiveIcon = activeTab.icon
