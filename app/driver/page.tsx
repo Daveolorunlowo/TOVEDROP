@@ -595,7 +595,7 @@ export default function DriverDashboardPage() {
                   className="text-sm font-bold"
                   style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}
                 >
-                  {initials(driverProfile.user.name)}
+                  {initials(driverProfile?.user?.name)}
                 </AvatarFallback>
               </Avatar>
               <span

@@ -39,6 +39,7 @@ export function ChatInterface({
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!pusherClient) return;
     const channel = pusherClient.subscribe(`trip-${tripId}`)
     
     channel.bind('new-message', (data: Message) => {
@@ -54,7 +55,7 @@ export function ChatInterface({
     })
 
     return () => {
-      pusherClient.unsubscribe(`trip-${tripId}`)
+      if (pusherClient) pusherClient.unsubscribe(`chat-${tripId}`)
     }
   }, [tripId])
 

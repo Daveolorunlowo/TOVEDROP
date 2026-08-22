@@ -94,7 +94,7 @@ const KineticText = ({ text, className = "", delay = 0, color = "text-foreground
     }),
   };
 
-  const child = {
+  const child: any = {
     visible: {
       opacity: 1,
       y: 0,

@@ -59,10 +59,10 @@ export async function POST(req: Request) {
     })
 
     if (driverStatus === 'APPROVED') {
-      await sendEmail(email, 'DriverApproved', { name, phone, vehiclePlate })
+      await sendEmail(email, 'DriverApproved', JSON.stringify({ name, phone, vehiclePlate }))
     } else {
-      await sendEmail(email, 'DriverApplicationReceived', { name, phone, vehiclePlate })
-      await sendEmail('admin@tovedrop.com', 'AdminNewApplication', { name, email, phone })
+      await sendEmail(email, 'DriverApplicationReceived', JSON.stringify({ name, phone, vehiclePlate }))
+      await sendEmail('admin@tovedrop.com', 'AdminNewApplication', JSON.stringify({ name, email, phone }))
     }
 
     return NextResponse.json({ 

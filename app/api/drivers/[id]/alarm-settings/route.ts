@@ -3,10 +3,11 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import prisma from '@/lib/prisma';
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session || !session.user || session.user.id !== params.id) {
+    const { id } = await params;
+    if (!session || !session.user || session.user.id !== id) {
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -14,7 +15,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
     const { alarmEnabled, alarmTimes, alarmSound, alarmVibrate } = body;
 
     const updatedProfile = await prisma.driverProfile.update({
-      where: { userId: params.id },
+      where: { userId: id },
       data: {
         ...(alarmEnabled !== undefined && { alarmEnabled }),
         ...(alarmTimes !== undefined && { alarmTimes }),

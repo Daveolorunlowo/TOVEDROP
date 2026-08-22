@@ -12,7 +12,7 @@ export interface LogContext {
  */
 class Logger {
   private formatLog(level: LogLevel, message: string, context?: LogContext, error?: unknown) {
-    const logEntry = {
+    const logEntry: Record<string, any> = {
       timestamp: new Date().toISOString(),
       level,
       message,

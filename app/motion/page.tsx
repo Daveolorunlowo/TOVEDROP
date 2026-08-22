@@ -16,7 +16,7 @@ const KineticText = ({ text, className = "", delay = 0, color = "text-white" }: 
     }),
   };
 
-  const child = {
+  const child: any = {
     hidden: { opacity: 0, skewX: 60, scaleY: 0.2, filter: "blur(20px)", y: 50 },
     glitch: { opacity: 1, skewX: -30, scaleY: 1.5, filter: "blur(5px)", y: -10 },
     visible: {
@@ -88,7 +88,7 @@ export default function MotionAd() {
     if (synths.current.initialized) return;
     synths.current.initialized = true;
     
-    synths.current.tick = new Tone.MetalSynth({ frequency: "C5", envelope: { attack: 0.001, decay: 0.1, release: 0.01 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 }).toDestination()
+    synths.current.tick = new Tone.MetalSynth({ frequency: "C5", envelope: { attack: 0.001, decay: 0.1, release: 0.01 }, harmonicity: 5.1, modulationIndex: 32, resonance: 4000, octaves: 1.5 } as any).toDestination()
     synths.current.tick.volume.value = -28 
     
     synths.current.drone = new Tone.FMSynth({ harmonicity: 0.5, modulationIndex: 10, oscillator: { type: "sine" }, modulation: { type: "triangle" } }).toDestination()

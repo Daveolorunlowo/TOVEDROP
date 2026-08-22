@@ -26,6 +26,7 @@ export function LiveMap() {
   }, [])
 
   useEffect(() => {
+    if (!pusherClient) return;
     const channel = pusherClient.subscribe('global-driver-locations')
     
     channel.bind('location-update', (data: any) => {
@@ -42,7 +43,7 @@ export function LiveMap() {
 
     return () => {
       channel.unbind('location-update')
-      pusherClient.unsubscribe('global-driver-locations')
+      pusherClient?.unsubscribe('global-driver-locations')
     }
   }, [])
 

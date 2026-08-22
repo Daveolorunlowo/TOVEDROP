@@ -7,8 +7,10 @@ import { AlarmSounds } from '@/lib/alarm-sounds';
 export function AlarmSettings({
   driverId,
   initialSettings,
-  onSave
+  onSave,
+  onPreviewAlarm
 }: {
+  driverId: string;
   initialSettings: any;
   onSave: (settings: any) => void;
   onPreviewAlarm?: () => void;

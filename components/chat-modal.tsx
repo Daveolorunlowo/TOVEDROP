@@ -52,7 +52,8 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
 
     fetchHistory()
 
-    const channel = pusherClient.subscribe(`trip-${tripId}`)
+    if (!pusherClient) return;
+    const channel = pusherClient.subscribe(`chat-${tripId}`)
     channel.bind('new-message', (newMessage: Message) => {
       setMessages((prev) => {
         // Prevent duplicates
@@ -63,7 +64,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
 
     return () => {
       mounted = false
-      pusherClient.unsubscribe(`trip-${tripId}`)
+      if (pusherClient) pusherClient.unsubscribe(`chat-${tripId}`)
     }
   }, [tripId])
 

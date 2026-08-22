@@ -13,7 +13,8 @@ export function GlobalMessageListener() {
     if (!session?.user?.id) return
 
     const channelName = `user-trips-${session.user.id}`
-    const channel = pusherClient.subscribe(channelName)
+    if (!pusherClient) return;
+    const channel = pusherClient.subscribe(`user-${session.user.id}`)
     
     channel.bind('incoming-message', (data: any) => {
       // Show toast
@@ -28,7 +29,9 @@ export function GlobalMessageListener() {
     })
 
     return () => {
-      pusherClient.unsubscribe(channelName)
+      if (pusherClient) {
+        pusherClient.unsubscribe(channelName)
+      }
     }
   }, [session?.user?.id])
 

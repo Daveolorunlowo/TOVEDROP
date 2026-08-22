@@ -2658,6 +2658,8 @@ export const TripScalarFieldEnum = {
   driverArrivedAt: 'driverArrivedAt',
   isPool: 'isPool',
   poolGroupId: 'poolGroupId',
+  isScheduled: 'isScheduled',
+  scheduledDateTime: 'scheduledDateTime',
   bookingFeeNaira: 'bookingFeeNaira',
   dropLotId: 'dropLotId',
   shareToken: 'shareToken',

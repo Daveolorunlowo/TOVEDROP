@@ -82,6 +82,7 @@ export function TripList({
     const hasPending = upcomingTrips.some(t => t.status === 'PENDING');
     if (!hasPending) return;
 
+    if (!pusherClient) return;
     const channel = pusherClient.subscribe('global-driver-locations')
     
     channel.bind('location-update', (data: any) => {
@@ -96,7 +97,7 @@ export function TripList({
 
     return () => {
       channel.unbind('location-update')
-      pusherClient.unsubscribe('global-driver-locations')
+      pusherClient?.unsubscribe('global-driver-locations')
     }
   }, [upcomingTrips])
 

@@ -9,7 +9,7 @@ export function SpotifyPlayer({ tripId }: { tripId: string }) {
   const [debouncedQuery] = useDebounce(query, 500);
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [queued, setQueued] = useState<Record<string, boolean>>({});
+  const [queued, setQueued] = useState<Record<string, boolean | 'loading'>>({});
 
   useEffect(() => {
     if (!debouncedQuery) {
