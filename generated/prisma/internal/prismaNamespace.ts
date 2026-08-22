@@ -424,7 +424,8 @@ export const ModelName = {
   UpdateRead: 'UpdateRead',
   PrivacyRequest: 'PrivacyRequest',
   AlarmLog: 'AlarmLog',
-  TripReminder: 'TripReminder'
+  TripReminder: 'TripReminder',
+  TripTransfer: 'TripTransfer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -440,7 +441,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder"
+    modelProps: "account" | "session" | "user" | "verificationToken" | "driverProfile" | "trip" | "review" | "verificationCode" | "adminLoginLog" | "pushSubscription" | "message" | "anomalyReport" | "anomalyAlert" | "referralCode" | "referral" | "dropTransaction" | "feedback" | "dropLot" | "walletTransaction" | "withdrawalRequest" | "platformRevenue" | "adminRevenue" | "systemSettings" | "update" | "updateRead" | "privacyRequest" | "alarmLog" | "tripReminder" | "tripTransfer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2516,6 +2517,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    TripTransfer: {
+      payload: Prisma.$TripTransferPayload<ExtArgs>
+      fields: Prisma.TripTransferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.TripTransferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.TripTransferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>
+        }
+        findFirst: {
+          args: Prisma.TripTransferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.TripTransferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>
+        }
+        findMany: {
+          args: Prisma.TripTransferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>[]
+        }
+        create: {
+          args: Prisma.TripTransferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>
+        }
+        createMany: {
+          args: Prisma.TripTransferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.TripTransferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>[]
+        }
+        delete: {
+          args: Prisma.TripTransferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>
+        }
+        update: {
+          args: Prisma.TripTransferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>
+        }
+        deleteMany: {
+          args: Prisma.TripTransferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.TripTransferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.TripTransferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>[]
+        }
+        upsert: {
+          args: Prisma.TripTransferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$TripTransferPayload>
+        }
+        aggregate: {
+          args: Prisma.TripTransferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateTripTransfer>
+        }
+        groupBy: {
+          args: Prisma.TripTransferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripTransferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.TripTransferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.TripTransferCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2631,6 +2706,7 @@ export const DriverProfileScalarFieldEnum = {
   totalTrips: 'totalTrips',
   rating: 'rating',
   walletBalance: 'walletBalance',
+  transferCount: 'transferCount',
   alarmEnabled: 'alarmEnabled',
   alarmTimes: 'alarmTimes',
   alarmSound: 'alarmSound',
@@ -2937,6 +3013,24 @@ export const TripReminderScalarFieldEnum = {
 export type TripReminderScalarFieldEnum = (typeof TripReminderScalarFieldEnum)[keyof typeof TripReminderScalarFieldEnum]
 
 
+export const TripTransferScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  fromDriverId: 'fromDriverId',
+  toDriverId: 'toDriverId',
+  reason: 'reason',
+  reasonNote: 'reasonNote',
+  shareToken: 'shareToken',
+  status: 'status',
+  expiresAt: 'expiresAt',
+  acceptedAt: 'acceptedAt',
+  expiredAt: 'expiredAt',
+  createdAt: 'createdAt'
+} as const
+
+export type TripTransferScalarFieldEnum = (typeof TripTransferScalarFieldEnum)[keyof typeof TripTransferScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -3055,6 +3149,34 @@ export type EnumUpdateAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'UpdateAudience[]'
  */
 export type ListEnumUpdateAudienceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UpdateAudience[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TransferReason'
+ */
+export type EnumTransferReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransferReason'>
+    
+
+
+/**
+ * Reference to a field of type 'TransferReason[]'
+ */
+export type ListEnumTransferReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransferReason[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TransferStatus'
+ */
+export type EnumTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransferStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'TransferStatus[]'
+ */
+export type ListEnumTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransferStatus[]'>
     
 
 /**
@@ -3236,6 +3358,7 @@ export type GlobalOmitConfig = {
   privacyRequest?: Prisma.PrivacyRequestOmit
   alarmLog?: Prisma.AlarmLogOmit
   tripReminder?: Prisma.TripReminderOmit
+  tripTransfer?: Prisma.TripTransferOmit
 }
 
 /* Types for Logging */
