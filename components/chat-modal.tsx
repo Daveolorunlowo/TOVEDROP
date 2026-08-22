@@ -83,13 +83,14 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
         body: JSON.stringify({ content: messageText }),
       })
       if (!res.ok) {
-        throw new Error("Failed to send")
+        const errorData = await res.json().catch(() => null)
+        throw new Error(errorData?.details || errorData?.error || "Failed to send")
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
       // If it fails, put the text back so they can try again
       setInputText(messageText)
-      alert("Failed to send message")
+      alert(`Failed to send message: ${err.message}`)
     } finally {
       setSending(false)
     }

@@ -47,25 +47,26 @@
 }
 
 :root {
-  color-scheme: light;
-  /* TOVEDROP single source of truth brand tokens - LIGHT MODE */
-  --bg-deep: #FAFAFA;
-  --surface-card: #FFFFFF;
-  --surface-elevated: #F4F4F5;
-  --border-subtle: rgba(0,0,0,0.08);
-  --border-default: rgba(0,0,0,0.12);
-  --text-primary: #0A0A0F;
-  --text-secondary: #52525B;
-  --text-muted: #A1A1AA;
+  color-scheme: dark;
+  /* TOVEDROP Complete App Guide Brand Tokens - STRICT DARK MODE */
+  --bg-deep: #0d0d0f;
+  --surface-card: #1a1a1f;
+  --surface-elevated: #1a1a1f; /* Same as card for simplicity or slightly lighter if needed */
+  --border-subtle: #2a2a2e;
+  --border-default: #2a2a2e;
+  --text-primary: #FFFFFF;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
   
   --purple-brand: #8B5CF6;
   --purple-light: #A78BFA;
-  --orange-brand: #F97316;
-  --orange-dark: #EA6C0A;
-  --status-success: #22C55E;
-  --status-warning: #F97316;
-  --status-danger: #EF4444;
-  --status-neutral: #A1A1AA;
+  --orange-brand: #f97316;
+  --orange-dark: #f5841f; /* From hover state in guide */
+  --status-success: #4ade80;
+  --status-warning: #f97316;
+  --status-danger: #ef4444;
+  --status-danger-bg: #1a0f0f;
+  --status-neutral: #6b7280;
   --status-info: #8B5CF6;
 
   /* Shadcn Baseline mapped to new tokens */
@@ -75,42 +76,33 @@
   --card-foreground: var(--text-primary);
   --popover: var(--surface-card);
   --popover-foreground: var(--text-primary);
-  --primary: var(--purple-brand);
+  --primary: var(--orange-brand); /* Primary is orange in the new guide */
   --primary-foreground: #FFFFFF;
-  --secondary: var(--surface-elevated);
-  --secondary-foreground: var(--text-primary);
-  --muted: var(--surface-elevated);
+  --secondary: transparent;
+  --secondary-foreground: var(--text-secondary);
+  --muted: var(--surface-card);
   --muted-foreground: var(--text-muted);
   --accent: var(--orange-brand);
   --accent-foreground: #FFFFFF;
   --destructive: var(--status-danger);
+  --destructive-foreground: #FFFFFF;
   --border: var(--border-default);
-  --input: var(--border-subtle);
-  --ring: var(--purple-brand);
-  --radius: 0.75rem;
+  --input: var(--border-default);
+  --ring: var(--orange-brand);
+  --radius: 6px;
 
   --sidebar: var(--surface-card);
   --sidebar-foreground: var(--text-primary);
-  --sidebar-primary: var(--purple-brand);
+  --sidebar-primary: var(--orange-brand);
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: var(--border-subtle);
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border-default);
-  --sidebar-ring: var(--purple-brand);
+  --sidebar-ring: var(--orange-brand);
 }
 
 .dark {
-  color-scheme: dark;
-  /* TOVEDROP single source of truth brand tokens - DARK MODE */
-  --bg-deep: #0A0A0F;
-  --surface-card: #131318;
-  --surface-elevated: #1A1A21;
-  --border-subtle: rgba(255,255,255,0.08);
-  --border-default: rgba(255,255,255,0.12);
-  --text-primary: #FFFFFF;
-  --text-secondary: #A1A1AA;
-  --text-muted: #6B6B76;
-  --status-neutral: #6B6B76;
+  /* No need to duplicate, :root is already dark, but keep for compatibility */
 }
 
 @layer base {

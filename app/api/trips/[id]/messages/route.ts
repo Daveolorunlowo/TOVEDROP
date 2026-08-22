@@ -75,7 +75,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     })
 
     // Trigger realtime event on the trip's channel (for open chat modals)
-    await pusherServer.trigger(`trip-${tripId}`, 'new-message', message)
+    await pusherServer.trigger(`chat-${tripId}`, 'new-message', message)
 
     // Trigger realtime event on the recipient's global channel (for in-app popups)
     const isSenderDriver = session.user.id === trip.driverId
@@ -101,6 +101,6 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     return NextResponse.json({ message }, { status: 201 })
   } catch (error: any) {
     console.error('Error sending message:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 })
   }
 }
