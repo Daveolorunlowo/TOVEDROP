@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 import { useGuide } from "@/hooks/useGuide";
 import { motion, AnimatePresence } from "framer-motion";
 import { GuideElementType } from "@/lib/guide-steps";
@@ -32,17 +32,8 @@ export default function GuideEngine() {
     startGuide
   } = useGuide();
 
-  // Keyboard navigation
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight" || e.key === "Enter") nextStep();
-      if (e.key === "ArrowLeft")                       prevStep();
-      if (e.key === "Escape")                          skipGuide();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [isOpen, nextStep, prevStep, skipGuide]);
+
+
 
   // Floating help button when guide is closed
   if (!isOpen || !activeGuide) {
@@ -250,23 +241,28 @@ export default function GuideEngine() {
               </button>
 
               {/* Next / Finish */}
-              <button
-                onClick={nextStep}
-                disabled={!interactionSatisfied}
-                className={`flex-[2] flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-95 ${
-                  !interactionSatisfied
-                    ? "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"
-                    : isLastStep
-                      ? "bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-white border border-green-500/30 shadow-lg shadow-green-500/20 hover:brightness-110"
-                      : "bg-gradient-to-r from-purple-600/80 to-violet-600/80 text-white border border-purple-500/30 shadow-lg shadow-purple-500/20 hover:brightness-110"
-                }`}
-              >
-                {isLastStep ? (
-                  <><CheckCircle2 size={14} /> Done!</>
-                ) : (
-                  <>Next <ChevronRight size={15} /></>
-                )}
-              </button>
+              {(() => {
+                const blocked = step.requiresInteraction && !interactionSatisfied;
+                return (
+                  <button
+                    onClick={nextStep}
+                    disabled={blocked}
+                    className={`flex-[2] flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 active:scale-95 ${
+                      blocked
+                        ? "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"
+                        : isLastStep
+                          ? "bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-white border border-green-500/30 shadow-lg shadow-green-500/20 hover:brightness-110"
+                          : "bg-gradient-to-r from-purple-600/80 to-violet-600/80 text-white border border-purple-500/30 shadow-lg shadow-purple-500/20 hover:brightness-110"
+                    }`}
+                  >
+                    {isLastStep ? (
+                      <><CheckCircle2 size={14} /> Done!</>
+                    ) : (
+                      <>Next <ChevronRight size={15} /></>
+                    )}
+                  </button>
+                );
+              })()}
             </div>
 
 
