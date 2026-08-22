@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Loader2, Plus, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from '@/lib/config'
-import './buy-drops.css'
+import '@/app/dashboard/buy-drops/buy-drops.css'
 
 function DropCoinIcon({ className = "" }: { className?: string }) {
   return (
