@@ -8,7 +8,6 @@ import { Car, Wallet, User, MapPin, Gift, Search, Bell } from 'lucide-react'
 import { NavTab, OrbitalNav } from '@/components/shared/OrbitalNav'
 import { SignOutButton } from '@/components/sign-out-button'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { useGuide } from '@/hooks/useGuide'
 const riderTabs: NavTab[] = [
   { id: 'book', label: 'Book', icon: Search, href: '/book', matchPrefix: true },
   { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard' },
@@ -40,13 +39,6 @@ export function GlobalAuthenticatedNav() {
     }
   }, [status, session?.user, pathname])
 
-  const { checkAndStartGuide } = useGuide()
-
-  useEffect(() => {
-    if (status === 'authenticated' && session?.user && pathname !== '/' && !pathname.startsWith('/auth')) {
-      checkAndStartGuide('welcome')
-    }
-  }, [status, session?.user, pathname, checkAndStartGuide])
 
   if (status !== 'authenticated' || !session?.user) return null
 

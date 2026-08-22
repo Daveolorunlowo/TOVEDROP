@@ -7,7 +7,6 @@ import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath'
 import { TripPoller } from '@/components/trip-poller'
 import { DashboardTabs } from '@/components/dashboard/Tabs'
 import { Suspense } from 'react'
-import { GuideTrigger } from '@/components/guide/GuideTrigger'
 
 // Tab Components (to be created)
 import { OverviewTab } from '@/components/dashboard/OverviewTab'
@@ -82,7 +81,6 @@ export default async function DashboardPage(props: { searchParams: Promise<{ tab
           </div>
         </div>
 
-        <GuideTrigger pageKey="rider-dashboard" />
 
         {/* ── Tabs Navigation ── */}
         <DashboardTabs />
