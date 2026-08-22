@@ -776,7 +776,7 @@ export default function AdminPage() {
                         </thead>
                         <tbody className="divide-y divide-white/5">
                           {financesData.drivers.list.map((d: any, i: number) => (
-                            <tr key={d.id} className="cursor-pointer hover:bg-white/5 transition-colors group" onClick={() => router.push(`/admin/drivers/${d.id}`)}>
+                            <tr key={d.id} className="hover:bg-white/5 transition-colors group">
                               <td className="px-5 py-4 text-sm font-medium text-foreground group-hover:text-orange-brand transition-colors">{d.name}</td>
                               <td className="px-5 py-4"><StatusChip status={d.status} /></td>
                               <td className="px-5 py-4 text-sm text-right font-bold text-orange-400">₦{d.walletBalance.toLocaleString()}</td>
