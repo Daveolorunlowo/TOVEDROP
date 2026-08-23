@@ -55,7 +55,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ tab
                 Drops Balance
               </p>
               <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-extrabold text-orange-brand tracking-tight">{user.dropsBalance}</span>
+                <span className="text-4xl font-extrabold text-primary tracking-tight">{user.dropsBalance}</span>
                 <span className="text-sm font-medium text-muted-foreground">Drops available</span>
               </div>
             </div>
@@ -71,8 +71,7 @@ export default async function DashboardPage(props: { searchParams: Promise<{ tab
               ) : (
                 <Link 
                   href="/dashboard/buy-drops" 
-                  className="flex w-full sm:w-auto items-center justify-center py-2.5 px-5 rounded-lg text-xs font-bold transition-all hover:bg-orange-brand/10 border border-orange-brand/20" 
-                  style={{ color: 'var(--orange-brand)' }}
+                  className="flex w-full sm:w-auto items-center justify-center py-2.5 px-5 rounded-lg text-xs font-bold transition-all hover:bg-primary/10 border border-primary/20 text-primary"
                 >
                   Get More Drops
                 </Link>

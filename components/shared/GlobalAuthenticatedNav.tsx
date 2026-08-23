@@ -64,11 +64,11 @@ export function GlobalAuthenticatedNav() {
           style={{ letterSpacing: '-0.02em' }}
         >
           <span className="text-foreground">TOVE</span>
-          <span className="text-orange-brand">DROP</span>
+          <span className="text-primary">DROP</span>
         </Link>
         <div className="flex items-center gap-3 pointer-events-auto">
           <ThemeToggle />
-          <Link id="guide-nav-profile" href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center hover:border-orange-brand/50 transition-colors">
+          <Link id="guide-nav-profile" href={isDriver ? '/driver/settings' : '/dashboard/settings'} className="w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center hover:border-primary/50 transition-colors">
             <User className="w-4 h-4 text-muted-foreground" />
           </Link>
           <SignOutButton

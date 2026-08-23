@@ -69,7 +69,7 @@ export function DashboardTabs({
             onClick={() => setTab(tab.id)}
             className={`flex items-center gap-2 pb-3 px-1 border-b-2 transition-colors whitespace-nowrap text-sm font-medium ${
               isActive
-                ? 'border-orange-brand text-foreground'
+                ? 'border-primary text-foreground'
                 : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
             }`}
           >

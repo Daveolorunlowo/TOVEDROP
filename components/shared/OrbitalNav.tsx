@@ -130,7 +130,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
         {/* Orbital Guide Ring */}
         <div 
           className={cn(
-            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-purple-500/15 border-dashed pointer-events-none transition-all duration-500",
+            "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/15 border-dashed pointer-events-none transition-all duration-500",
             isOpen ? "opacity-100" : "opacity-0 scale-50"
           )}
           style={{ width: radius * 2, height: radius * 2 }}
@@ -155,9 +155,9 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
               data-node-index={index}
               onClick={() => setIsOpen(false)}
               className={cn(
-                "absolute top-1/2 left-1/2 flex items-center justify-center w-12 h-12 -mt-6 -ml-6 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-purple-400 bg-card border hover:bg-[#2a2a2a] transition-colors",
+                "absolute top-1/2 left-1/2 flex items-center justify-center w-12 h-12 -mt-6 -ml-6 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card border hover:bg-[#2a2a2a] transition-colors",
                 isOpen ? "pointer-events-auto" : "pointer-events-none",
-                isActive ? "border-purple-500 shadow-[0_0_12px_rgba(139,92,246,0.3)]" : "border-border"
+                isActive ? "border-primary shadow-[0_0_12px_rgba(34,197,94,0.3)]" : "border-border"
               )}
               style={{
                 transform: isOpen ? `translate(${x}px, ${y}px) scale(1)` : `translate(0px, 0px) scale(0.3)`,
@@ -170,15 +170,15 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
               aria-current={isActive ? 'page' : undefined}
             >
               <tab.icon 
-                className={cn("w-5 h-5", isActive ? "text-purple-400" : "text-foreground")} 
+                className={cn("w-5 h-5", isActive ? "text-primary" : "text-foreground")} 
                 strokeWidth={isActive ? 2.5 : 2} 
               />
               
               {/* Node Notification Badge */}
               {(tab.hasNotification || (tab.id === 'updates' && unreadCount > 0)) && (
                 <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-orange-brand border-2 border-[#1e1e1e]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/70 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-primary border-2 border-[#1e1e1e]"></span>
                 </span>
               )}
             </Link>
@@ -190,13 +190,11 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
             "relative flex items-center justify-center w-[60px] h-[60px] rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] z-10",
-            "bg-[var(--gradient-purple)] shadow-[0_0_24px_rgba(139,92,246,0.4)]",
+            "bg-primary shadow-[0_0_24px_rgba(34,197,94,0.4)]",
             "active:scale-95 transition-transform duration-300"
           )}
           style={{
             transform: isOpen ? 'rotate(135deg) scale(0.92)' : 'rotate(0deg) scale(1)',
-            // Fallback for CSS variable if not defined globally
-            backgroundImage: 'var(--gradient-purple, linear-gradient(135deg, #a855f7, #7e22ce))'
           }}
           aria-expanded={isOpen}
           aria-label={isOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -215,8 +213,8 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
           {/* Hub Notification Badge (hidden when open) */}
           {!isOpen && hasAnyNotification && (
             <span className="absolute top-0 right-0 flex h-4 w-4">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-              <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-orange-brand border-2 border-[#111] text-[9px] font-bold text-foreground">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/70 opacity-75"></span>
+              <span className="relative inline-flex items-center justify-center rounded-full h-4 w-4 bg-primary border-2 border-[#111] text-[9px] font-bold text-primary-foreground">
                 {unreadCount > 0 ? (unreadCount > 9 ? '9+' : unreadCount) : ''}
               </span>
             </span>
