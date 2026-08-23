@@ -48,24 +48,31 @@
 :root {
   color-scheme: light;
   /* TOVEDROP single source of truth brand tokens - LIGHT MODE */
-  --bg-deep: #FAFAFA;
+  --bg-deep: #F8F9FA;
   --surface-card: #FFFFFF;
-  --surface-elevated: #F4F4F5;
-  --border-subtle: rgba(0,0,0,0.08);
-  --border-default: rgba(0,0,0,0.12);
+  --surface-elevated: #F1F3F4;
+  --border-subtle: rgba(0,0,0,0.07);
+  --border-default: rgba(0,0,0,0.11);
   --text-primary: #0A0A0F;
-  --text-secondary: #52525B;
-  --text-muted: #A1A1AA;
+  --text-secondary: #3D3D4E;
+  --text-muted: #8A8A99;
   
-  --purple-brand: #8B5CF6;
-  --purple-light: #A78BFA;
+  /* Green brand (replaces purple) */
+  --green-brand: #22C55E;
+  --green-light: #4ADE80;
+  --green-dark: #16A34A;
+
+  /* Backward-compat aliases — all purple-brand refs now render green */
+  --purple-brand: var(--green-brand);
+  --purple-light: var(--green-light);
+
   --orange-brand: #F97316;
   --orange-dark: #EA6C0A;
   --status-success: #22C55E;
   --status-warning: #F97316;
   --status-danger: #EF4444;
   --status-neutral: #A1A1AA;
-  --status-info: #8B5CF6;
+  --status-info: #22C55E;
 
   /* Shadcn Baseline mapped to new tokens */
   --background: var(--bg-deep);
@@ -74,7 +81,7 @@
   --card-foreground: var(--text-primary);
   --popover: var(--surface-card);
   --popover-foreground: var(--text-primary);
-  --primary: var(--purple-brand);
+  --primary: var(--green-brand);
   --primary-foreground: #FFFFFF;
   --secondary: var(--surface-elevated);
   --secondary-foreground: var(--text-primary);
@@ -85,31 +92,43 @@
   --destructive: var(--status-danger);
   --border: var(--border-default);
   --input: var(--border-subtle);
-  --ring: var(--purple-brand);
+  --ring: var(--green-brand);
   --radius: 0.75rem;
 
   --sidebar: var(--surface-card);
   --sidebar-foreground: var(--text-primary);
-  --sidebar-primary: var(--purple-brand);
+  --sidebar-primary: var(--green-brand);
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: var(--border-subtle);
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border-default);
-  --sidebar-ring: var(--purple-brand);
+  --sidebar-ring: var(--green-brand);
 }
 
 .dark {
   color-scheme: dark;
   /* TOVEDROP single source of truth brand tokens - DARK MODE */
-  --bg-deep: #0A0A0F;
-  --surface-card: #131318;
-  --surface-elevated: #1A1A21;
-  --border-subtle: rgba(255,255,255,0.08);
-  --border-default: rgba(255,255,255,0.12);
+  --bg-deep: #000000;
+  --surface-card: #0D0D0D;
+  --surface-elevated: #141414;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-default: rgba(255,255,255,0.1);
   --text-primary: #FFFFFF;
   --text-secondary: #A1A1AA;
-  --text-muted: #6B6B76;
-  --status-neutral: #6B6B76;
+  --text-muted: #5A5A6B;
+  --status-neutral: #5A5A6B;
+
+  /* Deepen green in dark mode for better contrast */
+  --green-brand: #22C55E;
+  --green-light: #4ADE80;
+  --green-dark: #16A34A;
+  --purple-brand: var(--green-brand);
+  --purple-light: var(--green-light);
+  --primary: var(--green-brand);
+  --ring: var(--green-brand);
+  --sidebar-primary: var(--green-brand);
+  --sidebar-ring: var(--green-brand);
+  --status-info: var(--green-brand);
 }
 
 @layer base {
@@ -217,9 +236,9 @@
   .admin-mesh-bg {
     background-color: var(--bg-deep);
     background-image: 
-      radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 0%, rgba(34, 197, 94, 0.18) 0px, transparent 50%),
       radial-gradient(at 100% 0%, rgba(249, 115, 22, 0.1) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(34, 197, 94, 0.1) 0px, transparent 50%),
       radial-gradient(at 0% 100%, rgba(249, 115, 22, 0.05) 0px, transparent 50%);
     background-attachment: fixed;
   }

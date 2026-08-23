@@ -754,7 +754,7 @@ function StatsSection() {
               </p>
             </div>
             <div className="flex -space-x-2 mt-3">
-              {['var(--orange-brand)','#3B82F6','var(--purple-brand)','var(--orange-brand)','#8B5CF6'].map((c, j) => (
+              {['var(--orange-brand)','#3B82F6','var(--green-brand)','var(--orange-brand)','#22C55E'].map((c, j) => (
                 <div key={j} className="w-7 h-7 rounded-full border-2 border-[#0E0E24] flex items-center justify-center text-foreground text-[9px] font-bold shrink-0" style={{ background: c }}>
                   {String.fromCharCode(65 + j)}
                 </div>

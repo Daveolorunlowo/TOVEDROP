@@ -16,8 +16,14 @@ const config: Config = {
         'text-primary': 'var(--text-primary)',
         'text-secondary': 'var(--text-secondary)',
         'text-muted': 'var(--text-muted)',
+        // Green brand (primary accent)
+        'green-brand': 'var(--green-brand)',
+        'green-light': 'var(--green-light)',
+        'green-dark': 'var(--green-dark)',
+        // Backward-compat: purple-brand now resolves to green
         'purple-brand': 'var(--purple-brand)',
         'purple-light': 'var(--purple-light)',
+        // Warm secondary
         'orange-brand': 'var(--orange-brand)',
         'orange-dark': 'var(--orange-dark)',
         'status-success': 'var(--status-success)',
