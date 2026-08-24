@@ -52,7 +52,7 @@ function StatusChip({ status }: { status: string }) {
   const s = map[status.toLowerCase()] ?? { label: status, color: 'var(--muted-foreground)', bg: 'var(--border)' }
   return (
     <span
-      className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
+      className="text-[10px] font-semibold tracking-wide px-1.5 py-0.5"
       style={{ background: s.bg, color: s.color, borderRadius: '4px' }}
     >
       {s.label}
@@ -75,7 +75,7 @@ function CheckRow({ done, label, detail }: { done: boolean; label: string; detai
         </span>
         <p className="text-xs font-medium" style={{ color: done ? '#888' : '#555' }}>{label}</p>
       </div>
-      <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: done ? '#22c55e' : '#444' }}>
+      <p className="text-[10px] font-semibold tracking-wide" style={{ color: done ? '#22c55e' : '#444' }}>
         {detail}
       </p>
     </div>
@@ -308,13 +308,13 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
   const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
   return (
-    <div className="flex min-h-screen admin-mesh-bg text-foreground">
+    <div className="flex min-h-screen bg-background text-foreground">
       <CommandPalette activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {/* ── Sidebar ── */}
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:z-auto transition-transform duration-200 lg:translate-x-0 glass-panel',
+          'fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:z-auto transition-transform duration-200 lg:translate-x-0 bg-card border-b border-border shadow-sm',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         style={{ width: '210px', borderRight: '1px solid rgba(255,255,255,0.05)' }}
@@ -331,7 +331,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
         {/* Nav label */}
         <div className="px-5 pt-5 pb-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: 'var(--muted-foreground)' }}>
+          <p className="text-[10px] font-semibold tracking-wide" style={{ color: 'var(--muted-foreground)' }}>
             Admin
           </p>
         </div>
@@ -384,7 +384,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
         {/* Topbar */}
         <header
-          className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12 glass-panel"
+          className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12 bg-card border-b border-border shadow-sm"
           style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', borderRadius: '0' }}
         >
           <button className="lg:hidden" onClick={() => setSidebarOpen(true)} style={{ color: 'var(--muted-foreground)' }}>
@@ -401,11 +401,11 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
             <div>
               <SkeletonStatCard />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="rounded-lg bg-surface-card border border-border-default p-4">
+                <div className="rounded-lg bg-card border border-border p-4">
                   <Skeleton width={120} height={12} className="mb-4" />
                   {Array.from({ length: 4 }).map((_, i) => <SkeletonTableRow key={i} />)}
                 </div>
-                <div className="rounded-lg bg-surface-card border border-border-default p-4">
+                <div className="rounded-lg bg-card border border-border p-4">
                   <Skeleton width={120} height={12} className="mb-4" />
                   {Array.from({ length: 4 }).map((_, i) => <SkeletonTableRow key={i} />)}
                 </div>
@@ -421,7 +421,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
               transition={{ duration: 0.5 }}
               className="space-y-6"
             >
-              {/* Grouped stats card with glassmorphism */}
+              {/* Grouped stats card */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
                   { label: 'Total Riders',       value: stats.totalUsers },
@@ -434,10 +434,9 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.1, duration: 0.4 }}
-                    className="relative overflow-hidden rounded-xl p-5 glass-card group cursor-default"
+                    className="relative overflow-hidden rounded-xl p-5 bg-card border border-border"
                   >
-                    <div className="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 rounded-full bg-orange-brand/10 blur-2xl group-hover:bg-orange-brand/20 transition-all duration-500" />
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-muted-foreground group-hover:text-muted-foreground transition-colors">
+                    <p className="text-[11px] font-semibold mb-2 text-muted-foreground transition-colors">
                       {s.label}
                     </p>
                     <p
@@ -455,10 +454,10 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-red-950/20 border border-red-500/20 rounded-xl p-4 flex items-center justify-between shadow-lg"
+                className="bg-card border border-red-500/20 rounded-xl p-4 flex items-center justify-between shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-500/20 rounded-lg">
+                  <div className="p-2 bg-red-500/10 rounded-lg">
                     <ShieldAlert className="w-5 h-5 text-red-400" />
                   </div>
                   <div>
@@ -479,10 +478,10 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.25 }}
-                className="bg-blue-950/20 border border-blue-500/20 rounded-xl p-4 flex items-center justify-between shadow-lg"
+                className="bg-card border border-blue-500/20 rounded-xl p-4 flex items-center justify-between shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-500/20 rounded-lg">
+                  <div className="p-2 bg-blue-500/10 rounded-lg">
                     <Bell className="w-5 h-5 text-blue-400" />
                   </div>
                   <div>
@@ -507,10 +506,9 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3, duration: 0.5 }}
-                  className="lg:col-span-2 rounded-xl p-5 relative overflow-hidden glass-card neon-border"
+                  className="lg:col-span-2 rounded-xl p-5 bg-card border border-border"
                 >
-                  <div className="absolute top-0 left-1/4 w-1/2 h-40 bg-orange-brand/10 blur-[120px] pointer-events-none" />
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-6 text-muted-foreground">
+                  <p className="text-[11px] font-semibold mb-6 text-muted-foreground">
                     Platform Growth (Last 7 Days)
                   </p>
                   <div className="h-[220px] w-full relative z-10">
@@ -543,10 +541,10 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4, duration: 0.5 }}
-                  className="rounded-xl p-5 glass-card flex flex-col"
+                  className="rounded-xl p-5 bg-card border border-border flex flex-col"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground flex items-center gap-2">
+                    <p className="text-[11px] font-semibold text-muted-foreground flex items-center gap-2">
                       <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]" />
                       Live Activity
                     </p>
@@ -587,7 +585,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="lg:col-span-2 rounded-xl p-1 relative overflow-hidden glass-card neon-border h-[350px]"
+                  className="lg:col-span-2 rounded-xl p-1 bg-card border border-border h-[350px]"
                 >
                   <LiveMap />
                 </motion.div>
@@ -598,10 +596,10 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="rounded-xl p-5 glass-card flex flex-col"
+                    className="rounded-xl p-5 bg-card border border-border flex flex-col"
                   >
                     <div className="flex items-center justify-between mb-4 relative z-10">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
+                      <p className="text-[11px] font-semibold text-muted-foreground">
                         Pending Approvals
                       </p>
                       <button
@@ -613,7 +611,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                     </div>
                     <div className="flex-1 overflow-y-auto space-y-3 relative z-10 pr-2">
                       {pendingDrivers.map((d: any) => (
-                        <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-background/20 border border-white/5 hover:border-orange-brand/30 transition-colors group cursor-pointer" onClick={() => setActiveTab('approvals')}>
+                        <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-background/20 border border-border transition-colors group cursor-pointer" onClick={() => setActiveTab('approvals')}>
                           <Avatar className="w-8 h-8 shrink-0">
                             <AvatarFallback className="text-[10px] font-bold bg-white/10 text-[#fff]">
                               {initials(d.user.name)}
@@ -633,11 +631,11 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
-                    className="rounded-xl p-5 glass-card flex items-center justify-center text-center"
+                    className="rounded-xl p-5 bg-card border border-border flex items-center justify-center text-center"
                   >
                     <div>
                       <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2 opacity-50" />
-                      <p className="text-xs text-gray-500 uppercase font-semibold tracking-wider">All Caught Up</p>
+                      <p className="text-xs text-gray-500 font-semibold">All Caught Up</p>
                       <p className="text-[10px] text-gray-600 mt-1">No pending driver approvals</p>
                     </div>
                   </motion.div>
@@ -654,7 +652,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
               transition={{ duration: 0.5 }}
               className="space-y-10"
             >
-              <div className="flex items-center justify-between glass-card p-4 rounded-xl mb-6 neon-border">
+              <div className="flex items-center justify-between bg-card p-4 rounded-xl mb-6 border border-border">
                 <div>
                   <p className="text-sm font-bold text-foreground tracking-wide">Financial Command Center</p>
                   <p className="text-[11px] text-gray-400 mt-1">Real-time overview of platform revenue, liabilities, and payouts.</p>
@@ -662,7 +660,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                 <button
                   onClick={exportFinancesCSV}
                   disabled={!financesData || financesLoading}
-                  className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-white/10 disabled:opacity-50 glass-panel border border-white/10 text-foreground"
+                  className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-white/10 disabled:opacity-50 bg-card border border-border text-foreground"
                 >
                   <FileText className="w-3.5 h-3.5 text-orange-brand" />
                   Export CSV Report
@@ -680,7 +678,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   {/* Section 1: Company Position */}
                   <section>
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                      <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400">
                         <TrendingUp className="w-5 h-5" />
                       </div>
                       <h2 className="text-lg font-bold text-foreground tracking-tight">Platform Position</h2>
@@ -688,37 +686,36 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
                       {[
-                        { label: 'Total Cash Collected', value: `₦${financesData.company.totalCashCollected.toLocaleString()}`, sub: 'All-Time via Paystack', color: 'from-purple-500 to-indigo-500', glow: 'shadow-purple-500/20' },
-                        { label: 'Recognized Revenue', value: `₦${financesData.company.recognizedRevenue.toLocaleString()}`, sub: 'All-Time Earned Profit', color: 'from-green-500 to-emerald-500', glow: 'shadow-green-500/20' },
-                        { label: 'Outstanding Liability', value: `₦${financesData.company.outstandingLiability.toLocaleString()}`, sub: 'Unredeemed Rider Drops', color: 'from-orange-500 to-red-500', glow: 'shadow-orange-500/20' },
-                        { label: 'Total Driver Payouts', value: `₦${financesData.company.totalDriverPayouts.toLocaleString()}`, sub: 'All-Time Committed', color: 'from-blue-500 to-cyan-500', glow: 'shadow-blue-500/20' },
+                        { label: 'Total Cash Collected', value: `₦${financesData.company.totalCashCollected.toLocaleString()}`, sub: 'All-Time via Paystack' },
+                        { label: 'Recognized Revenue', value: `₦${financesData.company.recognizedRevenue.toLocaleString()}`, sub: 'All-Time Earned Profit' },
+                        { label: 'Outstanding Liability', value: `₦${financesData.company.outstandingLiability.toLocaleString()}`, sub: 'Unredeemed Rider Drops' },
+                        { label: 'Total Driver Payouts', value: `₦${financesData.company.totalDriverPayouts.toLocaleString()}`, sub: 'All-Time Committed' },
                       ].map((stat, i) => (
                         <motion.div 
                           key={stat.label}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: i * 0.1 }}
-                          className={`glass-card p-5 rounded-xl relative overflow-hidden group hover:border-white/20 transition-all ${stat.glow}`}
+                          className="bg-card p-5 rounded-xl border border-border"
                         >
-                          <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${stat.color} opacity-10 blur-2xl group-hover:opacity-20 transition-opacity`} />
-                          <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-2 relative z-10">{stat.label}</p>
-                          <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight relative z-10">{stat.value}</p>
-                          <p className="text-[10px] text-gray-500 mt-2 relative z-10">{stat.sub}</p>
+                          <p className="text-[10px] font-semibold text-gray-400 mb-2">{stat.label}</p>
+                          <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">{stat.value}</p>
+                          <p className="text-[10px] text-gray-500 mt-2">{stat.sub}</p>
                         </motion.div>
                       ))}
                     </div>
 
-                    <div className="glass-card rounded-xl overflow-x-auto border border-white/5 shadow-2xl">
+                    <div className="bg-card rounded-xl overflow-x-auto border border-border">
                       <table className="w-full text-left border-collapse min-w-[600px]">
-                        <thead className="bg-white/5 border-b border-white/10">
+                        <thead className="bg-white/5 border-b border-border">
                           <tr>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Period</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Cash Collected</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Recognized Revenue</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Driver Payouts</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Period</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Cash Collected</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Recognized Revenue</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Driver Payouts</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-border">
                           <tr className="hover:bg-white/5 transition-colors">
                             <td className="px-5 py-4 text-sm font-medium text-foreground">This Week</td>
                             <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisWeek.cashCollected.toLocaleString()}</td>
@@ -731,11 +728,11 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                             <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisMonth.recognizedRevenue.toLocaleString()}</td>
                             <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisMonth.driverPayouts.toLocaleString()}</td>
                           </tr>
-                          <tr className="bg-white/5 border-t-2 border-white/10">
-                            <td className="px-5 py-4 text-sm font-bold text-foreground uppercase tracking-wider">All-Time</td>
+                          <tr className="bg-white/5 border-t-2 border-border">
+                            <td className="px-5 py-4 text-sm font-bold text-foreground tracking-wider">All-Time</td>
                             <td className="px-5 py-4 text-sm text-right font-bold text-foreground">₦{financesData.company.totalCashCollected.toLocaleString()}</td>
-                            <td className="px-5 py-4 text-sm text-right font-bold text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.5)]">+₦{financesData.company.recognizedRevenue.toLocaleString()}</td>
-                            <td className="px-5 py-4 text-sm text-right font-bold text-red-400 drop-shadow-[0_0_8px_rgba(248,113,113,0.5)]">-₦{financesData.company.totalDriverPayouts.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-bold text-green-400">+₦{financesData.company.recognizedRevenue.toLocaleString()}</td>
+                            <td className="px-5 py-4 text-sm text-right font-bold text-red-400">-₦{financesData.company.totalDriverPayouts.toLocaleString()}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -745,36 +742,36 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   {/* Section 2: Drivers */}
                   <section>
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-2 rounded-lg bg-orange-brand/20 text-orange-brand shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                      <div className="p-2 rounded-lg bg-orange-brand/20 text-orange-brand">
                         <Car className="w-5 h-5" />
                       </div>
                       <h2 className="text-lg font-bold text-foreground tracking-tight">Driver Balances</h2>
                     </div>
 
-                    <div className="glass-card rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center gap-6">
+                    <div className="bg-card rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-center gap-6 border border-border">
                       <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-orange-400 mb-1">Total Outstanding Driver Balances</p>
+                        <p className="text-[10px] font-semibold text-orange-400 mb-1">Total Outstanding Driver Balances</p>
                         <p className="text-3xl font-bold text-foreground tabular-nums tracking-tight">₦{financesData.drivers.totalBalances.toLocaleString()}</p>
                       </div>
-                      <div className="h-10 w-px bg-white/10 hidden sm:block"></div>
+                      <div className="h-10 w-px bg-border hidden sm:block"></div>
                       <p className="text-xs text-gray-400 max-w-xs leading-relaxed">
                         This is the sum of all driver wallet balances that have not yet been paid out via Paystack transfers.
                       </p>
                     </div>
                     
-                    <div className="glass-card rounded-xl overflow-x-auto border border-white/5 shadow-2xl">
+                    <div className="bg-card rounded-xl overflow-x-auto border border-border">
                       <table className="w-full text-left border-collapse min-w-[700px]">
-                        <thead className="bg-white/5 border-b border-white/10">
+                        <thead className="bg-white/5 border-b border-border">
                           <tr>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Driver Name</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Status</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Wallet Balance</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Total Trips</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Avg ₦/Trip</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Last Payout</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Driver Name</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Status</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Wallet Balance</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Total Trips</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Avg ₦/Trip</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Last Payout</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-border">
                           {financesData.drivers.list.map((d: any, i: number) => (
                             <tr key={d.id} className="hover:bg-white/5 transition-colors group">
                               <td className="px-5 py-4 text-sm font-medium text-foreground group-hover:text-orange-brand transition-colors">{d.name}</td>
@@ -798,39 +795,39 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   {/* Section 3: Riders */}
                   <section>
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                      <div className="p-2 rounded-lg bg-blue-500/20 text-blue-400">
                         <Users className="w-5 h-5" />
                       </div>
                       <h2 className="text-lg font-bold text-foreground tracking-tight">Rider Drops Economy</h2>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
-                      <div className="glass-card rounded-xl p-5 border border-blue-500/20 hover:border-blue-500/40 transition-colors">
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-blue-400 mb-1">Total Drops in Circulation</p>
+                      <div className="bg-card rounded-xl p-5 border border-blue-500/20">
+                        <p className="text-[10px] font-semibold text-blue-400 mb-1">Total Drops in Circulation</p>
                         <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">{financesData.riders.totalDrops.toLocaleString()} <span className="text-sm font-medium text-gray-500">drops</span></p>
                       </div>
-                      <div className="glass-card rounded-xl p-5">
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Est. Naira Value of Drops</p>
+                      <div className="bg-card rounded-xl p-5 border border-border">
+                        <p className="text-[10px] font-semibold text-gray-400 mb-1">Est. Naira Value of Drops</p>
                         <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">₦{financesData.riders.totalNairaValue.toLocaleString()}</p>
                       </div>
-                      <div className="glass-card rounded-xl p-5">
-                        <p className="text-[10px] font-semibold uppercase tracking-wider text-gray-400 mb-1">Avg Drops / Active Rider</p>
+                      <div className="bg-card rounded-xl p-5 border border-border">
+                        <p className="text-[10px] font-semibold text-gray-400 mb-1">Avg Drops / Active Rider</p>
                         <p className="text-2xl font-bold text-foreground tabular-nums tracking-tight">{financesData.riders.avgDropsPerRider.toFixed(1)} <span className="text-sm font-medium text-gray-500">drops</span></p>
                       </div>
                     </div>
 
-                    <div className="glass-card rounded-xl overflow-x-auto border border-white/5 shadow-2xl">
+                    <div className="bg-card rounded-xl overflow-x-auto border border-border">
                       <table className="w-full text-left border-collapse min-w-[600px]">
-                        <thead className="bg-white/5 border-b border-white/10">
+                        <thead className="bg-white/5 border-b border-border">
                           <tr>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Rider Name</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Email</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Drops Balance</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Est. Naira Value</th>
-                            <th className="px-5 py-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 text-right">Total Trips</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Rider Name</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Email</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Drops Balance</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Est. Naira Value</th>
+                            <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Total Trips</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/5">
+                        <tbody className="divide-y divide-border">
                           {financesData.riders.list.map((r: any) => (
                             <tr key={r.id} className="hover:bg-white/5 transition-colors">
                               <td className="px-5 py-4 text-sm font-medium text-foreground">{r.name}</td>
@@ -858,7 +855,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
           {/* ── Revenue Split Settings ── */}
           {!loading && activeTab === 'revenue_split' && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
+              <p className="text-[11px] font-semibold mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Revenue Split Configuration
               </p>
               
@@ -872,7 +869,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
                   <div className="space-y-4 max-w-md">
                     <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Admin Percentage (%)</label>
+                      <label className="block text-[11px] font-semibold mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Admin Percentage (%)</label>
                       <input 
                         type="number"
                         min="0" max="100"
@@ -883,7 +880,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                       />
                     </div>
                     <div>
-                      <label className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Company (Platform) Percentage (%)</label>
+                      <label className="block text-[11px] font-semibold mb-1.5" style={{ color: 'var(--muted-foreground)' }}>Company (Platform) Percentage (%)</label>
                       <input 
                         type="number"
                         min="0" max="100"
@@ -931,7 +928,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   </div>
                 </div>
               )}
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
+              <p className="text-[11px] font-semibold mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Driver Approvals · {pendingDrivers.length} pending
               </p>
 
@@ -971,7 +968,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                       </div>
 
                       {/* Verification checklist */}
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-2" style={{ color: 'var(--muted-foreground)' }}>
+                      <p className="text-[10px] font-semibold mb-2" style={{ color: 'var(--muted-foreground)' }}>
                         Verification
                       </p>
                       <CheckRow done label="Name & Contact" detail={driver.user.name} />
@@ -1008,7 +1005,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
           {/* ── Payouts ── */}
           {!loading && activeTab === 'payouts' && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
+              <p className="text-[11px] font-semibold mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Pending Payouts · {pendingPayouts.length}
               </p>
 
@@ -1079,7 +1076,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
           {/* ── Reports / Suspended ── */}
           {!loading && activeTab === 'reports' && (
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: 'var(--muted-foreground)' }}>
+              <p className="text-[11px] font-semibold mb-5" style={{ color: 'var(--muted-foreground)' }}>
                 Suspended Drivers · {suspendedDrivers.length}
               </p>
 
@@ -1140,7 +1137,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                   <p className="text-sm text-[#555]">No feedback received yet.</p>
                 ) : (
                   data.feedbacks.map((fb: any) => (
-                    <div key={fb.id} className="bg-background border border-border rounded-xl p-5 shadow-sm">
+                    <div key={fb.id} className="bg-card border border-border rounded-xl p-5 shadow-sm">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <p className="text-sm font-medium text-[#f5f5f5]">{fb.user?.name || 'Anonymous'}</p>
@@ -1150,7 +1147,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                       </div>
                       <div className="mb-4">
                         <span className={cn(
-                          "text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded border",
+                          "text-[10px] font-bold px-2 py-1 rounded border",
                           fb.type === 'ISSUE' ? "bg-red-500/10 text-red-500 border-red-500/20" : "bg-blue-500/10 text-blue-500 border-blue-500/20"
                         )}>
                           {fb.type}
@@ -1222,7 +1219,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                 <div className="min-w-[500px]">
                 {/* Table head */}
                 <div
-                  className="grid text-[10px] font-semibold uppercase tracking-[0.05em] px-4 py-2.5"
+                  className="grid text-[10px] font-semibold px-4 py-2.5"
                   style={{
                     gridTemplateColumns: '1fr 80px 100px 80px 100px',
                     borderBottom: '1px solid var(--border)',
@@ -1310,10 +1307,10 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
             <div>
               <div className="rounded-lg" style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '16px 20px' }}>
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>Admin Login Audit Log</p>
+                  <p className="text-[11px] font-semibold" style={{ color: 'var(--muted-foreground)' }}>Admin Login Audit Log</p>
                   <button
                     onClick={fetchSecurityLogs}
-                    className="text-[10px] font-semibold uppercase tracking-[0.05em] transition-opacity hover:opacity-100 opacity-50"
+                    className="text-[10px] font-semibold transition-opacity hover:opacity-100 opacity-50"
                     style={{ color: 'var(--orange-brand)' }}
                   >
                     Refresh
@@ -1332,7 +1329,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                       <thead>
                         <tr>
                           {['Time', 'Email', 'Result', 'IP Address', 'User Agent'].map(h => (
-                            <th key={h} className="text-[10px] font-semibold uppercase tracking-[0.05em] pb-3 pr-4" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>{h}</th>
+                            <th key={h} className="text-[10px] font-semibold pb-3 pr-4" style={{ color: 'var(--muted-foreground)', whiteSpace: 'nowrap' }}>{h}</th>
                           ))}
                         </tr>
                       </thead>
@@ -1345,7 +1342,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
                             <td className="py-2.5 pr-4 text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{log.email}</td>
                             <td className="py-2.5 pr-4">
                               <span
-                                className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5"
+                                className="text-[10px] font-bold px-1.5 py-0.5"
                                 style={{
                                   borderRadius: '4px',
                                   background: log.success ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)',

@@ -112,7 +112,7 @@ export function LiveMap() {
       </MapContainer>
 
       {/* Map Overlay Controls / Legends */}
-      <div className="absolute bottom-4 left-4 z-[400] glass-card px-3 py-2 rounded-lg text-[10px] uppercase font-bold tracking-wider flex flex-col gap-2 pointer-events-none">
+      <div className="absolute bottom-4 left-4 z-[400] bg-card border border-border shadow-sm px-3 py-2 rounded-lg text-[10px] font-medium flex flex-col gap-2 pointer-events-none">
         <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_#22c55e]"></span> Available Drivers</div>
         <div className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_#f97316]"></span> Active Trips</div>
       </div>

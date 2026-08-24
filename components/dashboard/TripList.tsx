@@ -47,7 +47,7 @@ function StatusChip({ status }: { status: string }) {
   const s = map[status] ?? { label: status, color: 'var(--muted-foreground)', bg: '#1e1e1e' }
   return (
     <span
-      className="inline-block text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
+      className="inline-block text-[10px] font-medium px-1.5 py-0.5"
       style={{ background: s.bg, color: s.color, borderRadius: '4px' }}
     >
       {s.label}
@@ -160,7 +160,7 @@ export function TripList({
       {/* Upcoming Trips */}
       <div className="lg:col-span-2">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
+          <p className="text-[11px] font-semibold" style={{ color: 'var(--muted-foreground)' }}>
             Upcoming Trips
           </p>
           {upcomingTrips.length > 0 && (
@@ -265,7 +265,7 @@ export function TripList({
                   <div className="px-4 pb-4 pt-1">
                     <div className="bg-background/40 rounded-lg border border-white/5 p-3">
                       <div className="flex items-center justify-between mb-2">
-                        <p className="text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 animate-pulse" style={{ color: 'var(--orange-brand)' }}>
+                        <p className="text-[10px] font-semibold flex items-center gap-1.5 animate-pulse" style={{ color: 'var(--orange-brand)' }}>
                           <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--orange-brand)' }}></span>
                           Pinging Nearby Drivers
                         </p>
@@ -324,7 +324,7 @@ export function TripList({
       {/* Trip History */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
+          <p className="text-[11px] font-semibold" style={{ color: 'var(--muted-foreground)' }}>
             Trip History
           </p>
           {pastTrips.length > 0 && (
@@ -405,7 +405,7 @@ export function TripList({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
           <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--foreground)' }}>Share Trip</p>
+              <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>Share Trip</p>
               <button onClick={() => { setShareModalOpen(null); setCopied(false); }} className="p-1" style={{ color: 'var(--muted-foreground)' }}>
                 <X className="w-4 h-4" />
               </button>

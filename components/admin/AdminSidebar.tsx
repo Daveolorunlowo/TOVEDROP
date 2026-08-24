@@ -25,7 +25,7 @@ export function AdminSidebar() {
       <div className="p-6 flex items-center justify-between">
         <div>
           <h2 className="text-xl font-extrabold text-orange-brand tracking-tight">TOVEDROP</h2>
-          <p className="text-[10px] uppercase tracking-widest text-muted-foreground mt-1">Admin Portal</p>
+          <p className="text-[10px] font-medium text-muted-foreground mt-1">Admin Portal</p>
         </div>
         <button className="md:hidden p-2 text-muted-foreground" onClick={() => setMobileOpen(false)}>
           <X className="w-5 h-5" />
@@ -47,7 +47,7 @@ export function AdminSidebar() {
                 {isActive && (
                   <motion.div 
                     layoutId="admin-sidebar-active"
-                    className="absolute inset-0 bg-gradient-to-r from-orange-brand/20 to-transparent border-l-2 border-orange-brand"
+                    className="absolute inset-0 bg-surface-elevated rounded-xl"
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -71,7 +71,7 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile Toggle */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-bg-deep/80 backdrop-blur-md border-b border-border-default z-40 flex items-center justify-between px-4">
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-background border-b border-border-default z-40 flex items-center justify-between px-4">
         <h2 className="text-lg font-bold text-orange-brand">Admin Portal</h2>
         <button onClick={() => setMobileOpen(true)} className="p-2 text-foreground">
           <Menu className="w-6 h-6" />

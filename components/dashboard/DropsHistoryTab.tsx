@@ -55,7 +55,7 @@ export async function DropsHistoryTab({
             <a
               key={f}
               href={`?tab=history&filter=${f}`}
-              className={`text-[11px] font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full transition-colors ${
+              className={`text-[11px] font-medium px-3 py-1.5 rounded-full transition-colors ${
                 isActive 
                   ? 'bg-orange-brand text-primary-foreground' 
                   : 'bg-surface-elevated text-muted-foreground hover:bg-white/5 border border-border-subtle'

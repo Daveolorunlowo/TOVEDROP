@@ -167,7 +167,7 @@ export function BuyDropsClient({
       {/* Live Balance Card */}
       <div className={`mb-10 p-5 rounded-2xl bg-surface-card border transition-colors duration-600 ${showCelebration ? 'border-orange-brand/50' : 'border-border-default'} flex items-center justify-between shadow-sm`}>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted mb-1">Current Balance</p>
+          <p className="text-xs font-semibold text-muted mb-1">Current Balance</p>
           <div className="flex items-center gap-3">
             <DropCoinIcon className="w-8 h-8" />
             <span className="text-3xl font-bold tabular-nums tracking-tight">{animatedBalance}</span>
@@ -198,14 +198,14 @@ export function BuyDropsClient({
               >
                 {/* Popular Badge */}
                 {pkg.badge && (
-                  <div className="absolute top-0 right-0 bg-purple-brand/20 text-purple-light text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-bl-lg">
+                  <div className="absolute top-0 right-0 bg-purple-brand/20 text-purple-light text-[10px] font-bold px-3 py-1 rounded-bl-lg">
                     {pkg.badge}
                   </div>
                 )}
 
                 {/* First Time Badge */}
                 {isFirstTime && (
-                  <div className="absolute top-2 left-2 bg-green-500 text-white text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
+                  <div className="absolute top-2 left-2 bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-sm">
                     First Time - {(FIRST_PURCHASE_DISCOUNT_PERCENTAGE * 100)}% OFF
                   </div>
                 )}

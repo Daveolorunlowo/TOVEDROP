@@ -25,7 +25,7 @@ export function CommandPalette({ activeTab, setActiveTab }: { activeTab: string,
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh] bg-background/60 backdrop-blur-sm" onClick={() => setOpen(false)}>
       <div 
-        className="w-full max-w-lg rounded-xl overflow-hidden glass-card neon-border shadow-2xl"
+        className="w-full max-w-lg rounded-xl overflow-hidden bg-card border border-border shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <Command className="flex flex-col bg-transparent w-full h-full text-foreground" label="Command Menu">

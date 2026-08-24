@@ -29,7 +29,7 @@ export function ShareTripButton({ shareToken }: { shareToken: string }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.8)' }}>
           <div className="w-full max-w-sm rounded-xl overflow-hidden" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
             <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid var(--border)' }}>
-              <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--foreground)' }}>Share Trip</p>
+              <p className="text-xs font-medium" style={{ color: 'var(--foreground)' }}>Share Trip</p>
               <button onClick={() => { setOpen(false); setCopied(false); }} className="p-1" style={{ color: 'var(--muted-foreground)' }}>
                 <X className="w-4 h-4" />
               </button>

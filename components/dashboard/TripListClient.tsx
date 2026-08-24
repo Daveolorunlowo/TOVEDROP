@@ -47,7 +47,7 @@ function StatusChip({ status }: { status: string }) {
   const s = map[status] ?? { label: status, color: 'var(--muted-foreground)', bg: '#1e1e1e' }
   return (
     <span
-      className="inline-block text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
+      className="inline-block text-[10px] font-medium px-1.5 py-0.5"
       style={{ background: s.bg, color: s.color, borderRadius: '4px' }}
     >
       {s.label}
@@ -259,7 +259,7 @@ export function TripListClient({
                 <div className="px-4 pb-4 pt-0">
                   <div className="bg-surface-elevated rounded-lg border border-border-subtle p-3">
                     <div className="flex items-center justify-between mb-2">
-                      <p className="text-[10px] uppercase font-bold tracking-wider flex items-center gap-1.5 animate-pulse text-orange-brand">
+                      <p className="text-[10px] font-semibold flex items-center gap-1.5 animate-pulse text-orange-brand">
                         <span className="w-1.5 h-1.5 rounded-full bg-orange-brand"></span>
                         Pinging Nearby Drivers
                       </p>
@@ -314,7 +314,7 @@ export function TripListClient({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
           <div className="w-full max-w-sm rounded-xl overflow-hidden bg-card border border-border shadow-2xl">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <p className="text-xs font-semibold uppercase tracking-wider text-foreground">Share Trip</p>
+              <p className="text-xs font-semibold text-foreground">Share Trip</p>
               <button onClick={() => { setShareModalOpen(null); setCopied(false); }} className="p-1 text-muted-foreground hover:text-foreground transition-colors">
                 <X className="w-4 h-4" />
               </button>

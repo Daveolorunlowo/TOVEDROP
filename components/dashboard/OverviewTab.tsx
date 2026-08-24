@@ -54,11 +54,11 @@ export async function OverviewTab({ userId }: { userId: string }) {
       {/* Quick Stats */}
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-surface-elevated border border-border rounded-xl p-4 flex flex-col justify-center">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total Rides</p>
+          <p className="text-[11px] font-medium text-muted-foreground mb-1">Total Rides</p>
           <p className="text-2xl font-bold text-foreground">{tripsTaken}</p>
         </div>
         <div className="bg-surface-elevated border border-border rounded-xl p-4 flex flex-col justify-center">
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Status</p>
+          <p className="text-[11px] font-medium text-muted-foreground mb-1">Status</p>
           <p className="text-sm font-medium text-green-500">Active Rider</p>
         </div>
       </div>
@@ -105,7 +105,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-primary mt-0.5" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Pickup</p>
+                  <p className="text-[10px] font-semibold text-muted-foreground">Pickup</p>
                   <p className="text-sm font-medium text-foreground">{nextTrip.pickup}</p>
                 </div>
               </div>
@@ -113,7 +113,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
               <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-secondary mt-0.5" />
                 <div>
-                  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Destination</p>
+                  <p className="text-[10px] font-semibold text-muted-foreground">Destination</p>
                   <p className="text-sm font-medium text-foreground">{nextTrip.destination}</p>
                 </div>
               </div>
@@ -121,7 +121,7 @@ export async function OverviewTab({ userId }: { userId: string }) {
             </div>
           </div>
         ) : (
-          <div className="bg-gradient-to-br from-primary/10 to-background border border-primary/20 rounded-xl p-6 text-center shadow-md">
+          <div className="bg-card border border-border rounded-xl p-6 text-center shadow-sm">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
               <Car className="w-6 h-6 text-primary" />
             </div>
