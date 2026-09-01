@@ -136,7 +136,7 @@ export function Navbar() {
                   <Link
                     href="/auth?tab=signup"
                     className="text-[13px] font-bold text-foreground px-5 py-2 rounded-full transition-all duration-200 hover:brightness-110 hover:scale-[1.03] active:scale-[0.98]"
-                    style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 14px rgba(217,119,6,0.4)' }}
+                    style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}
                   >
                     Sign Up
                   </Link>
@@ -198,7 +198,7 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/auth" onClick={() => setMobileOpen(false)} className="text-center text-sm font-semibold text-foreground border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Log In</Link>
-                <Link href="/auth?tab=signup" onClick={() => setMobileOpen(false)} className="text-center text-sm font-bold text-foreground px-4 py-2.5 rounded-xl" style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 10px rgba(217,119,6,0.35)' }}>Sign Up</Link>
+                <Link href="/auth?tab=signup" onClick={() => setMobileOpen(false)} className="text-center text-sm font-bold text-foreground px-4 py-2.5 rounded-xl" style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }}>Sign Up</Link>
               </>
             )}
           </div>

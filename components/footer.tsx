@@ -118,7 +118,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 border-t border-orange-brand/15 text-center">
+        <div className="pt-6 border-t border-white/8 text-center">
           <p className="text-xs text-foreground/30">
             &copy; {new Date().getFullYear()} TOVEDROP. All rights reserved. Built for campus communities.
           </p>

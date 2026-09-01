@@ -114,7 +114,7 @@ export default function AboutPage() {
               className="inline-flex items-center justify-center gap-2 font-bold text-[15px] text-foreground px-8 py-4 rounded-full transition-all duration-200 hover:scale-[1.03]"
               style={{
                 background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
-                boxShadow: '0 4px 24px rgba(217,119,6,0.4)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
               }}
             >
               Download TOVEDROP free

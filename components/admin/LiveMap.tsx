@@ -78,7 +78,7 @@ export function LiveMap() {
     html: `
       <div style="position: relative; width: 24px; height: 24px;">
         <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; background-color: ${color}; opacity: 0.6; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
-        <div style="position: absolute; width: 12px; height: 12px; top: 6px; left: 6px; border-radius: 50%; background-color: ${color}; border: 2px solid white; box-shadow: 0 0 10px ${color};"></div>
+        <div style="position: absolute; width: 12px; height: 12px; top: 6px; left: 6px; border-radius: 50%; background-color: ${color}; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></div>
       </div>
     `,
     iconSize: [24, 24],

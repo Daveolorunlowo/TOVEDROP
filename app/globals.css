@@ -36,7 +36,6 @@
   --color-background: var(--background);
   --color-navy: var(--navy);
   --color-amber: var(--amber);
-  --color-cyan: var(--cyan);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);

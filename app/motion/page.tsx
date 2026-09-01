@@ -267,10 +267,10 @@ export default function MotionAd() {
           <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-300 mb-4 tracking-tighter">TOVEDROP AD ENGINE</h1>
           <p className="text-gray-400 mb-8 font-light tracking-widest uppercase text-sm">Volume Up. Press Start. Record.</p>
           <motion.button 
-            whileHover={{ scale: 1.05, boxShadow: "0 0 40px rgba(249,115,22,0.6)" }}
+            whileHover={{ scale: 1.05, boxShadow: "0 4px 16px rgba(0,0,0,0.2)" }}
             whileTap={{ scale: 0.95 }}
             onClick={runSequence} 
-            className="bg-orange-500 text-white px-10 py-5 rounded-2xl font-black text-xl shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all"
+            className="bg-orange-500 text-white px-10 py-5 rounded-2xl font-black text-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)] transition-all"
           >
             INITIALIZE RENDER
           </motion.button>

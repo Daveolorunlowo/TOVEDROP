@@ -232,7 +232,7 @@ export function WelcomeOverlay() {
                   {steps.map((_, i) => (
                     <div 
                       key={i} 
-                      className={`h-1.5 rounded-full transition-all duration-300 ${i === guideStep ? 'w-4 bg-orange-brand shadow-[0_0_8px_rgba(217,119,6,0.5)]' : 'w-1.5 bg-surface-elevated'}`} 
+                      className={`h-1.5 rounded-full transition-all duration-300 ${i === guideStep ? 'w-4 bg-orange-brand' : 'w-1.5 bg-surface-elevated'}`} 
                     />
                   ))}
                 </div>
@@ -245,7 +245,7 @@ export function WelcomeOverlay() {
                       setPhase('done');
                     }
                   }}
-                  className="bg-orange-brand hover:bg-orange-dark text-white px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all active:scale-95 shadow-[0_4px_14px_0_rgba(217,119,6,0.2)] hover:shadow-[0_6px_20px_rgba(217,119,6,0.3)]"
+                  className="bg-orange-brand hover:bg-orange-dark text-white px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all active:scale-95 shadow-sm hover:shadow-md"
                 >
                   {guideStep < steps.length - 1 ? (
                     <>Next <ChevronRight className="w-4 h-4" /></>

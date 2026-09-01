@@ -167,7 +167,7 @@ function PhoneMockup() {
             <path d="M 30 90 Q 70 50 130 30" fill="none" stroke="var(--purple-brand)" strokeWidth="1.5" strokeDasharray="4 2" style={{ animation: 'dash-travel 3s linear infinite' }} />
           </svg>
           <div className="absolute left-7 bottom-5 w-2 h-2 rounded-full bg-white border border-white/60" />
-          <div className="absolute right-8 top-5 w-2 h-2 rounded-full bg-orange-brand shadow-[0_0_6px_rgba(217,119,6,0.8)]" />
+          <div className="absolute right-8 top-5 w-2 h-2 rounded-full bg-orange-brand" />
         </div>
         <div className="mx-3 mt-3 bg-[#1A1A30] rounded-xl p-3 flex items-center gap-3">
           <div className="w-8 h-8 rounded-full flex items-center justify-center text-foreground text-[10px] font-bold shrink-0"
@@ -261,9 +261,9 @@ function HeroSection() {
       </svg>
 
       {/* Amber radial bloom — right */}
-      <div className="absolute pointer-events-none" style={{ top: '10%', right: '-5%', width: '55vw', height: '55vw', background: 'radial-gradient(circle, rgba(217,119,6,0.09) 0%, transparent 65%)', borderRadius: '50%' }} aria-hidden="true" />
-      {/* Cyan bloom — left */}
-      <div className="absolute pointer-events-none" style={{ bottom: '15%', left: '-8%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 65%)', borderRadius: '50%' }} aria-hidden="true" />
+      <div className="absolute pointer-events-none" style={{ top: '10%', right: '-5%', width: '55vw', height: '55vw', background: 'radial-gradient(circle, rgba(217,119,6,0.04) 0%, transparent 65%)', borderRadius: '50%' }} aria-hidden="true" />
+      {/* Subtle bloom — left */}
+      <div className="absolute pointer-events-none" style={{ bottom: '15%', left: '-8%', width: '40vw', height: '40vw', background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 65%)', borderRadius: '50%' }} aria-hidden="true" />
 
       {/* Curved sweep lines */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.05 }} xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -542,7 +542,7 @@ function DropsSection() {
 
       {/* Amber radial bloom behind Popular card */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/4 -translate-y-1/2 pointer-events-none" aria-hidden="true"
-        style={{ width: '60vw', height: '60vw', background: 'radial-gradient(circle, rgba(217,119,6,0.07) 0%, transparent 60%)', borderRadius: '50%' }} />
+        style={{ width: '60vw', height: '60vw', background: 'radial-gradient(circle, rgba(217,119,6,0.03) 0%, transparent 60%)', borderRadius: '50%' }} />
 
       <div ref={ref} className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className={cn('text-center mb-16 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
@@ -558,7 +558,7 @@ function DropsSection() {
               background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              filter: 'drop-shadow(0 0 28px rgba(217,119,6,0.35))',
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
             }}
           >
             Drops.
@@ -622,7 +622,7 @@ function DropsSection() {
                 <button
                   type="button"
                   className="w-full py-2.5 rounded-xl text-sm font-bold text-foreground transition-all duration-200 hover:scale-[1.03]"
-                  style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: isPopular ? '0 4px 20px rgba(217,119,6,0.35)' : undefined }}
+                  style={{ background: 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))', boxShadow: isPopular ? '0 2px 8px rgba(0,0,0,0.15)' : undefined }}
                 >
                   Buy Now
                 </button>
@@ -675,7 +675,7 @@ function TrustSection() {
           <p className="text-[11px] font-semibold text-purple-brand uppercase tracking-widest mb-3">Safety First</p>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-foreground text-balance" style={{ letterSpacing: '-0.02em' }}>
             Built on{' '}
-            <span style={{ background: 'linear-gradient(135deg, var(--purple-brand), #0891B2)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>verified.</span>
+            <span className="text-orange-brand">verified.</span>
           </h2>
           <p className="mt-3 text-foreground/45 max-w-md mx-auto text-sm leading-relaxed">
             Every person on TOVEDROP — rider or driver — has been verified.
@@ -688,7 +688,7 @@ function TrustSection() {
           {trustPoints.map(({ Icon, title, desc }, i) => (
             <div
               key={title}
-              className="bg-[#080814] border border-white/5 rounded-2xl p-6 hover:border-purple-brand/30 hover:shadow-[0_8px_32px_rgba(6,182,212,0.1)] transition-all duration-300 cursor-default"
+              className="bg-[#080814] border border-white/5 rounded-2xl p-6 hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-all duration-300 cursor-default"
               style={{ transitionDelay: `${i * 60}ms` }}
             >
               <div className="w-10 h-10 rounded-xl bg-purple-brand/10 border border-purple-brand/20 flex items-center justify-center mb-4">
@@ -729,7 +729,7 @@ function StatsSection() {
         <div className={cn('grid grid-cols-2 lg:grid-cols-4 gap-3 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
 
           {/* Trips completed — wide */}
-          <div className="col-span-2 bg-surface-card border border-white/5 rounded-2xl p-7 flex flex-col justify-between overflow-hidden relative group hover:border-orange-brand/25 hover:shadow-[0_0_32px_rgba(217,119,6,0.08)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
+          <div className="col-span-2 bg-surface-card border border-white/5 rounded-2xl p-7 flex flex-col justify-between overflow-hidden relative group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
             <div className="relative z-10">
               <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Trips Completed</p>
               <p className="text-5xl font-extrabold text-foreground tabular-nums" style={{ letterSpacing: '-0.03em' }}>
@@ -746,7 +746,7 @@ function StatsSection() {
           </div>
 
           {/* Students */}
-          <div className="bg-[#0E0E24] border border-white/5 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-orange-brand/25 hover:shadow-[0_0_32px_rgba(217,119,6,0.08)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
+          <div className="bg-[#0E0E24] border border-white/5 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
             <div>
               <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Students</p>
               <p className="text-4xl font-extrabold text-foreground tabular-nums" style={{ letterSpacing: '-0.03em' }}>
@@ -763,7 +763,7 @@ function StatsSection() {
           </div>
 
           {/* Rating */}
-          <div className="bg-[#0A0A18] border border-white/5 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-purple-brand/25 hover:shadow-[0_0_32px_rgba(6,182,212,0.08)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
+          <div className="bg-[#0A0A18] border border-white/5 rounded-2xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
             <div>
               <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Avg Rating</p>
               <p className="text-4xl font-extrabold text-foreground" style={{ letterSpacing: '-0.03em' }}>
@@ -778,7 +778,7 @@ function StatsSection() {
           </div>
 
           {/* Pay with Drops */}
-          <div className="col-span-2 lg:col-span-4 bg-[#0A0A18] border border-white/5 rounded-2xl px-7 py-5 flex items-center justify-between group hover:border-orange-brand/25 hover:shadow-[0_0_32px_rgba(217,119,6,0.08)] transition-all duration-300 cursor-default">
+          <div className="col-span-2 lg:col-span-4 bg-[#0A0A18] border border-white/5 rounded-2xl px-7 py-5 flex items-center justify-between group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
             <div className="flex items-center gap-3">
               <DropCoin size={28} />
               <div>
@@ -868,7 +868,7 @@ function DriverCTASection() {
                 ? 'linear-gradient(135deg, var(--orange-brand) 0%, var(--orange-brand) 100%)'
                 : 'linear-gradient(135deg, var(--orange-brand), var(--orange-brand))',
               color: 'var(--foreground)',
-              boxShadow: hovered ? '0 4px 28px rgba(217,119,6,0.5)' : '0 4px 24px rgba(217,119,6,0.3)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
               transform: hovered ? 'scale(1.03)' : 'scale(1)',
             }}
             onMouseEnter={() => setHovered(true)}
@@ -909,10 +909,10 @@ function DriverCTASection() {
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-bg-deep">
-      {/* Fixed top glow strip */}
+      {/* Fixed top accent line */}
       <div
-        className="fixed top-0 left-0 right-0 h-[2px] z-[9997] pointer-events-none"
-        style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(217,119,6,0.7) 40%, rgba(6,182,212,0.5) 60%, transparent 100%)' }}
+        className="fixed top-0 left-0 right-0 h-[1px] z-[9997] pointer-events-none"
+        style={{ background: 'rgba(255,255,255,0.06)' }}
         aria-hidden="true"
       />
       <Navbar />

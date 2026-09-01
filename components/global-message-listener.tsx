@@ -43,15 +43,11 @@ export function GlobalMessageListener() {
         className="relative overflow-hidden rounded-2xl p-4 shadow-2xl backdrop-blur-xl"
         style={{ 
           background: 'rgba(23, 23, 23, 0.85)', 
-          border: '1px solid rgba(217, 119, 6, 0.3)',
-          boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5), 0 0 20px rgba(217, 119, 6, 0.1)'
+          border: '1px solid rgba(255,255,255,0.1)',
+          boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)'
         }}
       >
-        {/* Glow effect */}
-        <div 
-          className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl"
-          style={{ background: 'rgba(217, 119, 6, 0.15)', pointerEvents: 'none' }}
-        />
+
         
         <div className="flex items-start gap-4 relative z-10">
           <div 
