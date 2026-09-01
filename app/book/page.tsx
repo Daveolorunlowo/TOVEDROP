@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense } from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { MapPin, Navigation, Calendar, Clock, Search, CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react'
@@ -37,6 +37,7 @@ function BookWizard() {
   const isScheduled = true
   const [noteStr, setNoteStr] = useState<string>('')
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
+  const idempotencyKeyRef = useRef<string>(crypto.randomUUID())
   
   // Wizard state
   const [step, setStep] = useState<number>(1)
@@ -115,6 +116,8 @@ function BookWizard() {
     if (step === 1 && validateStep1()) {
       setStep(2)
     } else if (step === 2 && validateStep2()) {
+      // Generate a fresh idempotency key for this booking attempt
+      idempotencyKeyRef.current = crypto.randomUUID()
       setStep(3)
     }
   }
@@ -154,32 +157,57 @@ function BookWizard() {
         notes: noteStr,
         isPool,
         isScheduled,
-        scheduledDateTime: isScheduled ? new Date(`${dateStr}T${timeStr}:00`).toISOString() : undefined
+        scheduledDateTime: isScheduled ? new Date(`${dateStr}T${timeStr}:00`).toISOString() : undefined,
+        idempotencyKey: idempotencyKeyRef.current,
       }
       
       if (!navigator.onLine) {
         addToOfflineQueue('/api/trips/create', 'POST', { 'Content-Type': 'application/json' }, JSON.stringify(payload))
         router.push('/dashboard')
-      } else {
-        const res = await fetch('/api/trips/create', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-        
-        if (res.ok) {
-          router.push('/dashboard')
-        } else {
-          const data = await res.json()
-          setErrors({ general: data.message || 'Failed to create trip.' })
-          setShowConfirm(false)
-        }
+        return
       }
-    } catch (err) {
-      setErrors({ general: 'An error occurred.' })
+
+      const res = await fetch('/api/trips/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      
+      if (res.ok) {
+        // 200 (idempotent hit) or 201 (newly created) — both are success
+        router.push('/dashboard')
+        return
+      }
+
+      const data = await res.json()
+
+      if (res.status === 409) {
+        // Duplicate trip guard — the trip exists, redirect to dashboard
+        router.push('/dashboard')
+        return
+      }
+
+      if (res.status >= 400 && res.status < 500) {
+        // Definitive client error (e.g., Insufficient Drops, validation)
+        // Safe to re-enable button — the trip was NOT created
+        setErrors({ general: data.message || 'Failed to create trip.' })
+        setShowConfirm(false)
+        // Generate a new idempotency key for the next attempt
+        idempotencyKeyRef.current = crypto.randomUUID()
+        setSubmitting(false)
+        return
+      }
+
+      // 5xx / ambiguous error — trip MAY have been created
+      // Do NOT re-enable the button to prevent duplicates
+      setErrors({ general: 'Something went wrong, but your booking may have been placed. Please check your trips.' })
       setShowConfirm(false)
-    } finally {
-      setSubmitting(false)
+      // Keep submitting=true so button stays disabled
+    } catch (err) {
+      // Network error / timeout — ambiguous, trip may exist
+      setErrors({ general: 'Connection error. Your booking may have been placed. Please check your trips.' })
+      setShowConfirm(false)
+      // Keep submitting=true so button stays disabled
     }
   }
 

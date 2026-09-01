@@ -188,6 +188,7 @@ export type DriverProfileScalarFieldEnum = (typeof DriverProfileScalarFieldEnum)
 
 export const TripScalarFieldEnum = {
   id: 'id',
+  idempotencyKey: 'idempotencyKey',
   status: 'status',
   pickup: 'pickup',
   pickupLat: 'pickupLat',

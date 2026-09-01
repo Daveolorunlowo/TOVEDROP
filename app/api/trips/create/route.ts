@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma"
 import { sendWebPush } from "@/lib/webpush"
 import { pusherServer } from "@/lib/pusher"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { logger } from "@/lib/logger"
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
     }
 
-    const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool, isScheduled, scheduledDateTime } = await req.json()
+    const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool, isScheduled, scheduledDateTime, idempotencyKey } = await req.json()
     
     if (!pickup || !destination || !date || !time || pickupLat === undefined || pickupLng === undefined || destinationLat === undefined || destinationLng === undefined) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
@@ -33,6 +34,49 @@ export async function POST(req: NextRequest) {
 
     if (!isWithinBounds(pickupLat, pickupLng) || !isWithinBounds(destinationLat, destinationLng)) {
       return NextResponse.json({ message: "Locations must be within Bowen University campus bounds." }, { status: 400 })
+    }
+
+    // === IDEMPOTENCY CHECK ===
+    // If a trip with this idempotency key already exists, return it (dedup)
+    if (idempotencyKey) {
+      const existingTrip = await prisma.trip.findUnique({
+        where: { idempotencyKey }
+      })
+
+      if (existingTrip) {
+        logger.info("Idempotent trip creation - returning existing trip", {
+          action: "CREATE_TRIP_IDEMPOTENT",
+          userId: session.user.id,
+          tripId: existingTrip.id,
+          idempotencyKey,
+        })
+        return NextResponse.json({ message: "Trip already created", trip: existingTrip }, { status: 200 })
+      }
+    }
+
+    // === DUPLICATE-TRIP TIME GUARD ===
+    // Reject if this rider already has a PENDING trip created in the last 60 seconds
+    const recentCutoff = new Date(Date.now() - 60 * 1000)
+    const recentPendingTrip = await prisma.trip.findFirst({
+      where: {
+        riderId: session.user.id,
+        status: "PENDING",
+        createdAt: { gte: recentCutoff },
+      },
+      orderBy: { createdAt: "desc" },
+    })
+
+    if (recentPendingTrip) {
+      logger.warn("Duplicate trip guard triggered - rider has recent PENDING trip", {
+        action: "CREATE_TRIP_DUPLICATE_GUARD",
+        userId: session.user.id,
+        existingTripId: recentPendingTrip.id,
+        existingTripCreatedAt: recentPendingTrip.createdAt.toISOString(),
+      })
+      return NextResponse.json(
+        { message: "You already have a pending booking. Check your trips.", trip: recentPendingTrip },
+        { status: 409 }
+      )
     }
 
     // Wrap in transaction: check drops, deduct, create trip
@@ -119,14 +163,29 @@ export async function POST(req: NextRequest) {
           isPool: Boolean(isPool),
           poolGroupId,
           isScheduled: Boolean(isScheduled),
-          scheduledDateTime: scheduledDateTime ? new Date(scheduledDateTime) : null
+          scheduledDateTime: scheduledDateTime ? new Date(scheduledDateTime) : null,
+          idempotencyKey: idempotencyKey || null,
         }
       })
       
       return trip
     })
 
-    // Notify drivers in the background via Web Push
+    logger.info("Trip created successfully", {
+      action: "CREATE_TRIP_SUCCESS",
+      userId: session.user.id,
+      tripId: result.id,
+      idempotencyKey: idempotencyKey || undefined,
+      pickup,
+      destination,
+    })
+
+    // === RESPOND IMMEDIATELY ===
+    // Return success as soon as the trip is durably committed.
+    // All downstream notifications are fire-and-forget below.
+    const response = NextResponse.json({ message: "Trip created successfully", trip: result }, { status: 201 })
+
+    // Notify drivers in the background via Web Push (fire-and-forget)
     prisma.driverProfile.findMany({
       where: { status: 'APPROVED' },
     }).then(async (drivers) => {
@@ -141,13 +200,18 @@ export async function POST(req: NextRequest) {
       }
     }).catch(err => console.error("Background Web Push driver broadcast failed:", err))
 
-    // Trigger pusher event to all drivers
-    await pusherServer.trigger('global-trips', 'new-trip', {
+    // Trigger pusher event to all drivers (fire-and-forget)
+    pusherServer.trigger('global-trips', 'new-trip', {
       trip: result
+    }).catch(err => console.error("Background Pusher trigger failed:", err))
+
+    return response
+  } catch (error: any) {
+    logger.error("Trip creation failed", error, {
+      action: "CREATE_TRIP_ERROR",
+      userId: undefined,
     })
 
-    return NextResponse.json({ message: "Trip created successfully", trip: result }, { status: 201 })
-  } catch (error: any) {
     if (error.message === "Insufficient Drops") {
       return NextResponse.json({ message: error.message }, { status: 400 })
     }

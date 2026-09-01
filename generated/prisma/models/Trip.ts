@@ -44,6 +44,7 @@ export type TripSumAggregateOutputType = {
 
 export type TripMinAggregateOutputType = {
   id: string | null
+  idempotencyKey: string | null
   status: string | null
   pickup: string | null
   pickupLat: number | null
@@ -70,6 +71,7 @@ export type TripMinAggregateOutputType = {
 
 export type TripMaxAggregateOutputType = {
   id: string | null
+  idempotencyKey: string | null
   status: string | null
   pickup: string | null
   pickupLat: number | null
@@ -96,6 +98,7 @@ export type TripMaxAggregateOutputType = {
 
 export type TripCountAggregateOutputType = {
   id: number
+  idempotencyKey: number
   status: number
   pickup: number
   pickupLat: number
@@ -140,6 +143,7 @@ export type TripSumAggregateInputType = {
 
 export type TripMinAggregateInputType = {
   id?: true
+  idempotencyKey?: true
   status?: true
   pickup?: true
   pickupLat?: true
@@ -166,6 +170,7 @@ export type TripMinAggregateInputType = {
 
 export type TripMaxAggregateInputType = {
   id?: true
+  idempotencyKey?: true
   status?: true
   pickup?: true
   pickupLat?: true
@@ -192,6 +197,7 @@ export type TripMaxAggregateInputType = {
 
 export type TripCountAggregateInputType = {
   id?: true
+  idempotencyKey?: true
   status?: true
   pickup?: true
   pickupLat?: true
@@ -305,6 +311,7 @@ export type TripGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type TripGroupByOutputType = {
   id: string
+  idempotencyKey: string | null
   status: string
   pickup: string
   pickupLat: number | null
@@ -354,6 +361,7 @@ export type TripWhereInput = {
   OR?: Prisma.TripWhereInput[]
   NOT?: Prisma.TripWhereInput | Prisma.TripWhereInput[]
   id?: Prisma.StringFilter<"Trip"> | string
+  idempotencyKey?: Prisma.StringNullableFilter<"Trip"> | string | null
   status?: Prisma.StringFilter<"Trip"> | string
   pickup?: Prisma.StringFilter<"Trip"> | string
   pickupLat?: Prisma.FloatNullableFilter<"Trip"> | number | null
@@ -391,6 +399,7 @@ export type TripWhereInput = {
 
 export type TripOrderByWithRelationInput = {
   id?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   pickup?: Prisma.SortOrder
   pickupLat?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -428,6 +437,7 @@ export type TripOrderByWithRelationInput = {
 
 export type TripWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  idempotencyKey?: string
   shareToken?: string
   AND?: Prisma.TripWhereInput | Prisma.TripWhereInput[]
   OR?: Prisma.TripWhereInput[]
@@ -464,10 +474,11 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   tripTransfers?: Prisma.TripTransferListRelationFilter
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
-}, "id" | "shareToken">
+}, "id" | "idempotencyKey" | "shareToken">
 
 export type TripOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   pickup?: Prisma.SortOrder
   pickupLat?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -502,6 +513,7 @@ export type TripScalarWhereWithAggregatesInput = {
   OR?: Prisma.TripScalarWhereWithAggregatesInput[]
   NOT?: Prisma.TripScalarWhereWithAggregatesInput | Prisma.TripScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Trip"> | string
+  idempotencyKey?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"Trip"> | string
   pickup?: Prisma.StringWithAggregatesFilter<"Trip"> | string
   pickupLat?: Prisma.FloatNullableWithAggregatesFilter<"Trip"> | number | null
@@ -528,6 +540,7 @@ export type TripScalarWhereWithAggregatesInput = {
 
 export type TripCreateInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -562,6 +575,7 @@ export type TripCreateInput = {
 
 export type TripUncheckedCreateInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -596,6 +610,7 @@ export type TripUncheckedCreateInput = {
 
 export type TripUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -630,6 +645,7 @@ export type TripUpdateInput = {
 
 export type TripUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -664,6 +680,7 @@ export type TripUncheckedUpdateInput = {
 
 export type TripCreateManyInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -690,6 +707,7 @@ export type TripCreateManyInput = {
 
 export type TripUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -713,6 +731,7 @@ export type TripUpdateManyMutationInput = {
 
 export type TripUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -749,6 +768,7 @@ export type TripOrderByRelationAggregateInput = {
 
 export type TripCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   pickup?: Prisma.SortOrder
   pickupLat?: Prisma.SortOrder
@@ -783,6 +803,7 @@ export type TripAvgOrderByAggregateInput = {
 
 export type TripMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   pickup?: Prisma.SortOrder
   pickupLat?: Prisma.SortOrder
@@ -809,6 +830,7 @@ export type TripMaxOrderByAggregateInput = {
 
 export type TripMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  idempotencyKey?: Prisma.SortOrder
   status?: Prisma.SortOrder
   pickup?: Prisma.SortOrder
   pickupLat?: Prisma.SortOrder
@@ -1101,6 +1123,7 @@ export type TripUpdateOneRequiredWithoutTripTransfersNestedInput = {
 
 export type TripCreateWithoutRiderInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1134,6 +1157,7 @@ export type TripCreateWithoutRiderInput = {
 
 export type TripUncheckedCreateWithoutRiderInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1177,6 +1201,7 @@ export type TripCreateManyRiderInputEnvelope = {
 
 export type TripCreateWithoutDriverInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1210,6 +1235,7 @@ export type TripCreateWithoutDriverInput = {
 
 export type TripUncheckedCreateWithoutDriverInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1272,6 +1298,7 @@ export type TripScalarWhereInput = {
   OR?: Prisma.TripScalarWhereInput[]
   NOT?: Prisma.TripScalarWhereInput | Prisma.TripScalarWhereInput[]
   id?: Prisma.StringFilter<"Trip"> | string
+  idempotencyKey?: Prisma.StringNullableFilter<"Trip"> | string | null
   status?: Prisma.StringFilter<"Trip"> | string
   pickup?: Prisma.StringFilter<"Trip"> | string
   pickupLat?: Prisma.FloatNullableFilter<"Trip"> | number | null
@@ -1314,6 +1341,7 @@ export type TripUpdateManyWithWhereWithoutDriverInput = {
 
 export type TripCreateWithoutReviewInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1347,6 +1375,7 @@ export type TripCreateWithoutReviewInput = {
 
 export type TripUncheckedCreateWithoutReviewInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1396,6 +1425,7 @@ export type TripUpdateToOneWithWhereWithoutReviewInput = {
 
 export type TripUpdateWithoutReviewInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1429,6 +1459,7 @@ export type TripUpdateWithoutReviewInput = {
 
 export type TripUncheckedUpdateWithoutReviewInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1462,6 +1493,7 @@ export type TripUncheckedUpdateWithoutReviewInput = {
 
 export type TripCreateWithoutMessagesInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1495,6 +1527,7 @@ export type TripCreateWithoutMessagesInput = {
 
 export type TripUncheckedCreateWithoutMessagesInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1544,6 +1577,7 @@ export type TripUpdateToOneWithWhereWithoutMessagesInput = {
 
 export type TripUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1577,6 +1611,7 @@ export type TripUpdateWithoutMessagesInput = {
 
 export type TripUncheckedUpdateWithoutMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1610,6 +1645,7 @@ export type TripUncheckedUpdateWithoutMessagesInput = {
 
 export type TripCreateWithoutDropLotInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1643,6 +1679,7 @@ export type TripCreateWithoutDropLotInput = {
 
 export type TripUncheckedCreateWithoutDropLotInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1702,6 +1739,7 @@ export type TripUpdateManyWithWhereWithoutDropLotInput = {
 
 export type TripCreateWithoutWalletTransactionsInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1735,6 +1773,7 @@ export type TripCreateWithoutWalletTransactionsInput = {
 
 export type TripUncheckedCreateWithoutWalletTransactionsInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1784,6 +1823,7 @@ export type TripUpdateToOneWithWhereWithoutWalletTransactionsInput = {
 
 export type TripUpdateWithoutWalletTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1817,6 +1857,7 @@ export type TripUpdateWithoutWalletTransactionsInput = {
 
 export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1850,6 +1891,7 @@ export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
 
 export type TripCreateWithoutPlatformRevenueInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1883,6 +1925,7 @@ export type TripCreateWithoutPlatformRevenueInput = {
 
 export type TripUncheckedCreateWithoutPlatformRevenueInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -1932,6 +1975,7 @@ export type TripUpdateToOneWithWhereWithoutPlatformRevenueInput = {
 
 export type TripUpdateWithoutPlatformRevenueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1965,6 +2009,7 @@ export type TripUpdateWithoutPlatformRevenueInput = {
 
 export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -1998,6 +2043,7 @@ export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
 
 export type TripCreateWithoutAdminRevenueInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2031,6 +2077,7 @@ export type TripCreateWithoutAdminRevenueInput = {
 
 export type TripUncheckedCreateWithoutAdminRevenueInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2080,6 +2127,7 @@ export type TripUpdateToOneWithWhereWithoutAdminRevenueInput = {
 
 export type TripUpdateWithoutAdminRevenueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2113,6 +2161,7 @@ export type TripUpdateWithoutAdminRevenueInput = {
 
 export type TripUncheckedUpdateWithoutAdminRevenueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2146,6 +2195,7 @@ export type TripUncheckedUpdateWithoutAdminRevenueInput = {
 
 export type TripCreateWithoutAlarmLogsInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2179,6 +2229,7 @@ export type TripCreateWithoutAlarmLogsInput = {
 
 export type TripUncheckedCreateWithoutAlarmLogsInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2228,6 +2279,7 @@ export type TripUpdateToOneWithWhereWithoutAlarmLogsInput = {
 
 export type TripUpdateWithoutAlarmLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2261,6 +2313,7 @@ export type TripUpdateWithoutAlarmLogsInput = {
 
 export type TripUncheckedUpdateWithoutAlarmLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2294,6 +2347,7 @@ export type TripUncheckedUpdateWithoutAlarmLogsInput = {
 
 export type TripCreateWithoutTripRemindersInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2327,6 +2381,7 @@ export type TripCreateWithoutTripRemindersInput = {
 
 export type TripUncheckedCreateWithoutTripRemindersInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2376,6 +2431,7 @@ export type TripUpdateToOneWithWhereWithoutTripRemindersInput = {
 
 export type TripUpdateWithoutTripRemindersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2409,6 +2465,7 @@ export type TripUpdateWithoutTripRemindersInput = {
 
 export type TripUncheckedUpdateWithoutTripRemindersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2442,6 +2499,7 @@ export type TripUncheckedUpdateWithoutTripRemindersInput = {
 
 export type TripCreateWithoutTripTransfersInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2475,6 +2533,7 @@ export type TripCreateWithoutTripTransfersInput = {
 
 export type TripUncheckedCreateWithoutTripTransfersInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2524,6 +2583,7 @@ export type TripUpdateToOneWithWhereWithoutTripTransfersInput = {
 
 export type TripUpdateWithoutTripTransfersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2557,6 +2617,7 @@ export type TripUpdateWithoutTripTransfersInput = {
 
 export type TripUncheckedUpdateWithoutTripTransfersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2590,6 +2651,7 @@ export type TripUncheckedUpdateWithoutTripTransfersInput = {
 
 export type TripCreateManyRiderInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2615,6 +2677,7 @@ export type TripCreateManyRiderInput = {
 
 export type TripCreateManyDriverInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2640,6 +2703,7 @@ export type TripCreateManyDriverInput = {
 
 export type TripUpdateWithoutRiderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2673,6 +2737,7 @@ export type TripUpdateWithoutRiderInput = {
 
 export type TripUncheckedUpdateWithoutRiderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2706,6 +2771,7 @@ export type TripUncheckedUpdateWithoutRiderInput = {
 
 export type TripUncheckedUpdateManyWithoutRiderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2731,6 +2797,7 @@ export type TripUncheckedUpdateManyWithoutRiderInput = {
 
 export type TripUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2764,6 +2831,7 @@ export type TripUpdateWithoutDriverInput = {
 
 export type TripUncheckedUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2797,6 +2865,7 @@ export type TripUncheckedUpdateWithoutDriverInput = {
 
 export type TripUncheckedUpdateManyWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2822,6 +2891,7 @@ export type TripUncheckedUpdateManyWithoutDriverInput = {
 
 export type TripCreateManyDropLotInput = {
   id?: string
+  idempotencyKey?: string | null
   status?: string
   pickup: string
   pickupLat?: number | null
@@ -2847,6 +2917,7 @@ export type TripCreateManyDropLotInput = {
 
 export type TripUpdateWithoutDropLotInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2880,6 +2951,7 @@ export type TripUpdateWithoutDropLotInput = {
 
 export type TripUncheckedUpdateWithoutDropLotInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -2913,6 +2985,7 @@ export type TripUncheckedUpdateWithoutDropLotInput = {
 
 export type TripUncheckedUpdateManyWithoutDropLotInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
+  idempotencyKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   pickup?: Prisma.StringFieldUpdateOperationsInput | string
   pickupLat?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
@@ -3005,6 +3078,7 @@ export type TripCountOutputTypeCountTripRemindersArgs<ExtArgs extends runtime.Ty
 
 export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  idempotencyKey?: boolean
   status?: boolean
   pickup?: boolean
   pickupLat?: boolean
@@ -3043,6 +3117,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  idempotencyKey?: boolean
   status?: boolean
   pickup?: boolean
   pickupLat?: boolean
@@ -3072,6 +3147,7 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  idempotencyKey?: boolean
   status?: boolean
   pickup?: boolean
   pickupLat?: boolean
@@ -3101,6 +3177,7 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type TripSelectScalar = {
   id?: boolean
+  idempotencyKey?: boolean
   status?: boolean
   pickup?: boolean
   pickupLat?: boolean
@@ -3125,7 +3202,7 @@ export type TripSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "status" | "pickup" | "pickupLat" | "pickupLng" | "destination" | "destinationLat" | "destinationLng" | "date" | "time" | "notes" | "riderId" | "driverId" | "driverArrivedAt" | "isPool" | "poolGroupId" | "isScheduled" | "scheduledDateTime" | "bookingFeeNaira" | "dropLotId" | "shareToken" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idempotencyKey" | "status" | "pickup" | "pickupLat" | "pickupLng" | "destination" | "destinationLat" | "destinationLng" | "date" | "time" | "notes" | "riderId" | "driverId" | "driverArrivedAt" | "isPool" | "poolGroupId" | "isScheduled" | "scheduledDateTime" | "bookingFeeNaira" | "dropLotId" | "shareToken" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.Trip$driverArgs<ExtArgs>
@@ -3168,6 +3245,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
+    idempotencyKey: string | null
     status: string
     pickup: string
     pickupLat: number | null
@@ -3625,6 +3703,7 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface TripFieldRefs {
   readonly id: Prisma.FieldRef<"Trip", 'String'>
+  readonly idempotencyKey: Prisma.FieldRef<"Trip", 'String'>
   readonly status: Prisma.FieldRef<"Trip", 'String'>
   readonly pickup: Prisma.FieldRef<"Trip", 'String'>
   readonly pickupLat: Prisma.FieldRef<"Trip", 'Float'>

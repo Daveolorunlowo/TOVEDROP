@@ -129,6 +129,7 @@ model DriverProfile {
 
 model Trip {
   id             String  @id @default(cuid())
+  idempotencyKey String? @unique
   status         String  @default("PENDING") // PENDING, CONFIRMED, COMPLETED, CANCELLED
   pickup         String
   pickupLat      Float?
