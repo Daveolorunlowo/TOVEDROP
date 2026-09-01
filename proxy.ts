@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 import { getRoleRedirectPath } from './lib/getRoleRedirectPath'
 
-export async function middleware(request: any) {
+export async function proxy(request: any) {
   const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
   const path = request.nextUrl.pathname
 
