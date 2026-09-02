@@ -18,6 +18,13 @@ import { useDropsBalance } from '@/hooks/useDropsBalance'
 
 const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 
+const generateId = () => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID()
+  }
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+}
+
 function BookWizard() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -37,7 +44,7 @@ function BookWizard() {
   const isScheduled = true
   const [noteStr, setNoteStr] = useState<string>('')
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  const idempotencyKeyRef = useRef<string>(crypto.randomUUID())
+  const idempotencyKeyRef = useRef<string>(generateId())
   
   // Wizard state
   const [step, setStep] = useState<number>(1)
@@ -117,7 +124,7 @@ function BookWizard() {
       setStep(2)
     } else if (step === 2 && validateStep2()) {
       // Generate a fresh idempotency key for this booking attempt
-      idempotencyKeyRef.current = crypto.randomUUID()
+      idempotencyKeyRef.current = generateId()
       setStep(3)
     }
   }
@@ -193,7 +200,7 @@ function BookWizard() {
         setErrors({ general: data.message || 'Failed to create trip.' })
         setShowConfirm(false)
         // Generate a new idempotency key for the next attempt
-        idempotencyKeyRef.current = crypto.randomUUID()
+        idempotencyKeyRef.current = generateId()
         setSubmitting(false)
         return
       }
