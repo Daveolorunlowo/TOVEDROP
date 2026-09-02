@@ -13,7 +13,10 @@ export function DriverTabs() {
 
   useEffect(() => {
     setMounted(true)
-    const savedTab = localStorage.getItem('tovedrop_driver_tab')
+    let savedTab = null
+    try {
+      savedTab = localStorage.getItem('tovedrop_driver_tab')
+    } catch (e) {}
     const urlTab = searchParams.get('tab')
     
     if (!urlTab && savedTab && savedTab !== 'requests') {
@@ -22,7 +25,9 @@ export function DriverTabs() {
   }, [searchParams, router])
 
   const setTab = (tab: string) => {
-    localStorage.setItem('tovedrop_driver_tab', tab)
+    try {
+      localStorage.setItem('tovedrop_driver_tab', tab)
+    } catch (e) {}
     const params = new URLSearchParams(searchParams.toString())
     params.set('tab', tab)
     params.delete('page') 

@@ -22,7 +22,10 @@ export function WelcomeOverlay() {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      const hasSeenGuide = localStorage.getItem(`hasSeenGuide_${role}`);
+      let hasSeenGuide = false
+      try {
+        hasSeenGuide = localStorage.getItem(`hasSeenGuide_${role}`) === 'true'
+      } catch (e) {}
 
       // Warm, gentle sequence
       setPhase('glow');
@@ -241,7 +244,9 @@ export function WelcomeOverlay() {
                   onClick={() => {
                     if (guideStep < steps.length - 1) setGuideStep(s => s + 1);
                     else {
-                      localStorage.setItem(`hasSeenGuide_${role}`, 'true');
+                      try {
+                        localStorage.setItem(`hasSeenGuide_${role}`, 'true');
+                      } catch (e) {}
                       setPhase('done');
                     }
                   }}

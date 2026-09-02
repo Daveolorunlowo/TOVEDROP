@@ -15,7 +15,10 @@ export function InstallPrompt() {
       
       // Delay showing banner to not interrupt initial load
       setTimeout(() => {
-        const hasDismissed = localStorage.getItem('tovedrop_pwa_dismissed')
+        let hasDismissed = false
+        try {
+          hasDismissed = !!localStorage.getItem('tovedrop_pwa_dismissed')
+        } catch (e) {}
         if (!hasDismissed) {
           setShowBanner(true)
         }
@@ -42,7 +45,7 @@ export function InstallPrompt() {
 
   const handleDismiss = () => {
     setShowBanner(false)
-    localStorage.setItem('tovedrop_pwa_dismissed', 'true')
+    try { localStorage.setItem('tovedrop_pwa_dismissed', 'true') } catch (e) {}
   }
 
   if (!showBanner) return null

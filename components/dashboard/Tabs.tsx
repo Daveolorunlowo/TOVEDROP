@@ -26,7 +26,12 @@ export function DashboardTabs({
   // Restore last visited tab from localStorage on mount
   useEffect(() => {
     setMounted(true)
-    const savedTab = localStorage.getItem(storageKey)
+    let savedTab = null
+    try {
+      savedTab = localStorage.getItem(storageKey)
+    } catch (e) {
+      console.warn('localStorage is not available')
+    }
     const urlTab = searchParams.get('tab')
     
     if (!urlTab && savedTab && savedTab !== defaultTab) {
@@ -35,7 +40,9 @@ export function DashboardTabs({
   }, [searchParams, router, storageKey, defaultTab])
 
   const setTab = (tab: string) => {
-    localStorage.setItem(storageKey, tab)
+    try {
+      localStorage.setItem(storageKey, tab)
+    } catch (e) {}
     const params = new URLSearchParams(searchParams.toString())
     params.set('tab', tab)
     params.delete('page') // Reset pagination on tab change

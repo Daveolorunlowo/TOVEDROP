@@ -19,7 +19,10 @@ export function DriverPageClientWrapper({
   useLocationBroadcaster(driverId, driverName, true, 'AVAILABLE')
 
   useEffect(() => {
-    const dismissed = localStorage.getItem('tovedrop_driver_notif_dismissed')
+    let dismissed = false
+    try {
+      dismissed = !!localStorage.getItem('tovedrop_driver_notif_dismissed')
+    } catch (e) {}
     if (dismissed) return
     const perm = getNotificationPermission()
     if (perm === 'default') {
@@ -35,13 +38,13 @@ export function DriverPageClientWrapper({
     setShowNotifBanner(false)
     const success = await subscribeToPushNotifications()
     if (!success) {
-      localStorage.setItem('tovedrop_driver_notif_dismissed', 'true')
+      try { localStorage.setItem('tovedrop_driver_notif_dismissed', 'true') } catch (e) {}
     }
   }
 
   const handleDismissNotifBanner = () => {
     setShowNotifBanner(false)
-    localStorage.setItem('tovedrop_driver_notif_dismissed', 'true')
+    try { localStorage.setItem('tovedrop_driver_notif_dismissed', 'true') } catch (e) {}
   }
 
   return (
