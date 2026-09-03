@@ -79,7 +79,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         : (fullTrip.dropLotId ? "No refund applies because the trip was already accepted by a driver." : "No refund applies.")
       const title = 'Trip Cancelled'
       const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${dropRefundStatus}`
-      const url = '/dashboard/trips'
+      const url = `/dashboard/trips/${tripId}`
 
       // Notify Rider
       if (fullTrip.riderId) {

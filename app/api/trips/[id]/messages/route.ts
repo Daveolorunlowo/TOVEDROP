@@ -94,7 +94,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     if (recipientId) {
       const title = `New message from ${senderName ? senderName.split(' ')[0] : (isSenderDriver ? 'driver' : 'rider')}`
       const notificationContent = message.content.length > 50 ? `${message.content.substring(0, 47)}...` : message.content
-      const url = isSenderDriver ? (trip.shareToken ? `/trip/${trip.shareToken}` : '/dashboard/trips') : '/driver'
+      const url = isSenderDriver ? (trip.shareToken ? `/trip/${trip.shareToken}` : `/dashboard/trips/${tripId}`) : '/driver'
       sendWebPush(recipientId, title, notificationContent, url)
     }
 
