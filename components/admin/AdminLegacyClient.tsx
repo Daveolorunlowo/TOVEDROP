@@ -308,96 +308,10 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
   const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <>
       <CommandPalette activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* ── Sidebar ── */}
-      <aside
-        className={cn(
-          'fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:z-auto transition-transform duration-200 lg:translate-x-0 bg-card border-b border-border shadow-sm',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        )}
-        style={{ width: '210px', borderRight: '1px solid rgba(255,255,255,0.05)' }}
-      >
-        {/* Logo */}
-        <div className="flex items-center justify-between px-5 py-5" style={{ borderBottom: '1px solid #1a1a1a' }}>
-          <a href="/" className="text-sm font-bold tracking-tight" style={{ color: 'var(--foreground)' }}>
-            TOVE<span style={{ color: 'var(--orange-brand)' }}>DROP</span>
-          </a>
-          <button className="lg:hidden" onClick={() => setSidebarOpen(false)} style={{ color: 'var(--muted-foreground)' }}>
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Nav label */}
-        <div className="px-5 pt-5 pb-2">
-          <p className="text-[10px] font-semibold tracking-wide" style={{ color: 'var(--muted-foreground)' }}>
-            Admin
-          </p>
-        </div>
-
-        {/* Nav items */}
-        <nav className="px-3 space-y-0.5 flex-1">
-          {NAV_ITEMS.map(item => {
-            const active = activeTab === item.id
-            return (
-              <button
-                key={item.id}
-                onClick={() => { setActiveTab(item.id); setSidebarOpen(false) }}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-left text-xs font-medium transition-colors"
-                style={{
-                  background: active ? '#1a1a1a' : 'transparent',
-                  color: active ? 'var(--orange-brand)' : '#555',
-                  borderRadius: '6px',
-                }}
-              >
-                <item.icon className="w-3.5 h-3.5 shrink-0" />
-                <span>{item.label}</span>
-                {item.id === 'approvals' && pendingDrivers.length > 0 && (
-                  <span
-                    className="ml-auto text-[10px] font-bold px-1.5 py-0.5 tabular-nums"
-                    style={{ background: 'var(--card)', color: 'var(--orange-brand)', borderRadius: '4px' }}
-                  >
-                    {pendingDrivers.length}
-                  </span>
-                )}
-              </button>
-            )
-          })}
-        </nav>
-
-        {/* Sign Out */}
-        <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <SignOutButton 
-            variant="ghost" 
-            className="w-full justify-start text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-[#1a1a1a] transition-colors" 
-          />
-        </div>
-      </aside>
-
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-background/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
-
-      {/* ── Main ── */}
-      <div className="flex-1 flex flex-col min-w-0">
-
-        {/* Topbar */}
-        <header
-          className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12 bg-card border-b border-border shadow-sm"
-          style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', borderRadius: '0' }}
-        >
-          <button className="lg:hidden" onClick={() => setSidebarOpen(true)} style={{ color: 'var(--muted-foreground)' }}>
-            <Menu className="w-4 h-4" />
-          </button>
-          <p className="text-xs font-semibold" style={{ color: 'var(--muted-foreground)' }}>
-            {NAV_ITEMS.find(n => n.id === activeTab)?.label ?? 'Admin Panel'}
-          </p>
-        </header>
-
-        <main className="flex-1 overflow-auto p-5 lg:p-7">
-          
-          {loading && (
+      {loading && (
             <div>
               <SkeletonStatCard />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -1391,6 +1305,6 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
         onCancel={() => setConfirmAction(null)}
         onConfirm={executeAction}
       />
-    </div>
+    </>
   )
 }
