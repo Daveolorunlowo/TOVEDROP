@@ -1281,9 +1281,6 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
               <p className="text-[10px] mt-4" style={{ color: 'var(--muted-foreground)' }}>Showing last 50 entries · Includes both Step 1 and Step 2 attempts</p>
             </div>
           )}
-        </main>
-      </div>
-      
       {selectedActivityUser && (
         <UserActivityModal 
           user={selectedActivityUser} 
