@@ -28,7 +28,7 @@ export async function AdminDriversTab({ searchParams }: { searchParams: { page?:
     prisma.driverProfile.count({ where: where as any }),
     prisma.driverProfile.findMany({
       where: where as any,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { user: { createdAt: 'desc' } },
       skip: (page - 1) * itemsPerPage,
       take: itemsPerPage,
       include: {
