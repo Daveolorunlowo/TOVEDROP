@@ -67,10 +67,7 @@ export default async function AdminPage() {
  }
 
  return (
- <main className="max-w-6xl mx-auto w-full px-5 py-10 relative">
- <h1 className="text-3xl font-extrabold tracking-tight mb-2">Admin Portal</h1>
- <p className="text-muted mb-8">Platform overview and recent activity.</p>
-
+ <main className="max-w-6xl mx-auto w-full">
  <AdminOverviewTab stats={overviewStats.stats} recentActivity={overviewStats.recentActivity} />
  </main>
  )
