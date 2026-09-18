@@ -213,3 +213,5 @@
     transition: transform 2s linear;
   }
 }
+
+body { font-variant-numeric: tabular-nums; }

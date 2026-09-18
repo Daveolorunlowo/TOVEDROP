@@ -6,10 +6,10 @@ import { AdminLegacyClient } from '@/components/admin/AdminLegacyClient'
 export const dynamic = 'force-dynamic'
 
 export default async function AdminReportsPage() {
-  const session = await getServerSession(authOptions)
-  if (!session?.user || session.user.role !== 'ADMIN') {
-    redirect('/auth')
-  }
+ const session = await getServerSession(authOptions)
+ if (!session?.user || session.user.role !== 'ADMIN') {
+ redirect('/auth')
+ }
 
-  return <AdminLegacyClient initialTab="reports" />
+ return <AdminLegacyClient initialTab="reports" />
 }

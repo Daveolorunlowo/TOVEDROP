@@ -4,73 +4,73 @@ import bcrypt from "bcryptjs"
 import { sendEmail } from "@/lib/email"
 
 export async function POST(req: Request) {
-  try {
-    const data = await req.json()
-    const { name, email, password, phone, area, availability, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate, isVerified } = data
+ try {
+ const data = await req.json()
+ const { name, email, password, phone, area, availability, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate, isVerified } = data
 
-    if (!name || !email || !password || !licenseNumber || !vehiclePlate) {
-      return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
-    }
+ if (!name || !email || !password || !licenseNumber || !vehiclePlate) {
+ return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
+ }
 
-    const exists = await prisma.user.findUnique({
-      where: { email }
-    })
+ const exists = await prisma.user.findUnique({
+ where: { email }
+ })
 
-    if (exists) {
-      return NextResponse.json({ message: "Email already registered" }, { status: 400 })
-    }
+ if (exists) {
+ return NextResponse.json({ message: "Email already registered" }, { status: 400 })
+ }
 
-    const hashedPassword = await bcrypt.hash(password, 10)
+ const hashedPassword = await bcrypt.hash(password, 10)
 
-    let driverStatus = 'PENDING'
-    if (process.env.AUTO_APPROVE_DRIVERS === 'true' || isVerified === true) {
-      driverStatus = 'APPROVED'
-    }
+ let driverStatus = 'PENDING'
+ if (process.env.AUTO_APPROVE_DRIVERS === 'true' || isVerified === true) {
+ driverStatus = 'APPROVED'
+ }
 
-    // Create user and driver profile in a transaction
-    const user = await prisma.$transaction(async (tx) => {
-      const newUser = await tx.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role: "DRIVER",
-          dropsBalance: 0
-        }
-      })
+ // Create user and driver profile in a transaction
+ const user = await prisma.$transaction(async (tx) => {
+ const newUser = await tx.user.create({
+ data: {
+ name,
+ email,
+ password: hashedPassword,
+ role: "DRIVER",
+ dropsBalance: 0
+ }
+ })
 
-      await tx.driverProfile.create({
-        data: {
-          userId: newUser.id,
-          phone,
-          area,
-          availability,
-          bio,
-          licenseNumber,
-          vehicleMake,
-          vehicleModel,
-          vehicleColor,
-          vehiclePlate,
-          status: driverStatus
-        }
-      })
+ await tx.driverProfile.create({
+ data: {
+ userId: newUser.id,
+ phone,
+ area,
+ availability,
+ bio,
+ licenseNumber,
+ vehicleMake,
+ vehicleModel,
+ vehicleColor,
+ vehiclePlate,
+ status: driverStatus
+ }
+ })
 
-      return newUser
-    })
+ return newUser
+ })
 
-    if (driverStatus === 'APPROVED') {
-      await sendEmail(email, 'DriverApproved', JSON.stringify({ name, phone, vehiclePlate }))
-    } else {
-      await sendEmail(email, 'DriverApplicationReceived', JSON.stringify({ name, phone, vehiclePlate }))
-      await sendEmail('admin@tovedrop.com', 'AdminNewApplication', JSON.stringify({ name, email, phone }))
-    }
+ if (driverStatus === 'APPROVED') {
+ await sendEmail(email, 'DriverApproved', JSON.stringify({ name, phone, vehiclePlate }))
+ } else {
+ await sendEmail(email, 'DriverApplicationReceived', JSON.stringify({ name, phone, vehiclePlate }))
+ await sendEmail('admin@tovedrop.com', 'AdminNewApplication', JSON.stringify({ name, email, phone }))
+ }
 
-    return NextResponse.json({ 
-      message: "Driver application submitted successfully", 
-      autoApproved: driverStatus === 'APPROVED'
-    }, { status: 201 })
-  } catch (error: any) {
-    console.error("Driver application error:", error)
-    return NextResponse.json({ message: "Error submitting application", error: error.message }, { status: 500 })
-  }
+ return NextResponse.json({ 
+ message: "Driver application submitted successfully", 
+ autoApproved: driverStatus === 'APPROVED'
+ }, { status: 201 })
+ } catch (error: any) {
+ console.error("Driver application error:", error)
+ return NextResponse.json({ message: "Error submitting application", error: error.message }, { status: 500 })
+ }
 }
