@@ -56,64 +56,56 @@ export async function AdminUsersTab({ searchParams }: { searchParams: { page?: s
  </form>
  </div>
 
- {/* Users Table */}
- <div className="bg-surface-card border border-border-default rounded-xl overflow-hidden">
- <div className="overflow-x-auto">
- <table className="w-full text-sm text-left">
- <thead className="bg-surface-elevated/50 text-[11px] uppercase tracking-wider text-muted-foreground border-b border-border-default">
- <tr>
- <th className="px-6 py-4 font-semibold">User</th>
- <th className="px-6 py-4 font-semibold">Joined</th>
- <th className="px-6 py-4 font-semibold">Drops Balance</th>
- <th className="px-6 py-4 font-semibold">Total Rides</th>
- <th className="px-6 py-4 font-semibold text-right">Actions</th>
- </tr>
- </thead>
- <tbody className="divide-y divide-border-default">
- {users.length === 0 ? (
- <tr>
- <td colSpan={5} className="px-6 py-12 text-center text-muted-foreground">
- No riders found matching your search.
- </td>
- </tr>
- ) : (
- users.map(user => (
- <tr key={user.id} className="hover:bg-surface-elevated/30 transition-colors">
- <td className="px-6 py-4">
- <div className="flex items-center gap-3">
- <Avatar className="w-8 h-8">
- <AvatarFallback className="text-[10px] font-bold bg-surface-elevated text-muted-foreground">
- {initials(user.name)}
- </AvatarFallback>
- </Avatar>
- <div>
- <p className="font-medium text-foreground">{user.name}</p>
- <p className="text-xs text-muted-foreground">{user.email}</p>
- </div>
- </div>
- </td>
- <td className="px-6 py-4 text-muted-foreground">
- {/* CreatedAt not available in schema, default to Unknown */}
- Unknown
- </td>
- <td className="px-6 py-4 font-medium">
- {user.dropsBalance} Drops
- </td>
- <td className="px-6 py-4 text-muted-foreground">
- {user._count.tripsAsRider}
- </td>
- <td className="px-6 py-4 text-right">
- <button className="text-xs font-semibold text-orange-brand hover:underline">
- View Details
- </button>
- </td>
- </tr>
- ))
- )}
- </tbody>
- </table>
- </div>
- </div>
+  {/* Users Grid */}
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {users.length === 0 ? (
+      <div className="col-span-full bg-card border border-border rounded-xl p-12 text-center flex flex-col items-center justify-center space-y-3">
+        <div className="w-12 h-12 rounded-full bg-surface-elevated flex items-center justify-center mb-2">
+          <Search className="w-6 h-6 text-muted-foreground" />
+        </div>
+        <h3 className="text-lg font-bold text-foreground">No riders found</h3>
+        <p className="text-sm text-muted-foreground">We couldn't find any riders matching your search criteria.</p>
+      </div>
+    ) : (
+      users.map(user => (
+        <div key={user.id} className="flex flex-col bg-card border border-border rounded-xl p-6 transition-all hover:border-primary/50">
+          
+          {/* Header Info */}
+          <div className="flex items-center gap-4 mb-6">
+            <Avatar className="w-12 h-12 border border-border">
+              <AvatarFallback className="text-sm font-bold bg-surface-elevated text-muted-foreground">
+                {initials(user.name)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-bold text-foreground truncate">{user.name}</h3>
+              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+            </div>
+          </div>
+          
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="bg-surface-elevated rounded-lg p-4 flex flex-col justify-center">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Drops</p>
+              <p className="text-2xl font-bold tabular-nums text-foreground">{user.dropsBalance}</p>
+            </div>
+            <div className="bg-surface-elevated rounded-lg p-4 flex flex-col justify-center">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total Rides</p>
+              <p className="text-2xl font-bold tabular-nums text-foreground">{user._count.tripsAsRider}</p>
+            </div>
+          </div>
+
+          {/* Actions Footer */}
+          <div className="mt-auto pt-4 border-t border-border flex justify-end">
+            <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors">
+              View Details
+            </button>
+          </div>
+
+        </div>
+      ))
+    )}
+  </div>
 
  {totalItems > 0 && (
  <PaginationControls 

@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { DM_Sans } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from '@/components/providers'
 import { InstallPrompt } from '@/components/install-prompt'
@@ -11,9 +11,9 @@ import { NetworkIndicator } from '@/components/network-indicator'
 import { GlobalMessageListener } from '@/components/global-message-listener'
 import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
 
-const dmSans = DM_Sans({
+const inter = Inter({
  subsets: ['latin'],
- weight: ['300', '400', '500', '600', '700', '800'],
+ weight: ['300', '400', '500', '600', '700'],
 })
 
 export const metadata: Metadata = {
@@ -75,7 +75,7 @@ export default function RootLayout({
 }>) {
  return (
  <html lang="en" className="bg-background">
- <body className={`${dmSans.className} antialiased`}>
+ <body className={`${inter.className} antialiased`}>
  <Providers>
  <GlobalAuthenticatedNav />
  {children}
