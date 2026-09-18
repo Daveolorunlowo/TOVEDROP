@@ -56,14 +56,14 @@
   --text-secondary: #3F3F46;
   --text-muted: #71717A;
   
-  /* Primary brand (Professional Indigo) */
-  --brand-primary: #4F46E5;
+  /* Primary brand (Professional Purple) */
+  --brand-primary: #7C3AED;
   
   /* Status Colors (Functional only) */
   --status-success: #10B981;
   --status-warning: #F59E0B;
   --status-danger: #EF4444;
-  --status-info: #3B82F6;
+  --status-info: #7C3AED;
   --status-neutral: #A1A1AA;
 
   /* Backward-compat aliases */
@@ -109,19 +109,19 @@
 .dark {
   color-scheme: dark;
   /* TOVEDROP professional palette - DARK MODE */
-  --bg-deep: #09090B;
-  --surface-card: #18181B;
-  --surface-elevated: #27272A;
-  --border-subtle: #27272A;
-  --border-default: #3F3F46;
+  --bg-deep: #000000; /* Pure Black for that premium dark look */
+  --surface-card: #0A0A0A;
+  --surface-elevated: #171717;
+  --border-subtle: #262626;
+  --border-default: #404040;
   --text-primary: #FAFAFA; /* Off-white */
   --text-secondary: #A1A1AA;
   --text-muted: #71717A;
   
-  --brand-primary: #6366F1; /* Slightly lighter indigo for dark mode */
+  --brand-primary: #A855F7; /* Vibrant purple that pops against black */
 
   --status-neutral: #5A5A6B;
-  --status-info: #3B82F6;
+  --status-info: #A855F7;
 
   /* Backward-compat aliases */
   --green-brand: var(--brand-primary);
