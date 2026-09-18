@@ -190,7 +190,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
             "relative flex items-center justify-center w-[60px] h-[60px] rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] z-10",
-            "bg-primary shadow-[0_0_24px_rgba(34,197,94,0.4)]",
+            "bg-primary shadow-[0_0_24px_rgba(249,115,22,0.5)]",
             "active:scale-95 transition-transform duration-300"
           )}
           style={{

@@ -29,11 +29,33 @@ export function RequestsListClient({
   const [requests, setRequests] = useState(initialRequests)
 
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem(`tovedrop_declined_trips_${driverId}`)
+      if (stored) {
+        setDeclined(JSON.parse(stored))
+      }
+    } catch (e) {
+      console.warn('Could not read declined trips from local storage')
+    }
+  }, [driverId])
+
+  useEffect(() => {
     setRequests(initialRequests)
   }, [initialRequests])
 
   const handleDecline = (tripId: string) => {
-    setDeclined(prev => [...prev, tripId])
+    setDeclined(prev => {
+      const newDeclined = [...prev, tripId]
+      try {
+        // Keep last 100 to avoid localStorage bloat
+        const limited = newDeclined.slice(-100)
+        localStorage.setItem(`tovedrop_declined_trips_${driverId}`, JSON.stringify(limited))
+        return limited
+      } catch (e) {
+        console.warn('Could not write declined trips to local storage')
+      }
+      return newDeclined
+    })
   }
 
   const handleAccept = async (tripId: string) => {

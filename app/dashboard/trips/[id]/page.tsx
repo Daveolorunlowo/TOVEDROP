@@ -34,18 +34,16 @@ export default async function TripDetailPage({ params }: { params: { id: string 
   const otherUser = isRider ? trip.driver : trip.rider
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <Link href="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Link>
-          
-          {trip.status === 'CONFIRMED' && isRider && trip.shareToken && (
-            <ShareTripButton shareToken={trip.shareToken} />
-          )}
+    <div className="space-y-6 animate-in fade-in duration-300 max-w-5xl mx-auto pb-20">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Trip Details</h1>
         </div>
+        
+        {trip.status === 'CONFIRMED' && isRider && trip.shareToken && (
+          <ShareTripButton shareToken={trip.shareToken} />
+        )}
+      </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Trip Details */}
@@ -121,7 +119,6 @@ export default async function TripDetailPage({ params }: { params: { id: string 
             )}
           </div>
         </div>
-      </div>
     </div>
   )
 }

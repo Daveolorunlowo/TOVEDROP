@@ -91,16 +91,11 @@ export default function RiderSettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-5 py-8">
-        <div className="flex items-center mb-8">
-          <Link href="/dashboard" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Link>
-        </div>
-
-        <h1 className="text-2xl font-bold mb-6 text-foreground">Settings</h1>
+    <div className="space-y-6 animate-in fade-in duration-300 max-w-2xl pb-20">
+      <div>
+        <h1 className="text-2xl font-bold mb-1 text-foreground">Settings</h1>
+        <p className="text-sm text-muted-foreground mb-6">Manage your preferences and notifications.</p>
+      </div>
 
         {loading ? (
           <div className="animate-pulse flex flex-col gap-4">
@@ -194,7 +189,6 @@ export default function RiderSettingsPage() {
             </div>
           </div>
         )}
-      </div>
     </div>
   )
 }

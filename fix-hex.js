@@ -1,3 +1,4 @@
+/`df hj;'K;
 const fs = require('fs');
 
 const files = [
@@ -24,7 +25,7 @@ files.forEach(file => {
   content = content.replace(/'#222'/g, "'var(--border-default)'");
   content = content.replace(/'#333333'/g, "'var(--border-subtle)'");
   content = content.replace(/'#333'/g, "'var(--border-subtle)'");
-  
+
   content = content.replace(/"#111111"/g, '"var(--background)"');
   content = content.replace(/"#171717"/g, '"var(--surface-card)"');
   content = content.replace(/"#1e1e1e"/g, '"var(--border)"');
