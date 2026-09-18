@@ -90,7 +90,7 @@ export default async function TripSharePage({ params }: { params: { shareToken: 
             <p className="text-[10px] font-semibold uppercase tracking-wider mb-4" style={{ color: 'var(--muted-foreground)' }}>Driver & Vehicle Details</p>
             <div className="flex items-center gap-4">
               <Avatar className="w-12 h-12 shrink-0 border" style={{ borderColor: 'var(--border-default)' }}>
-                <AvatarFallback className="text-sm font-bold" style={{ background: '#111', color: 'var(--foreground)' }}>
+                <AvatarFallback className="text-sm font-bold" style={{ background: 'var(--background)', color: 'var(--foreground)' }}>
                   {driverInitials}
                 </AvatarFallback>
               </Avatar>
@@ -113,7 +113,7 @@ export default async function TripSharePage({ params }: { params: { shareToken: 
             
             {/* Vehicle Details */}
             {driverProfile && (
-              <div className="mt-5 rounded-lg p-3.5 flex items-center gap-3" style={{ background: 'var(--background)', border: '1px solid #1e1e1e' }}>
+              <div className="mt-5 rounded-lg p-3.5 flex items-center gap-3" style={{ background: 'var(--background)', border: '1px solid var(--border)' }}>
                 <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--card)', border: '1px solid var(--border)' }}>
                   <Car className="w-4 h-4" style={{ color: 'var(--muted-foreground)' }} />
                 </div>
@@ -123,7 +123,7 @@ export default async function TripSharePage({ params }: { params: { shareToken: 
                       {driverProfile.vehicleColor} {driverProfile.vehicleMake} {driverProfile.vehicleModel}
                     </p>
                   </div>
-                  <div className="shrink-0 px-2.5 py-1 rounded-md" style={{ background: '#1a1a1a', border: '1px solid #333' }}>
+                  <div className="shrink-0 px-2.5 py-1 rounded-md" style={{ background: '#1a1a1a', border: '1px solid var(--border-subtle)' }}>
                     <p className="text-xs font-mono font-bold tracking-widest uppercase" style={{ color: 'var(--foreground)' }}>
                       {driverProfile.vehiclePlate}
                     </p>

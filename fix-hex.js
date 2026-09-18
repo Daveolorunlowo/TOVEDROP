@@ -1,4 +1,4 @@
-/`df hj;'K;
+
 const fs = require('fs');
 
 const files = [
@@ -17,19 +17,15 @@ files.forEach(file => {
   let content = fs.readFileSync(file, 'utf8');
   const orig = content;
 
-  content = content.replace(/'#111111'/g, "'var(--background)'");
-  content = content.replace(/'#171717'/g, "'var(--surface-card)'");
-  content = content.replace(/'#1e1e1e'/g, "'var(--border)'");
-  content = content.replace(/'#f5f5f5'/g, "'var(--foreground)'");
-  content = content.replace(/'#222222'/g, "'var(--border-default)'");
-  content = content.replace(/'#222'/g, "'var(--border-default)'");
-  content = content.replace(/'#333333'/g, "'var(--border-subtle)'");
-  content = content.replace(/'#333'/g, "'var(--border-subtle)'");
-
-  content = content.replace(/"#111111"/g, '"var(--background)"');
-  content = content.replace(/"#171717"/g, '"var(--surface-card)"');
-  content = content.replace(/"#1e1e1e"/g, '"var(--border)"');
-  content = content.replace(/"#f5f5f5"/g, '"var(--foreground)"');
+  content = content.replace(/#111111/g, "var(--background)");
+  content = content.replace(/#111\b/g, "var(--background)");
+  content = content.replace(/#171717/g, "var(--surface-card)");
+  content = content.replace(/#1e1e1e/g, "var(--border)");
+  content = content.replace(/#f5f5f5/g, "var(--foreground)");
+  content = content.replace(/#222222/g, "var(--border-default)");
+  content = content.replace(/#222\b/g, "var(--border-default)");
+  content = content.replace(/#333333/g, "var(--border-subtle)");
+  content = content.replace(/#333\b/g, "var(--border-subtle)");
 
   if (content !== orig) {
     fs.writeFileSync(file, content, 'utf8');

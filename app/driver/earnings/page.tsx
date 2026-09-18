@@ -165,7 +165,7 @@ export default function EarningsPage() {
                   value={bankName}
                   onChange={e => setBankName(e.target.value)}
                   placeholder="e.g. GTBank, OPay"
-                  style={{ background: '#111', border: '1px solid #333', color: 'var(--foreground)' }}
+                  style={{ background: 'var(--background)', border: '1px solid var(--border-subtle)', color: 'var(--foreground)' }}
                 />
               </div>
               
@@ -175,7 +175,7 @@ export default function EarningsPage() {
                   value={accountNumber}
                   onChange={e => setAccountNumber(e.target.value)}
                   placeholder="0123456789"
-                  style={{ background: '#111', border: '1px solid #333', color: 'var(--foreground)' }}
+                  style={{ background: 'var(--background)', border: '1px solid var(--border-subtle)', color: 'var(--foreground)' }}
                 />
               </div>
 
@@ -185,7 +185,7 @@ export default function EarningsPage() {
                   value={accountName}
                   onChange={e => setAccountName(e.target.value)}
                   placeholder="John Doe"
-                  style={{ background: '#111', border: '1px solid #333', color: 'var(--foreground)' }}
+                  style={{ background: 'var(--background)', border: '1px solid var(--border-subtle)', color: 'var(--foreground)' }}
                 />
               </div>
 
@@ -207,7 +207,7 @@ export default function EarningsPage() {
             <h2 className="text-sm font-semibold mb-4" style={{ color: 'var(--foreground)' }}>Withdrawal History</h2>
             <div className="space-y-3">
               {data.withdrawalRequests.map((req: any) => (
-                <div key={req.id} className="flex items-center justify-between p-3 rounded-md" style={{ background: '#111', border: '1px solid #1e1e1e' }}>
+                <div key={req.id} className="flex items-center justify-between p-3 rounded-md" style={{ background: 'var(--background)', border: '1px solid var(--border)' }}>
                   <div>
                     <p className="text-sm font-bold text-foreground">₦{req.amount.toLocaleString()}</p>
                     <p className="text-[10px] text-[#555]">{new Date(req.createdAt).toLocaleString()}</p>
@@ -229,7 +229,7 @@ export default function EarningsPage() {
       {/* Withdraw Modal */}
       {showWithdrawModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
-          <div className="w-full max-w-sm rounded-lg p-6" style={{ background: 'var(--card)', border: '1px solid #333' }}>
+          <div className="w-full max-w-sm rounded-lg p-6" style={{ background: 'var(--card)', border: '1px solid var(--border-subtle)' }}>
             <h2 className="text-lg font-bold text-foreground mb-1">Request Withdrawal</h2>
             <p className="text-xs text-muted-foreground mb-6">Enter the amount you wish to withdraw to {bankName}.</p>
             
@@ -242,7 +242,7 @@ export default function EarningsPage() {
                   onChange={e => setWithdrawAmount(e.target.value)}
                   placeholder={`Max: ₦${walletBalance}`}
                   max={walletBalance}
-                  style={{ background: '#111', border: '1px solid #333', color: 'var(--foreground)' }}
+                  style={{ background: 'var(--background)', border: '1px solid var(--border-subtle)', color: 'var(--foreground)' }}
                 />
               </div>
               <div className="flex gap-3 pt-2">
