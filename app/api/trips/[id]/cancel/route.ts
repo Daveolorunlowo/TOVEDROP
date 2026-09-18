@@ -40,8 +40,8 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
       })
 
       let refunded = false
-      // Refund the drop if dropLotId is set and the trip hasn't been accepted yet
-      if (trip.dropLotId && trip.status === "PENDING") {
+      // Refund the drop if dropLotId is set and the trip hasn't been accepted yet, OR if it's confirmed but the driver hasn't arrived
+      if (trip.dropLotId && (trip.status === "PENDING" || (trip.status === "CONFIRMED" && !trip.driverArrivedAt))) {
         refunded = true
         await tx.dropLot.update({
           where: { id: trip.dropLotId },
@@ -74,11 +74,15 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
     })
     
     if (fullTrip) {
-      const dropRefundStatus = result.refunded 
-        ? "Your 1 Drop has been refunded." 
-        : (fullTrip.dropLotId ? "No refund applies because the trip was already accepted by a driver." : "No refund applies.")
+      let refundReason = "No refund applies."
+      if (result.refunded) {
+        refundReason = "Your 1 Drop has been refunded."
+      } else if (fullTrip.dropLotId) {
+        refundReason = "No refund applies because the driver has already arrived."
+      }
+
       const title = 'Trip Cancelled'
-      const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${dropRefundStatus}`
+      const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${refundReason}`
       const url = `/dashboard/trips/${tripId}`
 
       // Notify Rider
