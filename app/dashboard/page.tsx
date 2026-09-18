@@ -55,136 +55,149 @@ export default async function DashboardOverview() {
  return map[reason] || "Unforeseen circumstances"
  }
  
- return (
- <div className="space-y-8 animate-in fade-in zoom-in-95 duration-300 max-w-5xl mx-auto pb-20">
- <TripPoller userId={user.id} />
+  return (
+  <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300 max-w-2xl mx-auto px-4 pt-6 pb-24">
+  <TripPoller userId={user.id} />
 
- {/* Header */}
- <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
- <div className="min-w-0 max-w-full">
- <h1 className="text-2xl font-bold break-words text-foreground tracking-tight">
- Overview
- </h1>
- {user.university && (
- <p className="text-xs mt-1 text-muted-foreground">{user.name} &bull; {user.university}</p>
- )}
- </div>
- </div>
+  {/* Header */}
+  <div>
+   <h1 className="text-2xl font-bold text-foreground tracking-tight">Overview</h1>
+   {user.university && (
+    <p className="text-sm mt-1 text-muted-foreground">{user.name} &bull; {user.university}</p>
+   )}
+  </div>
 
- {/* Persistent Drops Balance Card */}
- <div className="rounded-lg bg-card border border-border px-6 py-6">
- <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
- <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2 text-muted-foreground">
- Drops Balance
- </p>
- <div className="flex items-baseline gap-2">
- <span className="text-4xl font-extrabold text-foreground tabular-nums tracking-tight">{user.dropsBalance}</span>
- <span className="text-sm font-medium text-muted-foreground">Drops available</span>
- </div>
- </div>
- <div className="flex-shrink-0 w-full sm:w-auto">
- {user.dropsBalance === 0 ? (
- <Link
- href="/dashboard/buy-drops"
- className="flex w-full sm:w-auto items-center justify-center py-3 px-6 rounded-lg text-sm font-bold text-primary-foreground bg-primary transition-transform active:scale-[0.98] hover:brightness-110"
- >
- Buy more Drops
- </Link>
- ) : (
- <Link 
- href="/dashboard/buy-drops" 
- className="flex w-full sm:w-auto items-center justify-center py-2.5 px-5 rounded-lg text-sm font-bold transition-all bg-primary/10 hover:bg-primary/20 text-primary"
- >
- Get More Drops
- </Link>
- )}
- </div>
- </div>
- </div>
+  {/* Drops Balance Card — primary hero */}
+  <div className="rounded-xl bg-card border border-border p-6 space-y-5">
+   <div>
+    <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-1">
+     Drops Balance
+    </p>
+    <div className="flex items-baseline gap-2">
+     <span className="text-5xl font-black text-foreground tabular-nums tracking-tight">{user.dropsBalance}</span>
+     <span className="text-sm font-medium text-muted-foreground">available</span>
+    </div>
+   </div>
+   {user.dropsBalance === 0 ? (
+    <Link
+     href="/dashboard/buy-drops"
+     className="flex w-full items-center justify-center py-3 px-6 rounded-lg text-sm font-bold text-primary-foreground bg-primary transition-all active:scale-[0.98] hover:opacity-90"
+    >
+     Buy Drops
+    </Link>
+   ) : (
+    <Link
+     href="/dashboard/buy-drops"
+     className="flex w-full items-center justify-center py-3 px-6 rounded-lg text-sm font-bold transition-all bg-primary/10 hover:bg-primary/20 text-primary"
+    >
+     Get More Drops
+    </Link>
+   )}
+  </div>
 
- {/* Quick Stats */}
- <div className="grid grid-cols-2 gap-4">
- <div className="bg-card border border-border rounded-lg p-5 flex flex-col justify-center">
- <p className="text-xs font-medium text-muted-foreground mb-1">Total Rides Taken</p>
- <p className="text-3xl font-bold tabular-nums text-foreground">{tripsTaken}</p>
- </div>
- <div className="bg-card border border-border rounded-lg p-5 flex flex-col justify-center">
- <p className="text-xs font-medium text-muted-foreground mb-1">Account Status</p>
- <p className="text-lg font-bold text-green-500">Active</p>
- </div>
- </div>
+  {/* Quick Stats Row */}
+  <div className="grid grid-cols-2 gap-3">
+   <div className="bg-card border border-border rounded-xl p-5">
+    <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">Rides Taken</p>
+    <p className="text-4xl font-black tabular-nums text-foreground">{tripsTaken}</p>
+   </div>
+   <div className="bg-card border border-border rounded-xl p-5">
+    <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2">Account</p>
+    <div className="flex items-center gap-2 mt-1">
+     <span className="w-2 h-2 rounded-full bg-primary inline-block" />
+     <p className="text-base font-bold text-primary">Active</p>
+    </div>
+   </div>
+  </div>
 
- {/* Next Trip Section */}
- <div>
- <div className="flex items-center justify-between mb-4">
- <h2 className="text-lg font-bold text-foreground">Next Upcoming Trip</h2>
- <Link href="/dashboard/trips" className="text-sm font-semibold text-primary hover:underline flex items-center gap-1">
- See all <ArrowRight className="w-4 h-4" />
- </Link>
- </div>
+  {/* Next Trip Section */}
+  <div className="space-y-3">
+   <div className="flex items-center justify-between">
+    <h2 className="text-base font-bold text-foreground">Next Upcoming Trip</h2>
+    <Link href="/dashboard/trips" className="text-xs font-semibold text-primary hover:opacity-80 flex items-center gap-1 transition-opacity">
+     See all <ArrowRight className="w-3.5 h-3.5" />
+    </Link>
+   </div>
 
- {nextTrip ? (
- <div className="bg-card border border-border rounded-xl p-0 overflow-hidden">
- {isRecentlyTransferred && (
- <div className="bg-orange-brand/10 border-b border-orange-brand/20 p-4">
- <p className="text-sm font-bold text-orange-brand mb-1 flex items-center gap-1.5">
- <span className="text-lg">⚠</span> Driver Changed
- </p>
- <p className="text-xs text-foreground mt-2 leading-relaxed">
- <strong>{recentTransfer.fromDriver.name}</strong> transferred your trip to <strong>{nextTrip.driver?.name}</strong> due to: <span className="italic">{getReasonText(recentTransfer.reason, recentTransfer.reasonNote)}</span>
- </p>
- </div>
- )}
- <div className="p-6">
- <div className="flex justify-between items-start mb-6">
- <div>
- <p className="text-sm font-semibold text-primary mb-2 flex items-center gap-1.5">
- <Clock className="w-4 h-4" />
- {nextTrip.date} at {nextTrip.time}
- </p>
- <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-surface-elevated border border-border">
- {nextTrip.status}
- </span>
- </div>
- </div>
- 
- <div className="space-y-4">
- <div className="flex items-start gap-3">
- <MapPin className="w-5 h-5 text-primary mt-0.5" />
- <div>
- <p className="text-xs font-semibold text-muted-foreground">Pickup</p>
- <p className="text-base font-medium text-foreground">{nextTrip.pickup}</p>
- </div>
- </div>
- <div className="w-0.5 h-6 bg-border ml-2.5" />
- <div className="flex items-start gap-3">
- <MapPin className="w-5 h-5 text-secondary mt-0.5" />
- <div>
- <p className="text-xs font-semibold text-muted-foreground">Destination</p>
- <p className="text-base font-medium text-foreground">{nextTrip.destination}</p>
- </div>
- </div>
- </div>
- </div>
- </div>
- ) : (
- <div className="bg-surface-elevated border border-border rounded-xl p-8 text-center">
- <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
- <Car className="w-7 h-7 text-primary" />
- </div>
- <h3 className="text-lg font-bold text-foreground mb-2">No upcoming rides</h3>
- <p className="text-sm text-muted-foreground mb-6">Ready to head to class or back to your hostel?</p>
- <Link 
- href="/book" 
- className="inline-flex items-center justify-center px-6 py-3 rounded-xl text-sm font-bold bg-primary text-primary-foreground hover:brightness-110 transition-all"
- >
- Book your next ride
- </Link>
- </div>
- )}
- </div>
+   {nextTrip ? (
+    <div className="bg-card border border-border rounded-xl overflow-hidden">
+     {isRecentlyTransferred && (
+      <div className="bg-primary/10 border-b border-primary/20 px-5 py-3">
+       <p className="text-sm font-bold text-primary flex items-center gap-1.5">
+        <span>⚠</span> Driver Changed
+       </p>
+       <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+        <span className="text-foreground font-medium">{recentTransfer.fromDriver.name}</span> transferred your trip to{' '}
+        <span className="text-foreground font-medium">{nextTrip.driver?.name}</span> — <span className="italic">{getReasonText(recentTransfer.reason, recentTransfer.reasonNote)}</span>
+       </p>
+      </div>
+     )}
 
- </div>
- )
+     <div className="p-5 space-y-5">
+      {/* Date + Status row */}
+      <div className="flex items-center justify-between">
+       <div className="flex items-center gap-2 text-primary">
+        <Clock className="w-4 h-4 shrink-0" />
+        <span className="text-sm font-semibold">{nextTrip.date} &nbsp;·&nbsp; {nextTrip.time}</span>
+       </div>
+       <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full border tracking-wider uppercase ${
+        nextTrip.status === 'CONFIRMED'
+         ? 'bg-primary/10 text-primary border-primary/30'
+         : 'bg-surface-elevated text-muted-foreground border-border'
+       }`}>
+        {nextTrip.status}
+       </span>
+      </div>
+
+      {/* Route */}
+      <div className="space-y-0">
+       <div className="flex items-start gap-3 py-3 border-t border-border">
+        <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+        <div>
+         <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">Pickup</p>
+         <p className="text-sm font-semibold text-foreground">{nextTrip.pickup}</p>
+        </div>
+       </div>
+       <div className="flex items-start gap-3 py-3 border-t border-border">
+        <MapPin className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
+        <div>
+         <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-0.5">Destination</p>
+         <p className="text-sm font-semibold text-foreground">{nextTrip.destination}</p>
+        </div>
+       </div>
+      </div>
+
+      {/* Driver info if assigned */}
+      {nextTrip.driver && (
+       <div className="flex items-center gap-3 pt-1 border-t border-border">
+        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+         <Car className="w-4 h-4 text-primary" />
+        </div>
+        <div>
+         <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">Driver</p>
+         <p className="text-sm font-semibold text-foreground">{nextTrip.driver.name}</p>
+        </div>
+       </div>
+      )}
+     </div>
+    </div>
+   ) : (
+    <div className="bg-card border border-border rounded-xl p-10 text-center">
+     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+      <Car className="w-6 h-6 text-primary" />
+     </div>
+     <h3 className="text-base font-bold text-foreground mb-1">No upcoming rides</h3>
+     <p className="text-sm text-muted-foreground mb-5">Ready to head to class or back to your hostel?</p>
+     <Link
+      href="/book"
+      className="inline-flex items-center justify-center px-6 py-3 rounded-lg text-sm font-bold bg-primary text-primary-foreground hover:opacity-90 transition-all active:scale-[0.98]"
+     >
+      Book a Ride
+     </Link>
+    </div>
+   )}
+  </div>
+
+  </div>
+  )
 }
