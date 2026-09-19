@@ -169,16 +169,17 @@ export function BuyDropsClient({
  <div className="animate-in fade-in slide-in- duration-300 relative">
 
  {/* Live Balance Card */}
- <div className={`mb-10 p-5 rounded-xl bg-surface-card border transition-colors duration-600 ${showCelebration ? 'border-orange-brand/50' : 'border-border-default'} flex items-center justify-between `}>
+ <div className={`relative mb-12 p-6 rounded-2xl bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border overflow-hidden transition-colors duration-600 ${showCelebration ? 'border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.2)]' : 'border-white/10'} flex items-center justify-between z-10`}>
+ <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 blur-2xl rounded-full" />
  <div>
- <p className="text-xs font-semibold text-muted mb-1">Current Balance</p>
+ <p className="text-xs font-bold uppercase tracking-widest text-[#888] mb-2">Current Balance</p>
  <div className="flex items-center gap-3">
- <DropCoinIcon className="w-8 h-8" />
- <span className="text-3xl font-bold tabular-nums tracking-tight">{animatedBalance}</span>
+ <DropCoinIcon className="w-10 h-10 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
+ <span className="text-4xl font-black text-white tabular-nums tracking-tight">{animatedBalance}</span>
  </div>
  </div>
  <div className="text-right">
- <p className="text-sm text-secondary">Ready to ride</p>
+ <p className="text-xs font-bold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-3 py-1.5 rounded-full border border-orange-500/20 inline-block">Ready to ride</p>
  </div>
  </div>
 
@@ -194,37 +195,37 @@ export function BuyDropsClient({
  key={pkg.id}
  onClick={() => setSelectedPackage(pkg.id)}
  className={`
- relative p-6 rounded-xl border transition-all duration-200 cursor-pointer overflow-hidden
- ${isSelected ? 'border-purple-brand bg-surface-elevated ring-1 ring-purple-brand/50 z-10' : 'border-border-default bg-surface-card hover:bg-surface-elevated/50'}
+ relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden
+ ${isSelected ? 'border-orange-500 bg-orange-500/10 shadow-[0_0_20px_rgba(249,115,22,0.15)] z-10' : 'border-white/10 bg-[#141414] hover:bg-[#1a1a1a] hover:border-white/20'}
  ${selectedPackage && !isSelected ? 'opacity-60 scale-95' : 'scale-100'}
  `}
  style={{ transform: isSelected ? 'scale(1.02)' : undefined }}
  >
  {/* Popular Badge */}
  {pkg.badge && (
- <div className="absolute top-0 right-0 bg-purple-brand/20 text-purple-light text-[10px] font-bold px-3 py-1 rounded-bl-lg">
+ <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-600 to-orange-400 text-black text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-bl-lg shadow-lg">
  {pkg.badge}
  </div>
  )}
 
  {/* First Time Badge */}
  {isFirstTime && (
- <div className="absolute top-2 left-2 bg-green-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full">
+ <div className="absolute top-3 left-3 bg-green-500 text-black text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-lg">
  First Time - {(FIRST_PURCHASE_DISCOUNT_PERCENTAGE * 100)}% OFF
  </div>
  )}
  
  <div className="flex items-start justify-between relative z-10 mt-2">
  <div>
- <h3 className="text-lg font-extrabold flex items-center gap-2">
+ <h3 className="text-xl font-extrabold flex items-center gap-2 text-white">
  {pkg.drops} Drops
  </h3>
  <div className="mt-1 flex items-center gap-2">
- <p className="text-sm text-muted">₦{discountedPrice.toLocaleString()}</p>
- {isFirstTime && <p className="text-xs text-secondary/60 line-through">₦{pkg.naira.toLocaleString()}</p>}
+ <p className="text-lg font-bold text-green-400">₦{discountedPrice.toLocaleString()}</p>
+ {isFirstTime && <p className="text-sm font-medium text-white/40 line-through">₦{pkg.naira.toLocaleString()}</p>}
  </div>
  </div>
- <div className={`w-6 h-6 rounded-full flex items-center justify-center border transition-colors ${isSelected ? 'bg-purple-brand border-purple-brand' : 'border-border-default bg-transparent'}`}>
+ <div className={`w-7 h-7 rounded-full flex items-center justify-center border-2 transition-all ${isSelected ? 'bg-orange-500 border-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]' : 'border-white/20 bg-black/50'}`}>
  {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
  </div>
  </div>
@@ -250,8 +251,8 @@ export function BuyDropsClient({
  onClick={handleCheckout}
  disabled={isCheckingOut}
  className={`
- w-full py-4 rounded-xl text-base font-bold shadow-lg transition-all flex items-center justify-center gap-2 relative overflow-hidden
- ${isCheckingOut ? 'bg-orange-brand/80 text-white/90 scale-[0.98]' : 'bg-orange-brand text-white hover:brightness-110 active:scale-[0.98] hover:shadow-orange-brand/20'}
+ w-full py-4 rounded-xl text-lg font-black uppercase tracking-wider shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all flex items-center justify-center gap-2 relative overflow-hidden
+ ${isCheckingOut ? 'bg-orange-600 text-white/90 scale-[0.98]' : 'bg-gradient-to-r from-orange-500 to-orange-400 text-black hover:brightness-110 active:scale-[0.98]'}
  `}
  >
  {isCheckingOut ? (
@@ -266,7 +267,7 @@ export function BuyDropsClient({
  )}
 
  {/* Shimmer effect */}
- <div className="absolute inset-0 -translate-x-full bg-primary /20 hover:animate-shimmer" />
+ <div className="absolute inset-0 -translate-x-full bg-white/20 hover:animate-shimmer" />
  </button>
  <p className="text-center text-xs text-secondary mt-4 flex items-center justify-center gap-1.5">
  Secure payment via Paystack <span className="opacity-50">•</span> Cancel anytime
