@@ -537,7 +537,7 @@ export default function AdminDashboardPage() {
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-1 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
           {NAV_ITEMS.map(item => {
             const active = activeTab === item.id
             return (
