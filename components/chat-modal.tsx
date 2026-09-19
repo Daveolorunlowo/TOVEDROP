@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { X, Send, Loader2 } from "lucide-react"
+import { X, Send, Loader2, CheckCircle2 } from "lucide-react"
 import { pusherClient } from "@/lib/pusher-client"
 
 interface Message {
@@ -53,7 +53,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  fetchHistory()
 
  if (!pusherClient) return;
- const channel = pusherClient.subscribe(`chat-${tripId}`)
+ const channel = pusherClient.subscribe(`trip-${tripId}`)
  channel.bind('new-message', (newMessage: Message) => {
  setMessages((prev) => {
  // Prevent duplicates
@@ -64,7 +64,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
 
  return () => {
  mounted = false
- if (pusherClient) pusherClient.unsubscribe(`chat-${tripId}`)
+ if (pusherClient) pusherClient.unsubscribe(`trip-${tripId}`)
  }
  }, [tripId])
 
@@ -96,56 +96,73 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  }
 
  return (
- <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-background/60 backdrop-blur-sm animate-in fade-in duration-200">
+ <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center sm:p-4 bg-background/60 backdrop-blur-md animate-in fade-in duration-300">
  <div 
- className="w-full sm:max-w-md h-[80vh] sm:h-[600px] bg-surface-elevated flex flex-col rounded-t-2xl sm:rounded-xl overflow-hidden animate-in slide-in- sm:slide-in-"
- style={{ border: '1px solid var(--border)' }}
+ className="w-full sm:max-w-md h-[85vh] sm:h-[650px] flex flex-col rounded-t-3xl sm:rounded-3xl overflow-hidden animate-in slide-in-from-bottom-8 sm:slide-in-from-bottom-4 duration-500 ease-out shadow-2xl relative"
+ style={{ background: '#111', border: '1px solid rgba(255,255,255,0.08)' }}
  >
+ {/* Ambient Glow Background */}
+ <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-orange-500/10 to-transparent pointer-events-none" />
+
  {/* Header */}
- <div className="flex items-center justify-between px-5 py-4 border-b border-border-default bg-surface-card">
+ <div className="relative flex items-center justify-between px-6 py-5 border-b border-white/10 bg-white/5 backdrop-blur-xl z-10">
+ <div className="flex items-center gap-3">
+ <div className="relative">
+ <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-orange-500/20">
+ {otherPartyName.charAt(0).toUpperCase()}
+ </div>
+ <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#111] rounded-full animate-pulse" />
+ </div>
  <div>
- <h3 className="font-bold text-primary" style={{ letterSpacing: '-0.01em' }}>
- Chat with {otherPartyName.split(' ')[0]}
+ <h3 className="font-bold text-white tracking-tight text-lg">
+ {otherPartyName.split(' ')[0]}
  </h3>
- <p className="text-[10px] text-status-success font-semibold uppercase tracking-wider">
- Secure Connection
+ <p className="text-[11px] text-green-400 font-medium tracking-wide">
+ Online ?' Secured
  </p>
+ </div>
  </div>
  <button 
  onClick={onClose}
- className="p-2 rounded-full hover:bg-white/5 transition-colors text-muted hover:text-primary"
+ className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 transition-all text-white/70 hover:text-white"
  >
  <X className="w-5 h-5" />
  </button>
  </div>
 
  {/* Message List */}
- <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-surface-base">
+ <div className="flex-1 overflow-y-auto p-5 space-y-6 relative z-10" style={{ background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.4))' }}>
  {loading ? (
  <div className="h-full flex items-center justify-center">
- <Loader2 className="w-6 h-6 animate-spin text-muted" />
+ <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
  </div>
  ) : messages.length === 0 ? (
- <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
- <p className="text-sm font-medium text-primary mb-1">No messages yet</p>
- <p className="text-xs text-muted">Say hi to coordinate your pickup!</p>
+ <div className="h-full flex flex-col items-center justify-center text-center px-4 animate-in fade-in duration-700">
+ <div className="w-16 h-16 mb-4 rounded-full bg-white/5 flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(249,115,22,0.1)]">
+ <Send className="w-6 h-6 text-orange-500" />
+ </div>
+ <p className="text-base font-bold text-white mb-1">Start the conversation</p>
+ <p className="text-sm text-white/50">Say hi to coordinate your pickup with {otherPartyName.split(' ')[0]}!</p>
  </div>
  ) : (
- messages.map((msg) => {
+ messages.map((msg, idx) => {
  const isMe = msg.senderId === currentUserId
  return (
- <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
+ <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-2 fade-in duration-300 ease-out`} style={{ animationFillMode: 'both', animationDelay: `${Math.min(idx * 50, 500)}ms` }}>
  <div 
- className={`max-w-[80%] rounded-xl px-4 py-2.5 ${
+ className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-lg backdrop-blur-sm ${
  isMe 
- ? 'bg-[var(--orange-brand)] text-foreground rounded-tr-sm' 
- : 'bg-surface-card border border-border-default text-primary rounded-tl-sm'
+ ? 'bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-tr-sm shadow-orange-500/20' 
+ : 'bg-white/10 border border-white/10 text-white rounded-tl-sm'
  }`}
  >
- <p className="text-sm font-medium break-words leading-relaxed">{msg.content}</p>
- <p className={`text-[9px] font-semibold uppercase tracking-wider mt-1.5 ${isMe ? 'text-foreground/60' : 'text-muted'}`}>
+ <p className="text-[15px] font-medium break-words leading-relaxed">{msg.content}</p>
+ <div className={`flex items-center gap-1.5 mt-2 ${isMe ? 'justify-end' : 'justify-start'}`}>
+ <p className={`text-[10px] font-bold uppercase tracking-wider ${isMe ? 'text-white/70' : 'text-white/40'}`}>
  {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
  </p>
+ {isMe && <CheckCircle2 className="w-3 h-3 text-white/70" />}
+ </div>
  </div>
  </div>
  )
@@ -155,19 +172,19 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  </div>
 
  {/* Input Area */}
- <div className="p-4 border-t border-border-default bg-surface-card">
- <form onSubmit={handleSend} className="flex items-center gap-2">
+ <div className="p-4 sm:p-5 bg-[#111] border-t border-white/10 relative z-10">
+ <form onSubmit={handleSend} className="relative flex items-center">
  <input 
  type="text" 
  value={inputText}
  onChange={(e) => setInputText(e.target.value)}
  placeholder="Type a message..." 
- className="flex-1 bg-surface-base border border-border-default rounded-full px-5 py-3 text-sm text-primary focus:outline-none focus:border-[var(--orange-brand)] transition-colors placeholder:text-muted"
+ className="w-full bg-white/5 border border-white/10 rounded-full pl-6 pr-14 py-4 text-sm text-white focus:outline-none focus:border-orange-500 focus:bg-white/10 transition-all placeholder:text-white/40 shadow-inner"
  />
  <button 
  type="submit"
  disabled={!inputText.trim() || sending}
- className="w-11 h-11 rounded-full flex items-center justify-center bg-[var(--orange-brand)] text-foreground shrink-0 disabled:opacity-50 disabled:cursor-not-allowed hover:brightness-110 active:scale-95 transition-all"
+ className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center bg-orange-500 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-orange-400 hover:shadow-[0_0_15px_rgba(249,115,22,0.5)] active:scale-95 transition-all"
  >
  {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 ml-0.5" />}
  </button>
