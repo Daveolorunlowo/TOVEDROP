@@ -83,6 +83,10 @@ export function BuyDropsClient({
  const burstConfig = useRef<Array<{ x: number, y: number, r: number }>>([])
 
  useEffect(() => {
+   setDropsBalance(initialDropsBalance)
+ }, [initialDropsBalance])
+
+ useEffect(() => {
  const payment = searchParams.get('payment')
  const addedStr = searchParams.get('added')
  const savedStr = searchParams.get('saved')
