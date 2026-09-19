@@ -270,6 +270,15 @@ export function TripList({
           </div>
         )}
       </div>
+
+      {activeChatTrip && (
+        <ChatModal
+          tripId={activeChatTrip.id}
+          currentUserId={activeChatTrip.riderId}
+          otherPartyName={activeChatTrip.driver?.name ?? 'Driver'}
+          onClose={() => setActiveChatTrip(null)}
+        />
+      )}
     </div>
   )
 }

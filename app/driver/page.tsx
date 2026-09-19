@@ -743,7 +743,15 @@ export default function DriverDashboardPage() {
                 </div>
               )}
             </div>
-      </div>
+</div>
+      {activeChatTrip && (
+        <ChatModal
+          tripId={activeChatTrip.id}
+          currentUserId={activeChatTrip.driverId}
+          otherPartyName={activeChatTrip.rider?.name ?? 'Rider'}
+          onClose={() => setActiveChatTrip(null)}
+        />
+      )}
     </div>
   )
 }
