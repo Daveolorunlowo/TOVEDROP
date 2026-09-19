@@ -389,7 +389,6 @@ function BookWizard() {
  )}
 
  {isScheduled && (
- {/* Quick Time Selection */}
  <div className="space-y-2 animate-in fade-in duration-300">
  <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
  <div className="flex flex-wrap gap-2">
