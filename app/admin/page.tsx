@@ -71,7 +71,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     if (activeTab === 'security' && securityLogs.length === 0) {
-      fetch('/api/portal/audit-log').then(r => r.json()).then(setSecurityLogs).catch(console.error)
+      fetch('/api/portal/audit-log').then(r => r.json()).then(data => setSecurityLogs(data.logs || [])).catch(console.error)
     }
   }, [activeTab, securityLogs.length])
 
@@ -354,8 +354,8 @@ export default function AdminDashboardPage() {
                   <ShieldAlert className="w-4 h-4 text-orange-500" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#eee]">{log.action}</p>
-                  <p className="text-xs text-[#888] mt-1">{log.details}</p>
+                  <p className="text-sm font-semibold text-[#eee]">{log.success ? 'Successful Login' : 'Failed Login Attempt'}</p>
+                  <p className="text-xs text-[#888] mt-1">Email: {log.email} &bull; IP: {log.ipAddress || 'Unknown'}</p>
                   <p className="text-[10px] text-[#444] mt-2">{new Date(log.createdAt).toLocaleString()}</p>
                 </div>
               </div>
