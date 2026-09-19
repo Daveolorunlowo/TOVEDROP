@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Loader2, Plus, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { Loader2, ArrowRight, CheckCircle2, ShieldCheck, CreditCard } from 'lucide-react'
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from '@/lib/config'
 import '@/app/dashboard/buy-drops/buy-drops.css'
 
@@ -13,32 +13,23 @@ function DropCoinIcon({ className = "" }: { className?: string }) {
  <path d="M10 5 C10 5 7 9 7 11.5 A3 3 0 0 0 13 11.5 C13 9 10 5 10 5Z" fill="white" opacity="0.85" />
  <defs>
  <linearGradient id="bdc_buy" x1="0" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse">
- <stop offset="0%" stopColor="var(--orange-brand, #F97316)" />
- <stop offset="100%" stopColor="var(--orange-brand, #F97316)" />
+ <stop offset="0%" stopColor="#f97316" />
+ <stop offset="100%" stopColor="#ea580c" />
  </linearGradient>
  </defs>
  </svg>
  )
 }
 
-const getCoinsForDrops = (drops: number) => {
- if (drops <= 10) return 3
- if (drops <= 20) return 4
- if (drops <= 50) return 5
- return 6
-}
-
-function useCountUp(target: number, duration: number = 600) {
+function useCountUp(target: number, duration: number = 800) {
  const [current, setCurrent] = useState(target)
  const previousRef = useRef(target)
  
  useEffect(() => {
  if (previousRef.current === target) return
-
  const startValue = previousRef.current
  const endValue = target
  const startTime = performance.now()
- 
  let reqId: number
 
  const tick = (now: number) => {
@@ -54,7 +45,6 @@ function useCountUp(target: number, duration: number = 600) {
  previousRef.current = endValue
  }
  }
- 
  reqId = requestAnimationFrame(tick)
  return () => cancelAnimationFrame(reqId)
  }, [target, duration])
@@ -82,9 +72,7 @@ export function BuyDropsClient({
  const [celebrationData, setCelebrationData] = useState<{ drops: number, saved: number | null }>({ drops: 0, saved: null })
  const burstConfig = useRef<Array<{ x: number, y: number, r: number }>>([])
 
- useEffect(() => {
-   setDropsBalance(initialDropsBalance)
- }, [initialDropsBalance])
+ useEffect(() => { setDropsBalance(initialDropsBalance) }, [initialDropsBalance])
 
  useEffect(() => {
  const payment = searchParams.get('payment')
@@ -95,19 +83,14 @@ export function BuyDropsClient({
  const added = parseInt(addedStr, 10)
  const saved = savedStr ? parseInt(savedStr, 10) : null
  
- burstConfig.current = Array.from({ length: 8 }).map(() => {
+ burstConfig.current = Array.from({ length: 12 }).map(() => {
  const angle = Math.random() * Math.PI * 2
- const distance = 80 + Math.random() * 60
- return {
- x: Math.cos(angle) * distance,
- y: Math.sin(angle) * distance,
- r: (Math.random() - 0.5) * 360
- }
+ const distance = 100 + Math.random() * 80
+ return { x: Math.cos(angle) * distance, y: Math.sin(angle) * distance, r: (Math.random() - 0.5) * 360 }
  })
  
  setCelebrationData({ drops: added, saved })
  setShowCelebration(true)
- 
  setDropsBalance(prev => prev + added)
  }
  }, [searchParams])
@@ -124,12 +107,12 @@ export function BuyDropsClient({
 
  useEffect(() => {
  if (showCelebration) {
- const timer = setTimeout(() => dismissCelebration(), 5000)
+ const timer = setTimeout(() => dismissCelebration(), 6000)
  return () => clearTimeout(timer)
  }
  }, [showCelebration])
 
- const animatedBalance = useCountUp(dropsBalance, 800)
+ const animatedBalance = useCountUp(dropsBalance, 1000)
 
  const handleCheckout = async () => {
  if (!selectedPackage || isCheckingOut) return
@@ -153,182 +136,218 @@ export function BuyDropsClient({
  
  setTimeout(() => {
  let savedAmount = null
- if (data.discountApplied) {
- savedAmount = pkg.naira * FIRST_PURCHASE_DISCOUNT_PERCENTAGE
- }
+ if (data.discountApplied) { savedAmount = pkg.naira * FIRST_PURCHASE_DISCOUNT_PERCENTAGE }
  window.location.href = `/dashboard/buy-drops?payment=success&added=${pkg.drops}${savedAmount ? '&saved='+savedAmount : ''}`
  }, 800)
 
  } catch (err) {
- setCheckoutError("Couldn't start checkout. Please try again.")
+ setCheckoutError("Transaction failed. Please try again.")
  setIsCheckingOut(false)
  }
  }
 
  return (
- <div className="animate-in fade-in slide-in- duration-300 relative">
+ <div className="relative">
 
- {/* Live Balance Card */}
- <div className={`relative mb-12 p-6 rounded-2xl bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border overflow-hidden transition-colors duration-600 ${showCelebration ? 'border-orange-500 shadow-[0_0_30px_rgba(249,115,22,0.2)]' : 'border-white/10'} flex items-center justify-between z-10`}>
- <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 blur-2xl rounded-full" />
- <div>
- <p className="text-xs font-bold uppercase tracking-widest text-[#888] mb-2">Current Balance</p>
- <div className="flex items-center gap-3">
- <DropCoinIcon className="w-10 h-10 drop-shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
- <span className="text-4xl font-black text-white tabular-nums tracking-tight">{animatedBalance}</span>
- </div>
- </div>
- <div className="text-right">
- <p className="text-xs font-bold uppercase tracking-widest text-orange-400 bg-orange-500/10 px-3 py-1.5 rounded-full border border-orange-500/20 inline-block">Ready to ride</p>
- </div>
- </div>
-
- <div className="space-y-6">
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- {DROP_PACKAGES.map((pkg, idx) => {
- const isSelected = selectedPackage === pkg.id
- const discountedPrice = isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira
- const coins = getCoinsForDrops(pkg.drops)
- 
- return (
- <div 
- key={pkg.id}
- onClick={() => setSelectedPackage(pkg.id)}
- className={`
- relative p-6 rounded-2xl border transition-all duration-300 cursor-pointer overflow-hidden
- ${isSelected ? 'border-orange-500 bg-orange-500/10 shadow-[0_0_20px_rgba(249,115,22,0.15)] z-10' : 'border-white/10 bg-[#141414] hover:bg-[#1a1a1a] hover:border-white/20'}
- ${selectedPackage && !isSelected ? 'opacity-60 scale-95' : 'scale-100'}
- `}
- style={{ transform: isSelected ? 'scale(1.02)' : undefined }}
- >
- {/* Popular Badge */}
- {pkg.badge && (
- <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-600 to-orange-400 text-black text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-bl-lg shadow-lg">
- {pkg.badge}
- </div>
- )}
-
- {/* First Time Badge */}
- {isFirstTime && (
- <div className="absolute top-3 left-3 bg-green-500 text-black text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-lg">
- First Time - {(FIRST_PURCHASE_DISCOUNT_PERCENTAGE * 100)}% OFF
- </div>
- )}
- 
- <div className="flex items-start justify-between relative z-10 mt-2">
- <div>
- <h3 className="text-xl font-extrabold flex items-center gap-2 text-white">
- {pkg.drops} Drops
- </h3>
- <div className="mt-1 flex items-center gap-2">
- <p className="text-lg font-bold text-green-400">₦{discountedPrice.toLocaleString()}</p>
- {isFirstTime && <p className="text-sm font-medium text-white/40 line-through">₦{pkg.naira.toLocaleString()}</p>}
- </div>
- </div>
- <div className={`w-7 h-7 rounded-full flex items-center justify-center border-2 transition-all ${isSelected ? 'bg-orange-500 border-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.5)]' : 'border-white/20 bg-black/50'}`}>
- {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
- </div>
+ {/* Elite Wallet Card */}
+ <div className={`relative w-full rounded-3xl p-8 mb-10 overflow-hidden border transition-all duration-700
+   ${showCelebration ? 'bg-gradient-to-br from-orange-500/20 to-orange-900/20 border-orange-500/50 shadow-[0_0_50px_rgba(249,115,22,0.3)]' : 'bg-gradient-to-br from-[#1c1c1c] to-[#0a0a0a] border-white/10 shadow-2xl'}
+ `}>
+   {/* Internal Glows */}
+   <div className="absolute -top-24 -right-24 w-64 h-64 bg-orange-500/10 blur-[80px] rounded-full pointer-events-none" />
+   <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-white/5 blur-[80px] rounded-full pointer-events-none" />
+   
+   <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+     <div>
+       <div className="flex items-center gap-2 mb-3">
+         <ShieldCheck className="w-4 h-4 text-[#888]" />
+         <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#888]">ToveDrop Wallet</p>
+       </div>
+       <div className="flex items-center gap-4">
+         <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-orange-600 to-orange-400 p-0.5 shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+           <div className="w-full h-full bg-[#111] rounded-[14px] flex items-center justify-center">
+             <DropCoinIcon className="w-8 h-8 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]" />
+           </div>
+         </div>
+         <div className="flex flex-col">
+           <span className="text-5xl md:text-6xl font-black text-white tabular-nums tracking-tighter leading-none">{animatedBalance}</span>
+           <span className="text-sm font-semibold text-orange-400 tracking-wide mt-1">Available Drops</span>
+         </div>
+       </div>
+     </div>
+     
+     <div className="md:text-right">
+       <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-xl backdrop-blur-md">
+         <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" />
+         <span className="text-xs font-bold text-[#ccc] tracking-wide">Ready for Bookings</span>
+       </div>
+     </div>
+   </div>
  </div>
 
- {/* Visual coin representation */}
- <div className="absolute -bottom-6 right-2 flex -space-x-4 opacity-50 group-hover:opacity-80 transition-opacity pointer-events-none">
- {Array.from({ length: coins }).map((_, i) => (
- <DropCoinIcon key={i} className="w-12 h-12 relative" style={{ zIndex: coins - i, transform: `translateY(${i * 2}px)` }} />
- ))}
- </div>
- </div>
- )
- })}
+ {/* Pricing Packages Grid */}
+ <div className="space-y-4">
+   <div className="flex items-center justify-between mb-2">
+     <h3 className="text-sm font-black uppercase tracking-widest text-[#888]">Select a Package</h3>
+     {isFirstTime && (
+       <span className="bg-green-500/20 text-green-400 border border-green-500/30 text-[10px] font-black uppercase px-3 py-1 rounded-full">
+         First Time Discount Active
+       </span>
+     )}
+   </div>
+   
+   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+     {DROP_PACKAGES.map((pkg) => {
+       const isSelected = selectedPackage === pkg.id
+       const discountedPrice = isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira
+       
+       return (
+         <div 
+           key={pkg.id}
+           onClick={() => setSelectedPackage(pkg.id)}
+           className={`
+             relative p-6 rounded-3xl border transition-all duration-300 cursor-pointer overflow-hidden group
+             ${isSelected ? 'border-orange-500 bg-orange-500/10 shadow-[0_0_30px_rgba(249,115,22,0.15)] ring-1 ring-orange-500/50' : 'border-white/10 bg-[#111] hover:bg-[#161616] hover:border-white/20'}
+             ${selectedPackage && !isSelected ? 'opacity-50 scale-[0.98] grayscale-[30%]' : 'scale-100'}
+           `}
+         >
+           {/* Package Badges */}
+           {pkg.badge && (
+             <div className="absolute top-0 right-0 bg-gradient-to-r from-orange-600 to-orange-400 text-black text-[9px] font-black uppercase tracking-[0.1em] px-4 py-1.5 rounded-bl-2xl shadow-lg z-20">
+               {pkg.badge}
+             </div>
+           )}
+
+           <div className="relative z-10 flex flex-col h-full">
+             <div className="flex justify-between items-start mb-6">
+               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${isSelected ? 'bg-orange-500/20 text-orange-500' : 'bg-white/5 text-[#888] group-hover:text-white'}`}>
+                 <DropCoinIcon className="w-6 h-6" />
+               </div>
+               <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? 'bg-orange-500 border-orange-500 scale-110' : 'border-white/20 bg-[#0a0a0a]'}`}>
+                 {isSelected && <CheckCircle2 className="w-4 h-4 text-white" />}
+               </div>
+             </div>
+             
+             <div className="mt-auto">
+               <h3 className={`text-2xl font-black tracking-tight transition-colors ${isSelected ? 'text-white' : 'text-[#eee]'}`}>
+                 {pkg.drops} Drops
+               </h3>
+               <div className="mt-2 flex items-end gap-2">
+                 <span className="text-3xl font-black text-white tracking-tighter">₦{discountedPrice.toLocaleString()}</span>
+                 {isFirstTime && <span className="text-sm font-bold text-[#666] line-through mb-1">₦{pkg.naira.toLocaleString()}</span>}
+               </div>
+               
+               <p className="text-xs font-semibold text-[#888] mt-3 uppercase tracking-wider">
+                 {(pkg.naira / pkg.drops).toFixed(0)} NGN / Drop
+               </p>
+             </div>
+           </div>
+
+           {/* Subtle glow effect on hover */}
+           <div className={`absolute inset-0 bg-gradient-to-tr from-orange-500/0 via-orange-500/0 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${isSelected ? 'opacity-100' : ''}`} />
+         </div>
+       )
+     })}
+   </div>
  </div>
 
- {selectedPackage && (
- <div className="pt-6 animate-in fade-in slide-in- duration-200">
- {checkoutError && (
- <p className="text-red-500 text-sm mb-4 text-center font-medium">{checkoutError}</p>
- )}
- 
- <button
- onClick={handleCheckout}
- disabled={isCheckingOut}
- className={`
- w-full py-4 rounded-xl text-lg font-black uppercase tracking-wider shadow-[0_0_20px_rgba(249,115,22,0.3)] transition-all flex items-center justify-center gap-2 relative overflow-hidden
- ${isCheckingOut ? 'bg-orange-600 text-white/90 scale-[0.98]' : 'bg-gradient-to-r from-orange-500 to-orange-400 text-black hover:brightness-110 active:scale-[0.98]'}
- `}
- >
- {isCheckingOut ? (
- <>
- <Loader2 className="w-5 h-5 animate-spin" />
- Processing...
- </>
- ) : (
- <>
- Continue to Payment <ArrowRight className="w-5 h-5" />
- </>
- )}
-
- {/* Shimmer effect */}
- <div className="absolute inset-0 -translate-x-full bg-white/20 hover:animate-shimmer" />
- </button>
- <p className="text-center text-xs text-secondary mt-4 flex items-center justify-center gap-1.5">
- Secure payment via Paystack <span className="opacity-50">•</span> Cancel anytime
- </p>
+ {/* Action Area */}
+ <div className={`transition-all duration-500 overflow-hidden ${selectedPackage ? 'max-h-64 opacity-100 mt-8' : 'max-h-0 opacity-0 mt-0'}`}>
+   {checkoutError && (
+     <div className="bg-red-500/10 border border-red-500/20 text-red-500 text-sm font-bold px-4 py-3 rounded-xl mb-4 text-center">
+       {checkoutError}
+     </div>
+   )}
+   
+   <button
+     onClick={handleCheckout}
+     disabled={isCheckingOut}
+     className={`
+       w-full py-5 rounded-2xl text-lg font-black uppercase tracking-widest transition-all flex items-center justify-center gap-3 relative overflow-hidden group
+       ${isCheckingOut ? 'bg-orange-600/80 text-white cursor-wait scale-[0.99]' : 'bg-white text-black hover:bg-gray-100 active:scale-[0.99] shadow-[0_0_40px_rgba(255,255,255,0.15)] hover:shadow-[0_0_60px_rgba(255,255,255,0.25)]'}
+     `}
+   >
+     {isCheckingOut ? (
+       <>
+         <Loader2 className="w-6 h-6 animate-spin" />
+         Processing Security...
+       </>
+     ) : (
+       <>
+         <CreditCard className="w-6 h-6" />
+         Complete Purchase
+         <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+       </>
+     )}
+   </button>
+   <div className="flex items-center justify-center gap-4 mt-5 opacity-60">
+     <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-white">
+       <ShieldCheck className="w-3.5 h-3.5" /> 256-bit Encryption
+     </div>
+     <div className="w-1 h-1 rounded-full bg-white/20" />
+     <div className="text-[10px] font-bold uppercase tracking-widest text-white">
+       Powered by Paystack
+     </div>
+   </div>
  </div>
- )}
- </div>
 
- {/* Redirect Overlay */}
+ {/* Overlays */}
  {showRedirectOverlay && (
- <div className="fixed inset-0 bg-background/90 backdrop-blur-sm z-50 flex items-center justify-center flex-col animate-in fade-in duration-300">
- <Loader2 className="w-12 h-12 animate-spin text-orange-brand mb-4" />
- <h2 className="text-xl font-bold">Redirecting to Paystack...</h2>
- <p className="text-sm text-secondary mt-2">Please wait while we secure your session.</p>
- </div>
+   <div className="fixed inset-0 bg-[#000]/90 backdrop-blur-xl z-[100] flex items-center justify-center flex-col animate-in fade-in duration-500">
+     <div className="w-24 h-24 relative mb-8">
+       <div className="absolute inset-0 border-4 border-orange-500/20 rounded-full" />
+       <div className="absolute inset-0 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+       <ShieldCheck className="absolute inset-0 m-auto w-8 h-8 text-orange-500" />
+     </div>
+     <h2 className="text-3xl font-black text-white tracking-tight mb-3">Securing Session</h2>
+     <p className="text-sm font-semibold text-[#888] uppercase tracking-widest">Handing off to Paystack Gateway...</p>
+   </div>
  )}
 
- {/* Success Celebration Overlay */}
  {showCelebration && (
- <div className="fixed inset-0 bg-background/80 backdrop-blur-md z-50 flex items-center justify-center animate-in fade-in duration-300">
- <div className="bg-surface-elevated border border-orange-brand/30 p-8 rounded-2xl max-w-sm w-full mx-5 text-center shadow-2xl relative overflow-hidden">
- 
- {/* Confetti / Burst elements */}
- {burstConfig.current.map((conf, i) => (
- <div 
- key={i}
- className="absolute top-1/2 left-1/2 w-4 h-4 rounded-full bg-orange-brand"
- style={{
- '--tx': `${conf.x}px`,
- '--ty': `${conf.y}px`,
- '--tr': `${conf.r}deg`,
- animation: `burst 1s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`,
- transform: `translate(-50%, -50%)`,
- } as React.CSSProperties}
- />
- ))}
+   <div className="fixed inset-0 bg-[#000]/80 backdrop-blur-2xl z-[100] flex items-center justify-center animate-in fade-in duration-500">
+     <div className="bg-[#111] border border-white/10 p-10 rounded-[2rem] max-w-md w-full mx-5 text-center shadow-[0_0_100px_rgba(249,115,22,0.2)] relative overflow-hidden">
+       
+       <div className="absolute -top-32 -right-32 w-64 h-64 bg-orange-500/20 blur-[80px] rounded-full pointer-events-none" />
+       
+       {burstConfig.current.map((conf, i) => (
+         <div 
+           key={i}
+           className="absolute top-1/2 left-1/2 w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_10px_rgba(249,115,22,0.8)]"
+           style={{
+             '--tx': `${conf.x}px`,
+             '--ty': `${conf.y}px`,
+             '--tr': `${conf.r}deg`,
+             animation: `burst 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards`,
+             transform: `translate(-50%, -50%)`,
+           } as React.CSSProperties}
+         />
+       ))}
 
- <div className="relative z-10">
- <div className="w-20 h-20 bg-orange-brand/20 rounded-full flex items-center justify-center mx-auto mb-6 scale-in-center">
- <CheckCircle2 className="w-10 h-10 text-orange-brand" />
- </div>
- <h2 className="text-2xl font-black mb-2">Payment Successful!</h2>
- <p className="text-lg text-secondary mb-6">
- You added <strong className="text-white">{celebrationData.drops} Drops</strong> to your account.
- </p>
- 
- {celebrationData.saved && (
- <div className="bg-green-500/10 border border-green-500/20 text-green-500 text-xs font-bold px-4 py-2 rounded-lg inline-flex items-center gap-2 mb-6">
- 🎉 You saved ₦{celebrationData.saved.toLocaleString()} on your first purchase!
- </div>
- )}
+       <div className="relative z-10">
+         <div className="w-24 h-24 bg-gradient-to-tr from-green-500 to-green-400 rounded-[2rem] flex items-center justify-center mx-auto mb-8 shadow-[0_0_40px_rgba(34,197,94,0.4)] scale-in-center">
+           <CheckCircle2 className="w-12 h-12 text-black" />
+         </div>
+         <h2 className="text-4xl font-black text-white tracking-tight mb-3">Transaction Complete</h2>
+         <p className="text-lg text-[#888] font-medium mb-8">
+           Successfully secured <strong className="text-orange-500">{celebrationData.drops} Drops</strong>
+         </p>
+         
+         {celebrationData.saved && (
+           <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-bold px-5 py-3 rounded-xl inline-flex items-center justify-center gap-2 mb-8 w-full">
+             🎉 You saved ₦{celebrationData.saved.toLocaleString()} on your first top-up!
+           </div>
+         )}
 
- <button 
- onClick={dismissCelebration}
- className="w-full py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-100 transition-colors"
- >
- Start Riding
- </button>
- </div>
- </div>
- </div>
+         <button 
+           onClick={dismissCelebration}
+           className="w-full py-4 bg-white text-black text-lg font-black uppercase tracking-wider rounded-xl hover:bg-gray-200 active:scale-[0.98] transition-all shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+         >
+           Access Drops
+         </button>
+       </div>
+     </div>
+   </div>
  )}
  </div>
  )
