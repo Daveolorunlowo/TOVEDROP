@@ -2,11 +2,11 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Loader2, ArrowRight, CheckCircle2, Lock, Zap } from 'lucide-react'
+import { Loader2, ArrowRight, CheckCircle2, Lock, ChevronLeft } from 'lucide-react'
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from '@/lib/config'
-import '@/app/dashboard/buy-drops/buy-drops.css'
 
-function useCountUp(target: number, dur = 1000) {
+/* ── Count-up hook ── */
+function useCountUp(target: number, dur = 900) {
   const [val, setVal] = useState(target)
   const prev = useRef(target)
   useEffect(() => {
@@ -25,19 +25,20 @@ function useCountUp(target: number, dur = 1000) {
   return val
 }
 
-const TIER_ACCENT: Record<string, string> = {
-  starter: 'border-blue-500/30',
-  popular: 'border-orange-500/30',
-  campus_pro: 'border-violet-500/30',
-  semester: 'border-amber-500/30',
+/* ── Coin SVG ── */
+function Coin({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" fill="url(#cg)" />
+      <path d="M10 5C10 5 7 9 7 11.5A3 3 0 0013 11.5C13 9 10 5 10 5Z" fill="#fff" opacity=".9" />
+      <defs><linearGradient id="cg" x1="0" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#f97316" /><stop offset="1" stopColor="#ea580c" />
+      </linearGradient></defs>
+    </svg>
+  )
 }
 
-const TIER_TAG: Record<string, { bg: string; label: string }> = {
-  starter: { bg: 'bg-blue-500/10 text-blue-400', label: 'Starter' },
-  popular: { bg: 'bg-orange-500/10 text-orange-400', label: 'Popular' },
-  campus_pro: { bg: 'bg-violet-500/10 text-violet-400', label: 'Pro' },
-  semester: { bg: 'bg-amber-500/10 text-amber-400', label: 'Elite' },
-}
+/* ══════════════════════════════════════════════════════════════ */
 
 export function BuyDropsClient({
   initialDropsBalance,
@@ -47,277 +48,219 @@ export function BuyDropsClient({
   isFirstTime: boolean
 }) {
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const sp = useSearchParams()
 
-  const [balance, setBalance] = useState(initialDropsBalance)
-  const [selected, setSelected] = useState<string | null>(null)
-  const [checking, setChecking] = useState(false)
-  const [error, setError] = useState('')
-  const [redirecting, setRedirecting] = useState(false)
-  const [celebrating, setCelebrating] = useState(false)
-  const [celebData, setCelebData] = useState<{ drops: number; saved: number | null }>({ drops: 0, saved: null })
+  const [bal, setBal] = useState(initialDropsBalance)
+  const [sel, setSel] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
+  const [redir, setRedir] = useState(false)
+  const [celeb, setCeleb] = useState(false)
+  const [cData, setCData] = useState<{ drops: number; saved: number | null }>({ drops: 0, saved: null })
   const bursts = useRef<Array<{ x: number; y: number; r: number }>>([])
 
-  useEffect(() => { setBalance(initialDropsBalance) }, [initialDropsBalance])
+  useEffect(() => setBal(initialDropsBalance), [initialDropsBalance])
 
   useEffect(() => {
-    const payment = searchParams.get('payment')
-    const added = searchParams.get('added')
-    const saved = searchParams.get('saved')
-    if (payment === 'success' && added) {
+    if (sp.get('payment') === 'success' && sp.get('added')) {
+      const added = parseInt(sp.get('added')!), saved = sp.get('saved')
       bursts.current = Array.from({ length: 14 }).map(() => {
         const a = Math.random() * Math.PI * 2, d = 80 + Math.random() * 100
         return { x: Math.cos(a) * d, y: Math.sin(a) * d, r: (Math.random() - 0.5) * 720 }
       })
-      setCelebData({ drops: parseInt(added), saved: saved ? parseInt(saved) : null })
-      setCelebrating(true)
-      setBalance(prev => prev + parseInt(added))
+      setCData({ drops: added, saved: saved ? parseInt(saved) : null })
+      setCeleb(true)
+      setBal(p => p + added)
     }
-  }, [searchParams])
+  }, [sp])
 
   const dismiss = () => {
-    setCelebrating(false)
-    const p = new URLSearchParams(searchParams.toString())
+    setCeleb(false)
+    const p = new URLSearchParams(sp.toString())
     p.delete('payment'); p.delete('added'); p.delete('saved')
     router.replace(`/dashboard/buy-drops?${p.toString()}`, { scroll: false })
     router.refresh()
   }
+  useEffect(() => { if (celeb) { const t = setTimeout(dismiss, 7000); return () => clearTimeout(t) } }, [celeb])
 
-  useEffect(() => {
-    if (celebrating) { const t = setTimeout(dismiss, 7000); return () => clearTimeout(t) }
-  }, [celebrating])
+  const animBal = useCountUp(bal, 1000)
+  const pkg = DROP_PACKAGES.find(p => p.id === sel)
 
-  const animBal = useCountUp(balance, 1200)
-  const selectedPkg = DROP_PACKAGES.find(p => p.id === selected)
-
-  const checkout = async () => {
-    if (!selected || checking) return
-    setChecking(true); setError('')
-    const pkg = DROP_PACKAGES.find(p => p.id === selected)
-    if (!pkg) return
+  const buy = async () => {
+    if (!sel || busy) return
+    setBusy(true); setErr('')
+    const pk = DROP_PACKAGES.find(p => p.id === sel)!
     try {
-      const res = await fetch('/api/drops/purchase', {
+      const r = await fetch('/api/drops/purchase', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ packageId: pkg.id, amount: pkg.naira }),
+        body: JSON.stringify({ packageId: pk.id, amount: pk.naira }),
       })
-      if (!res.ok) throw new Error('fail')
-      const data = await res.json()
-      setRedirecting(true)
+      if (!r.ok) throw new Error()
+      const d = await r.json()
+      setRedir(true)
       setTimeout(() => {
-        let s = null
-        if (data.discountApplied) s = pkg.naira * FIRST_PURCHASE_DISCOUNT_PERCENTAGE
-        window.location.href = `/dashboard/buy-drops?payment=success&added=${pkg.drops}${s ? '&saved=' + s : ''}`
+        const s = d.discountApplied ? pk.naira * FIRST_PURCHASE_DISCOUNT_PERCENTAGE : null
+        window.location.href = `/dashboard/buy-drops?payment=success&added=${pk.drops}${s ? '&saved=' + s : ''}`
       }, 1000)
     } catch {
-      setError('Transaction failed. Try again.')
-      setChecking(false)
+      setErr('Payment failed — please try again.')
+      setBusy(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden">
+    <div className="min-h-screen bg-[#111] text-white pb-8">
 
-      <div className="max-w-5xl mx-auto px-5 sm:px-8 pt-10 sm:pt-16 pb-44">
+      {/* ─── TOP BAR ─── */}
+      <div className="sticky top-0 z-30 bg-[#111]/90 backdrop-blur-lg border-b border-white/5">
+        <div className="max-w-lg mx-auto flex items-center justify-between px-5 py-4">
+          <button onClick={() => router.push('/dashboard')} className="text-white/40 hover:text-white transition-colors">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-sm font-bold tracking-wide">Buy Drops</h1>
+          <div className="w-5" />
+        </div>
+      </div>
 
-        {/* ── HEADER ── */}
-        <header className="mb-14 sm:mb-20 rise">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8">
-            <div className="max-w-lg">
-              <h1 className="text-5xl sm:text-6xl font-black leading-[0.92] tracking-tight text-white mb-4">
-                Buy Drops<span className="text-orange-500">.</span>
-              </h1>
-              <p className="text-base text-white/35 font-medium leading-relaxed">
-                Each drop unlocks one ride — no surge, no expiry, no hidden fees. Pick a pack and you're set.
-              </p>
+      <div className="max-w-lg mx-auto px-5 pt-8">
+
+        {/* ─── BALANCE CARD ─── */}
+        <div className="bg-gradient-to-br from-orange-600 to-orange-500 rounded-3xl p-7 mb-10 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/4" />
+          <div className="relative z-10">
+            <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-1">Available balance</p>
+            <div className="flex items-center gap-3">
+              <Coin size={32} />
+              <span className="text-5xl font-black tracking-tight">{animBal}</span>
+              <span className="text-lg font-bold text-white/70 self-end mb-1">drops</span>
             </div>
-
-            {/* Wallet */}
-            <div className="bg-white/[0.03] border border-white/[0.08] rounded-2xl px-7 py-5 sm:min-w-[260px]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/25 mb-2">Your Balance</p>
-              <div className="flex items-baseline gap-2">
-                <span className="font-mono text-5xl font-black text-white tracking-tighter leading-none">
-                  {animBal}
-                </span>
-                <span className="text-sm font-bold text-orange-500">drops</span>
-              </div>
-              <div className="flex items-center gap-2 mt-3">
-                <span className="relative flex h-2 w-2">
-                  <span className="ping-slow absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-                </span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/20">Active</span>
-              </div>
-            </div>
+            <p className="text-white/50 text-xs font-medium mt-3">Each drop = 1 ride booking</p>
           </div>
-        </header>
-
-        {/* ── SECTION LABEL ── */}
-        <div className="flex items-center justify-between mb-6 rise" style={{ animationDelay: '80ms' }}>
-          <h2 className="text-lg font-bold text-white/50">Select a pack</h2>
-          {isFirstTime && (
-            <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-lg">
-              <Zap className="w-3.5 h-3.5 text-green-400" />
-              <span className="text-[10px] font-bold text-green-400 uppercase tracking-wider">
-                {FIRST_PURCHASE_DISCOUNT_PERCENTAGE * 100}% off — first purchase
-              </span>
-            </div>
-          )}
         </div>
 
-        {/* ── PACKAGE GRID ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-16">
-          {DROP_PACKAGES.map((pkg, idx) => {
-            const isActive = selected === pkg.id
-            const price = isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira
-            const tag = TIER_TAG[pkg.id] || TIER_TAG.starter
-            const accent = TIER_ACCENT[pkg.id] || ''
+        {/* ─── FIRST-TIME BANNER ─── */}
+        {isFirstTime && (
+          <div className="bg-green-500/10 border border-green-500/20 rounded-2xl px-5 py-3.5 mb-6 flex items-center gap-3">
+            <span className="text-xl">🎉</span>
+            <div>
+              <p className="text-sm font-bold text-green-400">First purchase — {FIRST_PURCHASE_DISCOUNT_PERCENTAGE * 100}% off!</p>
+              <p className="text-xs text-green-400/60 mt-0.5">Applied automatically to all packs below</p>
+            </div>
+          </div>
+        )}
+
+        {/* ─── PACKAGE LIST ─── */}
+        <div className="space-y-3 mb-10">
+          {DROP_PACKAGES.map((p) => {
+            const active = sel === p.id
+            const price = isFirstTime ? p.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : p.naira
 
             return (
-              <div
-                key={pkg.id}
-                onClick={() => setSelected(pkg.id)}
+              <button
+                key={p.id}
+                onClick={() => setSel(p.id)}
                 className={`
-                  rise relative rounded-2xl border cursor-pointer overflow-hidden
-                  transition-all duration-250
-                  ${isActive
-                    ? `${accent} bg-white/[0.06] ring-1 ring-white/[0.08]`
-                    : 'border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.1]'}
-                  ${selected && !isActive ? 'opacity-40 scale-[0.98]' : ''}
+                  w-full text-left rounded-2xl border p-5 transition-all duration-200
+                  ${active
+                    ? 'bg-orange-500/10 border-orange-500/40 ring-2 ring-orange-500/20'
+                    : 'bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/[0.1]'}
                 `}
-                style={{ animationDelay: `${120 + idx * 70}ms` }}
               >
-                <div className="p-6 sm:p-8 flex flex-col min-h-[220px]">
-                  {/* Top: tag + badge + selector */}
-                  <div className="flex items-start justify-between mb-auto">
-                    <div className="flex items-center gap-2">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${tag.bg}`}>
-                        {tag.label}
-                      </span>
-                      {pkg.badge && (
-                        <span className="text-[10px] font-bold text-orange-500 uppercase tracking-wider">
-                          {pkg.badge}
-                        </span>
-                      )}
-                    </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all
-                      ${isActive ? 'border-orange-500 bg-orange-500' : 'border-white/15'}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {/* Radio */}
+                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors
+                      ${active ? 'border-orange-500 bg-orange-500' : 'border-white/20'}
                     `}>
-                      {isActive && <CheckCircle2 className="w-3.5 h-3.5 text-black" />}
+                      {active && <div className="w-2 h-2 rounded-full bg-black" />}
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-base font-bold text-white">{p.drops} Drops</span>
+                        {p.badge && (
+                          <span className="text-[10px] font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                            {p.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-white/30 mt-0.5 block">₦{(price / p.drops).toFixed(0)} per ride</span>
                     </div>
                   </div>
 
-                  {/* Name */}
-                  <div className="mt-6">
-                    <h3 className="text-2xl font-black tracking-tight text-white mb-4">
-                      {pkg.drops} Drops
-                    </h3>
-
-                    {/* PRICE */}
-                    <div className="flex items-baseline gap-3">
-                      <span className="font-mono text-4xl sm:text-5xl font-black text-white tracking-tighter leading-none">
-                        ₦{price.toLocaleString()}
-                      </span>
-                      {isFirstTime && (
-                        <span className="text-sm font-bold text-white/20 line-through">
-                          ₦{pkg.naira.toLocaleString()}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-3 mt-3">
-                      <span className="text-xs font-medium text-white/20">
-                        ₦{(price / pkg.drops).toFixed(0)} per ride
-                      </span>
-                      {isFirstTime && (
-                        <span className="text-[10px] font-bold text-green-400 bg-green-500/10 px-2 py-0.5 rounded-md tracking-wider">
-                          Save ₦{(pkg.naira * FIRST_PURCHASE_DISCOUNT_PERCENTAGE).toLocaleString()}
-                        </span>
-                      )}
-                    </div>
+                  {/* Price */}
+                  <div className="text-right">
+                    <span className="text-2xl font-black text-white">₦{price.toLocaleString()}</span>
+                    {isFirstTime && (
+                      <span className="block text-xs text-white/20 line-through mt-0.5">₦{p.naira.toLocaleString()}</span>
+                    )}
                   </div>
                 </div>
-
-                {/* Bottom accent line */}
-                {isActive && <div className="h-[2px] bg-orange-500" />}
-              </div>
+              </button>
             )
           })}
         </div>
 
-        {/* ── INFO ── */}
-        <div className="rise grid grid-cols-1 sm:grid-cols-3 gap-6 text-center sm:text-left border-t border-white/[0.05] pt-10" style={{ animationDelay: '450ms' }}>
+        {/* ─── CTA ─── */}
+        <div className={`transition-all duration-300 ${sel ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+          {err && (
+            <p className="text-red-400 text-sm font-semibold text-center mb-3">{err}</p>
+          )}
+          <button
+            onClick={buy}
+            disabled={busy}
+            className={`
+              w-full py-4 rounded-2xl text-base font-bold flex items-center justify-center gap-2
+              transition-all duration-200
+              ${busy
+                ? 'bg-orange-500/50 text-white/60 cursor-wait'
+                : 'bg-orange-500 text-white hover:bg-orange-600 active:scale-[0.98] shadow-lg shadow-orange-500/20'}
+            `}
+          >
+            {busy ? (
+              <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
+            ) : (
+              <>Buy {pkg?.drops} Drops for ₦{pkg ? (isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira).toLocaleString() : ''} <ArrowRight className="w-5 h-5" /></>
+            )}
+          </button>
+          <p className="text-center text-xs text-white/20 mt-3">
+            Secure payment via Paystack · Instant activation
+          </p>
+        </div>
+
+        {/* ─── FAQ ─── */}
+        <div className="mt-14 space-y-5 pb-10">
+          <h3 className="text-sm font-bold text-white/30 uppercase tracking-wider">Common questions</h3>
           {[
-            { q: 'Do drops expire?', a: 'Never. Use them whenever.' },
-            { q: 'What does 1 Drop cover?', a: 'One ride booking. The transport fare is paid separately to the driver.' },
-            { q: 'Can I get a refund?', a: 'Unused drops are refundable within 30 days.' },
+            { q: 'Do drops expire?', a: 'No — your drops never expire. Use them whenever you want.' },
+            { q: 'What does a drop cover?', a: 'Each drop covers one ride booking fee. The transport fare is paid separately to the driver.' },
+            { q: 'Can I get a refund?', a: 'Yes. Unused drops can be refunded within 30 days of purchase.' },
           ].map((item, i) => (
-            <div key={i}>
-              <p className="text-xs font-bold text-white/30 mb-1.5">{item.q}</p>
-              <p className="text-sm text-white/50 leading-relaxed">{item.a}</p>
+            <div key={i} className="border-b border-white/5 pb-4">
+              <p className="text-sm font-semibold text-white/60 mb-1">{item.q}</p>
+              <p className="text-sm text-white/30 leading-relaxed">{item.a}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── STICKY CHECKOUT ── */}
-      <div className={`
-        fixed bottom-0 left-0 right-0 z-50 transition-all duration-400
-        ${selected ? 'translate-y-0' : 'translate-y-full'}
-      `}>
-        <div className="bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-white/[0.08]">
-          <div className="max-w-5xl mx-auto px-5 sm:px-8 py-5 flex flex-col sm:flex-row items-center gap-4">
-            {selectedPkg && (
-              <div className="flex-1 flex items-center gap-4 w-full sm:w-auto">
-                <div>
-                  <p className="text-sm font-bold text-white/50">{selectedPkg.drops} Drops — {selectedPkg.name}</p>
-                  <p className="font-mono text-3xl font-black text-white tracking-tighter leading-none mt-0.5">
-                    ₦{(isFirstTime ? selectedPkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : selectedPkg.naira).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            )}
+      {/* ═══ OVERLAYS ═══ */}
 
-            {error && <p className="text-red-400 text-xs font-bold">{error}</p>}
-
-            <button
-              onClick={checkout}
-              disabled={checking}
-              className={`
-                w-full sm:w-auto sm:min-w-[220px] py-4 px-8 rounded-xl
-                text-sm font-bold uppercase tracking-wider
-                flex items-center justify-center gap-2
-                transition-all duration-200
-                ${checking
-                  ? 'bg-white/10 text-white/40 cursor-wait'
-                  : 'bg-white text-black hover:bg-orange-500 hover:text-black active:scale-[0.98]'}
-              `}
-            >
-              {checking ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Processing</>
-              ) : (
-                <>Purchase <ArrowRight className="w-4 h-4" /></>
-              )}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* ── REDIRECT ── */}
-      {redirecting && (
-        <div className="fixed inset-0 bg-black z-[200] flex items-center justify-center flex-col">
-          <div className="w-16 h-16 relative mb-8">
+      {redir && (
+        <div className="fixed inset-0 bg-[#111] z-[200] flex items-center justify-center flex-col">
+          <div className="w-14 h-14 relative mb-6">
             <div className="absolute inset-0 border-2 border-white/10 rounded-full" />
-            <div className="absolute inset-0 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            <Lock className="absolute inset-0 m-auto w-5 h-5 text-white/60" />
+            <div className="absolute inset-0 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
+            <Lock className="absolute inset-0 m-auto w-5 h-5 text-white/40" />
           </div>
-          <p className="text-sm font-bold uppercase tracking-widest text-white/30">Redirecting to Paystack</p>
+          <p className="text-sm font-semibold text-white/30">Redirecting to Paystack...</p>
         </div>
       )}
 
-      {/* ── CELEBRATION ── */}
-      {celebrating && (
-        <div className="fixed inset-0 bg-black/95 z-[200] flex items-center justify-center p-5">
-          <div className="bg-[#111] border border-white/[0.08] p-10 rounded-2xl max-w-md w-full text-center relative overflow-hidden">
+      {celeb && (
+        <div className="fixed inset-0 bg-[#111]/95 backdrop-blur-xl z-[200] flex items-center justify-center p-5">
+          <div className="bg-[#1a1a1a] border border-white/[0.08] p-8 rounded-3xl max-w-sm w-full text-center relative overflow-hidden">
 
             {bursts.current.map((c, i) => (
               <div
@@ -333,26 +276,23 @@ export function BuyDropsClient({
             ))}
 
             <div className="relative z-10">
-              <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6 scale-in-center">
+              <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-5">
                 <CheckCircle2 className="w-8 h-8 text-black" />
               </div>
-
-              <h2 className="text-3xl font-black text-white tracking-tight mb-2">You're set!</h2>
-              <p className="text-base text-white/40 font-medium mb-8">
-                <strong className="text-orange-500 font-black">{celebData.drops} Drops</strong> added to your wallet
+              <h2 className="text-2xl font-black text-white mb-1">Payment Successful!</h2>
+              <p className="text-sm text-white/40 mb-6">
+                <strong className="text-orange-500">{cData.drops} Drops</strong> added to your wallet
               </p>
-
-              {celebData.saved && (
-                <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-bold px-4 py-3 rounded-xl mb-8">
-                  🎉 You saved ₦{celebData.saved.toLocaleString()} with your first-timer discount!
+              {cData.saved && (
+                <div className="bg-green-500/10 border border-green-500/20 text-green-400 text-sm font-bold px-4 py-2.5 rounded-xl mb-6">
+                  🎉 Saved ₦{cData.saved.toLocaleString()} with your first-timer discount!
                 </div>
               )}
-
               <button
                 onClick={dismiss}
-                className="w-full py-4 bg-white text-black text-sm font-bold uppercase tracking-wider rounded-xl hover:bg-gray-100 active:scale-[0.98] transition-all"
+                className="w-full py-3.5 bg-orange-500 text-white text-sm font-bold rounded-xl hover:bg-orange-600 active:scale-[0.98] transition-all"
               >
-                Start Riding
+                Done
               </button>
             </div>
           </div>
