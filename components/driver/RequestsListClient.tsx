@@ -150,7 +150,7 @@ export function RequestsListClient({
  </div>
  <div className="text-right">
  <p className="text-xs font-semibold text-foreground">{trip.time}</p>
- <p className="text-[10px] text-muted-foreground">{trip.date}</p>
+ <p className="text-[10px] text-muted-foreground">{trip.isScheduled ? trip.date : 'Instant Pick-Up'}</p>
  </div>
  </div>
 

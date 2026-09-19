@@ -170,7 +170,9 @@ export function TripList({
                   </p>
                 </div>
                 <div className="shrink-0 text-right hidden sm:block">
-                  <p className="text-[11px]" style={{ color: '#555' }}>{trip.date}</p>
+                  <p className="text-[11px]" style={{ color: '#555' }}>
+                    {trip.isScheduled ? trip.date : 'Instant Pick-Up'}
+                  </p>
                   <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
                 </div>
                 <StatusChip status={trip.status} />

@@ -559,7 +559,9 @@ export default function DriverDashboardPage() {
                         <p className="text-[11px] truncate" style={{ color: '#555' }}>
                           {trip.pickup} → {trip.destination}
                         </p>
-                        <p className="text-[11px]" style={{ color: '#444' }}>{trip.date} · {trip.time}</p>
+                        <p className="text-[11px]" style={{ color: '#444' }}>
+                          {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
+                        </p>
                       </div>
                       <button
                         disabled={processing === trip.id}

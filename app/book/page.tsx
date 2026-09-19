@@ -41,7 +41,7 @@ function BookWizard() {
  const [destinationText, setDestinationText] = useState<string>('')
  const [selectingMode, setSelectingMode] = useState<'pickup' | 'destination'>('pickup')
  const [isPool, setIsPool] = useState<boolean>(false)
- const isScheduled = true
+ const [isScheduled, setIsScheduled] = useState<boolean>(false)
  const [noteStr, setNoteStr] = useState<string>('')
  const [showConfirm, setShowConfirm] = useState<boolean>(false)
  const idempotencyKeyRef = useRef<string>(generateId())
@@ -96,23 +96,25 @@ function BookWizard() {
 
  const validateStep2 = () => {
  const newErrors: Record<string, string> = {}
- if (!dateStr) {
- newErrors.date = 'Please select a date.'
- }
- if (!timeStr) {
- newErrors.time = 'Please select a time.'
- }
+ if (isScheduled) {
+   if (!dateStr) {
+   newErrors.date = 'Please select a date.'
+   }
+   if (!timeStr) {
+   newErrors.time = 'Please select a time.'
+   }
 
- if (dateStr && timeStr) {
- const selectedDate = new Date(`${dateStr}T${timeStr}:00`)
- const now = new Date()
- const twoHoursFromNow = new Date(now.getTime() + 2 * 60 * 60 * 1000)
+   if (dateStr && timeStr) {
+   const selectedDate = new Date(`${dateStr}T${timeStr}:00`)
+   const now = new Date()
+   const twoHoursFromNow = new Date(now.getTime() + 2 * 60 * 60 * 1000)
 
- if (selectedDate < now) {
- newErrors.time = 'You cannot select a time in the past.'
- } else if (selectedDate < twoHoursFromNow) {
- newErrors.time = 'Pickup time must be at least 2 hours from now.'
- }
+   if (selectedDate < now) {
+   newErrors.time = 'You cannot select a time in the past.'
+   } else if (selectedDate < twoHoursFromNow) {
+   newErrors.time = 'Scheduled pickups must be at least 2 hours from now.'
+   }
+   }
  }
 
  setErrors(newErrors)
@@ -151,6 +153,19 @@ function BookWizard() {
 
  const confirmBooking = async () => {
  setSubmitting(true)
+
+ let finalDate = dateStr
+ let finalTime = timeStr
+ 
+ if (!isScheduled) {
+ const d = new Date()
+ const yyyy = d.getFullYear()
+ const mm = String(d.getMonth() + 1).padStart(2, '0')
+ const dd = String(d.getDate()).padStart(2, '0')
+ finalDate = `${yyyy}-${mm}-${dd}`
+ finalTime = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0')
+ }
+
  try {
  const payload = { 
  pickup: pickupPoint!.label, 
@@ -159,8 +174,8 @@ function BookWizard() {
  destination: destinationPoint!.label, 
  destinationLat: destinationPoint!.lat,
  destinationLng: destinationPoint!.lng,
- date: dateStr, 
- time: timeStr, 
+ date: finalDate, 
+ time: finalTime, 
  notes: noteStr,
  isPool,
  isScheduled,
@@ -313,7 +328,32 @@ function BookWizard() {
  {step === 2 && (
  <div className="space-y-6 animate-in fade-in slide-in- duration-300">
  <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
+ <div className="space-y-3">
+ <Label className="text-base">Booking Type</Label>
  <div className="grid grid-cols-2 gap-4">
+ <button
+ type="button"
+ onClick={() => setIsScheduled(false)}
+ className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${!isScheduled ? 'border-orange-brand bg-orange-brand/5' : 'border-border hover:border-orange-brand/50'}`}
+ >
+ <Navigation className={`w-6 h-6 mb-2 ${!isScheduled ? 'text-orange-brand' : 'text-muted-foreground'}`} />
+ <span className={`font-semibold text-sm ${!isScheduled ? 'text-foreground' : 'text-muted-foreground'}`}>Instant Pick-Up</span>
+ <span className="text-xs text-muted-foreground mt-1">Leave right now</span>
+ </button>
+ <button
+ type="button"
+ onClick={() => setIsScheduled(true)}
+ className={`flex flex-col items-center justify-center p-4 rounded-xl border-2 transition-all ${isScheduled ? 'border-orange-brand bg-orange-brand/5' : 'border-border hover:border-orange-brand/50'}`}
+ >
+ <Calendar className={`w-6 h-6 mb-2 ${isScheduled ? 'text-orange-brand' : 'text-muted-foreground'}`} />
+ <span className={`font-semibold text-sm ${isScheduled ? 'text-foreground' : 'text-muted-foreground'}`}>Scheduled Ride</span>
+ <span className="text-xs text-muted-foreground mt-1">Book in advance</span>
+ </button>
+ </div>
+ </div>
+
+ {isScheduled && (
+ <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
  <div className="space-y-1.5">
  <Label htmlFor="date">Date</Label>
  <div className="relative">
@@ -325,6 +365,7 @@ function BookWizard() {
  value={dateStr}
  onChange={(e) => setDateStr(e.target.value)}
  className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
+ min={new Date().toISOString().split('T')[0]}
  />
  </div>
  {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
@@ -345,16 +386,19 @@ function BookWizard() {
  {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
  </div>
  </div>
+ )}
 
+ {isScheduled && (
  {/* Quick Time Selection */}
- <div className="space-y-2">
+ <div className="space-y-2 animate-in fade-in duration-300">
  <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
  <div className="flex flex-wrap gap-2">
- <button type="button" onClick={() => setQuickTime(30)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+30m</button>
- <button type="button" onClick={() => setQuickTime(60)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+1h</button>
  <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
+ <button type="button" onClick={() => setQuickTime(180)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+3h</button>
+ <button type="button" onClick={() => setQuickTime(240)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+4h</button>
  </div>
  </div>
+ )}
  </div>
  </div>
  )}

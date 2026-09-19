@@ -94,8 +94,12 @@ export function TransferAcceptClient({ transfer }: TransferAcceptClientProps) {
  <div className="flex items-start gap-3">
  <Clock className="w-4 h-4 text-orange-brand mt-0.5 shrink-0" />
  <div className="min-w-0">
- <p className="text-[10px] uppercase font-bold text-orange-brand">Scheduled</p>
- <p className="text-sm font-bold text-orange-brand">{transfer.trip.date} at {transfer.trip.time}</p>
+ <p className="text-[10px] uppercase font-bold text-orange-brand">
+   {transfer.trip.isScheduled ? 'Scheduled' : 'Instant Pick-Up'}
+ </p>
+ <p className="text-sm font-bold text-orange-brand">
+   {transfer.trip.isScheduled ? `${transfer.trip.date} at ${transfer.trip.time}` : transfer.trip.time}
+ </p>
  </div>
  </div>
  <div className="pt-2 border-t border-border mt-2">

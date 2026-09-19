@@ -167,7 +167,9 @@ export function DriverTripListClient({
  <span className="text-[10px] text-muted-foreground/60">→</span>
  <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.destination}</span>
  </div>
- <p className="text-[10px] text-muted-foreground mt-1">{trip.date} · {trip.time}</p>
+ <p className="text-[10px] text-muted-foreground mt-1">
+   {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
+ </p>
  </div>
  </div>
  

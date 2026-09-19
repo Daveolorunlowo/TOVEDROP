@@ -112,7 +112,10 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
  <div className="p-3 bg-surface-elevated rounded-lg border border-border text-sm flex flex-col gap-2">
  <div className="flex items-center gap-2"><MapPin className="w-3 h-3 text-muted-foreground" /> {trip.pickup}</div>
  <div className="flex items-center gap-2"><Navigation className="w-3 h-3 text-muted-foreground" /> {trip.destination}</div>
- <div className="flex items-center gap-2"><Clock className="w-3 h-3 text-muted-foreground" /> {trip.date} · {trip.time}</div>
+ <div className="flex items-center gap-2">
+   <Clock className="w-3 h-3 text-muted-foreground" /> 
+   {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
+ </div>
  </div>
 
  <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-md text-amber-500 text-xs flex gap-2 items-start">
