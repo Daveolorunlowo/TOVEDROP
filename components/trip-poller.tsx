@@ -21,6 +21,10 @@ export function TripPoller({ userId }: { userId: string }) {
  useResilientChannel(`user-trips-${userId}`, 'trip-accepted', (data) => handleEvent(data, 'accepted'), () => router.refresh())
  useResilientChannel(`user-trips-${userId}`, 'trip-completed', (data) => handleEvent(data, 'completed'))
  useResilientChannel(`user-trips-${userId}`, 'trip-transferred', (data) => handleEvent(data, 'transferred'))
+ useResilientChannel(`user-trips-${userId}`, 'trip-cancelled', (data) => {
+   setToastMessage("🚫 A trip was cancelled.")
+   router.refresh()
+ })
 
  if (!toastMessage) return null
 

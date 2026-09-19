@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { X, Star, Car, TrendingUp } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
@@ -53,6 +53,11 @@ export function TripList({
   const [upcomingTrips, setUpcomingTrips] = useState(initialUpcoming)
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
+  
+  useEffect(() => {
+    setUpcomingTrips(initialUpcoming)
+    setPastTrips(initialPast)
+  }, [initialUpcoming, initialPast])
   
   // Custom styled Toast/Alert fallback if we don't have a toast library available
   // In a real app we'd use sonner or similar.
