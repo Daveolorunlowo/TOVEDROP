@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { sendWebPush } from "@/lib/webpush"
+import { pusherServer } from "@/lib/pusher"
+import { revalidatePath } from "next/cache"
 
 export async function POST(req: Request, context: { params: Promise<{ id: string }> }) {
  const params = await context.params;
@@ -85,16 +87,26 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
  const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${refundReason}`
  const url = `/dashboard/trips/${tripId}`
 
- // Notify Rider
- if (fullTrip.riderId) {
- sendWebPush(fullTrip.riderId, title, message, url)
- }
+  // Notify Rider
+  if (fullTrip.riderId) {
+    sendWebPush(fullTrip.riderId, title, message, url)
+    pusherServer.trigger(`user-trips-${fullTrip.riderId}`, 'trip-cancelled', { tripId }).catch(e => console.error("Pusher error:", e))
+  }
 
- // Notify Driver
- if (fullTrip.driverId) {
- sendWebPush(fullTrip.driverId, title, message, '/driver')
+  // Notify Driver
+  if (fullTrip.driverId) {
+    sendWebPush(fullTrip.driverId, title, message, '/driver')
+    pusherServer.trigger(`user-trips-${fullTrip.driverId}`, 'trip-cancelled', { tripId }).catch(e => console.error("Pusher error:", e))
+  }
+  
+  // Also notify the global trip channel in case anyone is watching the specific trip
+  pusherServer.trigger(`trip-${tripId}`, 'trip-cancelled', { tripId }).catch(e => console.error("Pusher error:", e))
  }
- }
+ 
+ revalidatePath('/dashboard')
+ revalidatePath('/dashboard/trips')
+ revalidatePath('/driver')
+ revalidatePath('/admin')
 
  return NextResponse.json({ 
  message: result.refunded ? "Trip cancelled and drops refunded" : "Trip cancelled (no drop refund)", 

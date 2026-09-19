@@ -49,6 +49,7 @@ export function TripList({
   initialUpcoming: any[],
   initialPast: any[]
 }) {
+  const router = useRouter()
   const [upcomingTrips, setUpcomingTrips] = useState(initialUpcoming)
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
@@ -70,14 +71,15 @@ export function TripList({
     const targetTrip = upcomingTrips.find(t => t.id === tripId)
     if (!targetTrip) return
     
-    const updatedTrip = { ...targetTrip, status: 'CANCELLED' }
+    const cancelledTrip = { ...targetTrip, status: 'CANCELLED' }
     setUpcomingTrips(upcomingTrips.filter(t => t.id !== tripId))
-    setPastTrips([updatedTrip, ...pastTrips])
+    setPastTrips([cancelledTrip, ...pastTrips])
     
     // Estimate refund
     const tripDate = new Date(`${targetTrip.date} ${targetTrip.time}`)
-    const isWithin2Hours = tripDate.getTime() - Date.now() < 2 * 60 * 60 * 1000
-    if (isWithin2Hours && targetTrip.status === 'CONFIRMED') {
+    const hoursDifference = (tripDate.getTime() - new Date().getTime()) / (1000 * 60 * 60)
+
+    if (hoursDifference <= 2) {
       showToast('Trip cancelled — no refund (cancelled within 2 hours of trip time)')
     } else {
       showToast('Trip cancelled — 1 Drop refunded')
@@ -87,8 +89,9 @@ export function TripList({
     
     // 3. Network Request
     try {
-      const res = await fetch(`/api/trips/${tripId}`, { method: 'DELETE' })
+      const res = await fetch(`/api/trips/${tripId}/cancel`, { method: 'POST' })
       if (!res.ok) throw new Error("Failed to cancel")
+      router.refresh()
     } catch (err) {
       // 4. Rollback on failure
       setUpcomingTrips(prevUpcoming)
