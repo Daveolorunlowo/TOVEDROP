@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp } from 'lucide-react'
+import { X, Star, Car, TrendingUp, MessageCircle } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
+import { ChatModal } from '@/components/chat-modal'
 
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
@@ -53,6 +54,7 @@ export function TripList({
   const [upcomingTrips, setUpcomingTrips] = useState(initialUpcoming)
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
+  const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
   
   useEffect(() => {
     setUpcomingTrips(initialUpcoming)
@@ -176,6 +178,15 @@ export function TripList({
                   <p className="text-[11px]" style={{ color: '#444' }}>{trip.time}</p>
                 </div>
                 <StatusChip status={trip.status} />
+                {trip.status === 'CONFIRMED' && (
+                  <button
+                    onClick={() => setActiveChatTrip(trip)}
+                    className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-white/5 mr-1"
+                    aria-label="Chat"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   disabled={processing === trip.id}
                   onClick={() => handleCancel(trip.id)}

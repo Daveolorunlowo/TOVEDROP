@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check
+  CheckCircle, XCircle, Loader2, Check, MessageCircle
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SignOutButton } from '@/components/sign-out-button'
@@ -13,6 +13,7 @@ import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/Skeleton
 import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { ChatModal } from '@/components/chat-modal'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg #111111 / surface #171717 / border #222 / divider #1e1e1e
@@ -70,6 +71,7 @@ export default function DriverDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [declined, setDeclined] = useState<string[]>([])
   const [processing, setProcessing] = useState<string | null>(null)
+  const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
 
   const fetchData = async () => {
     const start = Date.now()
@@ -398,6 +400,14 @@ export default function DriverDashboardPage() {
               </div>
               <button
                 disabled={processing === trip.id}
+                onClick={() => setActiveChatTrip(trip)}
+                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-white/5 mr-2"
+                aria-label="Chat"
+              >
+                <MessageCircle className="w-5 h-5" />
+              </button>
+              <button
+                disabled={processing === trip.id}
                 onClick={() => handleComplete(trip.id)}
                 className="text-[11px] font-semibold px-2.5 py-1 shrink-0"
                 style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
@@ -713,6 +723,14 @@ export default function DriverDashboardPage() {
                         </p>
                       </div>
                       <button
+                disabled={processing === trip.id}
+                onClick={() => setActiveChatTrip(trip)}
+                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-white/5 mr-2"
+                aria-label="Chat"
+              >
+                <MessageCircle className="w-5 h-5" />
+              </button>
+              <button
                         disabled={processing === trip.id}
                         onClick={() => handleComplete(trip.id)}
                         className="text-[11px] font-semibold px-2.5 py-1 shrink-0"
