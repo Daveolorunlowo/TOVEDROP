@@ -32,7 +32,7 @@ function StatusChip({ status }: { status: string }) {
   }
   const s = map[status?.toLowerCase()] ?? { label: status, color: '#888', bg: '#1e1e1e' }
   return (
-    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: s.bg, color: s.color, border: 1px solid 30 }}>
+    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: s.bg, color: s.color, border: `1px solid ${s.color}30` }}>
       {s.label}
     </span>
   )
@@ -126,14 +126,14 @@ export default function AdminDashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total Revenue', value: ₦, icon: DollarSign, color: 'text-green-500' },
+          { label: 'Total Revenue', value: `₦${stats.platformRevenue?.toLocaleString()}`, icon: DollarSign, color: 'text-green-500' },
           { label: 'Total Trips', value: stats.totalTrips, icon: Car, color: 'text-orange-500' },
           { label: 'Active Users', value: stats.totalUsers + activeDrivers.length, icon: Users, color: 'text-blue-500' },
           { label: 'Drops Sold', value: stats.dropsSold, icon: Activity, color: 'text-purple-500' },
         ].map((s, i) => (
           <div key={i} className="p-5 rounded-2xl relative overflow-hidden group border border-white/5 bg-[#141414] hover:bg-[#1a1a1a] transition-all">
             <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <s.icon className={w-24 h-24 } />
+              <s.icon className={`w-24 h-24 ${s.color}`} />
             </div>
             <p className="text-[10px] font-bold uppercase tracking-wider text-[#666] mb-2">{s.label}</p>
             <p className="text-2xl font-bold text-white tracking-tight">{s.value}</p>
@@ -177,7 +177,7 @@ export default function AdminDashboardPage() {
               <PieChart>
                 <Pie data={demographicsData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" stroke="none">
                   {demographicsData.map((entry, index) => (
-                    <Cell key={cell-} fill={COLORS[index % COLORS.length]} />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip contentStyle={{ backgroundColor: '#111', border: '1px solid #333', borderRadius: '8px', fontSize: '12px' }} />
