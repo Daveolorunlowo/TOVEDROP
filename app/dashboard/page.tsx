@@ -56,36 +56,36 @@ export default async function DashboardPage() {
       <div className="max-w-5xl mx-auto px-5 py-8">
 
         {/* ── Header ── */}
-        <div className="flex items-start justify-between mb-8">
-          <div>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div className="flex-1 min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: '#555' }}>
               Rider Dashboard
             </p>
-            <h1 className="text-2xl font-bold" style={{ color: '#f5f5f5', letterSpacing: '-0.01em' }}>
+            <h1 className="text-2xl sm:text-3xl font-bold truncate" style={{ color: '#f5f5f5', letterSpacing: '-0.01em' }}>
               {user.name}
             </h1>
             {user.university && (
-              <p className="text-xs mt-0.5" style={{ color: '#555' }}>{user.university}</p>
+              <p className="text-xs mt-0.5 truncate" style={{ color: '#555' }}>{user.university}</p>
             )}
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <SignOutButton
               variant="outline"
-              className="text-[#555] text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5"
+              className="text-[#555] text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5 whitespace-nowrap"
             />
             <Link
               href="/dashboard/referrals"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground border border-border"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground border border-border whitespace-nowrap"
               style={{ background: '#1e1e1e' }}
             >
               Refer Friends
             </Link>
             <Link
               href="/book"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-black"
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-black whitespace-nowrap shadow-sm transition-transform active:scale-95"
               style={{ background: 'var(--orange-brand)' }}
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5 shrink-0" />
               Book a Ride
             </Link>
           </div>
