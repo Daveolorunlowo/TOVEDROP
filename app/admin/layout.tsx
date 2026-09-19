@@ -3,22 +3,16 @@ import { authOptions } from '@/lib/authOptions'
 import { redirect } from 'next/navigation'
 import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath'
 
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
-
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
- const session = await getServerSession(authOptions)
- 
- if (!session?.user) {
- redirect('/auth')
- }
+  const session = await getServerSession(authOptions)
+  
+  if (!session?.user) {
+    redirect('/auth/login')
+  }
 
- if (session.user.role !== 'ADMIN') {
- redirect(getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null))
- }
+  if (session.user.role !== 'ADMIN') {
+    redirect(getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null))
+  }
 
- return (
- <AdminSidebar>
- {children}
- </AdminSidebar>
- )
+  return <>{children}</>
 }
