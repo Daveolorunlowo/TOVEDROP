@@ -156,19 +156,19 @@ function AuthForm() {
  <form onSubmit={handleSubmit} className="space-y-4" noValidate>
  {tab === 'signup' && (
  <div className="space-y-1.5">
- <Label htmlFor="name" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Full Name</Label>
+ <Label htmlFor="name" className="text-xs font-bold uppercase tracking-wider text-foreground/80">Full Name</Label>
  <div className="relative">
  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
  <Input id="name" name="name" type="text" placeholder="Ada Okafor"
  className={`pl-10 ${errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
  autoComplete="name" />
  </div>
- {errors.name && <p className="text-xs text-red-600">{errors.name}</p>}
+ {errors.name && <p className="text-xs text-red-400 font-medium">{errors.name}</p>}
  </div>
  )}
 
  <div className="space-y-1.5">
- <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Email Address</Label>
+ <Label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-foreground/80">Email Address</Label>
  <div className="relative">
  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
  <Input id="email" name="email" type="email" placeholder="you@example.com"
@@ -178,11 +178,11 @@ function AuthForm() {
  {tab === 'signup' && !errors.email && (
  <p className="text-xs text-muted-foreground">We'll use this to send you ride updates.</p>
  )}
- {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}
+ {errors.email && <p className="text-xs text-red-400 font-medium">{errors.email}</p>}
  </div>
 
  <div className="space-y-1.5">
- <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Password</Label>
+ <Label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-foreground/80">Password</Label>
  <PasswordInput
  id="password"
  name="password"
@@ -190,12 +190,12 @@ function AuthForm() {
  className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''}
  autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
  />
- {errors.password && <p className="text-xs text-red-600">{errors.password}</p>}
+ {errors.password && <p className="text-xs text-red-400 font-medium">{errors.password}</p>}
  </div>
 
  {tab === 'signup' && (
  <div className="space-y-1.5">
- <Label htmlFor="confirmPassword" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">Confirm Password</Label>
+ <Label htmlFor="confirmPassword" className="text-xs font-bold uppercase tracking-wider text-foreground/80">Confirm Password</Label>
  <PasswordInput
  id="confirmPassword"
  name="confirmPassword"
@@ -203,13 +203,13 @@ function AuthForm() {
  className={errors.confirmPassword ? 'border-red-500 focus-visible:ring-red-500' : ''}
  autoComplete="new-password"
  />
- {errors.confirmPassword && <p className="text-xs text-red-600">{errors.confirmPassword}</p>}
+ {errors.confirmPassword && <p className="text-xs text-red-400 font-medium">{errors.confirmPassword}</p>}
  </div>
  )}
 
  {tab === 'login' && (
  <div className="text-right">
- <Link href="#" className="text-xs text-orange-brand hover:underline font-medium">Forgot password?</Link>
+ <Link href="/auth/reset-password" className="text-xs text-orange-brand hover:underline font-medium">Forgot password?</Link>
  </div>
  )}
 
@@ -243,9 +243,9 @@ function AuthForm() {
  {tab === 'signup' && (
  <p className="text-xs text-muted-foreground text-center mt-4">
  By signing up you agree to our{' '}
- <Link href="#" className="text-orange-brand hover:underline">Terms of Service</Link>{' '}
+ <Link href="/terms" className="text-orange-brand hover:underline p-1 inline-block">Terms of Service</Link>{' '}
  and{' '}
- <Link href="#" className="text-orange-brand hover:underline">Privacy Policy</Link>.
+ <Link href="/privacy" className="text-orange-brand hover:underline p-1 inline-block">Privacy Policy</Link>.
  </p>
  )}
  </div>

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
-import { Mail, Phone, MessageCircle, ShieldAlert, Briefcase, Plus, Minus, ArrowRight, ExternalLink } from 'lucide-react'
+import { Mail, Phone, MessageCircle, ShieldAlert, Briefcase, Plus, Minus, ArrowRight, ExternalLink, Lightbulb } from 'lucide-react'
 import Link from 'next/link'
 
 export default function ContactPage() {
@@ -61,7 +61,7 @@ export default function ContactPage() {
  <Navbar />
  
  <main className="flex-1 pt-24 pb-20">
- <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-16">
+ <div className="max-w-4xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
  
  {/* Section 1: Hero */}
  <section className="py-16 text-center border-b border-white/10">
@@ -163,23 +163,26 @@ export default function ContactPage() {
  <p className="text-sm text-foreground/60 mb-6">
  Fill out our simple form. Select your issue type, add a description, and we'll follow up within 2 hours.
  </p>
- <Link
- href="#"
- className="inline-flex items-center gap-2 text-sm font-bold text-orange-brand hover:text-orange-brand/80 transition-colors"
- >
- Submit a ticket <ArrowRight className="w-4 h-4" />
- </Link>
- </div>
+  <Link
+    href="mailto:support@tovedrop.com"
+    className="inline-flex items-center gap-2 text-sm font-bold text-orange-brand hover:text-orange-brand/80 transition-colors"
+  >
+    Submit a ticket <ArrowRight className="w-4 h-4" />
+  </Link>
+</div>
 
- <div>
- <h2 className="text-2xl font-bold text-foreground mb-4">Help us build better</h2>
- <p className="text-sm text-foreground/60 mb-6">
- Have an idea? Found a bug? Want to see a feature? We read all feature requests to shape our roadmap.
- </p>
- <Link
- href="#"
- className="inline-flex items-center gap-2 text-sm font-bold text-purple-brand hover:text-purple-brand/80 transition-colors"
- >
+<div className="bg-surface-card border border-border p-8 rounded-2xl">
+  <div className="w-12 h-12 bg-purple-brand/10 text-purple-brand rounded-2xl flex items-center justify-center mb-6">
+    <Lightbulb className="w-6 h-6" />
+  </div>
+  <h2 className="text-2xl font-bold text-foreground mb-4">Help us build better</h2>
+  <p className="text-sm text-foreground/60 mb-6">
+    Have an idea? Found a bug? Want to see a feature? We read all feature requests to shape our roadmap.
+  </p>
+  <Link
+    href="mailto:features@tovedrop.com"
+    className="inline-flex items-center gap-2 text-sm font-bold text-purple-brand hover:text-purple-brand/80 transition-colors"
+  >
  Submit a feature request <ExternalLink className="w-4 h-4" />
  </Link>
  </div>
@@ -239,7 +242,7 @@ export default function ContactPage() {
  </Link>
  <div className="mt-6">
  <Link
- href="#"
+ href="/dashboard"
  className="text-sm font-semibold text-foreground/60 hover:text-foreground transition-colors"
  >
  Check support status
