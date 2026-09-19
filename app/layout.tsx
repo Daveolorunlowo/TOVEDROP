@@ -9,6 +9,7 @@ import { GlobalAuthenticatedNav } from '@/components/shared/GlobalAuthenticatedN
 import { NetworkIndicator } from '@/components/network-indicator'
 
 import { GlobalMessageListener } from '@/components/global-message-listener'
+import { ServiceWorkerRegistry } from '@/components/sw-registry'
 import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
 
 const inter = Inter({
@@ -82,7 +83,8 @@ export default function RootLayout({
  <InstallPrompt />
  <ReferralTracker />
  <GlobalMessageListener />
- <WelcomeOverlay />
+        <ServiceWorkerRegistry />
+        <WelcomeOverlay />
  {process.env.NODE_ENV === 'production' && <Analytics />}
  </Providers>
  <NetworkIndicator />
