@@ -18,11 +18,14 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // 2. CORS Policy for API Routes
+  // 2. CORS Policy for API Routes (Allow same-origin and explicitly allowed origins)
   if (url.pathname.startsWith("/api/")) {
     const origin = request.headers.get("origin");
+    const hostUrl = `${url.protocol}//${request.headers.get("host")}`;
     const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || "";
-    if (process.env.NODE_ENV === "production" && origin && origin !== allowedOrigin) {
+    
+    // In production, block cross-origin requests from unrecognized domains
+    if (process.env.NODE_ENV === "production" && origin && origin !== allowedOrigin && origin !== hostUrl) {
       return new NextResponse(null, { status: 403, statusText: "Forbidden" });
     }
   }
@@ -67,7 +70,9 @@ export async function proxy(request: NextRequest) {
 
   const response = NextResponse.next();
   if (url.pathname.startsWith("/api/")) {
-    response.headers.set("Access-Control-Allow-Origin", process.env.NEXT_PUBLIC_APP_URL || "*");
+    const origin = request.headers.get("origin");
+    const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || origin || "*";
+    response.headers.set("Access-Control-Allow-Origin", allowedOrigin);
     response.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     response.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
   }
