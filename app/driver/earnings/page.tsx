@@ -95,7 +95,26 @@ export default function EarningsPage() {
  return <div className="min-h-screen bg-background flex items-center justify-center text-foreground">Loading...</div>
  }
 
- if (!data) return null
+  if (!data) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background">
+        <div className="p-6 max-w-sm w-full bg-card border border-border rounded-xl text-center shadow-sm">
+          <Wallet className="w-10 h-10 mx-auto text-muted-foreground mb-4" />
+          <h2 className="text-lg font-bold text-foreground mb-2">Profile Not Found</h2>
+          <p className="text-sm text-muted-foreground mb-6">
+            We couldn't load your driver wallet profile. If this error persists, please contact support.
+          </p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="w-full text-foreground"
+            style={{ background: 'var(--orange-brand)' }}
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    )
+  }
 
  const walletBalance = data.walletBalance || 0
 
