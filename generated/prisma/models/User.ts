@@ -293,6 +293,8 @@ export type UserWhereInput = {
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
   guideProgress?: Prisma.GuideProgressListRelationFilter
+  withdrawalsProcessed?: Prisma.WithdrawalRequestListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -329,6 +331,8 @@ export type UserOrderByWithRelationInput = {
   alarmLogs?: Prisma.AlarmLogOrderByRelationAggregateInput
   tripReminders?: Prisma.TripReminderOrderByRelationAggregateInput
   guideProgress?: Prisma.GuideProgressOrderByRelationAggregateInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestOrderByRelationAggregateInput
+  passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -368,6 +372,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   alarmLogs?: Prisma.AlarmLogListRelationFilter
   tripReminders?: Prisma.TripReminderListRelationFilter
   guideProgress?: Prisma.GuideProgressListRelationFilter
+  withdrawalsProcessed?: Prisma.WithdrawalRequestListRelationFilter
+  passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -442,6 +448,8 @@ export type UserCreateInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -478,6 +486,8 @@ export type UserUncheckedCreateInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -514,6 +524,8 @@ export type UserUpdateInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -550,6 +562,8 @@ export type UserUncheckedUpdateInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -702,6 +716,20 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type UserCreateNestedOneWithoutPasswordResetTokensInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutPasswordResetTokensNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPasswordResetTokensInput
+  upsert?: Prisma.UserUpsertWithoutPasswordResetTokensInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPasswordResetTokensInput, Prisma.UserUpdateWithoutPasswordResetTokensInput>, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
 }
 
 export type UserCreateNestedOneWithoutDriverProfileInput = {
@@ -874,6 +902,22 @@ export type UserUpdateOneRequiredWithoutDropLotsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDropLotsInput, Prisma.UserUpdateWithoutDropLotsInput>, Prisma.UserUncheckedUpdateWithoutDropLotsInput>
 }
 
+export type UserCreateNestedOneWithoutWithdrawalsProcessedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsProcessedInput, Prisma.UserUncheckedCreateWithoutWithdrawalsProcessedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWithdrawalsProcessedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutWithdrawalsProcessedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsProcessedInput, Prisma.UserUncheckedCreateWithoutWithdrawalsProcessedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWithdrawalsProcessedInput
+  upsert?: Prisma.UserUpsertWithoutWithdrawalsProcessedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWithdrawalsProcessedInput, Prisma.UserUpdateWithoutWithdrawalsProcessedInput>, Prisma.UserUncheckedUpdateWithoutWithdrawalsProcessedInput>
+}
+
 export type UserCreateNestedOneWithoutUpdateReadsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutUpdateReadsInput, Prisma.UserUncheckedCreateWithoutUpdateReadsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutUpdateReadsInput
@@ -1009,6 +1053,8 @@ export type UserCreateWithoutAccountsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -1044,6 +1090,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -1095,6 +1143,8 @@ export type UserUpdateWithoutAccountsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -1130,6 +1180,8 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -1165,6 +1217,8 @@ export type UserCreateWithoutSessionsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -1200,6 +1254,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -1251,6 +1307,8 @@ export type UserUpdateWithoutSessionsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -1286,6 +1344,172 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
+  password?: string | null
+  university?: string | null
+  role?: string
+  dropsBalance?: number
+  hasUsedFirstTopupDiscount?: boolean
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  driverProfile?: Prisma.DriverProfileCreateNestedOneWithoutUserInput
+  tripsAsRider?: Prisma.TripCreateNestedManyWithoutRiderInput
+  tripsAsDriver?: Prisma.TripCreateNestedManyWithoutDriverInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
+  referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
+  dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
+  dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
+  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
+  guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+}
+
+export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
+  password?: string | null
+  university?: string | null
+  role?: string
+  dropsBalance?: number
+  hasUsedFirstTopupDiscount?: boolean
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  driverProfile?: Prisma.DriverProfileUncheckedCreateNestedOneWithoutUserInput
+  tripsAsRider?: Prisma.TripUncheckedCreateNestedManyWithoutRiderInput
+  tripsAsDriver?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
+  referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
+  dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
+  dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
+  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
+  guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+}
+
+export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpsertWithoutPasswordResetTokensInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPasswordResetTokensInput, Prisma.UserUncheckedCreateWithoutPasswordResetTokensInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPasswordResetTokensInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPasswordResetTokensInput, Prisma.UserUncheckedUpdateWithoutPasswordResetTokensInput>
+}
+
+export type UserUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  driverProfile?: Prisma.DriverProfileUpdateOneWithoutUserNestedInput
+  tripsAsRider?: Prisma.TripUpdateManyWithoutRiderNestedInput
+  tripsAsDriver?: Prisma.TripUpdateManyWithoutDriverNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
+  referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
+  dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
+  dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
+  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
+  guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  driverProfile?: Prisma.DriverProfileUncheckedUpdateOneWithoutUserNestedInput
+  tripsAsRider?: Prisma.TripUncheckedUpdateManyWithoutRiderNestedInput
+  tripsAsDriver?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
+  referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
+  dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
+  dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
+  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
+  guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type UserCreateWithoutDriverProfileInput = {
@@ -1321,6 +1545,8 @@ export type UserCreateWithoutDriverProfileInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDriverProfileInput = {
@@ -1356,6 +1582,8 @@ export type UserUncheckedCreateWithoutDriverProfileInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDriverProfileInput = {
@@ -1407,6 +1635,8 @@ export type UserUpdateWithoutDriverProfileInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDriverProfileInput = {
@@ -1442,6 +1672,8 @@ export type UserUncheckedUpdateWithoutDriverProfileInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTripsAsRiderInput = {
@@ -1477,6 +1709,8 @@ export type UserCreateWithoutTripsAsRiderInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTripsAsRiderInput = {
@@ -1512,6 +1746,8 @@ export type UserUncheckedCreateWithoutTripsAsRiderInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTripsAsRiderInput = {
@@ -1552,6 +1788,8 @@ export type UserCreateWithoutTripsAsDriverInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTripsAsDriverInput = {
@@ -1587,6 +1825,8 @@ export type UserUncheckedCreateWithoutTripsAsDriverInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTripsAsDriverInput = {
@@ -1638,6 +1878,8 @@ export type UserUpdateWithoutTripsAsRiderInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTripsAsRiderInput = {
@@ -1673,6 +1915,8 @@ export type UserUncheckedUpdateWithoutTripsAsRiderInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTripsAsDriverInput = {
@@ -1719,6 +1963,8 @@ export type UserUpdateWithoutTripsAsDriverInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTripsAsDriverInput = {
@@ -1754,6 +2000,8 @@ export type UserUncheckedUpdateWithoutTripsAsDriverInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutVerificationCodesInput = {
@@ -1789,6 +2037,8 @@ export type UserCreateWithoutVerificationCodesInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutVerificationCodesInput = {
@@ -1824,6 +2074,8 @@ export type UserUncheckedCreateWithoutVerificationCodesInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutVerificationCodesInput = {
@@ -1875,6 +2127,8 @@ export type UserUpdateWithoutVerificationCodesInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationCodesInput = {
@@ -1910,6 +2164,8 @@ export type UserUncheckedUpdateWithoutVerificationCodesInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPushSubscriptionsInput = {
@@ -1945,6 +2201,8 @@ export type UserCreateWithoutPushSubscriptionsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
@@ -1980,6 +2238,8 @@ export type UserUncheckedCreateWithoutPushSubscriptionsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPushSubscriptionsInput = {
@@ -2031,6 +2291,8 @@ export type UserUpdateWithoutPushSubscriptionsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
@@ -2066,6 +2328,8 @@ export type UserUncheckedUpdateWithoutPushSubscriptionsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMessagesInput = {
@@ -2101,6 +2365,8 @@ export type UserCreateWithoutMessagesInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMessagesInput = {
@@ -2136,6 +2402,8 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMessagesInput = {
@@ -2187,6 +2455,8 @@ export type UserUpdateWithoutMessagesInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -2222,6 +2492,8 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralCodeInput = {
@@ -2257,6 +2529,8 @@ export type UserCreateWithoutReferralCodeInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralCodeInput = {
@@ -2292,6 +2566,8 @@ export type UserUncheckedCreateWithoutReferralCodeInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralCodeInput = {
@@ -2343,6 +2619,8 @@ export type UserUpdateWithoutReferralCodeInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralCodeInput = {
@@ -2378,6 +2656,8 @@ export type UserUncheckedUpdateWithoutReferralCodeInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReferralsGivenInput = {
@@ -2413,6 +2693,8 @@ export type UserCreateWithoutReferralsGivenInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferralsGivenInput = {
@@ -2448,6 +2730,8 @@ export type UserUncheckedCreateWithoutReferralsGivenInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferralsGivenInput = {
@@ -2488,6 +2772,8 @@ export type UserCreateWithoutReferredByInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReferredByInput = {
@@ -2523,6 +2809,8 @@ export type UserUncheckedCreateWithoutReferredByInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReferredByInput = {
@@ -2574,6 +2862,8 @@ export type UserUpdateWithoutReferralsGivenInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferralsGivenInput = {
@@ -2609,6 +2899,8 @@ export type UserUncheckedUpdateWithoutReferralsGivenInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReferredByInput = {
@@ -2655,6 +2947,8 @@ export type UserUpdateWithoutReferredByInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReferredByInput = {
@@ -2690,6 +2984,8 @@ export type UserUncheckedUpdateWithoutReferredByInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDropTransactionsInput = {
@@ -2725,6 +3021,8 @@ export type UserCreateWithoutDropTransactionsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDropTransactionsInput = {
@@ -2760,6 +3058,8 @@ export type UserUncheckedCreateWithoutDropTransactionsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDropTransactionsInput = {
@@ -2811,6 +3111,8 @@ export type UserUpdateWithoutDropTransactionsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDropTransactionsInput = {
@@ -2846,6 +3148,8 @@ export type UserUncheckedUpdateWithoutDropTransactionsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFeedbacksInput = {
@@ -2881,6 +3185,8 @@ export type UserCreateWithoutFeedbacksInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFeedbacksInput = {
@@ -2916,6 +3222,8 @@ export type UserUncheckedCreateWithoutFeedbacksInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFeedbacksInput = {
@@ -2967,6 +3275,8 @@ export type UserUpdateWithoutFeedbacksInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFeedbacksInput = {
@@ -3002,6 +3312,8 @@ export type UserUncheckedUpdateWithoutFeedbacksInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDropLotsInput = {
@@ -3037,6 +3349,8 @@ export type UserCreateWithoutDropLotsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDropLotsInput = {
@@ -3072,6 +3386,8 @@ export type UserUncheckedCreateWithoutDropLotsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDropLotsInput = {
@@ -3123,6 +3439,8 @@ export type UserUpdateWithoutDropLotsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDropLotsInput = {
@@ -3158,6 +3476,172 @@ export type UserUncheckedUpdateWithoutDropLotsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWithdrawalsProcessedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
+  password?: string | null
+  university?: string | null
+  role?: string
+  dropsBalance?: number
+  hasUsedFirstTopupDiscount?: boolean
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  driverProfile?: Prisma.DriverProfileCreateNestedOneWithoutUserInput
+  tripsAsRider?: Prisma.TripCreateNestedManyWithoutRiderInput
+  tripsAsDriver?: Prisma.TripCreateNestedManyWithoutDriverInput
+  verificationCodes?: Prisma.VerificationCodeCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  referralCode?: Prisma.ReferralCodeCreateNestedOneWithoutUserInput
+  referralsGiven?: Prisma.ReferralCreateNestedManyWithoutReferrerInput
+  referredBy?: Prisma.ReferralCreateNestedOneWithoutReferredInput
+  dropTransactions?: Prisma.DropTransactionCreateNestedManyWithoutUserInput
+  dropLots?: Prisma.DropLotCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackCreateNestedManyWithoutUserInput
+  updateReads?: Prisma.UpdateReadCreateNestedManyWithoutUserInput
+  privacyRequests?: Prisma.PrivacyRequestCreateNestedManyWithoutUserInput
+  transfersGiven?: Prisma.TripTransferCreateNestedManyWithoutFromDriverInput
+  transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
+  alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
+  tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
+  guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWithdrawalsProcessedInput = {
+  id?: string
+  name?: string | null
+  email?: string | null
+  emailVerified?: Date | string | null
+  image?: string | null
+  phoneNumber?: string | null
+  whatsappNotificationsEnabled?: boolean
+  password?: string | null
+  university?: string | null
+  role?: string
+  dropsBalance?: number
+  hasUsedFirstTopupDiscount?: boolean
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  driverProfile?: Prisma.DriverProfileUncheckedCreateNestedOneWithoutUserInput
+  tripsAsRider?: Prisma.TripUncheckedCreateNestedManyWithoutRiderInput
+  tripsAsDriver?: Prisma.TripUncheckedCreateNestedManyWithoutDriverInput
+  verificationCodes?: Prisma.VerificationCodeUncheckedCreateNestedManyWithoutUserInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedCreateNestedManyWithoutUserInput
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  referralCode?: Prisma.ReferralCodeUncheckedCreateNestedOneWithoutUserInput
+  referralsGiven?: Prisma.ReferralUncheckedCreateNestedManyWithoutReferrerInput
+  referredBy?: Prisma.ReferralUncheckedCreateNestedOneWithoutReferredInput
+  dropTransactions?: Prisma.DropTransactionUncheckedCreateNestedManyWithoutUserInput
+  dropLots?: Prisma.DropLotUncheckedCreateNestedManyWithoutUserInput
+  feedbacks?: Prisma.FeedbackUncheckedCreateNestedManyWithoutUserInput
+  updateReads?: Prisma.UpdateReadUncheckedCreateNestedManyWithoutUserInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedCreateNestedManyWithoutUserInput
+  transfersGiven?: Prisma.TripTransferUncheckedCreateNestedManyWithoutFromDriverInput
+  transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
+  alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
+  tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
+  guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWithdrawalsProcessedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsProcessedInput, Prisma.UserUncheckedCreateWithoutWithdrawalsProcessedInput>
+}
+
+export type UserUpsertWithoutWithdrawalsProcessedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWithdrawalsProcessedInput, Prisma.UserUncheckedUpdateWithoutWithdrawalsProcessedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWithdrawalsProcessedInput, Prisma.UserUncheckedCreateWithoutWithdrawalsProcessedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWithdrawalsProcessedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWithdrawalsProcessedInput, Prisma.UserUncheckedUpdateWithoutWithdrawalsProcessedInput>
+}
+
+export type UserUpdateWithoutWithdrawalsProcessedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  driverProfile?: Prisma.DriverProfileUpdateOneWithoutUserNestedInput
+  tripsAsRider?: Prisma.TripUpdateManyWithoutRiderNestedInput
+  tripsAsDriver?: Prisma.TripUpdateManyWithoutDriverNestedInput
+  verificationCodes?: Prisma.VerificationCodeUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  referralCode?: Prisma.ReferralCodeUpdateOneWithoutUserNestedInput
+  referralsGiven?: Prisma.ReferralUpdateManyWithoutReferrerNestedInput
+  referredBy?: Prisma.ReferralUpdateOneWithoutReferredNestedInput
+  dropTransactions?: Prisma.DropTransactionUpdateManyWithoutUserNestedInput
+  dropLots?: Prisma.DropLotUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUpdateManyWithoutUserNestedInput
+  updateReads?: Prisma.UpdateReadUpdateManyWithoutUserNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUpdateManyWithoutUserNestedInput
+  transfersGiven?: Prisma.TripTransferUpdateManyWithoutFromDriverNestedInput
+  transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
+  alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
+  tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
+  guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWithdrawalsProcessedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  whatsappNotificationsEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  university?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  dropsBalance?: Prisma.IntFieldUpdateOperationsInput | number
+  hasUsedFirstTopupDiscount?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  driverProfile?: Prisma.DriverProfileUncheckedUpdateOneWithoutUserNestedInput
+  tripsAsRider?: Prisma.TripUncheckedUpdateManyWithoutRiderNestedInput
+  tripsAsDriver?: Prisma.TripUncheckedUpdateManyWithoutDriverNestedInput
+  verificationCodes?: Prisma.VerificationCodeUncheckedUpdateManyWithoutUserNestedInput
+  pushSubscriptions?: Prisma.PushSubscriptionUncheckedUpdateManyWithoutUserNestedInput
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  referralCode?: Prisma.ReferralCodeUncheckedUpdateOneWithoutUserNestedInput
+  referralsGiven?: Prisma.ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+  referredBy?: Prisma.ReferralUncheckedUpdateOneWithoutReferredNestedInput
+  dropTransactions?: Prisma.DropTransactionUncheckedUpdateManyWithoutUserNestedInput
+  dropLots?: Prisma.DropLotUncheckedUpdateManyWithoutUserNestedInput
+  feedbacks?: Prisma.FeedbackUncheckedUpdateManyWithoutUserNestedInput
+  updateReads?: Prisma.UpdateReadUncheckedUpdateManyWithoutUserNestedInput
+  privacyRequests?: Prisma.PrivacyRequestUncheckedUpdateManyWithoutUserNestedInput
+  transfersGiven?: Prisma.TripTransferUncheckedUpdateManyWithoutFromDriverNestedInput
+  transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
+  alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
+  tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
+  guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUpdateReadsInput = {
@@ -3193,6 +3677,8 @@ export type UserCreateWithoutUpdateReadsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUpdateReadsInput = {
@@ -3228,6 +3714,8 @@ export type UserUncheckedCreateWithoutUpdateReadsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUpdateReadsInput = {
@@ -3279,6 +3767,8 @@ export type UserUpdateWithoutUpdateReadsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUpdateReadsInput = {
@@ -3314,6 +3804,8 @@ export type UserUncheckedUpdateWithoutUpdateReadsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPrivacyRequestsInput = {
@@ -3349,6 +3841,8 @@ export type UserCreateWithoutPrivacyRequestsInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
@@ -3384,6 +3878,8 @@ export type UserUncheckedCreateWithoutPrivacyRequestsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPrivacyRequestsInput = {
@@ -3435,6 +3931,8 @@ export type UserUpdateWithoutPrivacyRequestsInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
@@ -3470,6 +3968,8 @@ export type UserUncheckedUpdateWithoutPrivacyRequestsInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAlarmLogsInput = {
@@ -3505,6 +4005,8 @@ export type UserCreateWithoutAlarmLogsInput = {
   transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAlarmLogsInput = {
@@ -3540,6 +4042,8 @@ export type UserUncheckedCreateWithoutAlarmLogsInput = {
   transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAlarmLogsInput = {
@@ -3591,6 +4095,8 @@ export type UserUpdateWithoutAlarmLogsInput = {
   transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAlarmLogsInput = {
@@ -3626,6 +4132,8 @@ export type UserUncheckedUpdateWithoutAlarmLogsInput = {
   transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTripRemindersInput = {
@@ -3661,6 +4169,8 @@ export type UserCreateWithoutTripRemindersInput = {
   transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTripRemindersInput = {
@@ -3696,6 +4206,8 @@ export type UserUncheckedCreateWithoutTripRemindersInput = {
   transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTripRemindersInput = {
@@ -3747,6 +4259,8 @@ export type UserUpdateWithoutTripRemindersInput = {
   transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTripRemindersInput = {
@@ -3782,6 +4296,8 @@ export type UserUncheckedUpdateWithoutTripRemindersInput = {
   transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTransfersGivenInput = {
@@ -3817,6 +4333,8 @@ export type UserCreateWithoutTransfersGivenInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransfersGivenInput = {
@@ -3852,6 +4370,8 @@ export type UserUncheckedCreateWithoutTransfersGivenInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransfersGivenInput = {
@@ -3892,6 +4412,8 @@ export type UserCreateWithoutTransfersTakenInput = {
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTransfersTakenInput = {
@@ -3927,6 +4449,8 @@ export type UserUncheckedCreateWithoutTransfersTakenInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
   guideProgress?: Prisma.GuideProgressUncheckedCreateNestedManyWithoutUserInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTransfersTakenInput = {
@@ -3978,6 +4502,8 @@ export type UserUpdateWithoutTransfersGivenInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransfersGivenInput = {
@@ -4013,6 +4539,8 @@ export type UserUncheckedUpdateWithoutTransfersGivenInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutTransfersTakenInput = {
@@ -4059,6 +4587,8 @@ export type UserUpdateWithoutTransfersTakenInput = {
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransfersTakenInput = {
@@ -4094,6 +4624,8 @@ export type UserUncheckedUpdateWithoutTransfersTakenInput = {
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
   guideProgress?: Prisma.GuideProgressUncheckedUpdateManyWithoutUserNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGuideProgressInput = {
@@ -4129,6 +4661,8 @@ export type UserCreateWithoutGuideProgressInput = {
   transfersTaken?: Prisma.TripTransferCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderCreateNestedManyWithoutDriverInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGuideProgressInput = {
@@ -4164,6 +4698,8 @@ export type UserUncheckedCreateWithoutGuideProgressInput = {
   transfersTaken?: Prisma.TripTransferUncheckedCreateNestedManyWithoutToDriverInput
   alarmLogs?: Prisma.AlarmLogUncheckedCreateNestedManyWithoutDriverInput
   tripReminders?: Prisma.TripReminderUncheckedCreateNestedManyWithoutDriverInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGuideProgressInput = {
@@ -4215,6 +4751,8 @@ export type UserUpdateWithoutGuideProgressInput = {
   transfersTaken?: Prisma.TripTransferUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUpdateManyWithoutDriverNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGuideProgressInput = {
@@ -4250,6 +4788,8 @@ export type UserUncheckedUpdateWithoutGuideProgressInput = {
   transfersTaken?: Prisma.TripTransferUncheckedUpdateManyWithoutToDriverNestedInput
   alarmLogs?: Prisma.AlarmLogUncheckedUpdateManyWithoutDriverNestedInput
   tripReminders?: Prisma.TripReminderUncheckedUpdateManyWithoutDriverNestedInput
+  withdrawalsProcessed?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -4276,6 +4816,8 @@ export type UserCountOutputType = {
   alarmLogs: number
   tripReminders: number
   guideProgress: number
+  withdrawalsProcessed: number
+  passwordResetTokens: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4297,6 +4839,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   alarmLogs?: boolean | UserCountOutputTypeCountAlarmLogsArgs
   tripReminders?: boolean | UserCountOutputTypeCountTripRemindersArgs
   guideProgress?: boolean | UserCountOutputTypeCountGuideProgressArgs
+  withdrawalsProcessed?: boolean | UserCountOutputTypeCountWithdrawalsProcessedArgs
+  passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
 }
 
 /**
@@ -4435,6 +4979,20 @@ export type UserCountOutputTypeCountGuideProgressArgs<ExtArgs extends runtime.Ty
   where?: Prisma.GuideProgressWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWithdrawalsProcessedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WithdrawalRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PasswordResetTokenWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -4470,6 +5028,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   alarmLogs?: boolean | Prisma.User$alarmLogsArgs<ExtArgs>
   tripReminders?: boolean | Prisma.User$tripRemindersArgs<ExtArgs>
   guideProgress?: boolean | Prisma.User$guideProgressArgs<ExtArgs>
+  withdrawalsProcessed?: boolean | Prisma.User$withdrawalsProcessedArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -4541,6 +5101,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   alarmLogs?: boolean | Prisma.User$alarmLogsArgs<ExtArgs>
   tripReminders?: boolean | Prisma.User$tripRemindersArgs<ExtArgs>
   guideProgress?: boolean | Prisma.User$guideProgressArgs<ExtArgs>
+  withdrawalsProcessed?: boolean | Prisma.User$withdrawalsProcessedArgs<ExtArgs>
+  passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -4570,6 +5132,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     alarmLogs: Prisma.$AlarmLogPayload<ExtArgs>[]
     tripReminders: Prisma.$TripReminderPayload<ExtArgs>[]
     guideProgress: Prisma.$GuideProgressPayload<ExtArgs>[]
+    withdrawalsProcessed: Prisma.$WithdrawalRequestPayload<ExtArgs>[]
+    passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -4999,6 +5563,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   alarmLogs<T extends Prisma.User$alarmLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$alarmLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AlarmLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tripReminders<T extends Prisma.User$tripRemindersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tripRemindersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TripReminderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   guideProgress<T extends Prisma.User$guideProgressArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$guideProgressArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuideProgressPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  withdrawalsProcessed<T extends Prisma.User$withdrawalsProcessedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$withdrawalsProcessedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WithdrawalRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5919,6 +6485,54 @@ export type User$guideProgressArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.GuideProgressScalarFieldEnum | Prisma.GuideProgressScalarFieldEnum[]
+}
+
+/**
+ * User.withdrawalsProcessed
+ */
+export type User$withdrawalsProcessedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WithdrawalRequest
+   */
+  select?: Prisma.WithdrawalRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WithdrawalRequest
+   */
+  omit?: Prisma.WithdrawalRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WithdrawalRequestInclude<ExtArgs> | null
+  where?: Prisma.WithdrawalRequestWhereInput
+  orderBy?: Prisma.WithdrawalRequestOrderByWithRelationInput | Prisma.WithdrawalRequestOrderByWithRelationInput[]
+  cursor?: Prisma.WithdrawalRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WithdrawalRequestScalarFieldEnum | Prisma.WithdrawalRequestScalarFieldEnum[]
+}
+
+/**
+ * User.passwordResetTokens
+ */
+export type User$passwordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PasswordResetToken
+   */
+  select?: Prisma.PasswordResetTokenSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PasswordResetToken
+   */
+  omit?: Prisma.PasswordResetTokenOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PasswordResetTokenInclude<ExtArgs> | null
+  where?: Prisma.PasswordResetTokenWhereInput
+  orderBy?: Prisma.PasswordResetTokenOrderByWithRelationInput | Prisma.PasswordResetTokenOrderByWithRelationInput[]
+  cursor?: Prisma.PasswordResetTokenWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
 }
 
 /**

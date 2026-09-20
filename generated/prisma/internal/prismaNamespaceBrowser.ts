@@ -55,6 +55,7 @@ export const ModelName = {
   Session: 'Session',
   User: 'User',
   VerificationToken: 'VerificationToken',
+  PasswordResetToken: 'PasswordResetToken',
   DriverProfile: 'DriverProfile',
   Trip: 'Trip',
   Review: 'Review',
@@ -152,6 +153,17 @@ export const VerificationTokenScalarFieldEnum = {
 } as const
 
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+export const PasswordResetTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
 export const DriverProfileScalarFieldEnum = {
@@ -380,6 +392,7 @@ export const WithdrawalRequestScalarFieldEnum = {
   driverId: 'driverId',
   amount: 'amount',
   status: 'status',
+  approvedByAdminId: 'approvedByAdminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

@@ -6,8 +6,26 @@ import { sendWebPush } from "@/lib/webpush"
 import { pusherServer } from "@/lib/pusher"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { logger } from "@/lib/logger"
+import { z } from "zod"
+import { withValidation } from "@/lib/with-validation"
 
-export async function POST(req: NextRequest) {
+const createTripSchema = z.object({
+  pickup: z.string().min(2, "Pickup location is required"),
+  pickupLat: z.number({ required_error: "Pickup latitude is required" }),
+  pickupLng: z.number({ required_error: "Pickup longitude is required" }),
+  destination: z.string().min(2, "Destination is required"),
+  destinationLat: z.number({ required_error: "Destination latitude is required" }),
+  destinationLng: z.number({ required_error: "Destination longitude is required" }),
+  date: z.string().min(1, "Date is required"),
+  time: z.string().min(1, "Time is required"),
+  notes: z.string().optional(),
+  isPool: z.boolean().optional(),
+  isScheduled: z.boolean().optional(),
+  scheduledDateTime: z.string().optional().nullable(),
+  idempotencyKey: z.string().optional().nullable(),
+})
+
+export const POST = withValidation(createTripSchema, async (req: NextRequest, data) => {
  try {
  const rateLimit = checkRateLimit(req, 10, 60 * 1000) // 10 requests per minute
  if (!rateLimit.success) {
@@ -20,11 +38,7 @@ export async function POST(req: NextRequest) {
  return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
  }
 
- const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool, isScheduled, scheduledDateTime, idempotencyKey } = await req.json()
- 
- if (!pickup || !destination || !date || !time || pickupLat === undefined || pickupLng === undefined || destinationLat === undefined || destinationLng === undefined) {
- return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
- }
+ const { pickup, pickupLat, pickupLng, destination, destinationLat, destinationLng, date, time, notes, isPool, isScheduled, scheduledDateTime, idempotencyKey } = data
 
  const BOWEN_BOUNDS = { north: 7.6400, south: 7.6080, east: 4.2050, west: 4.1730 }
 

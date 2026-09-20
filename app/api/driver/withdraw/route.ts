@@ -1,18 +1,25 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
+import { checkRateLimit } from "@/lib/rateLimit"
+import { withValidation } from "@/lib/with-validation"
+import { z } from "zod"
 
-export async function POST(req: Request) {
+const withdrawSchema = z.object({
+  amount: z.number().positive().min(100, "Minimum withdrawal amount is ₦100")
+})
+
+export const POST = withValidation(withdrawSchema, async (req: NextRequest, { amount }) => {
  try {
+ const limitRes = checkRateLimit(req, 5, 60 * 60 * 1000) // 5 requests per hour
+ if (!limitRes.success) {
+ return NextResponse.json({ message: "Too many withdrawal requests. Please try again later." }, { status: 429 })
+ }
+
  const session = await getServerSession(authOptions)
  if (!session || !session.user || session.user.role !== 'DRIVER') {
  return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
- }
-
- const { amount } = await req.json()
- if (!amount || amount <= 0) {
- return NextResponse.json({ message: "Invalid amount" }, { status: 400 })
  }
 
  const profile = await prisma.driverProfile.findUnique({

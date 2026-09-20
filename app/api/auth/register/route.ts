@@ -4,19 +4,24 @@ import bcrypt from "bcryptjs"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { cookies } from "next/headers"
 import { sendWelcomeEmail } from "@/lib/email"
+import { z } from "zod"
+import { withValidation } from "@/lib/with-validation"
 
-export async function POST(req: NextRequest) {
+const registerSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  university: z.string().optional()
+})
+
+export const POST = withValidation(registerSchema, async (req: NextRequest, data) => {
  try {
  const rateLimit = checkRateLimit(req, 5, 60 * 1000) // 5 requests per minute
  if (!rateLimit.success) {
  return NextResponse.json({ message: "Too many registration attempts. Please try again later." }, { status: 429 })
  }
 
- const { name, email, university, password } = await req.json()
- 
- if (!name || !email || !password) {
- return NextResponse.json({ message: "Missing fields" }, { status: 400 })
- }
+ const { name, email, university, password } = data
 
  const exists = await prisma.user.findUnique({
  where: { email }

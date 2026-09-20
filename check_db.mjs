@@ -1,0 +1,1 @@
+import { PrismaClient } from './generated/prisma/index.js'; const prisma = new PrismaClient(); async function main() { const trips = await prisma.trip.findMany({ where: { status: { in: ['PENDING', 'CONFIRMED'] } } }); console.log(trips); } main();

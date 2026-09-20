@@ -76,6 +76,8 @@ model User {
   alarmLogs        AlarmLog[]
   tripReminders    TripReminder[]
   guideProgress    GuideProgress[]
+  withdrawalsProcessed WithdrawalRequest[]
+  passwordResetTokens  PasswordResetToken[]
 }
 
 model VerificationToken {
@@ -84,6 +86,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 // Tovedrop Models
@@ -172,6 +184,11 @@ model Trip {
 
   alarmLogs          AlarmLog[]
   tripReminders      TripReminder[]
+
+  @@index([riderId])
+  @@index([driverId])
+  @@index([status])
+  @@index([date, time])
 }
 
 model Review {
@@ -323,6 +340,10 @@ model WithdrawalRequest {
   driverId  String
   amount    Float // Naira
   status    String   @default("PENDING") // PENDING, APPROVED, REJECTED
+  
+  approvedByAdminId String?
+  admin             User?    @relation(fields: [approvedByAdminId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

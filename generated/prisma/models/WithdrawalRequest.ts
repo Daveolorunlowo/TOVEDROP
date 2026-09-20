@@ -39,6 +39,7 @@ export type WithdrawalRequestMinAggregateOutputType = {
   driverId: string | null
   amount: number | null
   status: string | null
+  approvedByAdminId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -48,6 +49,7 @@ export type WithdrawalRequestMaxAggregateOutputType = {
   driverId: string | null
   amount: number | null
   status: string | null
+  approvedByAdminId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -57,6 +59,7 @@ export type WithdrawalRequestCountAggregateOutputType = {
   driverId: number
   amount: number
   status: number
+  approvedByAdminId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -76,6 +79,7 @@ export type WithdrawalRequestMinAggregateInputType = {
   driverId?: true
   amount?: true
   status?: true
+  approvedByAdminId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -85,6 +89,7 @@ export type WithdrawalRequestMaxAggregateInputType = {
   driverId?: true
   amount?: true
   status?: true
+  approvedByAdminId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -94,6 +99,7 @@ export type WithdrawalRequestCountAggregateInputType = {
   driverId?: true
   amount?: true
   status?: true
+  approvedByAdminId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -190,6 +196,7 @@ export type WithdrawalRequestGroupByOutputType = {
   driverId: string
   amount: number
   status: string
+  approvedByAdminId: string | null
   createdAt: Date
   updatedAt: Date
   _count: WithdrawalRequestCountAggregateOutputType | null
@@ -222,8 +229,10 @@ export type WithdrawalRequestWhereInput = {
   driverId?: Prisma.StringFilter<"WithdrawalRequest"> | string
   amount?: Prisma.FloatFilter<"WithdrawalRequest"> | number
   status?: Prisma.StringFilter<"WithdrawalRequest"> | string
+  approvedByAdminId?: Prisma.StringNullableFilter<"WithdrawalRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
+  admin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   driver?: Prisma.XOR<Prisma.DriverProfileScalarRelationFilter, Prisma.DriverProfileWhereInput>
 }
 
@@ -232,8 +241,10 @@ export type WithdrawalRequestOrderByWithRelationInput = {
   driverId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  approvedByAdminId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  admin?: Prisma.UserOrderByWithRelationInput
   driver?: Prisma.DriverProfileOrderByWithRelationInput
 }
 
@@ -245,8 +256,10 @@ export type WithdrawalRequestWhereUniqueInput = Prisma.AtLeast<{
   driverId?: Prisma.StringFilter<"WithdrawalRequest"> | string
   amount?: Prisma.FloatFilter<"WithdrawalRequest"> | number
   status?: Prisma.StringFilter<"WithdrawalRequest"> | string
+  approvedByAdminId?: Prisma.StringNullableFilter<"WithdrawalRequest"> | string | null
   createdAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
+  admin?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   driver?: Prisma.XOR<Prisma.DriverProfileScalarRelationFilter, Prisma.DriverProfileWhereInput>
 }, "id">
 
@@ -255,6 +268,7 @@ export type WithdrawalRequestOrderByWithAggregationInput = {
   driverId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  approvedByAdminId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.WithdrawalRequestCountOrderByAggregateInput
@@ -272,6 +286,7 @@ export type WithdrawalRequestScalarWhereWithAggregatesInput = {
   driverId?: Prisma.StringWithAggregatesFilter<"WithdrawalRequest"> | string
   amount?: Prisma.FloatWithAggregatesFilter<"WithdrawalRequest"> | number
   status?: Prisma.StringWithAggregatesFilter<"WithdrawalRequest"> | string
+  approvedByAdminId?: Prisma.StringNullableWithAggregatesFilter<"WithdrawalRequest"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WithdrawalRequest"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WithdrawalRequest"> | Date | string
 }
@@ -282,6 +297,7 @@ export type WithdrawalRequestCreateInput = {
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  admin?: Prisma.UserCreateNestedOneWithoutWithdrawalsProcessedInput
   driver: Prisma.DriverProfileCreateNestedOneWithoutWithdrawalRequestsInput
 }
 
@@ -290,6 +306,7 @@ export type WithdrawalRequestUncheckedCreateInput = {
   driverId: string
   amount: number
   status?: string
+  approvedByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -300,6 +317,7 @@ export type WithdrawalRequestUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admin?: Prisma.UserUpdateOneWithoutWithdrawalsProcessedNestedInput
   driver?: Prisma.DriverProfileUpdateOneRequiredWithoutWithdrawalRequestsNestedInput
 }
 
@@ -308,6 +326,7 @@ export type WithdrawalRequestUncheckedUpdateInput = {
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -317,6 +336,7 @@ export type WithdrawalRequestCreateManyInput = {
   driverId: string
   amount: number
   status?: string
+  approvedByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -334,6 +354,7 @@ export type WithdrawalRequestUncheckedUpdateManyInput = {
   driverId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -353,6 +374,7 @@ export type WithdrawalRequestCountOrderByAggregateInput = {
   driverId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  approvedByAdminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -366,6 +388,7 @@ export type WithdrawalRequestMaxOrderByAggregateInput = {
   driverId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  approvedByAdminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -375,12 +398,55 @@ export type WithdrawalRequestMinOrderByAggregateInput = {
   driverId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  approvedByAdminId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type WithdrawalRequestSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+}
+
+export type WithdrawalRequestCreateNestedManyWithoutAdminInput = {
+  create?: Prisma.XOR<Prisma.WithdrawalRequestCreateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput> | Prisma.WithdrawalRequestCreateWithoutAdminInput[] | Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput[]
+  connectOrCreate?: Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput | Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput[]
+  createMany?: Prisma.WithdrawalRequestCreateManyAdminInputEnvelope
+  connect?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+}
+
+export type WithdrawalRequestUncheckedCreateNestedManyWithoutAdminInput = {
+  create?: Prisma.XOR<Prisma.WithdrawalRequestCreateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput> | Prisma.WithdrawalRequestCreateWithoutAdminInput[] | Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput[]
+  connectOrCreate?: Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput | Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput[]
+  createMany?: Prisma.WithdrawalRequestCreateManyAdminInputEnvelope
+  connect?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+}
+
+export type WithdrawalRequestUpdateManyWithoutAdminNestedInput = {
+  create?: Prisma.XOR<Prisma.WithdrawalRequestCreateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput> | Prisma.WithdrawalRequestCreateWithoutAdminInput[] | Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput[]
+  connectOrCreate?: Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput | Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput[]
+  upsert?: Prisma.WithdrawalRequestUpsertWithWhereUniqueWithoutAdminInput | Prisma.WithdrawalRequestUpsertWithWhereUniqueWithoutAdminInput[]
+  createMany?: Prisma.WithdrawalRequestCreateManyAdminInputEnvelope
+  set?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  disconnect?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  delete?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  connect?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  update?: Prisma.WithdrawalRequestUpdateWithWhereUniqueWithoutAdminInput | Prisma.WithdrawalRequestUpdateWithWhereUniqueWithoutAdminInput[]
+  updateMany?: Prisma.WithdrawalRequestUpdateManyWithWhereWithoutAdminInput | Prisma.WithdrawalRequestUpdateManyWithWhereWithoutAdminInput[]
+  deleteMany?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
+}
+
+export type WithdrawalRequestUncheckedUpdateManyWithoutAdminNestedInput = {
+  create?: Prisma.XOR<Prisma.WithdrawalRequestCreateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput> | Prisma.WithdrawalRequestCreateWithoutAdminInput[] | Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput[]
+  connectOrCreate?: Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput | Prisma.WithdrawalRequestCreateOrConnectWithoutAdminInput[]
+  upsert?: Prisma.WithdrawalRequestUpsertWithWhereUniqueWithoutAdminInput | Prisma.WithdrawalRequestUpsertWithWhereUniqueWithoutAdminInput[]
+  createMany?: Prisma.WithdrawalRequestCreateManyAdminInputEnvelope
+  set?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  disconnect?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  delete?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  connect?: Prisma.WithdrawalRequestWhereUniqueInput | Prisma.WithdrawalRequestWhereUniqueInput[]
+  update?: Prisma.WithdrawalRequestUpdateWithWhereUniqueWithoutAdminInput | Prisma.WithdrawalRequestUpdateWithWhereUniqueWithoutAdminInput[]
+  updateMany?: Prisma.WithdrawalRequestUpdateManyWithWhereWithoutAdminInput | Prisma.WithdrawalRequestUpdateManyWithWhereWithoutAdminInput[]
+  deleteMany?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
 }
 
 export type WithdrawalRequestCreateNestedManyWithoutDriverInput = {
@@ -425,18 +491,77 @@ export type WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput = {
   deleteMany?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
 }
 
-export type WithdrawalRequestCreateWithoutDriverInput = {
+export type WithdrawalRequestCreateWithoutAdminInput = {
   id?: string
+  amount: number
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  driver: Prisma.DriverProfileCreateNestedOneWithoutWithdrawalRequestsInput
+}
+
+export type WithdrawalRequestUncheckedCreateWithoutAdminInput = {
+  id?: string
+  driverId: string
   amount: number
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
 
+export type WithdrawalRequestCreateOrConnectWithoutAdminInput = {
+  where: Prisma.WithdrawalRequestWhereUniqueInput
+  create: Prisma.XOR<Prisma.WithdrawalRequestCreateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput>
+}
+
+export type WithdrawalRequestCreateManyAdminInputEnvelope = {
+  data: Prisma.WithdrawalRequestCreateManyAdminInput | Prisma.WithdrawalRequestCreateManyAdminInput[]
+  skipDuplicates?: boolean
+}
+
+export type WithdrawalRequestUpsertWithWhereUniqueWithoutAdminInput = {
+  where: Prisma.WithdrawalRequestWhereUniqueInput
+  update: Prisma.XOR<Prisma.WithdrawalRequestUpdateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedUpdateWithoutAdminInput>
+  create: Prisma.XOR<Prisma.WithdrawalRequestCreateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedCreateWithoutAdminInput>
+}
+
+export type WithdrawalRequestUpdateWithWhereUniqueWithoutAdminInput = {
+  where: Prisma.WithdrawalRequestWhereUniqueInput
+  data: Prisma.XOR<Prisma.WithdrawalRequestUpdateWithoutAdminInput, Prisma.WithdrawalRequestUncheckedUpdateWithoutAdminInput>
+}
+
+export type WithdrawalRequestUpdateManyWithWhereWithoutAdminInput = {
+  where: Prisma.WithdrawalRequestScalarWhereInput
+  data: Prisma.XOR<Prisma.WithdrawalRequestUpdateManyMutationInput, Prisma.WithdrawalRequestUncheckedUpdateManyWithoutAdminInput>
+}
+
+export type WithdrawalRequestScalarWhereInput = {
+  AND?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
+  OR?: Prisma.WithdrawalRequestScalarWhereInput[]
+  NOT?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
+  id?: Prisma.StringFilter<"WithdrawalRequest"> | string
+  driverId?: Prisma.StringFilter<"WithdrawalRequest"> | string
+  amount?: Prisma.FloatFilter<"WithdrawalRequest"> | number
+  status?: Prisma.StringFilter<"WithdrawalRequest"> | string
+  approvedByAdminId?: Prisma.StringNullableFilter<"WithdrawalRequest"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
+}
+
+export type WithdrawalRequestCreateWithoutDriverInput = {
+  id?: string
+  amount: number
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  admin?: Prisma.UserCreateNestedOneWithoutWithdrawalsProcessedInput
+}
+
 export type WithdrawalRequestUncheckedCreateWithoutDriverInput = {
   id?: string
   amount: number
   status?: string
+  approvedByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -467,22 +592,47 @@ export type WithdrawalRequestUpdateManyWithWhereWithoutDriverInput = {
   data: Prisma.XOR<Prisma.WithdrawalRequestUpdateManyMutationInput, Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverInput>
 }
 
-export type WithdrawalRequestScalarWhereInput = {
-  AND?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
-  OR?: Prisma.WithdrawalRequestScalarWhereInput[]
-  NOT?: Prisma.WithdrawalRequestScalarWhereInput | Prisma.WithdrawalRequestScalarWhereInput[]
-  id?: Prisma.StringFilter<"WithdrawalRequest"> | string
-  driverId?: Prisma.StringFilter<"WithdrawalRequest"> | string
-  amount?: Prisma.FloatFilter<"WithdrawalRequest"> | number
-  status?: Prisma.StringFilter<"WithdrawalRequest"> | string
-  createdAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"WithdrawalRequest"> | Date | string
+export type WithdrawalRequestCreateManyAdminInput = {
+  id?: string
+  driverId: string
+  amount: number
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type WithdrawalRequestUpdateWithoutAdminInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  driver?: Prisma.DriverProfileUpdateOneRequiredWithoutWithdrawalRequestsNestedInput
+}
+
+export type WithdrawalRequestUncheckedUpdateWithoutAdminInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type WithdrawalRequestUncheckedUpdateManyWithoutAdminInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  driverId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WithdrawalRequestCreateManyDriverInput = {
   id?: string
   amount: number
   status?: string
+  approvedByAdminId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -493,12 +643,14 @@ export type WithdrawalRequestUpdateWithoutDriverInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  admin?: Prisma.UserUpdateOneWithoutWithdrawalsProcessedNestedInput
 }
 
 export type WithdrawalRequestUncheckedUpdateWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -507,6 +659,7 @@ export type WithdrawalRequestUncheckedUpdateManyWithoutDriverInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedByAdminId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -518,8 +671,10 @@ export type WithdrawalRequestSelect<ExtArgs extends runtime.Types.Extensions.Int
   driverId?: boolean
   amount?: boolean
   status?: boolean
+  approvedByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  admin?: boolean | Prisma.WithdrawalRequest$adminArgs<ExtArgs>
   driver?: boolean | Prisma.DriverProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["withdrawalRequest"]>
 
@@ -528,8 +683,10 @@ export type WithdrawalRequestSelectCreateManyAndReturn<ExtArgs extends runtime.T
   driverId?: boolean
   amount?: boolean
   status?: boolean
+  approvedByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  admin?: boolean | Prisma.WithdrawalRequest$adminArgs<ExtArgs>
   driver?: boolean | Prisma.DriverProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["withdrawalRequest"]>
 
@@ -538,8 +695,10 @@ export type WithdrawalRequestSelectUpdateManyAndReturn<ExtArgs extends runtime.T
   driverId?: boolean
   amount?: boolean
   status?: boolean
+  approvedByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  admin?: boolean | Prisma.WithdrawalRequest$adminArgs<ExtArgs>
   driver?: boolean | Prisma.DriverProfileDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["withdrawalRequest"]>
 
@@ -548,24 +707,29 @@ export type WithdrawalRequestSelectScalar = {
   driverId?: boolean
   amount?: boolean
   status?: boolean
+  approvedByAdminId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type WithdrawalRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "driverId" | "amount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["withdrawalRequest"]>
+export type WithdrawalRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "driverId" | "amount" | "status" | "approvedByAdminId" | "createdAt" | "updatedAt", ExtArgs["result"]["withdrawalRequest"]>
 export type WithdrawalRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  admin?: boolean | Prisma.WithdrawalRequest$adminArgs<ExtArgs>
   driver?: boolean | Prisma.DriverProfileDefaultArgs<ExtArgs>
 }
 export type WithdrawalRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  admin?: boolean | Prisma.WithdrawalRequest$adminArgs<ExtArgs>
   driver?: boolean | Prisma.DriverProfileDefaultArgs<ExtArgs>
 }
 export type WithdrawalRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  admin?: boolean | Prisma.WithdrawalRequest$adminArgs<ExtArgs>
   driver?: boolean | Prisma.DriverProfileDefaultArgs<ExtArgs>
 }
 
 export type $WithdrawalRequestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WithdrawalRequest"
   objects: {
+    admin: Prisma.$UserPayload<ExtArgs> | null
     driver: Prisma.$DriverProfilePayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -573,6 +737,7 @@ export type $WithdrawalRequestPayload<ExtArgs extends runtime.Types.Extensions.I
     driverId: string
     amount: number
     status: string
+    approvedByAdminId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["withdrawalRequest"]>
@@ -969,6 +1134,7 @@ readonly fields: WithdrawalRequestFieldRefs;
  */
 export interface Prisma__WithdrawalRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  admin<T extends Prisma.WithdrawalRequest$adminArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.WithdrawalRequest$adminArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   driver<T extends Prisma.DriverProfileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.DriverProfileDefaultArgs<ExtArgs>>): Prisma.Prisma__DriverProfileClient<runtime.Types.Result.GetResult<Prisma.$DriverProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1003,6 +1169,7 @@ export interface WithdrawalRequestFieldRefs {
   readonly driverId: Prisma.FieldRef<"WithdrawalRequest", 'String'>
   readonly amount: Prisma.FieldRef<"WithdrawalRequest", 'Float'>
   readonly status: Prisma.FieldRef<"WithdrawalRequest", 'String'>
+  readonly approvedByAdminId: Prisma.FieldRef<"WithdrawalRequest", 'String'>
   readonly createdAt: Prisma.FieldRef<"WithdrawalRequest", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WithdrawalRequest", 'DateTime'>
 }
@@ -1403,6 +1570,25 @@ export type WithdrawalRequestDeleteManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many WithdrawalRequests to delete.
    */
   limit?: number
+}
+
+/**
+ * WithdrawalRequest.admin
+ */
+export type WithdrawalRequest$adminArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

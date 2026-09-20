@@ -1,11 +1,17 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { sendWebPush } from "@/lib/webpush"
 import { pusherServer } from "@/lib/pusher"
+import { z } from "zod"
+import { withValidation } from "@/lib/with-validation"
 
-export async function POST(req: Request) {
+const acceptTripSchema = z.object({
+  tripId: z.string().min(1, "Trip ID is required")
+})
+
+export const POST = withValidation(acceptTripSchema, async (req: NextRequest, data) => {
  try {
  const session = await getServerSession(authOptions)
  
@@ -13,11 +19,7 @@ export async function POST(req: Request) {
  return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
  }
 
- const { tripId } = await req.json()
- 
- if (!tripId) {
- return NextResponse.json({ message: "Missing trip ID" }, { status: 400 })
- }
+ const { tripId } = data
 
  const driverProfile = await prisma.driverProfile.findUnique({
  where: { userId: session.user.id },

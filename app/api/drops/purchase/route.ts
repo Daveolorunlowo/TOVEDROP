@@ -1,10 +1,16 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from "@/lib/config"
+import { z } from "zod"
+import { withValidation } from "@/lib/with-validation"
 
-export async function POST(req: Request) {
+const purchaseSchema = z.object({
+  packageId: z.string().min(1, "Package ID is required")
+})
+
+export const POST = withValidation(purchaseSchema, async (req: NextRequest, data) => {
  try {
  const session = await getServerSession(authOptions)
  
@@ -12,7 +18,7 @@ export async function POST(req: Request) {
  return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
  }
 
- const { packageId } = await req.json()
+ const { packageId } = data
  
  const pkg = DROP_PACKAGES.find(p => p.id === packageId)
  if (!pkg) {

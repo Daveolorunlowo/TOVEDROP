@@ -1,19 +1,23 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
+import { z } from "zod"
+import { withValidation } from "@/lib/with-validation"
 
-export async function POST(req: Request) {
+const adminWithdrawalSchema = z.object({
+  requestId: z.string().min(1, "Request ID is required"),
+  action: z.enum(["approve", "reject"])
+})
+
+export const POST = withValidation(adminWithdrawalSchema, async (req: NextRequest, data) => {
  try {
  const session = await getServerSession(authOptions)
  if (!session || !session.user || session.user.role !== 'ADMIN') {
  return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
  }
 
- const { requestId, action } = await req.json()
- if (!requestId || !['approve', 'reject'].includes(action)) {
- return NextResponse.json({ message: "Invalid request data" }, { status: 400 })
- }
+ const { requestId, action } = data
 
  const request = await prisma.withdrawalRequest.findUnique({
  where: { id: requestId }
@@ -33,12 +37,18 @@ export async function POST(req: Request) {
  if (action === 'approve') {
  updatedRequest = await tx.withdrawalRequest.update({
  where: { id: requestId },
- data: { status: "APPROVED" }
+ data: { 
+   status: "APPROVED",
+   approvedByAdminId: session.user.id
+ }
  })
  } else if (action === 'reject') {
  updatedRequest = await tx.withdrawalRequest.update({
  where: { id: requestId },
- data: { status: "REJECTED" }
+ data: { 
+   status: "REJECTED",
+   approvedByAdminId: session.user.id
+ }
  })
 
  // Refund driver
