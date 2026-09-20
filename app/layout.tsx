@@ -69,26 +69,31 @@ export const viewport: Viewport = {
  themeColor: '#22C55E',
 }
 
-export default function RootLayout({
- children,
+import { cookies } from 'next/headers'
+
+export default async function RootLayout({
+  children,
 }: Readonly<{
- children: React.ReactNode
+  children: React.ReactNode
 }>) {
- return (
- <html lang="en" className="bg-background">
- <body className={`${inter.className} antialiased`}>
- <Providers>
- <GlobalAuthenticatedNav />
- {children}
- <InstallPrompt />
- <ReferralTracker />
- <GlobalMessageListener />
-        <ServiceWorkerRegistry />
-        <WelcomeOverlay />
- {process.env.NODE_ENV === 'production' && <Analytics />}
- </Providers>
- <NetworkIndicator />
- </body>
- </html>
- )
+  const cookieStore = await cookies()
+  const hasSeenWelcome = cookieStore.get('tovedrop_welcomed')?.value === 'true'
+
+  return (
+    <html lang="en" className="bg-background">
+      <body className={`${inter.className} antialiased`}>
+        <Providers>
+          <GlobalAuthenticatedNav />
+          {children}
+          <InstallPrompt />
+          <ReferralTracker />
+          <GlobalMessageListener />
+          <ServiceWorkerRegistry />
+          <WelcomeOverlay hasSeenWelcome={hasSeenWelcome} />
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </Providers>
+        <NetworkIndicator />
+      </body>
+    </html>
+  )
 }

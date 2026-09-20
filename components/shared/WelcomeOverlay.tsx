@@ -5,44 +5,58 @@ import { useSession } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Car, Gift, ChevronRight, Check, Star, Users, Activity, LineChart } from 'lucide-react';
 
-export function WelcomeOverlay() {
- const { data: session, status } = useSession();
- const [phase, setPhase] = useState<'idle' | 'glow' | 'text' | 'fade' | 'guide' | 'done'>('idle');
- const [guideStep, setGuideStep] = useState(0);
- const firstName = session?.user?.name?.split(' ')[0] || 'there';
- const role = (session?.user as any)?.role || 'RIDER';
+export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: boolean }) {
+  const { data: session, status } = useSession();
+  const [phase, setPhase] = useState<'idle' | 'glow' | 'text' | 'fade' | 'guide' | 'done'>(
+    hasSeenWelcome ? 'done' : 'idle'
+  );
+  const [guideStep, setGuideStep] = useState(0);
+  
+  const firstName = session?.user?.name?.split(' ')[0] || 'there';
+  const role = (session?.user as any)?.role || 'RIDER';
 
- const getGreeting = () => {
- const hour = new Date().getHours();
- if (hour < 12) return 'Good Morning';
- if (hour < 17) return 'Good Afternoon';
- if (hour < 21) return 'Good Evening';
- return 'Good Night';
- };
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    if (hour < 21) return 'Good Evening';
+    return 'Good Night';
+  };
 
- useEffect(() => {
- if (status === 'authenticated') {
- let hasSeenGuide = false
- try {
- hasSeenGuide = localStorage.getItem(`hasSeenGuide_${role}`) === 'true'
- } catch (e) {}
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      setPhase('done');
+      return;
+    }
 
- // Warm, gentle sequence
- setPhase('glow');
- setTimeout(() => setPhase('text'), 600);
- setTimeout(() => setPhase('fade'), 3600);
- 
- setTimeout(() => {
- if (!hasSeenGuide) setPhase('guide');
- else setPhase('done');
- }, 4400);
- }
- }, [status, role]);
+    if (status === 'authenticated' && phase === 'idle') {
+      // Set session cookie so it doesn't show again on reload/navigate
+      document.cookie = "tovedrop_welcomed=true; path=/";
+      
+      let hasSeenGuide = false;
+      try {
+        hasSeenGuide = localStorage.getItem(`hasSeenGuide_${role}`) === 'true';
+      } catch (e) {}
 
- if (status !== 'authenticated' || phase === 'idle' || phase === 'done') return null;
+      // Warm, gentle sequence
+      setPhase('glow');
+      setTimeout(() => setPhase('text'), 600);
+      setTimeout(() => setPhase('fade'), 3600);
+      
+      setTimeout(() => {
+        if (!hasSeenGuide) setPhase('guide');
+        else setPhase('done');
+      }, 4400);
+    }
+  }, [status, role, phase]);
 
- const isWelcomeActive = ['glow', 'text', 'fade'].includes(phase);
- const greeting = getGreeting();
+  // If already welcomed or finished, render nothing
+  if (phase === 'done') return null;
+
+  // Even if status is 'loading' or unauthenticated, if phase is NOT done,
+  // we MUST render the background to block the dashboard from flashing.
+  const isWelcomeActive = ['idle', 'glow', 'text', 'fade'].includes(phase);
+  const greeting = getGreeting();
 
  const guideContent = {
  RIDER: [
