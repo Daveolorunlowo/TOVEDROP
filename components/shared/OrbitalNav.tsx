@@ -121,7 +121,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  <div 
  ref={containerRef}
  className={cn(
- "fixed z-50",
+ "fixed z-50 orbital-nav-container",
  // Mobile: bottom center. Desktop: bottom right
  "bottom-[calc(16px+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2",
  "sm:bottom-6 sm:left-auto sm:right-6 sm:translate-x-0"
@@ -190,7 +190,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  onClick={() => setIsOpen(!isOpen)}
  className={cn(
  "relative flex items-center justify-center w-[60px] h-[60px] rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] z-10",
- "bg-primary shadow-[0_0_24px_rgba(249,115,22,0.5)]",
+ "bg-primary shadow-lg shadow-primary/30",
  "active:scale-95 transition-transform duration-300"
  )}
  style={{

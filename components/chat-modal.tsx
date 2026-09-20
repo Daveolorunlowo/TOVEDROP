@@ -62,8 +62,16 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  })
  })
 
+ // Hide orbital nav while chat is open
+ const style = document.createElement('style')
+ style.innerHTML = '.orbital-nav-container { display: none !important; }'
+ document.head.appendChild(style)
+
  return () => {
  mounted = false
+ if (document.head.contains(style)) {
+ document.head.removeChild(style)
+ }
  if (pusherClient) pusherClient.unsubscribe(`trip-${tripId}`)
  }
  }, [tripId])
