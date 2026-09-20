@@ -43,7 +43,7 @@ export function SpotifyConnect({ isConnected }: { isConnected: boolean }) {
  <div>
  <button
  onClick={() => window.location.href = '/api/spotify/auth'}
- className="w-full bg-[#1DB954] hover:bg-[#1ed760] text-black font-bold py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
+ className="w-full bg-background hover:bg-background text-foreground font-bold py-2 rounded-lg transition-colors flex items-center justify-center gap-2"
  >
  <Music className="w-4 h-4" />
  Connect with Spotify

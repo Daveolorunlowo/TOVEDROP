@@ -223,7 +223,7 @@ export function TripListClient({
  <>
  <button
  onClick={() => setActiveChatTrip(trip)}
- className="p-1.5 rounded bg-surface-elevated hover:bg-white/10 transition-colors text-green-500"
+ className="p-1.5 rounded bg-surface-elevated hover:bg-foreground/5 transition-colors text-green-500"
  aria-label="Message Driver"
  >
  <MessageSquare className="w-3.5 h-3.5" />
@@ -231,7 +231,7 @@ export function TripListClient({
  {trip.shareToken && (
  <button
  onClick={() => setShareModalOpen(trip.shareToken)}
- className="p-1.5 rounded bg-surface-elevated hover:bg-white/10 transition-colors text-orange-brand"
+ className="p-1.5 rounded bg-surface-elevated hover:bg-foreground/5 transition-colors text-orange-brand"
  aria-label="Share Trip"
  >
  <Share className="w-3.5 h-3.5" />
@@ -244,7 +244,7 @@ export function TripListClient({
  id={i === 0 ? "guide-cancel-trip-btn" : undefined}
  disabled={processing === trip.id}
  onClick={() => setTripToCancel(trip.id)}
- className="p-1.5 rounded bg-surface-elevated hover:bg-white/10 transition-colors text-red-500/80"
+ className="p-1.5 rounded bg-surface-elevated hover:bg-foreground/5 transition-colors text-red-500/80"
  aria-label="Cancel"
  >
  <X className="w-3.5 h-3.5" />
@@ -342,7 +342,7 @@ export function TripListClient({
  href={`https://wa.me/?text=${encodeURIComponent(`I'm on a TOVEDROP ride — here's my trip details: ${window.location.origin}/trip/${shareModalOpen}`)}`}
  target="_blank"
  rel="noopener noreferrer"
- className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-white transition-opacity hover:opacity-90"
+ className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-foreground transition-opacity hover:opacity-90"
  style={{ background: '#25D366' }}
  >
  Share via WhatsApp

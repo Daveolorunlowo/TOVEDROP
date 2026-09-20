@@ -64,7 +64,7 @@ export default function ContactPage() {
  <div className="max-w-4xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
  
  {/* Section 1: Hero */}
- <section className="py-16 text-center border-b border-white/10">
+ <section className="py-16 text-center border-b border-border">
  <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-6" style={{ letterSpacing: '-0.025em' }}>
  We're here to help.
  </h1>
@@ -74,12 +74,12 @@ export default function ContactPage() {
  </section>
 
  {/* Section 2: Contact Methods */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">How to reach us</h2>
  
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <Mail className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-1">Email</h3>
  <p className="text-sm font-semibold text-foreground/90 mb-3">support@tovedrop.app</p>
@@ -87,7 +87,7 @@ export default function ContactPage() {
  <div className="text-[11px] uppercase tracking-widest text-foreground/30 font-bold">Response: 2hrs (weekday)</div>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <Phone className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-1">Phone / WhatsApp</h3>
  <p className="text-sm font-semibold text-foreground/90 mb-3">+234 80 123 4567</p>
@@ -95,7 +95,7 @@ export default function ContactPage() {
  <div className="text-[11px] uppercase tracking-widest text-foreground/30 font-bold">Hours: 8am - 9pm</div>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <MessageCircle className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-1">In-App Chat</h3>
  <p className="text-sm font-semibold text-foreground/90 mb-3">Settings → Help</p>
@@ -111,7 +111,7 @@ export default function ContactPage() {
  <div className="text-[11px] uppercase tracking-widest text-red-500/50 font-bold">Response: 5 mins (24/7)</div>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6 md:col-span-1 lg:col-span-2">
+ <div className="bg-surface-card border border-border rounded-xl p-6 md:col-span-1 lg:col-span-2">
  <Briefcase className="w-8 h-8 text-purple-brand mb-4" />
  <h3 className="text-foreground font-bold mb-1">Partnership / Press</h3>
  <p className="text-sm font-semibold text-foreground/90 mb-3">hello@tovedrop.app</p>
@@ -123,18 +123,18 @@ export default function ContactPage() {
  </section>
 
  {/* Section 3: FAQ */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">Quick answers</h2>
  
  <div className="max-w-2xl mx-auto space-y-3">
  {faqs.map((faq, index) => (
  <div 
  key={index} 
- className="bg-surface-card border border-white/10 rounded-xl overflow-hidden transition-all duration-300"
+ className="bg-surface-card border border-border rounded-xl overflow-hidden transition-all duration-300"
  >
  <button 
  onClick={() => toggleFaq(index)}
- className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
+ className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-foreground/5 transition-colors"
  >
  <span className="font-semibold text-sm text-foreground/90 pr-4">{faq.q}</span>
  {openFaq === index ? (
@@ -155,7 +155,7 @@ export default function ContactPage() {
  </section>
 
  {/* Section 4 & 5: Report Issue & Community Feedback */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-3xl mx-auto">
  
  <div>
@@ -191,13 +191,13 @@ export default function ContactPage() {
  </section>
 
  {/* Section 6: Hours Table */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">When to reach us</h2>
  
- <div className="max-w-2xl mx-auto bg-surface-card border border-white/10 rounded-xl overflow-hidden">
+ <div className="max-w-2xl mx-auto bg-surface-card border border-border rounded-xl overflow-hidden">
  <div className="overflow-x-auto">
  <table className="w-full text-left text-sm text-foreground/70">
- <thead className="bg-white/5 text-foreground/50 text-xs uppercase tracking-wider">
+ <thead className="bg-foreground/5 text-foreground/50 text-xs uppercase tracking-wider">
  <tr>
  <th className="px-6 py-4 font-semibold">Channel</th>
  <th className="px-6 py-4 font-semibold">Hours</th>
@@ -205,22 +205,22 @@ export default function ContactPage() {
  </tr>
  </thead>
  <tbody className="divide-y divide-white/10">
- <tr className="hover:bg-white/5 transition-colors">
+ <tr className="hover:bg-foreground/5 transition-colors">
  <td className="px-6 py-4 font-semibold text-foreground">Email</td>
  <td className="px-6 py-4">24/7</td>
  <td className="px-6 py-4">2 hours (weekday), 4 hours (weekend)</td>
  </tr>
- <tr className="hover:bg-white/5 transition-colors">
+ <tr className="hover:bg-foreground/5 transition-colors">
  <td className="px-6 py-4 font-semibold text-foreground">WhatsApp</td>
  <td className="px-6 py-4">8am - 9pm</td>
  <td className="px-6 py-4">15 minutes</td>
  </tr>
- <tr className="hover:bg-white/5 transition-colors">
+ <tr className="hover:bg-foreground/5 transition-colors">
  <td className="px-6 py-4 font-semibold text-foreground">In-app chat</td>
  <td className="px-6 py-4">24/7</td>
  <td className="px-6 py-4">30 minutes</td>
  </tr>
- <tr className="hover:bg-white/5 transition-colors">
+ <tr className="hover:bg-foreground/5 transition-colors">
  <td className="px-6 py-4 font-semibold text-red-400">Safety line</td>
  <td className="px-6 py-4">24/7</td>
  <td className="px-6 py-4">5 minutes</td>

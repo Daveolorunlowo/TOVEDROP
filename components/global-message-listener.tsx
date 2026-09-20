@@ -64,7 +64,7 @@ export function GlobalMessageListener() {
  </p>
  <button 
  onClick={() => setToast(null)}
- className="shrink-0 p-1 rounded-full hover:bg-white/10 transition-colors"
+ className="shrink-0 p-1 rounded-full hover:bg-foreground/5 transition-colors"
  style={{ color: 'var(--muted-foreground)' }}
  >
  <X className="h-3.5 w-3.5" />

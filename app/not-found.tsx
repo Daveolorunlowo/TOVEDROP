@@ -23,7 +23,7 @@ export default async function NotFound() {
  }
 
  return (
- <div className="min-h-screen bg-[#050505] overflow-hidden flex flex-col items-center justify-center p-6 text-center relative selection:bg-purple-900 selection:text-foreground">
+ <div className="min-h-screen bg-background overflow-hidden flex flex-col items-center justify-center p-6 text-center relative selection:bg-purple-900 selection:text-foreground">
  {/* Weird ambient background */}
  <div className="absolute inset-0 z-0 opacity-30">
  <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-700/50 rounded-full mix-blend-screen filter blur-[100px] animate-blob" />

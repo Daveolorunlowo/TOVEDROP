@@ -111,7 +111,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  {/* Backdrop for mobile */}
  <div 
  className={cn(
- "fixed inset-0 bg-[#0a0a0f]/40 z-40 transition-opacity sm:hidden",
+ "fixed inset-0 bg-background z-40 transition-opacity sm:hidden",
  isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
  )}
  aria-hidden="true"
@@ -130,7 +130,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  {/* Orbital Guide Ring */}
  <div 
  className={cn(
- "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/15 border-dashed pointer-events-none transition-all duration-500",
+ "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-border border-dashed pointer-events-none transition-all duration-500",
  isOpen ? "opacity-100" : "opacity-0 scale-50"
  )}
  style={{ width: radius * 2, height: radius * 2 }}
@@ -155,7 +155,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  data-node-index={index}
  onClick={() => setIsOpen(false)}
  className={cn(
- "absolute top-1/2 left-1/2 flex items-center justify-center w-12 h-12 -mt-6 -ml-6 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card border hover:bg-[#2a2a2a] transition-colors",
+ "absolute top-1/2 left-1/2 flex items-center justify-center w-12 h-12 -mt-6 -ml-6 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary bg-card border hover:bg-background transition-colors",
  isOpen ? "pointer-events-auto" : "pointer-events-none",
  isActive ? "border-primary shadow-[0_0_12px_rgba(34,197,94,0.3)]" : "border-border"
  )}

@@ -29,14 +29,14 @@ export function CommandPalette({ activeTab, setActiveTab }: { activeTab: string,
  onClick={(e) => e.stopPropagation()}
  >
  <Command className="flex flex-col bg-transparent w-full h-full text-foreground" label="Command Menu">
- <div className="flex items-center border-b border-white/10 px-3">
+ <div className="flex items-center border-b border-border px-3">
  <Search className="w-5 h-5 text-gray-400 shrink-0" />
  <Command.Input 
  autoFocus
  className="flex-1 bg-transparent border-none outline-none p-4 text-sm placeholder:text-gray-500" 
  placeholder="Type a command or search..." 
  />
- <div className="text-[10px] text-gray-500 bg-white/5 px-2 py-1 rounded">ESC</div>
+ <div className="text-[10px] text-gray-500 bg-foreground/5 px-2 py-1 rounded">ESC</div>
  </div>
 
  <Command.List className="max-h-[300px] overflow-y-auto p-2 space-y-1 scrollbar-hide">
@@ -67,13 +67,13 @@ export function CommandPalette({ activeTab, setActiveTab }: { activeTab: string,
  ))}
  </Command.Group>
 
- <Command.Group heading="Actions" className="text-xs font-semibold text-gray-500 px-2 py-1.5 mt-2 [&_[cmdk-group-items]]:mt-1 border-t border-white/5">
+ <Command.Group heading="Actions" className="text-xs font-semibold text-gray-500 px-2 py-1.5 mt-2 [&_[cmdk-group-items]]:mt-1 border-t border-border">
  <Command.Item
  onSelect={() => {
  router.push('/')
  setOpen(false)
  }}
- className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer aria-selected:bg-white/10 transition-colors text-gray-300"
+ className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm cursor-pointer aria-selected:bg-foreground/5 transition-colors text-gray-300"
  >
  <LayoutDashboard className="w-4 h-4" />
  Go to Main App

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import * as Tone from 'tone'
 
 // --- Glitch Kinetic Text Helper ---
-const KineticText = ({ text, className = "", delay = 0, color = "text-white" }: { text: string, className?: string, delay?: number, color?: string }) => {
+const KineticText = ({ text, className = "", delay = 0, color = "text-foreground" }: { text: string, className?: string, delay?: number, color?: string }) => {
  const words = text.split(" ");
 
  const container = {
@@ -263,7 +263,7 @@ export default function MotionAd() {
  return (
  <div className="min-h-screen bg-black flex items-center justify-center p-0 md:p-4 overflow-hidden font-sans">
  {!isPlaying && (
- <div className="absolute inset-0 bg-[#050505]/95 z-50 flex flex-col items-center justify-center backdrop-blur-xl">
+ <div className="absolute inset-0 bg-background z-50 flex flex-col items-center justify-center backdrop-blur-xl">
  <h1 className="text-4xl font-black text-transparent bg-clip-text bg-primary mb-4 tracking-tighter">TOVEDROP AD ENGINE</h1>
  <p className="text-gray-400 mb-8 font-light tracking-widest uppercase text-sm">Volume Up. Press Start. Record.</p>
  <motion.button 
@@ -278,7 +278,7 @@ export default function MotionAd() {
  )}
 
  {/* Responsive Canvas (16:9 or 9:16) */}
- <div className="relative bg-[#020202] overflow-hidden w-full h-[100dvh] md:w-[400px] md:h-[711px] md:border-[1px] md:border-gray-800 md:rounded-[40px] shadow-2xl" style={{ perspective: "1500px" }}>
+ <div className="relative bg-background overflow-hidden w-full h-[100dvh] md:w-[400px] md:h-[711px] md:border-[1px] md:border-gray-800 md:rounded-[40px] shadow-2xl" style={{ perspective: "1500px" }}>
  <AnimatePresence mode="wait">
 
  {/* SCENE 1 (0-3s) - CINEMATIC INTRO */}
@@ -294,7 +294,7 @@ export default function MotionAd() {
  transition={{ duration: 4, ease: "linear" }}
  className="z-10 flex flex-col items-center justify-center"
  >
- <div className="font-serif text-6xl font-light italic text-white tracking-[0.05em] drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{clockText}</div>
+ <div className="font-serif text-6xl font-light italic text-foreground tracking-[0.05em] drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">{clockText}</div>
  
  <motion.div initial={{ width: 0, opacity: 0 }} animate={{ width: 150, opacity: 1 }} transition={{ delay: 2.5, duration: 1.5, ease: "easeInOut" }} className="h-[1px] bg-red-600 mt-8 shadow-[0_0_15px_rgba(239,68,68,0.8)]" />
  
@@ -315,7 +315,7 @@ export default function MotionAd() {
  <AnimatePresence mode="wait">
  {step === 2 && (
  <motion.div key="s2a" exit={{ opacity: 0, filter: "blur(10px)" }} className="flex flex-col items-center justify-center h-full w-full px-6 bg-black">
- <KineticText text="Park is full." className="text-5xl" color="text-white" />
+ <KineticText text="Park is full." className="text-5xl" color="text-foreground" />
  </motion.div>
  )}
  
@@ -331,7 +331,7 @@ export default function MotionAd() {
  initial={{ skewX: 50, filter: "blur(20px)", scale: 0.9 }}
  animate={{ skewX: 0, filter: "blur(0px)", scale: 1 }}
  transition={{ type: "spring", stiffness: 300, damping: 15 }}
- className="text-white text-4xl font-sans font-black tracking-tighter text-center uppercase drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
+ className="text-foreground text-4xl font-sans font-black tracking-tighter text-center uppercase drop-shadow-[0_0_20px_rgba(0,0,0,0.5)]"
  >
  You're going to be late.
  </motion.div>
@@ -406,10 +406,10 @@ export default function MotionAd() {
  className="w-56 h-16 rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(234,88,12,0.4)] relative z-10 overflow-hidden"
  >
  <AnimatePresence>
- {step === 3.7 && <motion.span key="fast" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-white font-serif italic font-bold text-3xl">Fast</motion.span>}
- {step === 3.71 && <motion.span key="org" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-white font-serif italic font-bold text-3xl">Organized</motion.span>}
- {step === 3.72 && <motion.span key="easy" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-white font-serif italic font-bold text-3xl">Easy</motion.span>}
- {step === 3.73 && <motion.span key="rel" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-white font-serif italic font-bold text-3xl">Reliable</motion.span>}
+ {step === 3.7 && <motion.span key="fast" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-foreground font-serif italic font-bold text-3xl">Fast</motion.span>}
+ {step === 3.71 && <motion.span key="org" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-foreground font-serif italic font-bold text-3xl">Organized</motion.span>}
+ {step === 3.72 && <motion.span key="easy" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-foreground font-serif italic font-bold text-3xl">Easy</motion.span>}
+ {step === 3.73 && <motion.span key="rel" initial={{ y: 30, opacity: 0, filter: "blur(5px)" }} animate={{ y: 0, opacity: 1, filter: "blur(0px)" }} exit={{ y: -30, opacity: 0, filter: "blur(5px)" }} transition={{ type: "spring", damping: 20, stiffness: 300 }} className="absolute text-foreground font-serif italic font-bold text-3xl">Reliable</motion.span>}
  </AnimatePresence>
  </motion.div>
  )}
@@ -447,7 +447,7 @@ export default function MotionAd() {
  <span className="w-2 h-2 rounded-full bg-blue-500 mr-3 shadow-[0_0_10px_rgba(59,130,246,0.5)]" />
  {!formState.pickup ? <motion.div className="w-24 h-4 bg-gray-200 rounded-md animate-pulse" /> : formState.pickup}
  </div>
- {formState.c1 && <motion.div initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold">✓</motion.div>}
+ {formState.c1 && <motion.div initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-black rounded-full flex items-center justify-center text-foreground text-xs font-bold">✓</motion.div>}
  </motion.div>
 
  <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2, type: "spring" }} className="bg-gray-50 border border-gray-200 p-4 rounded-xl relative transition-colors duration-300">
@@ -456,7 +456,7 @@ export default function MotionAd() {
  <span className="w-2 h-2 rounded-full bg-red-500 mr-3 shadow-[0_0_10px_rgba(239,68,68,0.5)]" />
  {!formState.dest ? <motion.div className="w-32 h-4 bg-gray-200 rounded-md animate-pulse" /> : formState.dest}
  </div>
- {formState.c2 && <motion.div initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-black rounded-full flex items-center justify-center text-white text-xs font-bold">✓</motion.div>}
+ {formState.c2 && <motion.div initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 bg-black rounded-full flex items-center justify-center text-foreground text-xs font-bold">✓</motion.div>}
  </motion.div>
 
  <div className="flex gap-4">
@@ -478,10 +478,10 @@ export default function MotionAd() {
  initial={{ y: 20, opacity: 0 }} 
  animate={step >= 4.6 ? { scale: 0.95, backgroundColor: "#000", y: 0, opacity: 1 } : { scale: 1, backgroundColor: "#ea580c", y: 0, opacity: 1 }} 
  transition={{ delay: 0.5, type: "spring" }}
- className="py-4 rounded-xl text-white font-sans font-black tracking-tight text-center mt-2 text-lg relative overflow-hidden transition-colors"
+ className="py-4 rounded-xl text-foreground font-sans font-black tracking-tight text-center mt-2 text-lg relative overflow-hidden transition-colors"
  >
  <span className="relative z-10">Book Ride</span>
- {step >= 4.6 && <motion.div initial={{ scale: 0, opacity: 0.8 }} animate={{ scale: 4, opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="absolute inset-0 bg-white/40 rounded-xl z-0 pointer-events-none" style={{ originX: "50%", originY: "50%" }} />}
+ {step >= 4.6 && <motion.div initial={{ scale: 0, opacity: 0.8 }} animate={{ scale: 4, opacity: 0 }} transition={{ duration: 0.6, ease: "easeOut" }} className="absolute inset-0 bg-foreground/5 rounded-xl z-0 pointer-events-none" style={{ originX: "50%", originY: "50%" }} />}
  </motion.div>
  </motion.div>
  ) : (
@@ -493,7 +493,7 @@ export default function MotionAd() {
  className="flex flex-col items-center justify-center h-full w-full bg-white z-20"
  >
  <motion.div initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }} className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mb-8 shadow-[0_0_40px_rgba(34,197,94,0.4)]">
- <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
+ <svg className="w-12 h-12 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>
  </motion.div>
  
  <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }} className="text-3xl text-black font-sans font-black tracking-tight mb-2 text-center">Ride Confirmed</motion.div>
@@ -555,7 +555,7 @@ export default function MotionAd() {
  "Picked up 7:30 AM",
  "Early. Aced test."
  ].map((text, i) => (
- <motion.div key={i} initial={{ opacity: 0, skewX: -50, filter: "blur(10px)" }} animate={step >= 5.15 + (i * 0.1) ? { opacity: 1, skewX: 0, filter: "blur(0px)" } : { opacity: 0 }} transition={{ type: "spring", stiffness: 300, damping: 15 }} className="text-white font-sans font-black text-sm flex items-center gap-3">
+ <motion.div key={i} initial={{ opacity: 0, skewX: -50, filter: "blur(10px)" }} animate={step >= 5.15 + (i * 0.1) ? { opacity: 1, skewX: 0, filter: "blur(0px)" } : { opacity: 0 }} transition={{ type: "spring", stiffness: 300, damping: 15 }} className="text-foreground font-sans font-black text-sm flex items-center gap-3">
  <motion.span initial={{ scale: 0, rotate: -180 }} animate={step >= 5.15 + (i * 0.1) ? { scale: 1, rotate: 0 } : { scale: 0 }} transition={{ type: "spring", damping: 12 }} className="bg-white text-black rounded-full w-6 h-6 flex items-center justify-center font-black text-[10px]">✓</motion.span>
  {text}
  </motion.div>

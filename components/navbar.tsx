@@ -53,7 +53,7 @@ export function Navbar() {
  className={cn(
  'fixed top-0 left-0 right-0 z-50 transition-all duration-500',
  scrolled
- ? 'border-b border-white/8 shadow-[0_2px_32px_rgba(0,0,0,0.4)]'
+ ? 'border-b border-border shadow-[0_2px_32px_rgba(0,0,0,0.4)]'
  : 'border-b border-transparent'
  )}
  style={scrolled ? { background: 'rgba(9,9,21,0.82)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)' } : { background: 'transparent' }}
@@ -119,11 +119,11 @@ export function Navbar() {
  </>
  )}
  {!mounted || status === 'loading' ? (
- <div className="w-24 h-9 animate-pulse bg-white/8 rounded-full" />
+ <div className="w-24 h-9 animate-pulse bg-foreground/5 rounded-full" />
  ) : status === 'authenticated' ? (
  <button
  onClick={() => signOut({ callbackUrl: '/' })}
- className="text-[13px] font-semibold text-foreground/65 hover:text-foreground border border-white/12 hover:border-white/35 px-5 py-2 rounded-full transition-all duration-200 hover:bg-white/5"
+ className="text-[13px] font-semibold text-foreground/65 hover:text-foreground border border-border hover:border-border px-5 py-2 rounded-full transition-all duration-200 hover:bg-foreground/5"
  >
  Sign Out
  </button>
@@ -161,10 +161,10 @@ export function Navbar() {
 
  {/* Mobile drawer */}
  <div
- className={cn('md:hidden fixed top-0 right-0 h-screen w-72 z-40 border-l border-white/8 transition-transform duration-300 ease-in-out', mobileOpen ? 'translate-x-0' : 'translate-x-full')}
+ className={cn('md:hidden fixed top-0 right-0 h-screen w-72 z-40 border-l border-border transition-transform duration-300 ease-in-out', mobileOpen ? 'translate-x-0' : 'translate-x-full')}
  style={{ background: 'rgba(9,9,21,0.98)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}
  >
- <div className="flex items-center justify-between px-6 pt-6 pb-5 border-b border-white/8">
+ <div className="flex items-center justify-between px-6 pt-6 pb-5 border-b border-border">
  <Link href="/" onClick={() => setMobileOpen(false)} style={{ letterSpacing: '-0.025em' }}>
  <span className="text-foreground font-black text-xl">TOVE</span>
  <span className="text-orange-brand font-black" style={{ fontSize: '22px' }}>DROP</span>
@@ -183,7 +183,7 @@ export function Navbar() {
  handleBookRideClick(e);
  }
  setMobileOpen(false);
- }} className="px-4 py-3 rounded-xl text-sm font-medium text-foreground/65 hover:text-foreground hover:bg-white/5 transition-all">
+ }} className="px-4 py-3 rounded-xl text-sm font-medium text-foreground/65 hover:text-foreground hover:bg-foreground/5 transition-all">
  {link.label}
  </Link>
  ))}
@@ -197,12 +197,12 @@ export function Navbar() {
  <span className="text-[10px] font-bold text-foreground bg-purple-brand px-2 py-1 rounded">Buy More +</span>
  </Link>
  )}
- <div className="flex flex-col gap-2 mt-5 pt-5 border-t border-white/8">
+ <div className="flex flex-col gap-2 mt-5 pt-5 border-t border-border">
  {!mounted || status === 'loading' ? null : status === 'authenticated' ? (
- <button onClick={() => { setMobileOpen(false); signOut({ callbackUrl: '/' }) }} className="text-center text-sm font-semibold text-foreground/75 border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Sign Out</button>
+ <button onClick={() => { setMobileOpen(false); signOut({ callbackUrl: '/' }) }} className="text-center text-sm font-semibold text-foreground/75 border border-border px-4 py-2.5 rounded-xl hover:border-border hover:bg-foreground/5 transition-all">Sign Out</button>
  ) : (
  <>
- <Link href="/auth" onClick={() => setMobileOpen(false)} className="text-center text-sm font-semibold text-foreground border border-white/12 px-4 py-2.5 rounded-xl hover:border-white/35 hover:bg-white/5 transition-all">Log In</Link>
+ <Link href="/auth" onClick={() => setMobileOpen(false)} className="text-center text-sm font-semibold text-foreground border border-border px-4 py-2.5 rounded-xl hover:border-border hover:bg-foreground/5 transition-all">Log In</Link>
  <Link href="/auth?tab=signup" onClick={() => setMobileOpen(false)} className="text-center text-sm font-bold text-foreground px-4 py-2.5 rounded-xl" >Sign Up</Link>
  </>
  )}

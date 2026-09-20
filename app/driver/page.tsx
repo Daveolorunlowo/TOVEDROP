@@ -16,9 +16,9 @@ import { cn } from '@/lib/utils'
 import { ChatModal } from '@/components/chat-modal'
 
 // ─── Design tokens ─────────────────────────────────────
-// bg #111111 / surface #171717 / border #222 / divider #1e1e1e
+// bg var(--background) / surface var(--surface-card) / border var(--border-default) / divider var(--border)
 // label: 11px / uppercase / tracking-[0.05em] / #555
-// text: #f5f5f5 / #888 / #555
+// text: var(--foreground) / #888 / #555
 // accent: var(--orange-brand) (amber — CTA only)
 // radius: 8px cards / 4px badges
 // ──────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ function StatusChip({ status }: { status: string }) {
     PENDING:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.08)' },
     SUSPENDED: { label: 'Suspended', color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
   }
-  const s = map[status] ?? { label: status, color: '#555', bg: '#1e1e1e' }
+  const s = map[status] ?? { label: status, color: 'var(--muted-foreground)', bg: 'var(--border)' }
   return (
     <span
       className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
@@ -42,13 +42,13 @@ function StatusChip({ status }: { status: string }) {
 
 function CheckRow({ done, label, detail }: { done: boolean; label: string; detail: string }) {
   return (
-    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: '1px solid #1e1e1e' }}>
+    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: '1px solid var(--border)' }}>
       <div className="flex items-center gap-2.5">
         <span
           className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
           style={{
             background: done ? 'rgba(34,197,94,0.12)' : 'transparent',
-            border: done ? '1px solid rgba(34,197,94,0.3)' : '1px solid #333',
+            border: done ? '1px solid rgba(34,197,94,0.3)' : '1px solid var(--border-subtle)',
           }}
         >
           {done && <Check className="w-2.5 h-2.5" style={{ color: '#22c55e' }} />}
@@ -165,7 +165,7 @@ export default function DriverDashboardPage() {
 
   if (loading) {
     return (
-      <div style={{ background: '#111111', minHeight: '100vh' }}>
+      <div style={{ background: 'var(--background)', minHeight: '100vh' }}>
         <div className="max-w-5xl mx-auto px-5 py-8">
           <div className="flex items-start justify-between mb-8">
             <div className="flex items-start gap-4">
@@ -201,14 +201,14 @@ export default function DriverDashboardPage() {
 
   if (!data?.driverProfile) {
     return (
-      <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
-        <Car className="w-12 h-12 mb-4 opacity-50" style={{ color: '#555' }} />
-        <h2 className="text-xl font-bold mb-2 text-white">Driver Profile Not Found</h2>
+      <div style={{ background: 'var(--background)', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
+        <Car className="w-12 h-12 mb-4 opacity-50" style={{ color: 'var(--muted-foreground)' }} />
+        <h2 className="text-xl font-bold mb-2 text-foreground">Driver Profile Not Found</h2>
         <p className="text-sm text-muted-foreground max-w-sm mb-6">
           Your driver profile could not be found. Please contact support or submit a new application.
         </p>
         <Link href="/apply">
-          <Button style={{ background: 'var(--orange-brand)' }} className="text-white hover:opacity-90">
+          <Button style={{ background: 'var(--orange-brand)' }} className="text-foreground hover:opacity-90">
             Apply to Drive
           </Button>
         </Link>
@@ -221,9 +221,9 @@ export default function DriverDashboardPage() {
 
   if (status === 'PENDING') {
     return (
-      <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
+      <div style={{ background: 'var(--background)', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <Clock className="w-12 h-12 mb-4" style={{ color: 'var(--orange-brand)' }} />
-        <h2 className="text-xl font-bold mb-2 text-white">Application Under Review</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Application Under Review</h2>
         <p className="text-sm text-muted-foreground max-w-sm">
           We are currently reviewing your driver application. This process usually takes 24-48 hours. We'll email you once you're approved.
         </p>
@@ -233,9 +233,9 @@ export default function DriverDashboardPage() {
 
   if (status === 'SUSPENDED') {
     return (
-      <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
+      <div style={{ background: 'var(--background)', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <XCircle className="w-12 h-12 mb-4 text-red-500" />
-        <h2 className="text-xl font-bold mb-2 text-white">Account Suspended</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Account Suspended</h2>
         <p className="text-sm text-muted-foreground max-w-sm">
           Your driver account has been suspended. Please contact support for more information or to appeal this decision.
         </p>
@@ -245,14 +245,14 @@ export default function DriverDashboardPage() {
 
   if (status === 'REJECTED') {
     return (
-      <div style={{ background: '#111111', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
+      <div style={{ background: 'var(--background)', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
         <XCircle className="w-12 h-12 mb-4 text-red-500" />
-        <h2 className="text-xl font-bold mb-2 text-white">Application Not Approved</h2>
+        <h2 className="text-xl font-bold mb-2 text-foreground">Application Not Approved</h2>
         <p className="text-sm text-muted-foreground max-w-sm mb-6">
           Unfortunately, your application to drive with TOVEDROP was not approved at this time.
         </p>
         <Link href="/apply">
-          <Button variant="outline" className="text-white border-border-default hover:bg-surface-elevated">
+          <Button variant="outline" className="text-foreground border-border-default hover:bg-surface-elevated">
             Reapply
           </Button>
         </Link>
@@ -273,7 +273,7 @@ export default function DriverDashboardPage() {
   const renderRequestSection = (reqs: any[], title: string, emptyMsg: string) => (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
           {title}
         </p>
         {reqs.length > 0 && (
@@ -289,35 +289,35 @@ export default function DriverDashboardPage() {
       {reqs.length === 0 ? (
         <div
           className="rounded-lg"
-          style={{ background: '#171717', border: '1px dashed #222', padding: '20px' }}
+          style={{ background: 'var(--surface-card)', border: '1px dashed var(--border-default)', padding: '20px' }}
         >
-          <Car className="w-4 h-4 mb-2" style={{ color: '#333' }} />
-          <p className="text-sm font-medium" style={{ color: '#555' }}>No {title.toLowerCase()}</p>
-          <p className="text-xs mt-0.5" style={{ color: '#444' }}>{emptyMsg}</p>
+          <Car className="w-4 h-4 mb-2" style={{ color: 'var(--border-subtle)' }} />
+          <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>No {title.toLowerCase()}</p>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>{emptyMsg}</p>
         </div>
       ) : (
         <div
           className="rounded-lg overflow-hidden"
-          style={{ background: '#171717', border: '1px solid #222' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
         >
           {reqs.map((req: any, i: number) => (
             <div
               key={req.id}
               className="px-4 py-3"
-              style={{ borderBottom: i < reqs.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+              style={{ borderBottom: i < reqs.length - 1 ? '1px solid var(--border)' : 'none' }}
             >
               <div className="flex items-center gap-3">
                 <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                  <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
                     {initials(req.rider.name)}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{req.rider.name}</p>
-                  <p className="text-[11px] truncate" style={{ color: '#555' }}>
+                  <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
+                  <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                     {req.pickup} → {req.destination}
                   </p>
-                  <p className="text-[11px]" style={{ color: '#444' }}>{req.isScheduled ? `${req.date} · ${req.time}` : `Instant Pick-Up · ${req.time}`}</p>
+                  <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.isScheduled ? `${req.date} · ${req.time}` : `Instant Pick-Up · ${req.time}`}</p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
@@ -332,14 +332,14 @@ export default function DriverDashboardPage() {
                     disabled={processing === req.id}
                     onClick={() => setDeclined(d => [...d, req.id])}
                     className="text-[11px] font-semibold px-2.5 py-1"
-                    style={{ background: '#1e1e1e', color: '#555', borderRadius: '4px' }}
+                    style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
                   >
                     Decline
                   </button>
                 </div>
               </div>
               {req.notes && (
-                <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: '#1e1e1e', color: '#555', borderRadius: '4px' }}>
+                <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
                   Note: {req.notes}
                 </p>
               )}
@@ -353,13 +353,13 @@ export default function DriverDashboardPage() {
   const renderConfirmedSection = (trips: any[], title: string, emptyMsg: string) => (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
           {title}
         </p>
         {trips.length > 0 && (
           <span
             className="text-[10px] font-semibold px-1.5 py-0.5"
-            style={{ background: '#1e1e1e', color: '#888', borderRadius: '4px' }}
+            style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
           >
             {trips.length}
           </span>
@@ -369,39 +369,39 @@ export default function DriverDashboardPage() {
       {trips.length === 0 ? (
         <div
           className="rounded-lg"
-          style={{ background: '#171717', border: '1px solid #1e1e1e', padding: '20px' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', padding: '20px' }}
         >
-          <p className="text-xs" style={{ color: '#444' }}>{emptyMsg}</p>
+          <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>{emptyMsg}</p>
         </div>
       ) : (
         <div
           className="rounded-lg overflow-hidden"
-          style={{ background: '#171717', border: '1px solid #222' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
         >
           {trips.map((trip: any, i: number) => (
             <div
               key={trip.id}
               className="flex items-center gap-3 px-4 py-3"
-              style={{ borderBottom: i < trips.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+              style={{ borderBottom: i < trips.length - 1 ? '1px solid var(--border)' : 'none' }}
             >
               <Avatar className="w-7 h-7 shrink-0">
-                <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
                   {initials(trip.rider.name)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{trip.rider.name}</p>
-                <p className="text-[11px] truncate" style={{ color: '#555' }}>
+                <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{trip.rider.name}</p>
+                <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                   {trip.pickup} → {trip.destination}
                 </p>
-                <p className="text-[11px]" style={{ color: '#444' }}>
+                <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
                   {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
                 </p>
               </div>
               <button
                 disabled={processing === trip.id}
                 onClick={() => setActiveChatTrip(trip)}
-                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-white/5 mr-2"
+                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-2"
                 aria-label="Chat"
               >
                 <MessageCircle className="w-5 h-5" />
@@ -410,7 +410,7 @@ export default function DriverDashboardPage() {
                 disabled={processing === trip.id}
                 onClick={() => handleComplete(trip.id)}
                 className="text-[11px] font-semibold px-2.5 py-1 shrink-0"
-                style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
+                style={{ background: 'var(--border)', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
               >
                 {processing === trip.id ? '...' : 'Mark Complete'}
               </button>
@@ -422,7 +422,7 @@ export default function DriverDashboardPage() {
   )
 
   return (
-    <div style={{ background: '#111111', minHeight: '100vh' }}>
+    <div style={{ background: 'var(--background)', minHeight: '100vh' }}>
       <div className="max-w-5xl mx-auto px-5 py-8">
 
         {/* ── Header ── */}
@@ -433,29 +433,29 @@ export default function DriverDashboardPage() {
               <Avatar className="w-11 h-11">
                 <AvatarFallback
                   className="text-sm font-bold"
-                  style={{ background: '#1e1e1e', color: '#888' }}
+                  style={{ background: 'var(--border)', color: 'var(--muted-foreground)' }}
                 >
                   {initials(driverProfile.user.name)}
                 </AvatarFallback>
               </Avatar>
               <span
                 className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
-                style={{ background: '#22c55e', border: '2px solid #111111' }}
+                style={{ background: '#22c55e', border: '2px solid var(--background)' }}
               >
-                <Check className="w-2 h-2 text-white" />
+                <Check className="w-2 h-2 text-foreground" />
               </span>
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-0.5" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-0.5" style={{ color: 'var(--muted-foreground)' }}>
                 Driver Dashboard
               </p>
-              <h1 className="text-2xl sm:text-3xl font-bold truncate" style={{ color: '#f5f5f5', letterSpacing: '-0.01em' }}>
+              <h1 className="text-2xl sm:text-3xl font-bold truncate" style={{ color: 'var(--foreground)', letterSpacing: '-0.01em' }}>
                 {firstName}
               </h1>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <StatusChip status={driverProfile.status} />
                 {driverProfile.rating > 0 && (
-                  <span className="flex items-center gap-1 text-[11px] shrink-0" style={{ color: '#555' }}>
+                  <span className="flex items-center gap-1 text-[11px] shrink-0" style={{ color: 'var(--muted-foreground)' }}>
                     <Star className="w-3 h-3" style={{ color: 'var(--orange-brand)' }} />
                     {driverProfile.rating.toFixed(1)}
                   </span>
@@ -467,13 +467,13 @@ export default function DriverDashboardPage() {
             <Link
               href="/driver/earnings"
               className="text-xs font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-sm"
-              style={{ background: '#1e1e1e', color: '#f5f5f5' }}
+              style={{ background: 'var(--border)', color: 'var(--foreground)' }}
             >
               Earnings & Bank
             </Link>
             <SignOutButton
               variant="outline"
-              className="text-[#555] text-xs border-[#222] bg-transparent hover:bg-[#1e1e1e] rounded-md px-3 py-1.5 whitespace-nowrap"
+              className="text-foreground text-xs border-[var(--border-default)] bg-transparent hover:bg-[var(--border)] rounded-md px-3 py-1.5 whitespace-nowrap"
             />
           </div>
         </div>
@@ -481,9 +481,9 @@ export default function DriverDashboardPage() {
         {/* ── Stats card ── */}
         <div
           className="rounded-lg mb-6"
-          style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)', padding: '16px 20px' }}
         >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: '#555' }}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: 'var(--muted-foreground)' }}>
             Performance
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
@@ -496,15 +496,15 @@ export default function DriverDashboardPage() {
               <div
                 key={s.label}
                 className={cn(i > 0 && 'pl-5 sm:border-l')}
-                style={{ borderColor: '#1e1e1e', paddingRight: i < 3 ? '20px' : undefined }}
+                style={{ borderColor: 'var(--border)', paddingRight: i < 3 ? '20px' : undefined }}
               >
-                <p className="text-[11px] font-medium uppercase tracking-[0.05em] mb-1" style={{ color: '#555' }}>
+                <p className="text-[11px] font-medium uppercase tracking-[0.05em] mb-1" style={{ color: 'var(--muted-foreground)' }}>
                   {s.label}
                 </p>
                 {s.chip ? (
                   <StatusChip status={s.value} />
                 ) : (
-                  <p className="text-2xl font-bold tabular-nums" style={{ color: '#f5f5f5', letterSpacing: '-0.02em' }}>
+                  <p className="text-2xl font-bold tabular-nums" style={{ color: 'var(--foreground)', letterSpacing: '-0.02em' }}>
                     {s.value}
                   </p>
                 )}
@@ -516,25 +516,25 @@ export default function DriverDashboardPage() {
         {/* ── Wallet Section ── */}
         <div
           className="rounded-lg mb-6"
-          style={{ background: '#171717', border: '1px solid #222', padding: '24px 20px' }}
+          style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)', padding: '24px 20px' }}
         >
           <div className="flex flex-col md:flex-row gap-8">
             {/* Balance */}
             <div className="md:w-1/3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-2" style={{ color: 'var(--muted-foreground)' }}>
                 Wallet Balance
               </p>
-              <h2 className="text-4xl font-black mb-1" style={{ color: '#f5f5f5', letterSpacing: '-0.02em' }}>
+              <h2 className="text-4xl font-black mb-1" style={{ color: 'var(--foreground)', letterSpacing: '-0.02em' }}>
                 ₦{driverProfile.walletBalance?.toLocaleString() ?? '0'}
               </h2>
-              <p className="text-xs mb-3" style={{ color: '#888' }}>
+              <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
                 Earned from {driverProfile.totalTrips} completed rides
               </p>
               <p className="text-[11px] leading-relaxed" style={{ color: '#666' }}>
                 This is a bonus <strong>from TOVEDROP</strong>. It is separate from and in addition to the transport fare riders pay you directly for the ride.
               </p>
-              <div className="mt-6 p-3 rounded" style={{ background: '#111111', border: '1px dashed #333' }}>
-                <p className="text-[11px]" style={{ color: '#555' }}>
+              <div className="mt-6 p-3 rounded" style={{ background: 'var(--background)', border: '1px dashed var(--border-subtle)' }}>
+                <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
                   Withdrawal requests coming soon. Your balance is being tracked accurately in the meantime.
                 </p>
               </div>
@@ -542,40 +542,40 @@ export default function DriverDashboardPage() {
             
             {/* History Table */}
             <div className="md:w-2/3 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: '#555' }}>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: 'var(--muted-foreground)' }}>
                 Transaction History
               </p>
               {(!driverProfile.walletTransactions || driverProfile.walletTransactions.length === 0) ? (
                 <div
                   className="rounded-lg h-full flex flex-col items-center justify-center min-h-[120px]"
-                  style={{ background: '#111111', border: '1px dashed #222', padding: '20px' }}
+                  style={{ background: 'var(--background)', border: '1px dashed var(--border-default)', padding: '20px' }}
                 >
-                  <p className="text-xs" style={{ color: '#444' }}>No transactions yet.</p>
+                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No transactions yet.</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
                     <thead>
                       <tr>
-                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3" style={{ color: '#555', borderBottom: '1px solid #222' }}>Date</th>
-                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3" style={{ color: '#555', borderBottom: '1px solid #222' }}>Description</th>
-                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3" style={{ color: '#555', borderBottom: '1px solid #222' }}>Trip</th>
-                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3 text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Amount</th>
+                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3" style={{ color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border-default)' }}>Date</th>
+                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3" style={{ color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border-default)' }}>Description</th>
+                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3" style={{ color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border-default)' }}>Trip</th>
+                        <th className="text-[10px] font-semibold uppercase tracking-wider pb-3 text-right" style={{ color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border-default)' }}>Amount</th>
                       </tr>
                     </thead>
                     <tbody>
                       {driverProfile.walletTransactions.slice(0, 5).map((txn: any) => (
                         <tr key={txn.id}>
-                          <td className="py-3 text-[11px] whitespace-nowrap" style={{ color: '#888', borderBottom: '1px solid #1e1e1e' }}>
+                          <td className="py-3 text-[11px] whitespace-nowrap" style={{ color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
                             {new Date(txn.createdAt).toLocaleDateString()}
                           </td>
-                          <td className="py-3 text-xs" style={{ color: '#f5f5f5', borderBottom: '1px solid #1e1e1e' }}>
+                          <td className="py-3 text-xs" style={{ color: 'var(--foreground)', borderBottom: '1px solid var(--border)' }}>
                             {txn.description}
                           </td>
-                          <td className="py-3 text-[11px]" style={{ color: '#555', borderBottom: '1px solid #1e1e1e' }}>
+                          <td className="py-3 text-[11px]" style={{ color: 'var(--muted-foreground)', borderBottom: '1px solid var(--border)' }}>
                             {txn.trip?.pickup ? `${txn.trip.pickup.split(',')[0]} → ${txn.trip.destination.split(',')[0]}` : '—'}
                           </td>
-                          <td className="py-3 text-xs font-bold text-right whitespace-nowrap" style={{ color: txn.amount > 0 ? '#22c55e' : '#f5f5f5', borderBottom: '1px solid #1e1e1e' }}>
+                          <td className="py-3 text-xs font-bold text-right whitespace-nowrap" style={{ color: txn.amount > 0 ? '#22c55e' : 'var(--foreground)', borderBottom: '1px solid var(--border)' }}>
                             {txn.amount > 0 ? '+' : ''}₦{txn.amount.toLocaleString()}
                           </td>
                         </tr>
@@ -584,7 +584,7 @@ export default function DriverDashboardPage() {
                   </table>
                   {driverProfile.walletTransactions.length > 5 && (
                     <div className="pt-3 text-center">
-                      <p className="text-[10px] text-text-muted cursor-pointer hover:text-text-primary uppercase tracking-widest" style={{ color: '#555' }}>
+                      <p className="text-[10px] text-muted cursor-pointer hover:text-primary uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
                         View All
                       </p>
                     </div>
@@ -598,7 +598,7 @@ export default function DriverDashboardPage() {
         {/* ── Incoming Requests ── */}
             <div className="mb-6">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
                   Incoming Requests
                 </p>
                 {requests.length > 0 && (
@@ -614,35 +614,35 @@ export default function DriverDashboardPage() {
               {requests.length === 0 ? (
                 <div
                   className="rounded-lg"
-                  style={{ background: '#171717', border: '1px dashed #222', padding: '20px' }}
+                  style={{ background: 'var(--surface-card)', border: '1px dashed var(--border-default)', padding: '20px' }}
                 >
-                  <Car className="w-4 h-4 mb-2" style={{ color: '#333' }} />
-                  <p className="text-sm font-medium" style={{ color: '#555' }}>No new requests</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#444' }}>New trip requests will appear here.</p>
+                  <Car className="w-4 h-4 mb-2" style={{ color: 'var(--border-subtle)' }} />
+                  <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>No new requests</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>New trip requests will appear here.</p>
                 </div>
               ) : (
                 <div
                   className="rounded-lg overflow-hidden"
-                  style={{ background: '#171717', border: '1px solid #222' }}
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
                 >
                   {requests.map((req: any, i: number) => (
                     <div
                       key={req.id}
                       className="px-4 py-3"
-                      style={{ borderBottom: i < requests.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+                      style={{ borderBottom: i < requests.length - 1 ? '1px solid var(--border)' : 'none' }}
                     >
                       <div className="flex items-center gap-3">
                         <Avatar className="w-7 h-7 shrink-0">
-                          <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                          <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
                             {initials(req.rider.name)}
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{req.rider.name}</p>
-                          <p className="text-[11px] truncate" style={{ color: '#555' }}>
+                          <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
+                          <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                             {req.pickup} → {req.destination}
                           </p>
-                          <p className="text-[11px]" style={{ color: '#444' }}>{req.date} · {req.time}</p>
+                          <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.date} · {req.time}</p>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           <button
@@ -657,14 +657,14 @@ export default function DriverDashboardPage() {
                             disabled={processing === req.id}
                             onClick={() => setDeclined(d => [...d, req.id])}
                             className="text-[11px] font-semibold px-2.5 py-1"
-                            style={{ background: '#1e1e1e', color: '#555', borderRadius: '4px' }}
+                            style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
                           >
                             Decline
                           </button>
                         </div>
                       </div>
                       {req.notes && (
-                        <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: '#1e1e1e', color: '#555', borderRadius: '4px' }}>
+                        <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
                           Note: {req.notes}
                         </p>
                       )}
@@ -677,13 +677,13 @@ export default function DriverDashboardPage() {
             {/* ── Confirmed Trips ── */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
                   Upcoming Confirmed Trips
                 </p>
                 {confirmedTrips.length > 0 && (
                   <span
                     className="text-[10px] font-semibold px-1.5 py-0.5"
-                    style={{ background: '#1e1e1e', color: '#888', borderRadius: '4px' }}
+                    style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
                   >
                     {confirmedTrips.length}
                   </span>
@@ -693,39 +693,39 @@ export default function DriverDashboardPage() {
               {confirmedTrips.length === 0 ? (
                 <div
                   className="rounded-lg"
-                  style={{ background: '#171717', border: '1px solid #1e1e1e', padding: '20px' }}
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', padding: '20px' }}
                 >
-                  <p className="text-xs" style={{ color: '#444' }}>No confirmed trips yet.</p>
+                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No confirmed trips yet.</p>
                 </div>
               ) : (
                 <div
                   className="rounded-lg overflow-hidden"
-                  style={{ background: '#171717', border: '1px solid #222' }}
+                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
                 >
                   {confirmedTrips.map((trip: any, i: number) => (
                     <div
                       key={trip.id}
                       className="flex items-center gap-3 px-4 py-3"
-                      style={{ borderBottom: i < confirmedTrips.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+                      style={{ borderBottom: i < confirmedTrips.length - 1 ? '1px solid var(--border)' : 'none' }}
                     >
                       <Avatar className="w-7 h-7 shrink-0">
-                        <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                        <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
                           {initials(trip.rider.name)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold" style={{ color: '#f5f5f5' }}>{trip.rider.name}</p>
-                        <p className="text-[11px] truncate" style={{ color: '#555' }}>
+                        <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{trip.rider.name}</p>
+                        <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                           {trip.pickup} → {trip.destination}
                         </p>
-                        <p className="text-[11px]" style={{ color: '#444' }}>
+                        <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
                           {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
                         </p>
                       </div>
                       <button
                 disabled={processing === trip.id}
                 onClick={() => setActiveChatTrip(trip)}
-                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-white/5 mr-2"
+                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-2"
                 aria-label="Chat"
               >
                 <MessageCircle className="w-5 h-5" />
@@ -734,7 +734,7 @@ export default function DriverDashboardPage() {
                         disabled={processing === trip.id}
                         onClick={() => handleComplete(trip.id)}
                         className="text-[11px] font-semibold px-2.5 py-1 shrink-0"
-                        style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
+                        style={{ background: 'var(--border)', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
                       >
                         {processing === trip.id ? '…' : 'Mark Complete'}
                       </button>

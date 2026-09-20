@@ -62,7 +62,7 @@ export default function ErrorPage({
  
  <Link 
  href={dashboardPath}
- className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm border border-border hover:bg-[#1a1a24] transition-colors"
+ className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm border border-border hover:bg-background transition-colors"
  >
  {session?.user ? 'Go to Dashboard' : 'Back to Home'}
  </Link>
@@ -70,7 +70,7 @@ export default function ErrorPage({
  </div>
 
  <div className="w-full pb-6 flex justify-center">
- <p className="text-[10px] font-bold tracking-[0.1em] text-[#444] uppercase">
+ <p className="text-[10px] font-bold tracking-[0.1em] text-foreground uppercase">
  Tovedrop
  </p>
  </div>

@@ -13,7 +13,7 @@ function AccordionItem({ title, children, defaultOpen = false }: { title: string
  <div className="rounded-xl border border-border bg-card overflow-hidden mb-4 transition-all">
  <button 
  onClick={() => setIsOpen(!isOpen)}
- className="w-full flex items-center justify-between p-5 bg-surface-elevated hover:bg-white/5 transition-colors text-left"
+ className="w-full flex items-center justify-between p-5 bg-surface-elevated hover:bg-foreground/5 transition-colors text-left"
  >
  <span className="text-sm font-bold text-foreground">{title}</span>
  {isOpen ? <ChevronUp className="w-4 h-4 text-muted-foreground" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}

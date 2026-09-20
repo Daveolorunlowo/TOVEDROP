@@ -36,7 +36,7 @@ export function Footer() {
  }
 
  return (
- <footer className="bg-[#060611] text-foreground">
+ <footer className="bg-background text-foreground">
  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-6">
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12">
  {/* Col 1 — Brand */}
@@ -58,7 +58,7 @@ export function Footer() {
  key={label}
  href={href}
  aria-label={label}
- className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center text-foreground/50 hover:text-foreground hover:border-orange-brand/60 transition-colors"
+ className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-foreground/50 hover:text-foreground hover:border-orange-brand/60 transition-colors"
  >
  <Icon className="w-3.5 h-3.5" />
  </a>
@@ -104,7 +104,7 @@ export function Footer() {
  <input
  type="email"
  placeholder="your@email.com"
- className="w-full px-4 py-2.5 rounded-lg bg-white/5 border border-white/10 text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-orange-brand/60 transition-colors"
+ className="w-full px-4 py-2.5 rounded-lg bg-foreground/5 border border-border text-sm text-foreground placeholder:text-foreground/30 focus:outline-none focus:border-orange-brand/60 transition-colors"
  />
  <button
  type="submit"
@@ -118,7 +118,7 @@ export function Footer() {
  </div>
 
  {/* Bottom bar */}
- <div className="pt-6 border-t border-white/8 text-center">
+ <div className="pt-6 border-t border-border text-center">
  <p className="text-xs text-foreground/30">
  &copy; {new Date().getFullYear()} TOVEDROP. All rights reserved. Built for campus communities.
  </p>

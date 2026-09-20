@@ -92,7 +92,7 @@ export default function EarningsPage() {
  }
 
  if (loading) {
- return <div className="min-h-screen bg-background flex items-center justify-center text-[#555]">Loading...</div>
+ return <div className="min-h-screen bg-background flex items-center justify-center text-foreground">Loading...</div>
  }
 
  if (!data) return null
@@ -210,7 +210,7 @@ export default function EarningsPage() {
  <div key={req.id} className="flex items-center justify-between p-3 rounded-md" style={{ background: 'var(--background)', border: '1px solid var(--border)' }}>
  <div>
  <p className="text-sm font-bold text-foreground">₦{req.amount.toLocaleString()}</p>
- <p className="text-[10px] text-[#555]">{new Date(req.createdAt).toLocaleString()}</p>
+ <p className="text-[10px] text-foreground">{new Date(req.createdAt).toLocaleString()}</p>
  </div>
  <span className="text-[10px] font-bold px-2 py-1 rounded" style={{
  background: req.status === 'APPROVED' ? 'rgba(34,197,94,0.1)' : req.status === 'REJECTED' ? 'rgba(239,68,68,0.1)' : 'var(--border)',

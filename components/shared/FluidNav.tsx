@@ -95,7 +95,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
  {/* INNER WRAPPER */}
  <div 
  ref={navRef}
- className="relative w-full sm:w-auto sm:bg-[#1a1a1a] sm:rounded-full sm:border border-border"
+ className="relative w-full sm:w-auto sm:bg-background sm:rounded-full sm:border border-border"
  >
  {/* SLIDING PILL BACKGROUND (Hardware Accelerated) */}
  <div 
@@ -108,7 +108,7 @@ export function FluidNav({ tabs }: { tabs: NavTab[] }) {
  >
  <div className={cn(
  "w-full h-full rounded-full shadow-md",
- isReducedMotion ? "bg-white/10" : "bg-[var(--purple-brand)]"
+ isReducedMotion ? "bg-foreground/5" : "bg-[var(--purple-brand)]"
  )} />
  </div>
 

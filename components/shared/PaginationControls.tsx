@@ -60,7 +60,7 @@ export function PaginationControls({ currentPage, totalPages, totalItems, basePa
  <button
  onClick={() => handlePageChange(currentPage - 1)}
  disabled={currentPage === 1}
- className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+ className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-foreground/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
  >
  <ChevronLeft className="w-5 h-5" />
  </button>
@@ -75,7 +75,7 @@ export function PaginationControls({ currentPage, totalPages, totalItems, basePa
  ? 'bg-orange-brand text-foreground' 
  : p === '...' 
  ? 'text-muted-foreground cursor-default' 
- : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
+ : 'text-muted-foreground hover:bg-foreground/5 hover:text-foreground'
  }`}
  >
  {p}
@@ -85,7 +85,7 @@ export function PaginationControls({ currentPage, totalPages, totalItems, basePa
  <button
  onClick={() => handlePageChange(currentPage + 1)}
  disabled={currentPage === totalPages}
- className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+ className="p-1 rounded text-muted-foreground hover:text-foreground hover:bg-foreground/5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
  >
  <ChevronRight className="w-5 h-5" />
  </button>

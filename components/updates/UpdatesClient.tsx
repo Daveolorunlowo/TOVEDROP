@@ -44,7 +44,7 @@ function UpdateAccordion({ update, index }: { update: any, index: number }) {
  <Pin className="w-3.5 h-3.5 text-orange-brand" />
  )}
  <span 
- className="text-xs text-[#666] flex items-center gap-1.5"
+ className="text-xs text-foreground flex items-center gap-1.5"
  title={new Date(update.publishedAt).toLocaleString()}
  >
  <Clock className="w-3 h-3" />
@@ -102,7 +102,7 @@ export function UpdatesClient({
  {updates.length === 0 ? (
  <div className="bg-background p-8 rounded-xl border border-border text-center flex flex-col items-center justify-center animate-in fade-in duration-300">
  <div className="w-12 h-12 rounded-full bg-card flex items-center justify-center mb-4">
- <AlertCircle className="w-6 h-6 text-[#555]" />
+ <AlertCircle className="w-6 h-6 text-foreground" />
  </div>
  <h3 className="text-lg font-semibold text-foreground">No updates yet</h3>
  <p className="text-sm text-muted-foreground mt-1">Check back soon for news and features.</p>

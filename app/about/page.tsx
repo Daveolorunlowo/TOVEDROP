@@ -17,7 +17,7 @@ export default function AboutPage() {
  <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-16">
  
  {/* Section 1: What TOVEDROP is */}
- <section className="py-16 text-center border-b border-white/10">
+ <section className="py-16 text-center border-b border-border">
  <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-6" style={{ letterSpacing: '-0.025em' }}>
  Built for <span className="text-orange-brand">Campus.</span>
  </h1>
@@ -27,14 +27,14 @@ export default function AboutPage() {
  </section>
 
  {/* Section 2: How It Operates */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">How It Operates</h2>
  
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
  {/* Connecting line for desktop */}
- <div className="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-px bg-white/10 -translate-y-1/2" />
+ <div className="hidden md:block absolute top-1/2 left-[15%] right-[15%] h-px bg-foreground/5 -translate-y-1/2" />
  
- <div className="bg-surface-card border border-white/10 rounded-xl p-6 flex flex-col items-center text-center relative z-10">
+ <div className="bg-surface-card border border-border rounded-xl p-6 flex flex-col items-center text-center relative z-10">
  <div className="w-12 h-12 bg-orange-brand/10 rounded-full flex items-center justify-center mb-4 text-orange-brand font-bold text-lg">
  1
  </div>
@@ -44,7 +44,7 @@ export default function AboutPage() {
  </p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6 flex flex-col items-center text-center relative z-10">
+ <div className="bg-surface-card border border-border rounded-xl p-6 flex flex-col items-center text-center relative z-10">
  <div className="w-12 h-12 bg-purple-brand/10 rounded-full flex items-center justify-center mb-4 text-purple-brand font-bold text-lg">
  2
  </div>
@@ -54,7 +54,7 @@ export default function AboutPage() {
  </p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6 flex flex-col items-center text-center relative z-10">
+ <div className="bg-surface-card border border-border rounded-xl p-6 flex flex-col items-center text-center relative z-10">
  <div className="w-12 h-12 bg-orange-brand/10 rounded-full flex items-center justify-center mb-4 text-orange-brand font-bold text-lg">
  3
  </div>
@@ -67,11 +67,11 @@ export default function AboutPage() {
  </section>
 
  {/* Section 3: The Benefits */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">The Benefits</h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
  
- <div className="bg-white/5 rounded-xl p-6 border border-white/5 hover:border-white/10 transition-colors">
+ <div className="bg-foreground/5 rounded-xl p-6 border border-border hover:border-border transition-colors">
  <ShieldCheck className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-2">Unmatched Safety</h3>
  <p className="text-sm text-foreground/60">
@@ -79,7 +79,7 @@ export default function AboutPage() {
  </p>
  </div>
 
- <div className="bg-white/5 rounded-xl p-6 border border-white/5 hover:border-white/10 transition-colors">
+ <div className="bg-foreground/5 rounded-xl p-6 border border-border hover:border-border transition-colors">
  <Banknote className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-2">100% Cashless</h3>
  <p className="text-sm text-foreground/60">
@@ -87,7 +87,7 @@ export default function AboutPage() {
  </p>
  </div>
 
- <div className="bg-white/5 rounded-xl p-6 border border-white/5 hover:border-white/10 transition-colors">
+ <div className="bg-foreground/5 rounded-xl p-6 border border-border hover:border-border transition-colors">
  <MapPin className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-2">Campus-Specific Routes</h3>
  <p className="text-sm text-foreground/60">
@@ -95,7 +95,7 @@ export default function AboutPage() {
  </p>
  </div>
 
- <div className="bg-white/5 rounded-xl p-6 border border-white/5 hover:border-white/10 transition-colors">
+ <div className="bg-foreground/5 rounded-xl p-6 border border-border hover:border-border transition-colors">
  <Users className="w-8 h-8 text-orange-brand mb-4" />
  <h3 className="text-foreground font-bold mb-2">Built for the Community</h3>
  <p className="text-sm text-foreground/60">

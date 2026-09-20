@@ -254,7 +254,7 @@ function BookWizard() {
  {[1, 2, 3].map((s) => (
  <div key={s} className="flex items-center">
  <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm transition-colors duration-300 ${step >= s ? 'bg-orange-brand text-white' : 'bg-muted text-muted-foreground'}`}>
- {step > s ? <CheckCircle2 className="w-5 h-5 text-white" /> : s}
+ {step > s ? <CheckCircle2 className="w-5 h-5 text-foreground" /> : s}
  </div>
  {s < 3 && (
  <div className={`w-8 md:w-16 h-1 ml-2 md:ml-4 rounded-full transition-colors duration-300 ${step > s ? 'bg-orange-brand' : 'bg-muted'}`} />
@@ -392,9 +392,9 @@ function BookWizard() {
  <div className="space-y-2 animate-in fade-in duration-300">
  <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
  <div className="flex flex-wrap gap-2">
- <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
- <button type="button" onClick={() => setQuickTime(180)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+3h</button>
- <button type="button" onClick={() => setQuickTime(240)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors">+4h</button>
+ <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
+ <button type="button" onClick={() => setQuickTime(180)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+3h</button>
+ <button type="button" onClick={() => setQuickTime(240)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+4h</button>
  </div>
  </div>
  )}
@@ -527,7 +527,7 @@ function BookWizard() {
  key={lm.name}
  type="button"
  onClick={() => handleLandmarkSelect(lm)}
- className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-text-secondary hover:text-text-primary border border-border-subtle hover:bg-border-default transition-colors"
+ className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors"
  >
  {lm.name}
  </button>

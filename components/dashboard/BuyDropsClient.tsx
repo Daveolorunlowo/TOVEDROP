@@ -109,12 +109,12 @@ export function BuyDropsClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#111] text-white pb-8">
+    <div className="min-h-screen bg-background text-foreground pb-8">
 
       {/* ─── TOP BAR ─── */}
-      <div className="sticky top-0 z-30 bg-[#111]/90 backdrop-blur-lg border-b border-white/5">
+      <div className="sticky top-0 z-30 bg-background/90 backdrop-blur-lg border-b border-border">
         <div className="max-w-lg mx-auto flex items-center justify-between px-5 py-4">
-          <button onClick={() => router.push('/dashboard')} className="text-white/40 hover:text-white transition-colors">
+          <button onClick={() => router.push('/dashboard')} className="text-foreground/40 hover:text-foreground transition-colors">
             <ChevronLeft className="w-5 h-5" />
           </button>
           <h1 className="text-sm font-bold tracking-wide">Buy Drops</h1>
@@ -126,16 +126,16 @@ export function BuyDropsClient({
 
         {/* ─── BALANCE CARD ─── */}
         <div className="bg-gradient-to-br from-orange-600 to-orange-500 rounded-3xl p-7 mb-10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/4" />
+          <div className="absolute top-0 right-0 w-40 h-40 bg-foreground/5 rounded-full -translate-y-1/2 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/4" />
           <div className="relative z-10">
-            <p className="text-white/60 text-xs font-semibold uppercase tracking-wider mb-1">Available balance</p>
+            <p className="text-foreground/60 text-xs font-semibold uppercase tracking-wider mb-1">Available balance</p>
             <div className="flex items-center gap-3">
               <Coin size={32} />
               <span className="text-5xl font-black tracking-tight">{animBal}</span>
-              <span className="text-lg font-bold text-white/70 self-end mb-1">drops</span>
+              <span className="text-lg font-bold text-foreground/70 self-end mb-1">drops</span>
             </div>
-            <p className="text-white/50 text-xs font-medium mt-3">Each drop = 1 ride booking</p>
+            <p className="text-foreground/50 text-xs font-medium mt-3">Each drop = 1 ride booking</p>
           </div>
         </div>
 
@@ -171,29 +171,29 @@ export function BuyDropsClient({
                   <div className="flex items-center gap-4">
                     {/* Radio */}
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors
-                      ${active ? 'border-orange-500 bg-orange-500' : 'border-white/20'}
+                      ${active ? 'border-orange-500 bg-orange-500' : 'border-border'}
                     `}>
                       {active && <div className="w-2 h-2 rounded-full bg-black" />}
                     </div>
 
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-base font-bold text-white">{p.drops} Drops</span>
+                        <span className="text-base font-bold text-foreground">{p.drops} Drops</span>
                         {p.badge && (
                           <span className="text-[10px] font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
                             {p.badge}
                           </span>
                         )}
                       </div>
-                      <span className="text-xs text-white/30 mt-0.5 block">₦{(price / p.drops).toFixed(0)} per ride</span>
+                      <span className="text-xs text-foreground/30 mt-0.5 block">₦{(price / p.drops).toFixed(0)} per ride</span>
                     </div>
                   </div>
 
                   {/* Price */}
                   <div className="text-right">
-                    <span className="text-2xl font-black text-white">₦{price.toLocaleString()}</span>
+                    <span className="text-2xl font-black text-foreground">₦{price.toLocaleString()}</span>
                     {isFirstTime && (
-                      <span className="block text-xs text-white/20 line-through mt-0.5">₦{p.naira.toLocaleString()}</span>
+                      <span className="block text-xs text-foreground/20 line-through mt-0.5">₦{p.naira.toLocaleString()}</span>
                     )}
                   </div>
                 </div>
@@ -224,22 +224,22 @@ export function BuyDropsClient({
               <>Buy {pkg?.drops} Drops for ₦{pkg ? (isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira).toLocaleString() : ''} <ArrowRight className="w-5 h-5" /></>
             )}
           </button>
-          <p className="text-center text-xs text-white/20 mt-3">
+          <p className="text-center text-xs text-foreground/20 mt-3">
             Secure payment via Paystack · Instant activation
           </p>
         </div>
 
         {/* ─── FAQ ─── */}
         <div className="mt-14 space-y-5 pb-10">
-          <h3 className="text-sm font-bold text-white/30 uppercase tracking-wider">Common questions</h3>
+          <h3 className="text-sm font-bold text-foreground/30 uppercase tracking-wider">Common questions</h3>
           {[
             { q: 'Do drops expire?', a: 'No — your drops never expire. Use them whenever you want.' },
             { q: 'What does a drop cover?', a: 'Each drop covers one ride booking fee. The transport fare is paid separately to the driver.' },
             { q: 'Can I get a refund?', a: 'Yes. Unused drops can be refunded within 30 days of purchase.' },
           ].map((item, i) => (
-            <div key={i} className="border-b border-white/5 pb-4">
-              <p className="text-sm font-semibold text-white/60 mb-1">{item.q}</p>
-              <p className="text-sm text-white/30 leading-relaxed">{item.a}</p>
+            <div key={i} className="border-b border-border pb-4">
+              <p className="text-sm font-semibold text-foreground/60 mb-1">{item.q}</p>
+              <p className="text-sm text-foreground/30 leading-relaxed">{item.a}</p>
             </div>
           ))}
         </div>
@@ -248,19 +248,19 @@ export function BuyDropsClient({
       {/* ═══ OVERLAYS ═══ */}
 
       {redir && (
-        <div className="fixed inset-0 bg-[#111] z-[200] flex items-center justify-center flex-col">
+        <div className="fixed inset-0 bg-background z-[200] flex items-center justify-center flex-col">
           <div className="w-14 h-14 relative mb-6">
-            <div className="absolute inset-0 border-2 border-white/10 rounded-full" />
+            <div className="absolute inset-0 border-2 border-border rounded-full" />
             <div className="absolute inset-0 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
-            <Lock className="absolute inset-0 m-auto w-5 h-5 text-white/40" />
+            <Lock className="absolute inset-0 m-auto w-5 h-5 text-foreground/40" />
           </div>
-          <p className="text-sm font-semibold text-white/30">Redirecting to Paystack...</p>
+          <p className="text-sm font-semibold text-foreground/30">Redirecting to Paystack...</p>
         </div>
       )}
 
       {celeb && (
-        <div className="fixed inset-0 bg-[#111]/95 backdrop-blur-xl z-[200] flex items-center justify-center p-5">
-          <div className="bg-[#1a1a1a] border border-white/[0.08] p-8 rounded-3xl max-w-sm w-full text-center relative overflow-hidden">
+        <div className="fixed inset-0 bg-background/95 backdrop-blur-xl z-[200] flex items-center justify-center p-5">
+          <div className="bg-background border border-white/[0.08] p-8 rounded-3xl max-w-sm w-full text-center relative overflow-hidden">
 
             {bursts.current.map((c, i) => (
               <div
@@ -277,10 +277,10 @@ export function BuyDropsClient({
 
             <div className="relative z-10">
               <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-5">
-                <CheckCircle2 className="w-8 h-8 text-black" />
+                <CheckCircle2 className="w-8 h-8 text-foreground" />
               </div>
-              <h2 className="text-2xl font-black text-white mb-1">Payment Successful!</h2>
-              <p className="text-sm text-white/40 mb-6">
+              <h2 className="text-2xl font-black text-foreground mb-1">Payment Successful!</h2>
+              <p className="text-sm text-foreground/40 mb-6">
                 <strong className="text-orange-500">{cData.drops} Drops</strong> added to your wallet
               </p>
               {cData.saved && (

@@ -101,7 +101,7 @@ function PhoneMockup() {
 
  {/* Ghost phone behind */}
  <div
- className="absolute w-52 rounded-[2.5rem] border-[2px] border-white/8 bg-bg-deep/80 overflow-hidden"
+ className="absolute w-52 rounded-[2.5rem] border-[2px] border-border bg-bg-deep/80 overflow-hidden"
  style={{ top: '60px', right: '30px', opacity: 0.45, transform: 'rotate(8deg) scale(0.88)', height: '380px', filter: 'blur(1.5px)', zIndex: 1 }}
  >
  <div className="h-full bg-primary from-[var(--surface-card)] to-[var(--bg-deep)]" />
@@ -109,7 +109,7 @@ function PhoneMockup() {
 
  {/* Floating driver card */}
  <div
- className="absolute z-[8] bg-surface-card border border-white/12 rounded-xl p-3 shadow-[0_8px_28px_rgba(0,0,0,0.45)]"
+ className="absolute z-[8] bg-surface-card border border-border rounded-xl p-3 shadow-[0_8px_28px_rgba(0,0,0,0.45)]"
  style={{ width: '160px', top: '130px', left: '-20px', transform: 'rotate(-5deg)', animation: 'float-driver 5.5s ease-in-out infinite' }}
  >
  <div className="flex items-center gap-2 mb-2">
@@ -128,7 +128,7 @@ function PhoneMockup() {
 
  {/* Floating status pill */}
  <div
- className="absolute z-20 bg-bg-deep/90 border border-white/10 rounded-full px-3 py-1.5 flex items-center gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.35)]"
+ className="absolute z-20 bg-bg-deep/90 border border-border rounded-full px-3 py-1.5 flex items-center gap-2 shadow-[0_4px_16px_rgba(0,0,0,0.35)]"
  style={{ top: '10px', right: '50px', transform: 'rotate(3deg)', animation: 'float-notif 4.5s ease-in-out 0.5s infinite' }}
  >
  <span className="relative flex w-2 h-2 shrink-0">
@@ -140,17 +140,17 @@ function PhoneMockup() {
 
  {/* Main phone */}
  <div
- className="relative z-10 w-56 rounded-[2.5rem] border-[3px] border-white/15 bg-bg-deep shadow-[0_40px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.04)] overflow-hidden"
+ className="relative z-10 w-56 rounded-[2.5rem] border-[3px] border-border bg-bg-deep shadow-[0_40px_80px_rgba(0,0,0,0.65),0_0_0_1px_rgba(255,255,255,0.04)] overflow-hidden"
  style={{ animation: 'float 4s ease-in-out infinite', height: '420px', marginLeft: 'auto' }}
  >
  <div className="flex items-center justify-between px-5 pt-3 pb-1">
  <span className="text-[10px] text-foreground/50 font-medium">9:41</span>
  <div className="flex gap-1 items-center">
- <div className="w-3 h-1.5 rounded-sm bg-white/40" />
+ <div className="w-3 h-1.5 rounded-sm bg-foreground/5" />
  <div className="w-1 h-1.5 rounded-sm bg-orange-brand" />
  </div>
  </div>
- <div className="px-4 pt-1 pb-3 border-b border-white/5">
+ <div className="px-4 pt-1 pb-3 border-b border-border">
  <p className="text-[10px] text-foreground/40 uppercase tracking-widest mb-0.5">TOVEDROP</p>
  <p className="text-xs font-bold text-foreground">Booking Confirmed</p>
  </div>
@@ -166,10 +166,10 @@ function PhoneMockup() {
  <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
  <path d="M 30 90 Q 70 50 130 30" fill="none" stroke="var(--purple-brand)" strokeWidth="1.5" strokeDasharray="4 2" style={{ animation: 'dash-travel 3s linear infinite' }} />
  </svg>
- <div className="absolute left-7 bottom-5 w-2 h-2 rounded-full bg-white border border-white/60" />
+ <div className="absolute left-7 bottom-5 w-2 h-2 rounded-full bg-white border border-border" />
  <div className="absolute right-8 top-5 w-2 h-2 rounded-full bg-orange-brand" />
  </div>
- <div className="mx-3 mt-3 bg-[#1A1A30] rounded-xl p-3 flex items-center gap-3">
+ <div className="mx-3 mt-3 bg-background rounded-xl p-3 flex items-center gap-3">
  <div className="w-8 h-8 rounded-full flex items-center justify-center text-foreground text-[10px] font-bold shrink-0"
  >EO</div>
  <div className="flex-1 min-w-0">
@@ -186,7 +186,7 @@ function PhoneMockup() {
  <span className="text-[11px] text-orange-brand font-semibold">Driver en route · 4 min</span>
  </div>
  {/* Drops indicator */}
- <div className="mx-3 flex items-center justify-between bg-[#1A1A30] rounded-xl px-4 py-2.5">
+ <div className="mx-3 flex items-center justify-between bg-background rounded-xl px-4 py-2.5">
  <span className="text-[10px] text-foreground/40">Cost</span>
  <div className="flex items-center gap-1">
  <DropCoin size={12} />
@@ -197,7 +197,7 @@ function PhoneMockup() {
 
  {/* Floating rating badge */}
  <div
- className="absolute z-20 bg-surface-card border border-white/12 rounded-full px-4 py-2 flex items-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+ className="absolute z-20 bg-surface-card border border-border rounded-full px-4 py-2 flex items-center gap-2 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
  style={{ bottom: '80px', left: '0', animation: 'float-badge 6s ease-in-out 1s infinite' }}
  >
  <Star className="w-3.5 h-3.5 fill-purple-brand text-purple-brand shrink-0" />
@@ -207,7 +207,7 @@ function PhoneMockup() {
 
  {/* Floating trip card */}
  <div
- className="absolute z-20 bg-surface-card border-l-2 border-orange-brand border-t border-r border-b border-white/10 rounded-xl px-3 py-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
+ className="absolute z-20 bg-surface-card border-l-2 border-orange-brand border-t border-r border-b border-border rounded-xl px-3 py-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.4)]"
  style={{ bottom: '20px', right: '20px', transform: 'rotate(-3deg)', animation: 'float-badge 7s ease-in-out 2s infinite' }}
  >
  <p className="text-[10px] text-foreground/40 font-medium">Tomorrow · 8:00 AM</p>
@@ -287,9 +287,9 @@ function HeroSection() {
 
  {/* Vertical side label */}
  <div className="absolute left-6 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-2" aria-hidden="true">
- <div className="w-px h-16 bg-white/10" />
+ <div className="w-px h-16 bg-foreground/5" />
  <span className="text-foreground/20 font-semibold" style={{ fontSize: '9px', letterSpacing: '0.18em', writingMode: 'vertical-rl', textTransform: 'uppercase' }}>EST. 2024 · CAMPUS RIDES</span>
- <div className="w-px h-16 bg-white/10" />
+ <div className="w-px h-16 bg-foreground/5" />
  </div>
 
  <div className="relative z-10 max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-10 pt-24 pb-16">
@@ -310,7 +310,7 @@ function HeroSection() {
  value={destination}
  onChange={(e) => setDestination(e.target.value)}
  placeholder="Enter your destination..."
- className="w-full bg-surface-card border border-white/10 rounded-2xl py-5 pl-14 pr-16 text-xl text-foreground focus:outline-none focus:border-orange-brand/50 focus:ring-2 focus:ring-orange-brand/20 transition-all placeholder:text-foreground/30 shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
+ className="w-full bg-surface-card border border-border rounded-2xl py-5 pl-14 pr-16 text-xl text-foreground focus:outline-none focus:border-orange-brand/50 focus:ring-2 focus:ring-orange-brand/20 transition-all placeholder:text-foreground/30 shadow-[0_12px_40px_rgba(0,0,0,0.4)]"
  required
  />
  <button 
@@ -329,7 +329,7 @@ function HeroSection() {
  <p className="text-foreground/50 text-sm font-medium">Want to earn instead?</p>
  <Link
  href="/apply"
- className="inline-flex items-center gap-2 font-semibold text-[14px] text-foreground px-6 py-3 rounded-full border transition-all duration-200 hover:border-white/45 bg-white/5 hover:bg-white/10"
+ className="inline-flex items-center gap-2 font-semibold text-[14px] text-foreground px-6 py-3 rounded-full border transition-all duration-200 hover:border-border bg-foreground/5 hover:bg-foreground/5"
  >
  <Car className="w-4 h-4 text-orange-brand" />
  Drive with TOVEDROP
@@ -346,7 +346,7 @@ function HeroSection() {
  ].map(({ label, rotate, isDrops, isCyan }) => (
  <div
  key={label}
- className="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3.5 py-1.5 text-[12px] font-medium text-foreground/70 hover:text-foreground hover:border-white/25 transition-all duration-200 cursor-default"
+ className="flex items-center gap-1.5 bg-foreground/5 border border-border rounded-full px-3.5 py-1.5 text-[12px] font-medium text-foreground/70 hover:text-foreground hover:border-border transition-all duration-200 cursor-default"
  style={{ transform: `rotate(${rotate})`, transition: 'transform 0.2s, color 0.2s, border-color 0.2s' }}
  >
  {isDrops && <DropCoin size={13} />}
@@ -429,7 +429,7 @@ function HowItWorksSection() {
  ]
 
  return (
- <section className="bg-[#0F0F20] py-28 relative overflow-hidden">
+ <section className="bg-background py-28 relative overflow-hidden">
  <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
  style={{ background: 'var(--bg-deep)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
 
@@ -513,7 +513,7 @@ function DropsSection() {
  if (pkg.drops > 20) coins = 8
  if (pkg.drops >= 100) coins = 10
 
- let accent = 'border-white/8'
+ let accent = 'border-border'
  let size = 'normal'
  if (pkg.name === 'Popular') {
  accent = 'border-orange-brand/60'
@@ -535,7 +535,7 @@ function DropsSection() {
  })
 
  return (
- <section className="bg-[#080814] py-28 relative overflow-hidden">
+ <section className="bg-background py-28 relative overflow-hidden">
  {/* Skew top */}
  <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none" aria-hidden="true"
  style={{ background: '#0F0F20', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
@@ -572,7 +572,7 @@ function DropsSection() {
  'relative rounded-xl border p-5 flex flex-col gap-3 transition-all duration-300 cursor-default group',
  pkg.accent,
  isPopular
- ? 'bg-[#181810] shadow-[0_0_48px_rgba(217,119,6,0.18)] -mt-4 pb-7'
+ ? 'bg-background shadow-[0_0_48px_rgba(217,119,6,0.18)] -mt-4 pb-7'
  : 'bg-surface-card hover:border-orange-brand/30 hover:shadow-[0_0_24px_rgba(217,119,6,0.08)]'
  )}
  style={{ transitionDelay: `${i * 60}ms` }}
@@ -650,7 +650,7 @@ function TrustSection() {
  ]
 
  return (
- <section className="bg-[#0C0C1E] py-28 relative overflow-hidden">
+ <section className="bg-background py-28 relative overflow-hidden">
  <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
  style={{ background: '#080814', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
 
@@ -681,7 +681,7 @@ function TrustSection() {
  {trustPoints.map(({ Icon, title, desc }, i) => (
  <div
  key={title}
- className="bg-[#080814] border border-white/5 rounded-xl p-6 hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-all duration-300 cursor-default"
+ className="bg-background border border-border rounded-xl p-6 hover:border-border hover:shadow-[0_4px_16px_rgba(0,0,0,0.15)] transition-all duration-300 cursor-default"
  style={{ transitionDelay: `${i * 60}ms` }}
  >
  <div className="w-10 h-10 rounded-xl bg-purple-brand/10 border border-purple-brand/20 flex items-center justify-center mb-4">
@@ -706,7 +706,7 @@ function StatsSection() {
  const students = useCounter(1800, 1600, visible)
 
  return (
- <section className="bg-[#080814] py-28 relative overflow-hidden">
+ <section className="bg-background py-28 relative overflow-hidden">
  <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
  style={{ background: '#0C0C1E', clipPath: 'polygon(0 0, 100% 0, 100% 40%, 0 100%)' }} />
 
@@ -722,7 +722,7 @@ function StatsSection() {
  <div className={cn('grid grid-cols-2 lg:grid-cols-4 gap-3 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
 
  {/* Trips completed — wide */}
- <div className="col-span-2 bg-surface-card border border-white/5 rounded-xl p-7 flex flex-col justify-between overflow-hidden relative group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
+ <div className="col-span-2 bg-surface-card border border-border rounded-xl p-7 flex flex-col justify-between overflow-hidden relative group hover:border-border hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
  <div className="relative z-10">
  <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Trips Completed</p>
  <p className="text-5xl font-extrabold text-foreground tabular-nums" style={{ letterSpacing: '-0.03em' }}>
@@ -739,7 +739,7 @@ function StatsSection() {
  </div>
 
  {/* Students */}
- <div className="bg-[#0E0E24] border border-white/5 rounded-xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
+ <div className="bg-background border border-border rounded-xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-border hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
  <div>
  <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Students</p>
  <p className="text-4xl font-extrabold text-foreground tabular-nums" style={{ letterSpacing: '-0.03em' }}>
@@ -756,7 +756,7 @@ function StatsSection() {
  </div>
 
  {/* Rating */}
- <div className="bg-[#0A0A18] border border-white/5 rounded-xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
+ <div className="bg-background border border-border rounded-xl p-6 flex flex-col justify-between overflow-hidden relative group hover:border-border hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default" style={{ minHeight: '180px' }}>
  <div>
  <p className="text-[11px] font-semibold text-foreground/30 uppercase tracking-widest mb-2">Avg Rating</p>
  <p className="text-4xl font-extrabold text-foreground" style={{ letterSpacing: '-0.03em' }}>
@@ -771,7 +771,7 @@ function StatsSection() {
  </div>
 
  {/* Pay with Drops */}
- <div className="col-span-2 lg:col-span-4 bg-[#0A0A18] border border-white/5 rounded-xl px-7 py-5 flex items-center justify-between group hover:border-white/10 hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
+ <div className="col-span-2 lg:col-span-4 bg-background border border-border rounded-xl px-7 py-5 flex items-center justify-between group hover:border-border hover:shadow-[0_4px_16px_rgba(0,0,0,0.1)] transition-all duration-300 cursor-default">
  <div className="flex items-center gap-3">
  <DropCoin size={28} />
  <div>
@@ -801,7 +801,7 @@ function DriverCTASection() {
  const [hovered, setHovered] = useState(false)
 
  return (
- <section ref={ref} className="bg-[#060611] py-24 relative overflow-hidden">
+ <section ref={ref} className="bg-background py-24 relative overflow-hidden">
  <div
  className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
  
@@ -872,7 +872,7 @@ function DriverCTASection() {
  </div>
 
  <div className="flex justify-center lg:justify-end">
- <div className="bg-surface-card border border-white/8 rounded-xl p-6 w-72 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
+ <div className="bg-surface-card border border-border rounded-xl p-6 w-72 shadow-[0_8px_40px_rgba(0,0,0,0.5)]">
  <div className="flex items-center gap-3 mb-5">
  <div className="w-12 h-12 rounded-full flex items-center justify-center text-foreground font-bold text-base shrink-0"
  >EO</div>

@@ -87,16 +87,16 @@ export default function PrivacyRequestPage() {
  Request Type
  </label>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
- <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DOWNLOAD_DATA' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-background border-border text-muted-foreground hover:border-white/20'}`}>
+ <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DOWNLOAD_DATA' ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-background border-border text-muted-foreground hover:border-border'}`}>
  <input type="radio" name="type" value="DOWNLOAD_DATA" checked={form.type === 'DOWNLOAD_DATA'} onChange={() => setForm({...form, type: 'DOWNLOAD_DATA'})} className="sr-only" />
- <DownloadCloud className={`w-5 h-5 mb-2 ${form.type === 'DOWNLOAD_DATA' ? 'text-blue-400' : 'text-[#555]'}`} />
+ <DownloadCloud className={`w-5 h-5 mb-2 ${form.type === 'DOWNLOAD_DATA' ? 'text-blue-400' : 'text-foreground'}`} />
  <span className="font-semibold text-sm">Export Data</span>
  <span className="text-[10px] mt-1 opacity-80">Get a copy of your info</span>
  </label>
 
- <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DELETE_ACCOUNT' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-background border-border text-muted-foreground hover:border-white/20'}`}>
+ <label className={`cursor-pointer flex flex-col p-4 rounded-xl border transition-colors ${form.type === 'DELETE_ACCOUNT' ? 'bg-red-500/10 border-red-500/30 text-red-400' : 'bg-background border-border text-muted-foreground hover:border-border'}`}>
  <input type="radio" name="type" value="DELETE_ACCOUNT" checked={form.type === 'DELETE_ACCOUNT'} onChange={() => setForm({...form, type: 'DELETE_ACCOUNT'})} className="sr-only" />
- <Trash2 className={`w-5 h-5 mb-2 ${form.type === 'DELETE_ACCOUNT' ? 'text-red-400' : 'text-[#555]'}`} />
+ <Trash2 className={`w-5 h-5 mb-2 ${form.type === 'DELETE_ACCOUNT' ? 'text-red-400' : 'text-foreground'}`} />
  <span className="font-semibold text-sm">Delete Account</span>
  <span className="text-[10px] mt-1 opacity-80">Permanent erasure</span>
  </label>

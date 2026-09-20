@@ -68,9 +68,9 @@ export function SpotifyPlayer({ tripId }: { tripId: string }) {
 
  return (
  <div className="bg-surface-card border border-border rounded-xl overflow-hidden mt-4">
- <div className="bg-[#1DB954]/10 p-4 border-b border-[#1DB954]/20 flex items-center gap-3">
- <div className="w-10 h-10 rounded-full bg-[#1DB954] flex items-center justify-center shadow-lg shadow-[#1DB954]/30">
- <Music className="w-5 h-5 text-black" />
+ <div className="bg-background p-4 border-b border-[#1DB954]/20 flex items-center gap-3">
+ <div className="w-10 h-10 rounded-full bg-background flex items-center justify-center shadow-lg shadow-[#1DB954]/30">
+ <Music className="w-5 h-5 text-foreground" />
  </div>
  <div>
  <h3 className="font-bold text-foreground flex items-center gap-2">
@@ -94,14 +94,14 @@ export function SpotifyPlayer({ tripId }: { tripId: string }) {
 
  {loading && (
  <div className="flex justify-center py-4">
- <Loader2 className="w-5 h-5 animate-spin text-[#1DB954]" />
+ <Loader2 className="w-5 h-5 animate-spin text-foreground" />
  </div>
  )}
 
  {!loading && results.length > 0 && (
  <div className="space-y-2 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
  {results.map((track) => (
- <div key={track.uri} className="flex items-center justify-between p-2 hover:bg-white/5 rounded-lg group transition-colors">
+ <div key={track.uri} className="flex items-center justify-between p-2 hover:bg-foreground/5 rounded-lg group transition-colors">
  <div className="flex items-center gap-3 overflow-hidden">
  {track.album?.images?.[0]?.url ? (
  <img src={track.album.images[0].url} alt="Album Art" className="w-10 h-10 rounded shadow" />
@@ -121,7 +121,7 @@ export function SpotifyPlayer({ tripId }: { tripId: string }) {
  <button
  onClick={() => handleQueue(track)}
  disabled={!!queued[track.uri]}
- className="flex-shrink-0 ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-elevated hover:bg-[#1DB954] hover:text-black transition-colors disabled:opacity-100 disabled:bg-green-500/20 disabled:text-green-500"
+ className="flex-shrink-0 ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-surface-elevated hover:bg-background hover:text-foreground transition-colors disabled:opacity-100 disabled:bg-green-500/20 disabled:text-green-500"
  >
  {queued[track.uri] === 'loading' ? (
  <Loader2 className="w-4 h-4 animate-spin" />

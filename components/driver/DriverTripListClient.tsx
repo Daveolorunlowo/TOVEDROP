@@ -207,7 +207,7 @@ export function DriverTripListClient({
  <div className="flex items-center gap-2 mt-2 justify-end">
  <button
  onClick={() => downloadICS(trip, scheduledAt)}
- className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded bg-surface-elevated hover:bg-white/5 border border-border transition-colors text-foreground"
+ className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded bg-surface-elevated hover:bg-foreground/5 border border-border transition-colors text-foreground"
  >
  <Calendar className="w-3 h-3" />
  Add to Calendar
@@ -215,7 +215,7 @@ export function DriverTripListClient({
  {minsUntil > 15 ? (
  <button
  onClick={() => setTransferringTrip(trip)}
- className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5 text-muted-foreground border border-border"
+ className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-foreground/5 text-muted-foreground border border-border"
  >
  Transfer Trip
  </button>
@@ -224,7 +224,7 @@ export function DriverTripListClient({
  )}
  <button
  onClick={() => setActiveChatTrip(trip)}
- className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-white/5 text-green-500 border border-green-500/20"
+ className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1.5 rounded transition-colors hover:bg-foreground/5 text-green-500 border border-green-500/20"
  >
  <MessageSquare className="w-3 h-3" />
  Message

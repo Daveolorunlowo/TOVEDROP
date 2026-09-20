@@ -181,7 +181,7 @@ export default function AdGenerator() {
  )}
 
  <div 
- className="relative bg-[#050505] overflow-hidden"
+ className="relative bg-background overflow-hidden"
  style={{ width: '400px', height: '711px', border: '1px solid #111' }}
  >
  <AnimatePresence mode="wait">
@@ -282,7 +282,7 @@ export default function AdGenerator() {
  animate={{ opacity: 1, scale: 1, rotateX: 0 }}
  exit={{ x: '-100%', filter: "blur(10px)" }}
  transition={{ duration: 0.8, ease: "circOut" }}
- className="absolute inset-0 flex flex-col items-center pt-16 bg-[#050505]"
+ className="absolute inset-0 flex flex-col items-center pt-16 bg-background"
  style={{ perspective: 1200 }}
  >
  <KineticText text="Book your ride" className="text-3xl font-bold mb-2 text-foreground z-20" delay={0.2} />
@@ -331,7 +331,7 @@ export default function AdGenerator() {
  initial={{ scale: 0, rotate: -180 }}
  animate={{ scale: 1, rotate: 0 }}
  transition={{ delay: 0.5, type: "spring", damping: 10 }}
- className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-8 border border-white/40 shadow-2xl"
+ className="w-24 h-24 bg-foreground/5 backdrop-blur-md rounded-full flex items-center justify-center mb-8 border border-border shadow-2xl"
  >
  <span className="text-5xl">🛡️</span>
  </motion.div>

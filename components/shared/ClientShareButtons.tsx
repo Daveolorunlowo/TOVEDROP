@@ -68,14 +68,14 @@ export function ClientShareButtons({ referralLink, code }: ClientShareButtonsPro
  
  <button
  onClick={handleWhatsAppShare}
- className="flex items-center gap-2 px-4 py-2 bg-[#25D366] text-foreground rounded-lg text-sm font-bold hover:bg-[#20b858] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-background text-foreground rounded-lg text-sm font-bold hover:bg-background transition-colors"
  >
  WhatsApp
  </button>
  
  <button
  onClick={handleTwitterShare}
- className="flex items-center gap-2 px-4 py-2 bg-[#000000] text-foreground rounded-lg text-sm font-bold hover:bg-[#222222] transition-colors"
+ className="flex items-center gap-2 px-4 py-2 bg-background text-foreground rounded-lg text-sm font-bold hover:bg-background transition-colors"
  >
  X (Twitter)
  </button>

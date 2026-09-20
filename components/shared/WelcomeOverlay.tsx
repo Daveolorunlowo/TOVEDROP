@@ -146,7 +146,7 @@ export function WelcomeOverlay() {
  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
  exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
  transition={{ delay: 0.3, duration: 1, ease: 'easeOut' }}
- className="text-5xl md:text-7xl font-bold tracking-tight mb-2 text-text-primary drop-shadow-xl"
+ className="text-5xl md:text-7xl font-bold tracking-tight mb-2 text-primary drop-shadow-xl"
  >
  {greeting},
  </motion.h1>
@@ -156,7 +156,7 @@ export function WelcomeOverlay() {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ delay: 1, duration: 1.5, ease: 'easeInOut' }}
- className="text-4xl md:text-6xl font-medium text-text-primary opacity-90 drop-shadow-md"
+ className="text-4xl md:text-6xl font-medium text-primary opacity-90 drop-shadow-md"
  >
  {firstName}
  </motion.h2>
@@ -219,10 +219,10 @@ export function WelcomeOverlay() {
  animate={{ opacity: 1, x: 0 }}
  exit={{ opacity: 0, x: -20 }}
  >
- <h2 className="text-2xl font-bold text-text-primary mb-2 tracking-tight">
+ <h2 className="text-2xl font-bold text-primary mb-2 tracking-tight">
  {steps[guideStep].title}
  </h2>
- <p className="text-text-secondary text-sm leading-relaxed">
+ <p className="text-secondary text-sm leading-relaxed">
  {steps[guideStep].desc}
  </p>
  </motion.div>

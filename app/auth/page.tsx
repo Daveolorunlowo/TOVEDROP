@@ -125,7 +125,7 @@ function AuthForm() {
  <div className="w-full max-w-md">
  <div className="text-center mb-8">
  <Link href="/" className="text-3xl font-extrabold inline-block" style={{ letterSpacing: '-0.02em' }}>
- <span className="text-[#1A1A2E]">TOVE</span><span className="text-orange-brand">DROP</span>
+ <span className="text-foreground">TOVE</span><span className="text-orange-brand">DROP</span>
  </Link>
  <p className="mt-2 text-muted-foreground text-sm">
  {tab === 'login' ? 'Welcome back to your campus ride platform' : 'Join the trusted student ride network'}

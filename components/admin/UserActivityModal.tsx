@@ -50,7 +50,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
  key={tab}
  onClick={() => setActiveTab(tab)}
  className={`pb-3 text-xs font-semibold uppercase tracking-wider transition-colors relative ${
- activeTab === tab ? 'text-orange-brand' : 'text-[#666] hover:text-muted-foreground'
+ activeTab === tab ? 'text-orange-brand' : 'text-foreground hover:text-muted-foreground'
  }`}
  >
  {tab}
@@ -74,7 +74,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
  <div className="space-y-3">
  {activeTab === 'trips' && (
  data.trips.length === 0 ? (
- <p className="text-[#555] text-sm text-center py-10">No recent trips found.</p>
+ <p className="text-foreground text-sm text-center py-10">No recent trips found.</p>
  ) : (
  data.trips.map(trip => (
  <div key={trip.id} className="p-3 bg-card rounded-lg border border-border flex items-center justify-between">
@@ -87,7 +87,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
  {trip.riderId === user.id ? 'Requested Ride' : 'Drove for Rider'}
  </p>
  <p className="text-xs text-muted-foreground mt-0.5 truncate max-w-[200px] sm:max-w-[300px]">
- {trip.pickupLocation} <span className="text-[#444] mx-1">→</span> {trip.dropoffLocation}
+ {trip.pickupLocation} <span className="text-foreground mx-1">→</span> {trip.dropoffLocation}
  </p>
  </div>
  </div>
@@ -95,7 +95,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
  <p className="text-xs font-medium px-2 py-0.5 rounded bg-card text-muted-foreground inline-block mb-1">
  {trip.status}
  </p>
- <p className="text-[10px] text-[#555]">{new Date(trip.createdAt).toLocaleString()}</p>
+ <p className="text-[10px] text-foreground">{new Date(trip.createdAt).toLocaleString()}</p>
  </div>
  </div>
  ))
@@ -104,7 +104,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
 
  {activeTab === 'drops' && (
  data.drops.length === 0 ? (
- <p className="text-[#555] text-sm text-center py-10">No recent drop transactions.</p>
+ <p className="text-foreground text-sm text-center py-10">No recent drop transactions.</p>
  ) : (
  data.drops.map(drop => (
  <div key={drop.id} className="p-3 bg-card rounded-lg border border-border flex items-center justify-between">
@@ -121,7 +121,7 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
  <p className={`text-sm font-bold ${drop.type === 'EARNED' || drop.type === 'PURCHASED' ? 'text-green-500' : 'text-red-500'}`}>
  {drop.type === 'EARNED' || drop.type === 'PURCHASED' ? '+' : '-'}{drop.amount} drops
  </p>
- <p className="text-[10px] text-[#555]">{new Date(drop.createdAt).toLocaleString()}</p>
+ <p className="text-[10px] text-foreground">{new Date(drop.createdAt).toLocaleString()}</p>
  </div>
  </div>
  ))
@@ -130,14 +130,14 @@ export function UserActivityModal({ user, onClose }: { user: any, onClose: () =>
 
  {activeTab === 'feedbacks' && (
  data.feedbacks.length === 0 ? (
- <p className="text-[#555] text-sm text-center py-10">No recent feedback submitted.</p>
+ <p className="text-foreground text-sm text-center py-10">No recent feedback submitted.</p>
  ) : (
  data.feedbacks.map(feedback => (
  <div key={feedback.id} className="p-3 bg-card rounded-lg border border-border">
  <div className="flex items-center gap-2 mb-2">
  <MessageSquare className="w-4 h-4 text-orange-brand" />
  <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide">{feedback.category}</span>
- <span className="text-[10px] text-[#555] ml-auto">{new Date(feedback.createdAt).toLocaleString()}</span>
+ <span className="text-[10px] text-foreground ml-auto">{new Date(feedback.createdAt).toLocaleString()}</span>
  </div>
  <p className="text-sm text-foreground">{feedback.message}</p>
  </div>

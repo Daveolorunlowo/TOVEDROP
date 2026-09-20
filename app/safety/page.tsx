@@ -17,7 +17,7 @@ export default function SafetyPage() {
  <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-16">
  
  {/* Section 1: Hero */}
- <section className="py-16 text-center border-b border-white/10">
+ <section className="py-16 text-center border-b border-border">
  <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-6" style={{ letterSpacing: '-0.025em' }}>
  Your safety is our <span className="text-orange-brand">first Drop.</span>
  </h1>
@@ -27,14 +27,14 @@ export default function SafetyPage() {
  </section>
 
  {/* Section 2: How We Vet Drivers */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-6 text-center">Every driver goes through us</h2>
  <p className="text-foreground/60 text-center max-w-xl mx-auto mb-12">
  Before a driver picks up their first student, they go through a multi-step verification process:
  </p>
  
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 relative">
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <div className="flex items-center gap-4 mb-4">
  <div className="w-10 h-10 rounded-full bg-orange-brand/10 flex items-center justify-center text-orange-brand font-bold">1</div>
  <h3 className="text-foreground font-bold">Identity Check</h3>
@@ -44,7 +44,7 @@ export default function SafetyPage() {
  </p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <div className="flex items-center gap-4 mb-4">
  <div className="w-10 h-10 rounded-full bg-orange-brand/10 flex items-center justify-center text-orange-brand font-bold">2</div>
  <h3 className="text-foreground font-bold">Background Screening</h3>
@@ -54,7 +54,7 @@ export default function SafetyPage() {
  </p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <div className="flex items-center gap-4 mb-4">
  <div className="w-10 h-10 rounded-full bg-orange-brand/10 flex items-center justify-center text-orange-brand font-bold">3</div>
  <h3 className="text-foreground font-bold">Vehicle Inspection</h3>
@@ -64,7 +64,7 @@ export default function SafetyPage() {
  </p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <div className="flex items-center gap-4 mb-4">
  <div className="w-10 h-10 rounded-full bg-orange-brand/10 flex items-center justify-center text-orange-brand font-bold">4</div>
  <h3 className="text-foreground font-bold">Student Vetting</h3>
@@ -77,7 +77,7 @@ export default function SafetyPage() {
  </section>
 
  {/* Section 3: Continuous Safety */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">Every ride is monitored</h2>
  
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -113,13 +113,13 @@ export default function SafetyPage() {
  </div>
 
  {/* Minimal Mockup */}
- <div className="bg-[#12121A] rounded-[2rem] border border-white/10 p-6 flex flex-col items-center mx-auto w-full max-w-sm h-[400px] shadow-2xl relative overflow-hidden">
+ <div className="bg-background rounded-[2rem] border border-border p-6 flex flex-col items-center mx-auto w-full max-w-sm h-[400px] shadow-2xl relative overflow-hidden">
  <div className="w-32 h-6 bg-background rounded-b-xl absolute top-0 flex items-center justify-center">
- <div className="w-16 h-4 bg-white/10 rounded-full" />
+ <div className="w-16 h-4 bg-foreground/5 rounded-full" />
  </div>
  
  <div className="mt-12 w-full space-y-4">
- <div className="bg-surface-card p-4 rounded-xl border border-white/5 flex items-center justify-between">
+ <div className="bg-surface-card p-4 rounded-xl border border-border flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 bg-orange-brand rounded-full flex items-center justify-center text-foreground font-bold">AO</div>
  <div>
@@ -130,9 +130,9 @@ export default function SafetyPage() {
  <div className="bg-purple-brand/20 text-purple-brand text-xs font-bold px-2 py-1 rounded">4.8 ★</div>
  </div>
 
- <div className="bg-surface-card p-4 rounded-xl border border-white/5 space-y-2">
+ <div className="bg-surface-card p-4 rounded-xl border border-border space-y-2">
  <p className="text-xs text-foreground/40 uppercase font-bold tracking-wider">Live Tracking</p>
- <div className="h-24 bg-[#0A0A10] rounded-lg border border-white/10 relative overflow-hidden flex items-center justify-center">
+ <div className="h-24 bg-background rounded-lg border border-border relative overflow-hidden flex items-center justify-center">
  <p className="text-xs text-foreground/30">Map Interface</p>
  </div>
  </div>
@@ -147,7 +147,7 @@ export default function SafetyPage() {
  </section>
 
  {/* Section 4: What to Do If Something Feels Wrong */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <div className="max-w-2xl mx-auto">
  <h2 className="text-2xl font-bold text-foreground mb-4 text-center">We listen. We act.</h2>
  <p className="text-foreground/60 text-center mb-10">
@@ -174,7 +174,7 @@ export default function SafetyPage() {
  </ol>
  </div>
 
- <div className="bg-white/5 p-6 rounded-xl">
+ <div className="bg-foreground/5 p-6 rounded-xl">
  <h3 className="text-foreground font-bold mb-3">Real case examples:</h3>
  <ul className="space-y-3 text-sm text-foreground/70">
  <li><strong className="text-foreground">Student reported driver taking unplanned route</strong> → Driver account suspended, student refunded, campus security notified.</li>
@@ -187,26 +187,26 @@ export default function SafetyPage() {
  </section>
 
  {/* Section 5: Student Rights */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10 text-center">What you're guaranteed</h2>
  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
  
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <h3 className="text-foreground font-bold mb-2">Right to Cancel</h3>
  <p className="text-sm text-foreground/60">Change your mind before pickup? Cancel free. Within 60 seconds of pickup? Free ride.</p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <h3 className="text-foreground font-bold mb-2">Right to Report</h3>
  <p className="text-sm text-foreground/60">Uncomfortable with your driver? Report in-app, no questions asked. Full refund guaranteed.</p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <h3 className="text-foreground font-bold mb-2">Right to Privacy</h3>
  <p className="text-sm text-foreground/60">Your ride data is yours. We don't sell it. Your phone number isn't shared with drivers.</p>
  </div>
 
- <div className="bg-surface-card border border-white/10 rounded-xl p-6">
+ <div className="bg-surface-card border border-border rounded-xl p-6">
  <h3 className="text-foreground font-bold mb-2">Right to Support</h3>
  <p className="text-sm text-foreground/60">Our safety team is real humans, not chatbots. Email, call, or chat — we respond.</p>
  </div>
@@ -215,7 +215,7 @@ export default function SafetyPage() {
  </section>
 
  {/* Section 6: Driver Safety Too */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <div className="max-w-2xl mx-auto">
  <h2 className="text-2xl font-bold text-foreground mb-4">We protect drivers too</h2>
  <p className="text-foreground/60 mb-6">
@@ -252,7 +252,7 @@ export default function SafetyPage() {
  </Link>
  <Link
  href="/privacy"
- className="inline-flex items-center gap-2 font-semibold text-[15px] text-foreground/85 hover:text-foreground px-8 py-4 rounded-full border transition-all duration-200 hover:border-white/45"
+ className="inline-flex items-center gap-2 font-semibold text-[15px] text-foreground/85 hover:text-foreground px-8 py-4 rounded-full border transition-all duration-200 hover:border-border"
  style={{ borderColor: 'rgba(255,255,255,0.28)', background: 'rgba(255,255,255,0.04)' }}
  >
  Read full Safety Policy

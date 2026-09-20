@@ -69,7 +69,7 @@ export function UpdateFormModal({ update, onClose, onRefresh }: { update: any, o
  value={title}
  onChange={(e) => setTitle(e.target.value)}
  placeholder="E.g., New Feature: Wallet Top-ups"
- className="w-full bg-[#1a1a1a] border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors"
+ className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors"
  />
  </div>
 
@@ -80,9 +80,9 @@ export function UpdateFormModal({ update, onClose, onRefresh }: { update: any, o
  onChange={(e) => setContent(e.target.value)}
  placeholder="Write the announcement details here..."
  rows={5}
- className="w-full bg-[#1a1a1a] border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors resize-none"
+ className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors resize-none"
  />
- <p className="text-[10px] text-[#555] mt-1">Line breaks will be preserved.</p>
+ <p className="text-[10px] text-foreground mt-1">Line breaks will be preserved.</p>
  </div>
 
  <div className="grid grid-cols-2 gap-4">
@@ -91,7 +91,7 @@ export function UpdateFormModal({ update, onClose, onRefresh }: { update: any, o
  <select
  value={category}
  onChange={(e) => setCategory(e.target.value)}
- className="w-full bg-[#1a1a1a] border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors"
+ className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors"
  >
  <option value="ANNOUNCEMENT">Announcement</option>
  <option value="NEW_FEATURE">New Feature</option>
@@ -105,7 +105,7 @@ export function UpdateFormModal({ update, onClose, onRefresh }: { update: any, o
  <select
  value={audience}
  onChange={(e) => setAudience(e.target.value)}
- className="w-full bg-[#1a1a1a] border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors"
+ className="w-full bg-background border border-border rounded-md px-3 py-2 text-foreground text-sm focus:outline-none focus:border-orange-brand transition-colors"
  >
  <option value="ALL">Everyone</option>
  <option value="RIDERS">Riders Only</option>
@@ -119,7 +119,7 @@ export function UpdateFormModal({ update, onClose, onRefresh }: { update: any, o
  type="checkbox"
  checked={isPinned}
  onChange={(e) => setIsPinned(e.target.checked)}
- className="rounded border-border bg-[#1a1a1a] text-orange-brand focus:ring-orange-brand focus:ring-offset-[#111]"
+ className="rounded border-border bg-background text-orange-brand focus:ring-orange-brand focus:ring-offset-[#111]"
  />
  <span className="text-sm text-foreground font-medium">Pin this update to the top</span>
  </label>

@@ -89,7 +89,7 @@ export function UpdatesTab() {
  <div className="bg-card rounded-lg border border-border overflow-hidden">
  <div className="overflow-x-auto">
  <table className="w-full text-left text-sm text-muted-foreground">
- <thead className="bg-background text-[#555] uppercase text-[10px] tracking-wider">
+ <thead className="bg-background text-foreground uppercase text-[10px] tracking-wider">
  <tr>
  <th className="px-4 py-3 font-semibold">Title</th>
  <th className="px-4 py-3 font-semibold">Category</th>
@@ -101,13 +101,13 @@ export function UpdatesTab() {
  <tbody className="divide-y divide-[#222]">
  {updates.length === 0 ? (
  <tr>
- <td colSpan={5} className="px-4 py-8 text-center text-[#555]">
+ <td colSpan={5} className="px-4 py-8 text-center text-foreground">
  No updates found. Click "New Update" to create one.
  </td>
  </tr>
  ) : (
  updates.map((update) => (
- <tr key={update.id} className="hover:bg-[#1a1a1a] transition-colors">
+ <tr key={update.id} className="hover:bg-background transition-colors">
  <td className="px-4 py-4">
  <div className="flex items-center gap-2">
  {update.isPinned && <Pin className="w-3.5 h-3.5 text-orange-brand" />}
@@ -117,18 +117,18 @@ export function UpdatesTab() {
  </div>
  </td>
  <td className="px-4 py-4">
- <span className="text-xs px-2 py-1 rounded bg-[#222] text-[#ccc]">
+ <span className="text-xs px-2 py-1 rounded bg-background text-foreground">
  {update.category.replace('_', ' ')}
  </span>
  </td>
  <td className="px-4 py-4">
- <span className="text-xs px-2 py-1 rounded bg-[#222] text-[#ccc]">
+ <span className="text-xs px-2 py-1 rounded bg-background text-foreground">
  {update.audience}
  </span>
  </td>
  <td className="px-4 py-4">
  {update.publishedAt ? (
- <div className="flex items-center gap-1.5 text-[#22c55e]">
+ <div className="flex items-center gap-1.5 text-foreground">
  <CheckCircle2 className="w-3.5 h-3.5" />
  <span className="text-xs">Published</span>
  </div>

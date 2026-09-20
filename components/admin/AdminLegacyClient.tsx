@@ -445,7 +445,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  </AreaChart>
  </ResponsiveContainer>
  ) : (
- <div className="flex items-center justify-center h-full text-xs text-[#555]">No data available</div>
+ <div className="flex items-center justify-center h-full text-xs text-foreground">No data available</div>
  )}
  </div>
  </motion.div>
@@ -472,7 +472,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: 0.1 * idx }}
- className="flex items-start gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors"
+ className="flex items-start gap-3 p-2 rounded-lg hover:bg-foreground/5 transition-colors"
  >
  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-lg ${activity.type === 'TRIP' ? 'bg-orange-brand/20 text-orange-brand shadow-orange-brand/20' : 'bg-purple-500/20 text-purple-400 shadow-purple-500/20'}`}>
  {activity.type === 'TRIP' ? <Car className="w-4 h-4" /> : <Banknote className="w-4 h-4" />}
@@ -480,12 +480,12 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  <div>
  <p className="text-xs font-semibold text-foreground leading-tight">{activity.title}</p>
  <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">{activity.desc}</p>
- <p className="text-[9px] text-[#666] mt-1">{new Date(activity.time).toLocaleTimeString()}</p>
+ <p className="text-[9px] text-foreground mt-1">{new Date(activity.time).toLocaleTimeString()}</p>
  </div>
  </motion.div>
  ))
  ) : (
- <p className="text-xs text-[#666] text-center mt-10">No recent activity</p>
+ <p className="text-xs text-foreground text-center mt-10">No recent activity</p>
  )}
  </AnimatePresence>
  </div>
@@ -527,7 +527,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  {pendingDrivers.map((d: any) => (
  <div key={d.userId} className="flex items-center gap-3 p-3 rounded-lg bg-background/20 border border-border transition-colors group cursor-pointer" onClick={() => setActiveTab('approvals')}>
  <Avatar className="w-8 h-8 shrink-0">
- <AvatarFallback className="text-[10px] font-bold bg-white/10 text-[#fff]">
+ <AvatarFallback className="text-[10px] font-bold bg-foreground/5 text-foreground">
  {initials(d.user.name)}
  </AvatarFallback>
  </Avatar>
@@ -574,7 +574,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  <button
  onClick={exportFinancesCSV}
  disabled={!financesData || financesLoading}
- className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-white/10 disabled:opacity-50 bg-card border border-border text-foreground"
+ className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-lg transition-colors hover:bg-foreground/5 disabled:opacity-50 bg-card border border-border text-foreground"
  >
  <FileText className="w-3.5 h-3.5 text-orange-brand" />
  Export CSV Report
@@ -621,7 +621,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
  <div className="bg-card rounded-xl overflow-x-auto border border-border">
  <table className="w-full text-left border-collapse min-w-[600px]">
- <thead className="bg-white/5 border-b border-border">
+ <thead className="bg-foreground/5 border-b border-border">
  <tr>
  <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Period</th>
  <th className="px-5 py-4 text-[10px] font-bold text-gray-400 text-right">Cash Collected</th>
@@ -630,19 +630,19 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  </tr>
  </thead>
  <tbody className="divide-y divide-border">
- <tr className="hover:bg-white/5 transition-colors">
+ <tr className="hover:bg-foreground/5 transition-colors">
  <td className="px-5 py-4 text-sm font-medium text-foreground">This Week</td>
  <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisWeek.cashCollected.toLocaleString()}</td>
  <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisWeek.recognizedRevenue.toLocaleString()}</td>
  <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisWeek.driverPayouts.toLocaleString()}</td>
  </tr>
- <tr className="hover:bg-white/5 transition-colors">
+ <tr className="hover:bg-foreground/5 transition-colors">
  <td className="px-5 py-4 text-sm font-medium text-foreground">This Month</td>
  <td className="px-5 py-4 text-sm text-right text-gray-300">₦{financesData.company.thisMonth.cashCollected.toLocaleString()}</td>
  <td className="px-5 py-4 text-sm text-right font-semibold text-green-400">+₦{financesData.company.thisMonth.recognizedRevenue.toLocaleString()}</td>
  <td className="px-5 py-4 text-sm text-right font-semibold text-red-400">-₦{financesData.company.thisMonth.driverPayouts.toLocaleString()}</td>
  </tr>
- <tr className="bg-white/5 border-t-2 border-border">
+ <tr className="bg-foreground/5 border-t-2 border-border">
  <td className="px-5 py-4 text-sm font-bold text-foreground tracking-wider">All-Time</td>
  <td className="px-5 py-4 text-sm text-right font-bold text-foreground">₦{financesData.company.totalCashCollected.toLocaleString()}</td>
  <td className="px-5 py-4 text-sm text-right font-bold text-green-400">+₦{financesData.company.recognizedRevenue.toLocaleString()}</td>
@@ -675,7 +675,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  
  <div className="bg-card rounded-xl overflow-x-auto border border-border">
  <table className="w-full text-left border-collapse min-w-[700px]">
- <thead className="bg-white/5 border-b border-border">
+ <thead className="bg-foreground/5 border-b border-border">
  <tr>
  <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Driver Name</th>
  <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Status</th>
@@ -687,7 +687,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  </thead>
  <tbody className="divide-y divide-border">
  {financesData.drivers.list.map((d: any, i: number) => (
- <tr key={d.id} className="hover:bg-white/5 transition-colors group">
+ <tr key={d.id} className="hover:bg-foreground/5 transition-colors group">
  <td className="px-5 py-4 text-sm font-medium text-foreground group-hover:text-orange-brand transition-colors">{d.name}</td>
  <td className="px-5 py-4"><StatusChip status={d.status} /></td>
  <td className="px-5 py-4 text-sm text-right font-bold text-orange-400">₦{d.walletBalance.toLocaleString()}</td>
@@ -732,7 +732,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
  <div className="bg-card rounded-xl overflow-x-auto border border-border">
  <table className="w-full text-left border-collapse min-w-[600px]">
- <thead className="bg-white/5 border-b border-border">
+ <thead className="bg-foreground/5 border-b border-border">
  <tr>
  <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Rider Name</th>
  <th className="px-5 py-4 text-[10px] font-bold text-gray-400">Email</th>
@@ -743,7 +743,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  </thead>
  <tbody className="divide-y divide-border">
  {financesData.riders.list.map((r: any) => (
- <tr key={r.id} className="hover:bg-white/5 transition-colors">
+ <tr key={r.id} className="hover:bg-foreground/5 transition-colors">
  <td className="px-5 py-4 text-sm font-medium text-foreground">{r.name}</td>
  <td className="px-5 py-4 text-sm text-gray-400">{r.email}</td>
  <td className="px-5 py-4 text-sm text-right font-bold text-blue-400">{r.dropsBalance}</td>
@@ -1042,20 +1042,20 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  <div className="space-y-6 animate-fade-in">
  <div className="flex items-center justify-between">
  <div>
- <h2 className="text-xl font-semibold tracking-tight text-[#f5f5f5]">User Feedback</h2>
+ <h2 className="text-xl font-semibold tracking-tight text-foreground">User Feedback</h2>
  <p className="text-sm text-muted-foreground mt-1">Review issues and feature suggestions from riders and drivers.</p>
  </div>
  </div>
  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
  {!data?.feedbacks?.length ? (
- <p className="text-sm text-[#555]">No feedback received yet.</p>
+ <p className="text-sm text-foreground">No feedback received yet.</p>
  ) : (
  data.feedbacks.map((fb: any) => (
  <div key={fb.id} className="bg-card border border-border rounded-xl p-5">
  <div className="flex justify-between items-start mb-3">
  <div>
- <p className="text-sm font-medium text-[#f5f5f5]">{fb.user?.name || 'Anonymous'}</p>
- <p className="text-xs text-[#555]">{fb.user?.email}</p>
+ <p className="text-sm font-medium text-foreground">{fb.user?.name || 'Anonymous'}</p>
+ <p className="text-xs text-foreground">{fb.user?.email}</p>
  </div>
  <StatusChip status={fb.status} />
  </div>
@@ -1074,7 +1074,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  <button
  onClick={() => handleFeedbackAction(fb.id, 'review')}
  disabled={processing === fb.id}
- className="flex-1 bg-card hover:bg-[#252525] border border-border text-xs font-semibold py-2 rounded-md transition-colors"
+ className="flex-1 bg-card hover:bg-background border border-border text-xs font-semibold py-2 rounded-md transition-colors"
  >
  {processing === fb.id ? <Loader2 className="w-3 h-3 mx-auto animate-spin" /> : 'Mark Reviewed'}
  </button>

@@ -17,7 +17,7 @@ export default function TermsPage() {
  <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-16">
  
  {/* Section 1: Hero */}
- <section className="py-16 border-b border-white/10">
+ <section className="py-16 border-b border-border">
  <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground mb-6" style={{ letterSpacing: '-0.025em' }}>
  Here's how TOVEDROP <span className="text-orange-brand">works.</span>
  </h1>
@@ -27,10 +27,10 @@ export default function TermsPage() {
  </section>
 
  {/* Section 2: Quick Summary */}
- <section className="py-20 border-b border-white/10">
+ <section className="py-20 border-b border-border">
  <h2 className="text-2xl font-bold text-foreground mb-10">Terms in a nutshell</h2>
  
- <div className="bg-surface-card border border-white/10 rounded-xl p-8 space-y-4">
+ <div className="bg-surface-card border border-border rounded-xl p-8 space-y-4">
  <ul className="space-y-4 text-sm text-foreground/70">
  <li className="flex items-start gap-3">
  <Scale className="w-5 h-5 text-orange-brand shrink-0" />
@@ -223,9 +223,9 @@ export default function TermsPage() {
  </section>
 
  {/* Section 4: CTA */}
- <section className="py-12 border-t border-white/10 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+ <section className="py-12 border-t border-border flex flex-col sm:flex-row gap-4 items-start sm:items-center">
  <button
- className="inline-flex items-center gap-2 font-bold text-[14px] text-foreground px-6 py-3 rounded-full border transition-all duration-200 hover:bg-white/5"
+ className="inline-flex items-center gap-2 font-bold text-[14px] text-foreground px-6 py-3 rounded-full border transition-all duration-200 hover:bg-foreground/5"
  style={{ borderColor: 'rgba(255,255,255,0.2)' }}
  >
  <FileText className="w-4 h-4" /> Download terms as PDF

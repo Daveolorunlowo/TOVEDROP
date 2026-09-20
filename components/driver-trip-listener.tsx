@@ -25,7 +25,7 @@ export function DriverTripListener() {
  if (!toastMessage) return null
 
  return (
- <div className="fixed top-4 right-4 z-50 bg-card border-2 text-[#f5f5f5] px-5 py-4 rounded-xl shadow-xl flex items-center justify-between gap-6 animate-in slide-in- max-w-sm" style={{ borderColor: 'var(--orange-brand)' }}>
+ <div className="fixed top-4 right-4 z-50 bg-card border-2 text-foreground px-5 py-4 rounded-xl shadow-xl flex items-center justify-between gap-6 animate-in slide-in- max-w-sm" style={{ borderColor: 'var(--orange-brand)' }}>
  <div className="flex flex-col gap-1">
  <span className="text-[10px] font-bold uppercase tracking-[0.05em]" style={{ color: 'var(--orange-brand)' }}>New Trip</span>
  <p className="text-sm font-semibold">{toastMessage}</p>

@@ -182,7 +182,7 @@ export function RequestsListClient({
  <button
  disabled={processing === trip.id}
  onClick={() => handleDecline(trip.id)}
- className="flex-1 py-2.5 rounded-lg text-xs font-semibold text-muted-foreground hover:bg-white/5 border border-border transition-colors disabled:opacity-50"
+ className="flex-1 py-2.5 rounded-lg text-xs font-semibold text-muted-foreground hover:bg-foreground/5 border border-border transition-colors disabled:opacity-50"
  >
  Decline
  </button>
@@ -192,7 +192,7 @@ export function RequestsListClient({
  className="flex-1 py-2.5 rounded-lg text-xs font-semibold bg-orange-brand text-primary-foreground hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
  >
  {processing === trip.id ? (
- <span className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+ <span className="w-4 h-4 border-2 border-border border-t-white rounded-full animate-spin" />
  ) : (
  <>
  Accept <ArrowRight className="w-3.5 h-3.5" />

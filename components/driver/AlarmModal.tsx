@@ -121,7 +121,7 @@ export function AlarmModal({
  'UPCOMING RIDE';
 
  return (
- <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-6 bg-[#111] text-white">
+ <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-6 bg-background text-foreground">
  {/* Background Radial Glow */}
  <div 
  className="absolute inset-0 pointer-events-none transition-all duration-1000"
@@ -143,14 +143,14 @@ export function AlarmModal({
 
  {/* Pulsing Icon */}
  <div className="relative">
- <div className="absolute inset-0 bg-white/20 rounded-full animate-ping" />
- <div className="bg-white/10 p-6 rounded-full backdrop-blur-md relative animate-[pulse_0.8s_ease-in-out_infinite]">
+ <div className="absolute inset-0 bg-foreground/5 rounded-full animate-ping" />
+ <div className="bg-foreground/5 p-6 rounded-full backdrop-blur-md relative animate-[pulse_0.8s_ease-in-out_infinite]">
  <Clock className="w-16 h-16" />
  </div>
  </div>
 
  {/* Header Label */}
- <h3 className="text-xl font-bold tracking-[0.2em] text-center text-white/90">
+ <h3 className="text-xl font-bold tracking-[0.2em] text-center text-foreground/90">
  {headerText}
  </h3>
 
@@ -160,30 +160,30 @@ export function AlarmModal({
  </div>
 
  {/* Trip Details Card */}
- <div className="w-full bg-white/5 border border-white/10 rounded-xl p-5 space-y-3 backdrop-blur-md">
- <div className="flex justify-between items-center pb-2 border-b border-white/10">
- <span className="text-white/50 text-sm">Rider</span>
- <span className="font-semibold text-white/90">
+ <div className="w-full bg-foreground/5 border border-border rounded-xl p-5 space-y-3 backdrop-blur-md">
+ <div className="flex justify-between items-center pb-2 border-b border-border">
+ <span className="text-foreground/50 text-sm">Rider</span>
+ <span className="font-semibold text-foreground/90">
  {trip.rider?.name?.split(' ')[0] || 'Guest'}
  </span>
  </div>
  
- <div className="flex justify-between items-center pb-2 border-b border-white/10">
- <span className="text-white/50 text-sm">Pickup</span>
+ <div className="flex justify-between items-center pb-2 border-b border-border">
+ <span className="text-foreground/50 text-sm">Pickup</span>
  <span className="font-medium text-right max-w-[200px] truncate">
  {trip.pickup}
  </span>
  </div>
 
- <div className="flex justify-between items-center pb-2 border-b border-white/10">
- <span className="text-white/50 text-sm">Destination</span>
+ <div className="flex justify-between items-center pb-2 border-b border-border">
+ <span className="text-foreground/50 text-sm">Destination</span>
  <span className="font-medium text-right max-w-[200px] truncate">
  {trip.destination}
  </span>
  </div>
 
  <div className="flex justify-between items-center pt-1">
- <span className="text-white/50 text-sm">Scheduled</span>
+ <span className="text-foreground/50 text-sm">Scheduled</span>
  <span className="font-semibold text-emerald-400">
  {trip.time}
  </span>
@@ -202,7 +202,7 @@ export function AlarmModal({
  {!isUrgent && onSnooze && (
  <button
  onClick={onSnooze}
- className="w-full border border-white/20 hover:bg-white/10 text-white/90 font-medium py-3 rounded-xl transition-colors active:scale-[0.98]"
+ className="w-full border border-border hover:bg-foreground/5 text-foreground/90 font-medium py-3 rounded-xl transition-colors active:scale-[0.98]"
  >
  Snooze · 5 min
  </button>

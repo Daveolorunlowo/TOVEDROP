@@ -180,7 +180,7 @@ export function TransferTripModal({ trip, onClose }: TransferTripModalProps) {
  <Button onClick={handleCopy} variant="outline" className="flex-1 border-border flex items-center gap-2">
  <Copy className="w-4 h-4" /> {copied ? 'Copied!' : 'Copy Link'}
  </Button>
- <Button onClick={handleWhatsAppShare} className="flex-1 bg-[#25D366] hover:bg-[#20b858] text-white flex items-center gap-2">
+ <Button onClick={handleWhatsAppShare} className="flex-1 bg-background hover:bg-background text-foreground flex items-center gap-2">
  <Share2 className="w-4 h-4" /> Share via WhatsApp
  </Button>
  </div>

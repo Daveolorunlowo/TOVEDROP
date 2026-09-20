@@ -30,7 +30,7 @@ function StatusChip({ status }: { status: string }) {
     pending:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.1)' },
     suspended: { label: 'Suspended', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
   }
-  const s = map[status?.toLowerCase()] ?? { label: status, color: '#888', bg: '#1e1e1e' }
+  const s = map[status?.toLowerCase()] ?? { label: status, color: 'var(--muted-foreground)', bg: 'var(--border)' }
   return (
     <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: s.bg, color: s.color, border: `1px solid ${s.color}30` }}>
       {s.label}
@@ -98,10 +98,10 @@ export default function AdminDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <Activity className="w-8 h-8 text-[var(--orange-brand)] animate-pulse" />
-          <p className="text-xs text-[#555] font-semibold uppercase tracking-widest">Initializing Systems...</p>
+          <p className="text-xs text-foreground font-semibold uppercase tracking-widest">Initializing Systems...</p>
         </div>
       </div>
     )
@@ -131,21 +131,21 @@ export default function AdminDashboardPage() {
           { label: 'Active Users', value: (stats?.totalUsers || 0) + (activeDrivers?.length || 0), icon: Users, color: 'text-blue-500' },
           { label: 'Drops Sold', value: stats?.dropsSold || 0, icon: Package, color: 'text-purple-500' },
         ].map((s, i) => (
-          <div key={i} className="p-5 rounded-2xl relative overflow-hidden group border border-white/5 bg-[#141414] hover:bg-[#1a1a1a] transition-all">
+          <div key={i} className="p-5 rounded-2xl relative overflow-hidden group border border-border bg-background hover:bg-background transition-all">
             <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-5 group-hover:opacity-10 transition-opacity">
               <s.icon className={`w-24 h-24 ${s.color}`} />
             </div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-[#666] mb-2">{s.label}</p>
-            <p className="text-2xl font-bold text-white tracking-tight">{s.value}</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-foreground mb-2">{s.label}</p>
+            <p className="text-2xl font-bold text-foreground tracking-tight">{s.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Chart */}
-        <div className="lg:col-span-2 p-5 rounded-2xl border border-white/5 bg-[#141414]">
+        <div className="lg:col-span-2 p-5 rounded-2xl border border-border bg-background">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-[#888]">Trip Volume (7 Days)</h3>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">Trip Volume (7 Days)</h3>
           </div>
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -156,11 +156,11 @@ export default function AdminDashboardPage() {
                     <stop offset="95%" stopColor="var(--orange-brand)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#222" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-default)" vertical={false} />
                 <XAxis dataKey="date" stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
                 <YAxis stroke="#444" fontSize={10} tickLine={false} axisLine={false} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #333', borderRadius: '8px', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border-subtle)', borderRadius: '8px', fontSize: '12px' }}
                   itemStyle={{ color: 'var(--orange-brand)' }}
                 />
                 <Area type="monotone" dataKey="trips" stroke="var(--orange-brand)" strokeWidth={2} fillOpacity={1} fill="url(#colorTrips)" />
@@ -170,8 +170,8 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Demographics Pie */}
-        <div className="p-5 rounded-2xl border border-white/5 bg-[#141414] flex flex-col">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#888] mb-4">User Demographics</h3>
+        <div className="p-5 rounded-2xl border border-border bg-background flex flex-col">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">User Demographics</h3>
           <div className="flex-1 min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -180,7 +180,7 @@ export default function AdminDashboardPage() {
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ backgroundColor: '#111', border: '1px solid #333', borderRadius: '8px', fontSize: '12px' }} />
+                <Tooltip contentStyle={{ backgroundColor: 'var(--background)', border: '1px solid var(--border-subtle)', borderRadius: '8px', fontSize: '12px' }} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -188,7 +188,7 @@ export default function AdminDashboardPage() {
             {demographicsData.map((d, i) => (
               <div key={d.name} className="flex items-center gap-1.5">
                 <div className="w-2 h-2 rounded-full" style={{ background: COLORS[i] }} />
-                <span className="text-[10px] text-[#555] font-semibold">{d.name}</span>
+                <span className="text-[10px] text-foreground font-semibold">{d.name}</span>
               </div>
             ))}
           </div>
@@ -196,8 +196,8 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      <div className="p-5 rounded-2xl border border-white/5 bg-[#141414]">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#888] mb-6">Live Activity Feed</h3>
+      <div className="p-5 rounded-2xl border border-border bg-background">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-6">Live Activity Feed</h3>
         <div className="space-y-4">
           {recentActivity.map((act: any, i: number) => (
             <div key={act.id} className="flex items-start gap-4 pb-4" style={{ borderBottom: i < recentActivity.length - 1 ? '1px solid #1a1a1a' : 'none' }}>
@@ -205,10 +205,10 @@ export default function AdminDashboardPage() {
                 {act.type === 'TRIP' ? <Car className="w-4 h-4 text-orange-500" /> : <DollarSign className="w-4 h-4 text-green-500" />}
               </div>
               <div>
-                <p className="text-sm font-semibold text-[#eee]">{act.title}</p>
-                <p className="text-xs text-[#666] mt-0.5">{act.desc}</p>
+                <p className="text-sm font-semibold text-foreground">{act.title}</p>
+                <p className="text-xs text-foreground mt-0.5">{act.desc}</p>
               </div>
-              <div className="ml-auto text-[10px] text-[#444] font-medium">
+              <div className="ml-auto text-[10px] text-foreground font-medium">
                 {new Date(act.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
@@ -222,17 +222,17 @@ export default function AdminDashboardPage() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Driver Network</h2>
-          <p className="text-xs text-[#555] mt-1">Manage onboarding and active drivers.</p>
+          <h2 className="text-xl font-bold text-foreground tracking-tight">Driver Network</h2>
+          <p className="text-xs text-foreground mt-1">Manage onboarding and active drivers.</p>
         </div>
-        <div className="bg-[#1a1a1a] rounded-full px-4 py-1.5 flex items-center gap-2 border border-white/5">
-          <Search className="w-3.5 h-3.5 text-[#555]" />
+        <div className="bg-background rounded-full px-4 py-1.5 flex items-center gap-2 border border-border">
+          <Search className="w-3.5 h-3.5 text-foreground" />
           <input 
             type="text" 
             placeholder="Search drivers..." 
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="bg-transparent text-xs text-white placeholder:text-[#444] focus:outline-none w-32 md:w-48"
+            className="bg-transparent text-xs text-foreground placeholder:text-foreground focus:outline-none w-32 md:w-48"
           />
         </div>
       </div>
@@ -245,24 +245,24 @@ export default function AdminDashboardPage() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pendingDrivers.filter((d: any) => d.user.name?.toLowerCase().includes(search.toLowerCase())).map((driver: any) => (
-              <div key={driver.id} className="p-4 rounded-xl bg-[#111] border border-white/5 flex flex-col gap-4">
+              <div key={driver.id} className="p-4 rounded-xl bg-[var(--background)] border border-border flex flex-col gap-4">
                 <div className="flex items-center gap-3">
-                  <Avatar className="w-10 h-10 border border-white/10">
-                    <AvatarFallback className="bg-[#1a1a1a] text-xs font-bold text-[#888]">{initials(driver.user.name)}</AvatarFallback>
+                  <Avatar className="w-10 h-10 border border-border">
+                    <AvatarFallback className="bg-background text-xs font-bold text-foreground">{initials(driver.user.name)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-bold text-white">{driver.user.name}</p>
-                    <p className="text-xs text-[#555]">{driver.user.email}</p>
+                    <p className="text-sm font-bold text-foreground">{driver.user.name}</p>
+                    <p className="text-xs text-foreground">{driver.user.email}</p>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="bg-[#171717] p-2 rounded-lg">
-                    <span className="text-[#555] block mb-0.5">Car Model</span>
-                    <span className="text-[#ccc] font-medium">{driver.carModel || 'N/A'}</span>
+                  <div className="bg-[var(--surface-card)] p-2 rounded-lg">
+                    <span className="text-foreground block mb-0.5">Car Model</span>
+                    <span className="text-foreground font-medium">{driver.carModel || 'N/A'}</span>
                   </div>
-                  <div className="bg-[#171717] p-2 rounded-lg">
-                    <span className="text-[#555] block mb-0.5">Plate Number</span>
-                    <span className="text-[#ccc] font-medium uppercase tracking-wider">{driver.plateNumber || 'N/A'}</span>
+                  <div className="bg-[var(--surface-card)] p-2 rounded-lg">
+                    <span className="text-foreground block mb-0.5">Plate Number</span>
+                    <span className="text-foreground font-medium uppercase tracking-wider">{driver.plateNumber || 'N/A'}</span>
                   </div>
                 </div>
                 <div className="flex gap-2 mt-2">
@@ -288,10 +288,10 @@ export default function AdminDashboardPage() {
       )}
 
       <div>
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#888] mb-4">Active Fleet</h3>
-        <div className="bg-[#141414] border border-white/5 rounded-2xl overflow-hidden">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">Active Fleet</h3>
+        <div className="bg-background border border-border rounded-2xl overflow-hidden">
           <table className="w-full text-left text-sm">
-            <thead className="bg-[#1a1a1a] text-[10px] uppercase font-bold text-[#666] tracking-wider">
+            <thead className="bg-background text-[10px] uppercase font-bold text-foreground tracking-wider">
               <tr>
                 <th className="px-5 py-3">Driver</th>
                 <th className="px-5 py-3">Vehicle</th>
@@ -301,20 +301,20 @@ export default function AdminDashboardPage() {
             </thead>
             <tbody className="divide-y divide-white/5">
               {activeDrivers.filter((d: any) => d.user.name?.toLowerCase().includes(search.toLowerCase())).map((driver: any) => (
-                <tr key={driver.id} className="hover:bg-[#171717] transition-colors">
+                <tr key={driver.id} className="hover:bg-[var(--surface-card)] transition-colors">
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <Avatar className="w-8 h-8"><AvatarFallback className="bg-[#222] text-[#888] text-[10px]">{initials(driver.user.name)}</AvatarFallback></Avatar>
+                      <Avatar className="w-8 h-8"><AvatarFallback className="bg-[var(--border-default)] text-foreground text-[10px]">{initials(driver.user.name)}</AvatarFallback></Avatar>
                       <div>
-                        <p className="font-semibold text-[#eee]">{driver.user.name}</p>
-                        <p className="text-[11px] text-[#555]">{driver.user.email}</p>
+                        <p className="font-semibold text-foreground">{driver.user.name}</p>
+                        <p className="text-[11px] text-foreground">{driver.user.email}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-[#aaa] text-xs">
-                    {driver.carModel} <br/><span className="text-[#555]">{driver.plateNumber}</span>
+                  <td className="px-5 py-4 text-foreground text-xs">
+                    {driver.carModel} <br/><span className="text-foreground">{driver.plateNumber}</span>
                   </td>
-                  <td className="px-5 py-4 font-mono text-[#888]">{driver.totalTrips || 0}</td>
+                  <td className="px-5 py-4 font-mono text-foreground">{driver.totalTrips || 0}</td>
                   <td className="px-5 py-4 text-right">
                     <StatusChip status={driver.status} />
                   </td>
@@ -322,7 +322,7 @@ export default function AdminDashboardPage() {
               ))}
               {activeDrivers.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-5 py-10 text-center text-[#555] text-xs">No active drivers found.</td>
+                  <td colSpan={4} className="px-5 py-10 text-center text-foreground text-xs">No active drivers found.</td>
                 </tr>
               )}
             </tbody>
@@ -368,40 +368,40 @@ export default function AdminDashboardPage() {
             <DollarSign className="w-5 h-5 text-green-500" />
           </div>
           <div>
-            <h2 className="text-xl font-bold text-white tracking-tight">Finances & Withdrawals</h2>
-            <p className="text-xs text-[#555] mt-1">Manage driver payouts and view revenue.</p>
+            <h2 className="text-xl font-bold text-foreground tracking-tight">Finances & Withdrawals</h2>
+            <p className="text-xs text-foreground mt-1">Manage driver payouts and view revenue.</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <div className="bg-[#141414] border border-white/5 rounded-2xl p-5">
-             <p className="text-xs font-semibold text-[#888] uppercase">Total Revenue (All Time)</p>
-             <p className="text-3xl font-black text-white mt-1">₦{(data?.stats?.totalRevenue || 0).toLocaleString()}</p>
+           <div className="bg-background border border-border rounded-2xl p-5">
+             <p className="text-xs font-semibold text-foreground uppercase">Total Revenue (All Time)</p>
+             <p className="text-3xl font-black text-foreground mt-1">₦{(data?.stats?.totalRevenue || 0).toLocaleString()}</p>
            </div>
-           <div className="bg-[#141414] border border-white/5 rounded-2xl p-5">
-             <p className="text-xs font-semibold text-[#888] uppercase">Driver Payouts</p>
-             <p className="text-3xl font-black text-white mt-1">₦{(data?.stats?.driverPayouts || 0).toLocaleString()}</p>
+           <div className="bg-background border border-border rounded-2xl p-5">
+             <p className="text-xs font-semibold text-foreground uppercase">Driver Payouts</p>
+             <p className="text-3xl font-black text-foreground mt-1">₦{(data?.stats?.driverPayouts || 0).toLocaleString()}</p>
            </div>
         </div>
 
-        <h3 className="text-sm font-bold text-white mt-8 mb-4">Pending Withdrawal Requests</h3>
-        <div className="bg-[#141414] border border-white/5 rounded-2xl overflow-hidden">
+        <h3 className="text-sm font-bold text-foreground mt-8 mb-4">Pending Withdrawal Requests</h3>
+        <div className="bg-background border border-border rounded-2xl overflow-hidden">
           {pending.length === 0 ? (
-            <p className="text-xs text-[#555] text-center py-10">No pending withdrawal requests.</p>
+            <p className="text-xs text-foreground text-center py-10">No pending withdrawal requests.</p>
           ) : (
             <div className="divide-y divide-white/5">
               {pending.map((req: any) => (
                 <div key={req.id} className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-4 w-full sm:w-auto">
-                    <Avatar className="h-10 w-10 border border-white/10">
+                    <Avatar className="h-10 w-10 border border-border">
                       <AvatarFallback className="bg-orange-500/20 text-orange-500 font-bold">
                         {req.driver?.user?.firstName?.[0] || 'D'}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-sm font-semibold text-[#eee]">{req.driver?.user?.firstName} {req.driver?.user?.lastName}</p>
-                      <p className="text-xs text-[#888]">{req.driver?.user?.email}</p>
-                      <p className="text-[10px] text-[#555] mt-1">{new Date(req.createdAt).toLocaleString()}</p>
+                      <p className="text-sm font-semibold text-foreground">{req.driver?.user?.firstName} {req.driver?.user?.lastName}</p>
+                      <p className="text-xs text-foreground">{req.driver?.user?.email}</p>
+                      <p className="text-[10px] text-foreground mt-1">{new Date(req.createdAt).toLocaleString()}</p>
                     </div>
                   </div>
                   
@@ -432,19 +432,19 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        <h3 className="text-sm font-bold text-[#888] mt-8 mb-4">Past Withdrawals</h3>
-        <div className="bg-[#141414] border border-white/5 rounded-2xl overflow-hidden">
+        <h3 className="text-sm font-bold text-foreground mt-8 mb-4">Past Withdrawals</h3>
+        <div className="bg-background border border-border rounded-2xl overflow-hidden">
           {completed.length === 0 ? (
-             <p className="text-xs text-[#555] text-center py-6">No past withdrawals.</p>
+             <p className="text-xs text-foreground text-center py-6">No past withdrawals.</p>
           ) : (
             completed.slice(0, 10).map((req: any) => (
-               <div key={req.id} className="p-4 border-b border-white/5 last:border-0 flex items-center justify-between">
+               <div key={req.id} className="p-4 border-b border-border last:border-0 flex items-center justify-between">
                   <div>
-                     <p className="text-sm font-semibold text-[#eee]">{req.driver?.user?.firstName} {req.driver?.user?.lastName}</p>
-                     <p className="text-[10px] text-[#888]">{new Date(req.createdAt).toLocaleString()}</p>
+                     <p className="text-sm font-semibold text-foreground">{req.driver?.user?.firstName} {req.driver?.user?.lastName}</p>
+                     <p className="text-[10px] text-foreground">{new Date(req.createdAt).toLocaleString()}</p>
                   </div>
                   <div className="text-right">
-                     <p className="text-sm font-bold text-white">₦{req.amount.toLocaleString()}</p>
+                     <p className="text-sm font-bold text-foreground">₦{req.amount.toLocaleString()}</p>
                      <span className={`text-[10px] font-bold uppercase tracking-wider ${req.status === 'APPROVED' ? 'text-green-500' : 'text-red-500'}`}>
                        {req.status}
                      </span>
@@ -464,24 +464,24 @@ export default function AdminDashboardPage() {
           <ShieldCheck className="w-5 h-5 text-red-500" />
         </div>
         <div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Security & Audit Logs</h2>
-          <p className="text-xs text-[#555] mt-1">System-wide surveillance and anomalies.</p>
+          <h2 className="text-xl font-bold text-foreground tracking-tight">Security & Audit Logs</h2>
+          <p className="text-xs text-foreground mt-1">System-wide surveillance and anomalies.</p>
         </div>
       </div>
-      <div className="bg-[#141414] border border-white/5 rounded-2xl p-5">
+      <div className="bg-background border border-border rounded-2xl p-5">
         {securityLogs.length === 0 ? (
-          <p className="text-xs text-[#555] text-center py-10">No recent security anomalies.</p>
+          <p className="text-xs text-foreground text-center py-10">No recent security anomalies.</p>
         ) : (
           <div className="space-y-4">
             {securityLogs.map((log: any, i: number) => (
-              <div key={log.id} className="flex gap-4 pb-4 border-b border-white/5 last:border-0 last:pb-0">
+              <div key={log.id} className="flex gap-4 pb-4 border-b border-border last:border-0 last:pb-0">
                 <div className="mt-1">
                   <ShieldAlert className="w-4 h-4 text-orange-500" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-[#eee]">{log.success ? 'Successful Login' : 'Failed Login Attempt'}</p>
-                  <p className="text-xs text-[#888] mt-1">Email: {log.email} &bull; IP: {log.ipAddress || 'Unknown'}</p>
-                  <p className="text-[10px] text-[#444] mt-2">{new Date(log.createdAt).toLocaleString()}</p>
+                  <p className="text-sm font-semibold text-foreground">{log.success ? 'Successful Login' : 'Failed Login Attempt'}</p>
+                  <p className="text-xs text-foreground mt-1">Email: {log.email} &bull; IP: {log.ipAddress || 'Unknown'}</p>
+                  <p className="text-[10px] text-foreground mt-2">{new Date(log.createdAt).toLocaleString()}</p>
                 </div>
               </div>
             ))}
@@ -493,10 +493,10 @@ export default function AdminDashboardPage() {
 
   const renderGenericList = (title: string, items: any[]) => (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h2 className="text-xl font-bold text-white tracking-tight mb-6">{title}</h2>
-      <div className="bg-[#141414] border border-white/5 rounded-2xl overflow-hidden">
+      <h2 className="text-xl font-bold text-foreground tracking-tight mb-6">{title}</h2>
+      <div className="bg-background border border-border rounded-2xl overflow-hidden">
         <table className="w-full text-left text-sm">
-          <thead className="bg-[#1a1a1a] text-[10px] uppercase font-bold text-[#666] tracking-wider">
+          <thead className="bg-background text-[10px] uppercase font-bold text-foreground tracking-wider">
             <tr>
               <th className="px-5 py-3">Name</th>
               <th className="px-5 py-3">Email</th>
@@ -505,10 +505,10 @@ export default function AdminDashboardPage() {
           </thead>
           <tbody className="divide-y divide-white/5">
             {items.map((u: any) => (
-              <tr key={u.id} className="hover:bg-[#171717] transition-colors">
-                <td className="px-5 py-4 font-semibold text-[#eee]">{u.name}</td>
-                <td className="px-5 py-4 text-[#888] text-xs">{u.email}</td>
-                <td className="px-5 py-4 text-right text-[11px] text-[#555]">{new Date(u.createdAt).toLocaleDateString()}</td>
+              <tr key={u.id} className="hover:bg-[var(--surface-card)] transition-colors">
+                <td className="px-5 py-4 font-semibold text-foreground">{u.name}</td>
+                <td className="px-5 py-4 text-foreground text-xs">{u.email}</td>
+                <td className="px-5 py-4 text-right text-[11px] text-foreground">{new Date(u.createdAt).toLocaleDateString()}</td>
               </tr>
             ))}
           </tbody>
@@ -518,21 +518,21 @@ export default function AdminDashboardPage() {
   )
 
   return (
-    <div className="flex min-h-screen bg-[#0a0a0a] font-sans selection:bg-orange-500/30">
+    <div className="flex min-h-screen bg-background font-sans selection:bg-orange-500/30">
       
       {/* Dynamic Sidebar */}
       <aside className={cn(
-        'fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-[#111] border-r border-white/5 transition-transform duration-300 lg:static lg:translate-x-0',
+        'fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-[var(--background)] border-r border-border transition-transform duration-300 lg:static lg:translate-x-0',
         sidebarOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full'
       )}>
-        <div className="h-20 flex items-center justify-between px-6 border-b border-white/5">
+        <div className="h-20 flex items-center justify-between px-6 border-b border-border">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-gradient-to-tr from-orange-600 to-orange-400 rounded-lg shadow-[0_0_10px_rgba(249,115,22,0.5)]" />
-            <h1 className="text-base font-black tracking-tight text-white uppercase">
+            <h1 className="text-base font-black tracking-tight text-foreground uppercase">
               Admin<span className="text-orange-500">OS</span>
             </h1>
           </div>
-          <button className="lg:hidden text-[#555] hover:text-white" onClick={() => setSidebarOpen(false)}>
+          <button className="lg:hidden text-foreground hover:text-foreground" onClick={() => setSidebarOpen(false)}>
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -548,13 +548,13 @@ export default function AdminDashboardPage() {
                   'w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200',
                   active 
                     ? 'bg-orange-500/10 text-orange-500 shadow-[inset_0_0_0_1px_rgba(249,115,22,0.2)]' 
-                    : 'text-[#888] hover:bg-white/5 hover:text-white'
+                    : 'text-foreground hover:bg-foreground/5 hover:text-foreground'
                 )}
               >
                 <item.icon className={cn("w-4 h-4", active ? "text-orange-500 drop-shadow-[0_0_8px_rgba(249,115,22,0.8)]" : "")} />
                 {item.label}
                 {item.id === 'approvals' && pendingDrivers.length > 0 && (
-                  <span className="ml-auto bg-orange-500 text-black text-[9px] font-black px-1.5 py-0.5 rounded-full">
+                  <span className="ml-auto bg-orange-500 text-foreground text-[9px] font-black px-1.5 py-0.5 rounded-full">
                     {pendingDrivers.length}
                   </span>
                 )}
@@ -567,19 +567,19 @@ export default function AdminDashboardPage() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 max-h-screen overflow-y-auto">
         {/* Top Header */}
-        <header className="h-20 flex items-center justify-between px-6 lg:px-10 sticky top-0 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 z-40">
+        <header className="h-20 flex items-center justify-between px-6 lg:px-10 sticky top-0 bg-background/80 backdrop-blur-xl border-b border-border z-40">
           <div className="flex items-center gap-4">
-            <button className="lg:hidden text-[#888] hover:text-white transition-colors" onClick={() => setSidebarOpen(true)}>
+            <button className="lg:hidden text-foreground hover:text-foreground transition-colors" onClick={() => setSidebarOpen(true)}>
               <Menu className="w-5 h-5" />
             </button>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-[#555]">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-foreground">
               {NAV_ITEMS.find(n => n.id === activeTab)?.label}
             </h2>
           </div>
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111] border border-white/5">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--background)] border border-border">
               <span className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] animate-pulse" />
-              <span className="text-[10px] font-bold text-[#888] uppercase tracking-wider">System Online</span>
+              <span className="text-[10px] font-bold text-foreground uppercase tracking-wider">System Online</span>
             </div>
           </div>
         </header>

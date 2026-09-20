@@ -64,13 +64,13 @@ export function AlertSection({ title, alerts, color }: { title: string, alerts: 
  <p className="mb-4 text-gray-700">{alert.details}</p>
  
  {alert.affectedUsers && JSON.parse(alert.affectedUsers).length > 0 && (
- <div className="mb-4 text-sm bg-white/50 p-2 rounded text-gray-700 font-mono break-all">
+ <div className="mb-4 text-sm bg-foreground/5 p-2 rounded text-gray-700 font-mono break-all">
  <strong>Affected IDs: </strong> {JSON.parse(alert.affectedUsers).join(', ')}
  </div>
  )}
 
  {alert.recommendedAction && (
- <div className="mb-4 text-sm bg-white/50 p-3 rounded font-medium border text-gray-800">
+ <div className="mb-4 text-sm bg-foreground/5 p-3 rounded font-medium border text-gray-800">
  <strong>Action: </strong> {alert.recommendedAction}
  </div>
  )}
@@ -111,7 +111,7 @@ export function AlertSection({ title, alerts, color }: { title: string, alerts: 
  <button 
  onClick={() => handleAction(alert.id, 'dismiss')}
  disabled={processingId === alert.id}
- className="bg-yellow-600 text-white px-4 py-2 rounded font-bold text-sm hover:bg-yellow-700 transition disabled:opacity-50"
+ className="bg-yellow-600 text-foreground px-4 py-2 rounded font-bold text-sm hover:bg-yellow-700 transition disabled:opacity-50"
  >
  {processingId === alert.id ? 'Processing...' : 'Dismiss Alert'}
  </button>

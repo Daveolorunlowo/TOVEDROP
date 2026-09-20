@@ -85,7 +85,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  if (!res.ok) {
  const text = await res.text(); throw new Error(`Failed to send: ${res.status} ${text}`)
  }
- } catch (err) {
+ } catch (err: any) {
  console.error(err)
  // If it fails, put the text back so they can try again
  setInputText(messageText)
@@ -105,16 +105,16 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-orange-500/10 to-transparent pointer-events-none" />
 
  {/* Header */}
- <div className="relative flex items-center justify-between px-6 py-5 border-b border-white/10 bg-white/5 backdrop-blur-xl z-10">
+ <div className="relative flex items-center justify-between px-6 py-5 border-b border-border bg-foreground/5 backdrop-blur-xl z-10">
  <div className="flex items-center gap-3">
  <div className="relative">
- <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-orange-500/20">
+ <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-foreground font-bold text-lg shadow-lg shadow-orange-500/20">
  {otherPartyName.charAt(0).toUpperCase()}
  </div>
  <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-[#111] rounded-full animate-pulse" />
  </div>
  <div>
- <h3 className="font-bold text-white tracking-tight text-lg">
+ <h3 className="font-bold text-foreground tracking-tight text-lg">
  {otherPartyName.split(' ')[0]}
  </h3>
  <p className="text-[11px] text-green-400 font-medium tracking-wide">
@@ -124,7 +124,7 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  </div>
  <button 
  onClick={onClose}
- className="p-2.5 rounded-full bg-white/5 hover:bg-white/10 transition-all text-white/70 hover:text-white"
+ className="p-2.5 rounded-full bg-foreground/5 hover:bg-foreground/5 transition-all text-foreground/70 hover:text-foreground"
  >
  <X className="w-5 h-5" />
  </button>
@@ -138,11 +138,11 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  </div>
  ) : messages.length === 0 ? (
  <div className="h-full flex flex-col items-center justify-center text-center px-4 animate-in fade-in duration-700">
- <div className="w-16 h-16 mb-4 rounded-full bg-white/5 flex items-center justify-center border border-white/10 shadow-[0_0_30px_rgba(249,115,22,0.1)]">
+ <div className="w-16 h-16 mb-4 rounded-full bg-foreground/5 flex items-center justify-center border border-border shadow-[0_0_30px_rgba(249,115,22,0.1)]">
  <Send className="w-6 h-6 text-orange-500" />
  </div>
- <p className="text-base font-bold text-white mb-1">Start the conversation</p>
- <p className="text-sm text-white/50">Say hi to coordinate your pickup with {otherPartyName.split(' ')[0]}!</p>
+ <p className="text-base font-bold text-foreground mb-1">Start the conversation</p>
+ <p className="text-sm text-foreground/50">Say hi to coordinate your pickup with {otherPartyName.split(' ')[0]}!</p>
  </div>
  ) : (
  messages.map((msg, idx) => {
@@ -152,16 +152,16 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  <div 
  className={`max-w-[85%] rounded-2xl px-5 py-3 shadow-lg backdrop-blur-sm ${
  isMe 
- ? 'bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-tr-sm shadow-orange-500/20' 
- : 'bg-white/10 border border-white/10 text-white rounded-tl-sm'
+ ? 'bg-gradient-to-br from-orange-500 to-red-600 text-foreground rounded-tr-sm shadow-orange-500/20' 
+ : 'bg-foreground/5 border border-border text-foreground rounded-tl-sm'
  }`}
  >
  <p className="text-[15px] font-medium break-words leading-relaxed">{msg.content}</p>
  <div className={`flex items-center gap-1.5 mt-2 ${isMe ? 'justify-end' : 'justify-start'}`}>
- <p className={`text-[10px] font-bold uppercase tracking-wider ${isMe ? 'text-white/70' : 'text-white/40'}`}>
+ <p className={`text-[10px] font-bold uppercase tracking-wider ${isMe ? 'text-foreground/70' : 'text-foreground/40'}`}>
  {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
  </p>
- {isMe && <CheckCircle2 className="w-3 h-3 text-white/70" />}
+ {isMe && <CheckCircle2 className="w-3 h-3 text-foreground/70" />}
  </div>
  </div>
  </div>
@@ -172,14 +172,14 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  </div>
 
  {/* Input Area */}
- <div className="p-4 sm:p-5 bg-[#111] border-t border-white/10 relative z-10">
+ <div className="p-4 sm:p-5 bg-background border-t border-border relative z-10">
  <form onSubmit={handleSend} className="relative flex items-center">
  <input 
  type="text" 
  value={inputText}
  onChange={(e) => setInputText(e.target.value)}
  placeholder="Type a message..." 
- className="w-full bg-white/5 border border-white/10 rounded-full pl-6 pr-14 py-4 text-sm text-white focus:outline-none focus:border-orange-500 focus:bg-white/10 transition-all placeholder:text-white/40 shadow-inner"
+ className="w-full bg-foreground/5 border border-border rounded-full pl-6 pr-14 py-4 text-sm text-foreground focus:outline-none focus:border-orange-500 focus:bg-foreground/5 transition-all placeholder:text-foreground/40 shadow-inner"
  />
  <button 
  type="submit"
