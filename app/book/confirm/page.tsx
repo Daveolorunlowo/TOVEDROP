@@ -45,7 +45,7 @@ export default function ConfirmPage() {
  <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
  <CheckCircle className="w-10 h-10 text-emerald-600" />
  </div>
- <h1 className="text-2xl font-extrabold text-secondary mb-2">Booking Confirmed!</h1>
+ <h1 className="text-2xl font-extrabold text-muted-foreground mb-2">Booking Confirmed!</h1>
  <p className="text-muted-foreground mb-6 leading-relaxed">
  Your trip with <strong>{DRIVER.name}</strong> has been confirmed.
  1 Drop has been deducted from your balance.
@@ -64,7 +64,7 @@ export default function ConfirmPage() {
  <Link href="/dashboard" className={buttonVariants({ variant: "default", className: "bg-primary hover:bg-primary/90 text-foreground font-semibold" })}>
  View in My Trips
  </Link>
- <Link href="/" className={buttonVariants({ variant: "outline", className: "border-secondary text-secondary hover:bg-secondary hover:text-foreground" })}>
+ <Link href="/" className={buttonVariants({ variant: "outline", className: "border-secondary text-muted-foreground hover:bg-secondary hover:text-foreground" })}>
  Back to Home
  </Link>
  </div>
@@ -82,7 +82,7 @@ export default function ConfirmPage() {
  <div className="max-w-2xl mx-auto">
  <BookingProgress currentStep={3} />
 
- <h1 className="text-2xl font-extrabold text-secondary mb-1">Review your booking</h1>
+ <h1 className="text-2xl font-extrabold text-muted-foreground mb-1">Review your booking</h1>
  <p className="text-sm text-muted-foreground mb-7">
  Double-check the details before confirming.
  </p>
@@ -90,35 +90,35 @@ export default function ConfirmPage() {
  <div className="space-y-4">
  {/* Trip summary */}
  <div className="bg-surface-elevated border border-border-default rounded-xl p-5">
- <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-3">
+ <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-3">
  Trip Details
  </h2>
  <div className="flex flex-col">
  <div className="flex items-center justify-between py-2 border-b border-border-subtle">
  <div className="flex items-center gap-2">
  <MapPin className="w-4 h-4 text-purple-brand" />
- <span className="text-xs text-muted">Pickup</span>
+ <span className="text-xs text-muted-foreground">Pickup</span>
  </div>
  <span className="text-sm font-medium text-primary text-right">{TRIP.pickup}</span>
  </div>
  <div className="flex items-center justify-between py-2 border-b border-border-subtle">
  <div className="flex items-center gap-2">
  <Navigation className="w-4 h-4 text-orange-brand" />
- <span className="text-xs text-muted">Destination</span>
+ <span className="text-xs text-muted-foreground">Destination</span>
  </div>
  <span className="text-sm font-medium text-primary text-right">{TRIP.destination}</span>
  </div>
  <div className="flex items-center justify-between py-2 border-b border-border-subtle">
  <div className="flex items-center gap-2">
- <Calendar className="w-4 h-4 text-muted" />
- <span className="text-xs text-muted">Date</span>
+ <Calendar className="w-4 h-4 text-muted-foreground" />
+ <span className="text-xs text-muted-foreground">Date</span>
  </div>
  <span className="text-sm font-medium text-primary text-right">{TRIP.date}</span>
  </div>
  <div className="flex items-center justify-between py-2">
  <div className="flex items-center gap-2">
- <Clock className="w-4 h-4 text-muted" />
- <span className="text-xs text-muted">Time</span>
+ <Clock className="w-4 h-4 text-muted-foreground" />
+ <span className="text-xs text-muted-foreground">Time</span>
  </div>
  <span className="text-sm font-medium text-primary text-right">{TRIP.time}</span>
  </div>
@@ -127,13 +127,13 @@ export default function ConfirmPage() {
 
  {/* Driver summary */}
  <div className="bg-surface-elevated border border-border-default rounded-xl p-5">
- <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-3">
+ <h2 className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-3">
  Your Driver
  </h2>
  <div className="flex items-center gap-4">
  <div className="relative shrink-0">
  <Avatar className="w-12 h-12">
- <AvatarFallback className="text-sm font-bold" style={{ background: 'var(--surface-card)', color: 'var(--text-secondary)' }}>
+ <AvatarFallback className="text-sm font-bold" style={{ background: 'var(--surface-card)', color: 'var(--text-muted-foreground)' }}>
  EN
  </AvatarFallback>
  </Avatar>
@@ -149,11 +149,11 @@ export default function ConfirmPage() {
  <div className="flex items-center gap-1.5 text-sm text-primary">
  <Star className="w-3 h-3 fill-orange-brand text-orange-brand" />
  <span className="font-semibold">{DRIVER.rating}</span>
- <span className="text-[10px] text-muted ml-0.5 tracking-wide uppercase">Rating</span>
+ <span className="text-[10px] text-muted-foreground ml-0.5 tracking-wide uppercase">Rating</span>
  </div>
  <div className="flex items-center gap-1.5 text-sm text-primary">
- <Car className="w-3 h-3 text-muted" />
- <span className="text-[10px] text-muted ml-0.5 tracking-wide uppercase">{DRIVER.vehicle}</span>
+ <Car className="w-3 h-3 text-muted-foreground" />
+ <span className="text-[10px] text-muted-foreground ml-0.5 tracking-wide uppercase">{DRIVER.vehicle}</span>
  </div>
  </div>
  </div>
@@ -178,7 +178,7 @@ export default function ConfirmPage() {
  href="/book/drivers" 
  className={buttonVariants({ 
  variant: "outline", 
- className: "border-border-default text-secondary hover:border-purple-brand/40 hover:text-foreground bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
+ className: "border-border-default text-muted-foreground hover:border-purple-brand/40 hover:text-foreground bg-surface-card sm:w-auto flex items-center gap-2 justify-center" 
  })}
  >
  <ArrowLeft className="w-4 h-4" /> Change Driver

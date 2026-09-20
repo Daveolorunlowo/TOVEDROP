@@ -584,7 +584,7 @@ export default function DriverDashboardPage() {
                   </table>
                   {driverProfile.walletTransactions.length > 5 && (
                     <div className="pt-3 text-center">
-                      <p className="text-[10px] text-muted cursor-pointer hover:text-primary uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
+                      <p className="text-[10px] text-muted-foreground cursor-pointer hover:text-primary uppercase tracking-widest" style={{ color: 'var(--muted-foreground)' }}>
                         View All
                       </p>
                     </div>

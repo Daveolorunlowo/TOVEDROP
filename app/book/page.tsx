@@ -254,7 +254,7 @@ function BookWizard() {
  {[1, 2, 3].map((s) => (
  <div key={s} className="flex items-center">
  <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm transition-colors duration-300 ${step >= s ? 'bg-orange-brand text-white' : 'bg-muted text-muted-foreground'}`}>
- {step > s ? <CheckCircle2 className="w-5 h-5 text-foreground" /> : s}
+ {step > s ? <CheckCircle2 className="w-5 h-5 text-white" /> : s}
  </div>
  {s < 3 && (
  <div className={`w-8 md:w-16 h-1 ml-2 md:ml-4 rounded-full transition-colors duration-300 ${step > s ? 'bg-orange-brand' : 'bg-muted'}`} />
@@ -266,7 +266,7 @@ function BookWizard() {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
  {/* Form */}
  <div className="bg-card rounded-xl border border-border p-8 min-h-[420px] flex flex-col relative overflow-hidden">
- <h1 className="text-2xl font-extrabold text-secondary mb-1">
+ <h1 className="text-2xl font-extrabold text-muted-foreground mb-1">
  {step === 1 && "Where are you going?"}
  {step === 2 && "When do you need a ride?"}
  {step === 3 && "Review & Confirm"}
@@ -310,7 +310,7 @@ function BookWizard() {
  value={destinationPoint?.label || ''}
  onFocus={() => setSelectingMode('destination')}
  onChangeText={setDestinationText}
- icon={<Navigation className="w-4 h-4 text-secondary" />}
+ icon={<Navigation className="w-4 h-4 text-muted-foreground" />}
  onSelect={(result) => {
  const pt: MapPoint = { lat: result.lat, lng: result.lng, label: result.label }
  setDestinationPoint(pt)
@@ -392,9 +392,9 @@ function BookWizard() {
  <div className="space-y-2 animate-in fade-in duration-300">
  <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
  <div className="flex flex-wrap gap-2">
- <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
- <button type="button" onClick={() => setQuickTime(180)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+3h</button>
- <button type="button" onClick={() => setQuickTime(240)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+4h</button>
+ <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
+ <button type="button" onClick={() => setQuickTime(180)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+3h</button>
+ <button type="button" onClick={() => setQuickTime(240)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+4h</button>
  </div>
  </div>
  )}
@@ -415,7 +415,7 @@ function BookWizard() {
  </div>
  <div className="w-0.5 h-4 bg-border ml-[9px]" />
  <div className="flex items-start gap-3">
- <Navigation className="w-5 h-5 text-secondary mt-0.5" />
+ <Navigation className="w-5 h-5 text-muted-foreground mt-0.5" />
  <div>
  <p className="text-xs text-muted-foreground uppercase tracking-wider">Destination</p>
  <p className="text-sm font-medium">{destinationText}</p>
@@ -484,7 +484,7 @@ function BookWizard() {
  )}
  
  {step < 3 ? (
- <Button type="button" size="lg" onClick={handleNextStep} className="flex-1 text-foreground font-semibold" style={{ backgroundColor: 'var(--orange-brand)' }}>
+ <Button type="button" size="lg" onClick={handleNextStep} className="flex-1 text-white font-semibold" style={{ backgroundColor: 'var(--orange-brand)' }}>
  Next Step <ChevronRight className="w-5 h-5 ml-1" />
  </Button>
  ) : (
@@ -493,7 +493,7 @@ function BookWizard() {
  type="button"
  size="lg"
  onClick={() => router.push('/dashboard/buy-drops')}
- className="flex-1 text-foreground font-semibold"
+ className="flex-1 text-white font-semibold"
  style={{ backgroundColor: 'var(--orange-brand)' }}
  >
  Buy Drops
@@ -503,7 +503,7 @@ function BookWizard() {
  type="submit"
  size="lg"
  disabled={submitting || loading}
- className="flex-1 text-foreground font-semibold"
+ className="flex-1 text-white font-semibold"
  style={{ backgroundColor: 'var(--orange-brand)' }}
  >
  <Search className="w-4 h-4 mr-2" />
@@ -527,7 +527,7 @@ function BookWizard() {
  key={lm.name}
  type="button"
  onClick={() => handleLandmarkSelect(lm)}
- className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-secondary hover:text-primary border border-border-subtle hover:bg-border-default transition-colors"
+ className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors"
  >
  {lm.name}
  </button>

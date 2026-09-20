@@ -106,7 +106,7 @@ export default function RatePage() {
  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
  <ThumbsUp className="w-9 h-9 text-primary" />
  </div>
- <h1 className="text-2xl font-extrabold text-secondary mb-2">
+ <h1 className="text-2xl font-extrabold text-muted-foreground mb-2">
  Thanks for your feedback!
  </h1>
  <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -118,7 +118,7 @@ export default function RatePage() {
  <Star key={i} className="w-6 h-6 fill-primary text-primary" />
  ))}
  </div>
- <p className="text-sm font-semibold text-secondary mb-6">
+ <p className="text-sm font-semibold text-muted-foreground mb-6">
  You rated {trip.driver?.name || 'your driver'} {rating} star{rating !== 1 ? 's' : ''} — {LABELS[rating]}
  </p>
  <a href="/dashboard" className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-foreground font-semibold w-full" })}>
@@ -137,7 +137,7 @@ export default function RatePage() {
  <main className="flex-1 flex items-center justify-center px-4 py-16">
  <div className="max-w-md w-full">
  <div className="text-center mb-6">
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-1">
  Rate Your Driver
  </p>
  <h1 className="text-2xl font-extrabold text-primary">How was your trip?</h1>
@@ -149,7 +149,7 @@ export default function RatePage() {
  <div className="flex items-center gap-4 mb-6 pb-5 border-b border-border-subtle">
  <div className="relative shrink-0">
  <Avatar className="w-12 h-12">
- <AvatarFallback className="text-sm font-bold" style={{ background: 'var(--surface-elevated)', color: 'var(--text-secondary)' }}>
+ <AvatarFallback className="text-sm font-bold" style={{ background: 'var(--surface-elevated)', color: 'var(--text-muted-foreground)' }}>
  {trip.driver?.name ? trip.driver.name.substring(0, 2).toUpperCase() : '?'}
  </AvatarFallback>
  </Avatar>
@@ -159,13 +159,13 @@ export default function RatePage() {
  </div>
  <div>
  <p className="font-bold text-primary text-lg">{trip.driver?.name || 'Unknown Driver'}</p>
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mt-0.5">Trip {trip.id.substring(0, 8)}</p>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mt-0.5">Trip {trip.id.substring(0, 8)}</p>
  </div>
  </div>
 
  {/* Star selector */}
  <div className="text-center mb-6 bg-surface-elevated border border-border-default rounded-xl p-5">
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-4">Tap to rate</p>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-4">Tap to rate</p>
  <div
  className="flex items-center justify-center gap-3"
  role="radiogroup"
@@ -188,14 +188,14 @@ export default function RatePage() {
  'w-10 h-10 transition-colors',
  (hovered || rating) >= star
  ? 'fill-orange-brand text-orange-brand'
- : 'text-muted/30'
+ : 'text-muted-foreground/30'
  )}
  />
  </button>
  ))}
  </div>
  {(hovered > 0 || rating > 0) && (
- <p className="mt-3 text-sm font-semibold text-secondary transition-all">
+ <p className="mt-3 text-sm font-semibold text-muted-foreground transition-all">
  {LABELS[hovered || rating]}
  </p>
  )}
@@ -204,7 +204,7 @@ export default function RatePage() {
 
  {/* Note */}
  <div className="mb-6">
- <label htmlFor="note" className="block text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-2">
+ <label htmlFor="note" className="block text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-2">
  Leave a note <span className="font-normal normal-case tracking-normal">(optional)</span>
  </label>
  <Textarea

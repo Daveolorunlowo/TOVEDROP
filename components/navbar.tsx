@@ -103,7 +103,7 @@ export function Navbar() {
  <Avatar className="w-8 h-8">
  <AvatarFallback
  className="text-xs font-bold"
- style={{ background: 'var(--surface-elevated)', color: 'var(--text-secondary)' }}
+ style={{ background: 'var(--surface-elevated)', color: 'var(--text-muted-foreground)' }}
  >
  {initials(session.user.name)}
  </AvatarFallback>

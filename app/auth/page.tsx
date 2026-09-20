@@ -145,7 +145,7 @@ function AuthForm() {
  key={t}
  onClick={() => { setTab(t); setErrors({}); }}
  className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${
- tab === t ? 'bg-surface-card text-primary ' : 'text-secondary hover:text-primary'
+ tab === t ? 'bg-surface-card text-primary ' : 'text-muted-foreground hover:text-primary'
  }`}
  >
  {t === 'login' ? 'Log In' : 'Sign Up'}

@@ -164,7 +164,7 @@ export function RequestsListClient({
  </div>
  
  <div className="flex items-start gap-3">
- <MapPin className="w-4 h-4 mt-0.5 text-secondary" />
+ <MapPin className="w-4 h-4 mt-0.5 text-muted-foreground" />
  <div>
  <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Dropoff</p>
  <p className="text-sm font-medium text-foreground">{trip.destination}</p>

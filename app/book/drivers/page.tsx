@@ -47,7 +47,7 @@ export default function DriversPage() {
 
  <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
  <div>
- <h1 className="text-2xl font-extrabold text-secondary">Available Drivers</h1>
+ <h1 className="text-2xl font-extrabold text-muted-foreground">Available Drivers</h1>
  <p className="text-sm text-muted-foreground mt-0.5">
  Showing {DRIVERS.filter((d) => d.available).length} drivers for your route
  </p>
@@ -85,7 +85,7 @@ export default function DriversPage() {
  <Avatar className="w-12 h-12">
  <AvatarFallback
  className="text-sm font-bold"
- style={{ background: 'var(--surface-card)', color: 'var(--text-secondary)' }}
+ style={{ background: 'var(--surface-card)', color: 'var(--text-muted-foreground)' }}
  >
  {driver.name.split(' ').map((n) => n[0]).join('')}
  </AvatarFallback>
@@ -110,22 +110,22 @@ export default function DriversPage() {
  {/* Dense data rows */}
  <div className="grid grid-cols-3 gap-4">
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">Rating</p>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-1">Rating</p>
  <p className="text-sm font-medium flex items-center gap-1.5 text-primary">
  <Star className="w-3.5 h-3.5 fill-orange-brand text-orange-brand" />
  {driver.rating}
  </p>
  </div>
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">Trips</p>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-1">Trips</p>
  <p className="text-sm font-medium text-primary">
  {driver.trips.toLocaleString()}
  </p>
  </div>
  <div>
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted mb-1">Vehicle</p>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground mb-1">Vehicle</p>
  <p className="text-sm font-medium text-primary flex items-center gap-1.5">
- <Car className="w-3.5 h-3.5 text-muted" />
+ <Car className="w-3.5 h-3.5 text-muted-foreground" />
  {driver.vehicle}
  </p>
  </div>
@@ -134,7 +134,7 @@ export default function DriversPage() {
  </div>
 
  <div className="flex items-center justify-between mt-5 pt-4 border-t border-border-subtle">
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted">
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
  1 Drop Booking Fee
  </p>
  {selected === driver.id ? (
@@ -151,7 +151,7 @@ export default function DriversPage() {
  <Button
  size="sm"
  variant="outline"
- className="border-border-default text-secondary hover:text-foreground hover:border-purple-brand/40 bg-surface-card rounded-lg h-8 px-4"
+ className="border-border-default text-muted-foreground hover:text-foreground hover:border-purple-brand/40 bg-surface-card rounded-lg h-8 px-4"
  onClick={() => setSelected(driver.id)}
  >
  Select
@@ -166,7 +166,7 @@ export default function DriversPage() {
  {!loading && sorted.filter((d) => d.available).length === 0 && (
  <div className="text-center py-16">
  <Car className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
- <h3 className="font-semibold text-secondary">No drivers available</h3>
+ <h3 className="font-semibold text-muted-foreground">No drivers available</h3>
  <p className="text-sm text-muted-foreground mt-1">
  Try a different date or time — new drivers join daily.
  </p>

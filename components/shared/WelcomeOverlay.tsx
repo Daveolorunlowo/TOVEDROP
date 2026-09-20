@@ -222,7 +222,7 @@ export function WelcomeOverlay() {
  <h2 className="text-2xl font-bold text-primary mb-2 tracking-tight">
  {steps[guideStep].title}
  </h2>
- <p className="text-secondary text-sm leading-relaxed">
+ <p className="text-muted-foreground text-sm leading-relaxed">
  {steps[guideStep].desc}
  </p>
  </motion.div>

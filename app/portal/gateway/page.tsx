@@ -153,10 +153,10 @@ export default function PortalGatewayPage() {
  >
  {/* Header */}
  <div className="mb-10 text-center">
- <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted mb-1">
+ <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-1">
  TOVEDROP
  </p>
- <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">
+ <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
  Admin Access
  </p>
  </div>
@@ -186,7 +186,7 @@ export default function PortalGatewayPage() {
  <label
  htmlFor="email"
  className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5"
- style={{ color: 'var(--text-muted)' }}
+ style={{ color: 'var(--text-muted-foreground)' }}
  >
  Email Address
  </label>
@@ -211,7 +211,7 @@ export default function PortalGatewayPage() {
  <label
  htmlFor="password"
  className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5"
- style={{ color: 'var(--text-muted)' }}
+ style={{ color: 'var(--text-muted-foreground)' }}
  >
  Password
  </label>
@@ -249,14 +249,14 @@ export default function PortalGatewayPage() {
  ) : (
  <form onSubmit={handleStep2} className="space-y-5">
  <div className="text-center pb-2">
- <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: 'var(--text-muted)' }}>
+ <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: 'var(--text-muted-foreground)' }}>
  Verification Code
  </p>
- <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+ <p className="text-xs" style={{ color: 'var(--text-muted-foreground)' }}>
  A 6-digit code was sent to{' '}
- <span className="font-semibold" style={{ color: 'var(--text-secondary)' }}>{email}</span>
+ <span className="font-semibold" style={{ color: 'var(--text-muted-foreground)' }}>{email}</span>
  </p>
- <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted)' }}>
+ <p className="text-xs mt-0.5" style={{ color: 'var(--text-muted-foreground)' }}>
  Check your terminal / dev console for the code.
  </p>
  </div>
@@ -265,7 +265,7 @@ export default function PortalGatewayPage() {
  <label
  htmlFor="code"
  className="block text-[11px] font-semibold uppercase tracking-[0.05em] mb-1.5"
- style={{ color: 'var(--text-muted)' }}
+ style={{ color: 'var(--text-muted-foreground)' }}
  >
  6-Digit Code
  </label>
@@ -311,7 +311,7 @@ export default function PortalGatewayPage() {
  type="button"
  onClick={() => { setStep('credentials'); setError(''); setCode('') }}
  className="text-[11px] opacity-40 hover:opacity-70 transition-opacity"
- style={{ color: 'var(--text-muted)' }}
+ style={{ color: 'var(--text-muted-foreground)' }}
  >
  ← Back
  </button>
@@ -324,7 +324,7 @@ export default function PortalGatewayPage() {
  'flex items-center gap-1.5 text-[11px] transition-opacity',
  resendCooldown > 0 ? 'opacity-30 cursor-not-allowed' : 'opacity-60 hover:opacity-100'
  )}
- style={{ color: 'var(--text-muted)' }}
+ style={{ color: 'var(--text-muted-foreground)' }}
  >
  <RotateCcw className="w-3 h-3" />
  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend code'}
@@ -335,7 +335,7 @@ export default function PortalGatewayPage() {
  </div>
 
  {/* Bottom trace */}
- <p className="mt-8 text-[10px] uppercase tracking-[0.1em]" style={{ color: 'var(--text-muted)', opacity: 0.3 }}>
+ <p className="mt-8 text-[10px] uppercase tracking-[0.1em]" style={{ color: 'var(--text-muted-foreground)', opacity: 0.3 }}>
  All access attempts are recorded
  </p>
  </div>

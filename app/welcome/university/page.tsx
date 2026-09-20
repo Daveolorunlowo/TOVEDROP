@@ -54,7 +54,7 @@ export default function UniversityOnboarding() {
  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
  <GraduationCap className="w-8 h-8 text-primary" />
  </div>
- <h1 className="text-3xl font-extrabold text-secondary mb-2" style={{ letterSpacing: '-0.02em' }}>
+ <h1 className="text-3xl font-extrabold text-muted-foreground mb-2" style={{ letterSpacing: '-0.02em' }}>
  One last thing...
  </h1>
  <p className="text-muted-foreground text-sm">

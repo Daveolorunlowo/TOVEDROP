@@ -61,7 +61,7 @@ export default async function DashboardTrips() {
  </div>
  </div>
  <div className="flex items-start gap-3">
- <MapPin className="w-4 h-4 text-secondary mt-0.5" />
+ <MapPin className="w-4 h-4 text-muted-foreground mt-0.5" />
  <div>
  <p className="text-[10px] font-semibold text-muted-foreground">Destination</p>
  <p className="text-sm font-medium text-foreground">{trip.destination}</p>

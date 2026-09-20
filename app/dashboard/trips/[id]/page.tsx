@@ -61,7 +61,7 @@ export default async function TripDetailPage({ params }: { params: { id: string 
  </div>
 
  <div className="flex items-start gap-3">
- <Navigation className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
+ <Navigation className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
  <div>
  <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Destination</p>
  <p className="text-sm font-medium">{trip.destination}</p>
