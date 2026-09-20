@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { Car, Wallet, User, MapPin, Gift, Search, Bell } from 'lucide-react'
 import { NavTab, OrbitalNav } from '@/components/shared/OrbitalNav'
+import { ThemeToggle } from '@/components/theme-toggle'
 const riderTabs: NavTab[] = [
  { id: 'book', label: 'Book', icon: Search, href: '/book', matchPrefix: true },
  { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard' },
@@ -51,6 +52,11 @@ export function GlobalAuthenticatedNav() {
  const tabs = isDriver ? driverTabs : riderTabs
 
  return (
- <OrbitalNav tabs={tabs} unreadCount={unreadCount} />
+  <>
+   <div className="fixed top-4 right-4 z-50">
+    <ThemeToggle />
+   </div>
+   <OrbitalNav tabs={tabs} unreadCount={unreadCount} />
+  </>
  )
 }

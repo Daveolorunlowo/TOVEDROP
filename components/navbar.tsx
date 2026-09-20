@@ -8,6 +8,7 @@ import { useSession, signOut } from 'next-auth/react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useDropsBalance } from '@/hooks/useDropsBalance'
 import { useBookRideNavigation } from '@/hooks/useBookRideNavigation'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 function initials(name?: string | null) {
  if (!name) return '?'
@@ -83,6 +84,7 @@ export function Navbar() {
 
  {/* Right side: Drops + Auth */}
  <div className="hidden md:flex items-center gap-3">
+ <ThemeToggle />
  {mounted && status === 'authenticated' && session?.user && (
  <>
  <Link href="/dashboard/buy-drops" className="group flex items-center gap-1.5 bg-surface-elevated border border-border-default hover:border-purple-brand/50 hover:bg-surface-elevated/80 rounded-full px-2.5 py-1.5 transition-all cursor-pointer" title="Buy more Drops">
@@ -167,9 +169,12 @@ export function Navbar() {
  <span className="text-foreground font-black text-xl">TOVE</span>
  <span className="text-orange-brand font-black" style={{ fontSize: '22px' }}>DROP</span>
  </Link>
+ <div className="flex items-center gap-3">
+ <ThemeToggle />
  <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-full text-foreground/50 hover:text-foreground transition-colors">
- <X className="w-4 h-4" />
+ <X className="w-5 h-5" />
  </button>
+ </div>
  </div>
  <nav className="flex flex-col p-5 gap-1" aria-label="Mobile navigation">
  {navLinks.map((link) => (
