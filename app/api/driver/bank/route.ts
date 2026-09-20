@@ -30,4 +30,4 @@ export const POST = withValidation(bankSchema, async (req: NextRequest, data) =>
  console.error('Error saving bank details', error)
  return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 })
  }
-}
+})

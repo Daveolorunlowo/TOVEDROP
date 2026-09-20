@@ -81,4 +81,4 @@ export const POST = withValidation(adminWithdrawalSchema, async (req: NextReques
  } catch (error: any) {
  return NextResponse.json({ message: "Error processing withdrawal request", error: error.message }, { status: 500 })
  }
-}
+})

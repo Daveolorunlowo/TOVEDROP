@@ -231,4 +231,4 @@ export const POST = withValidation(createTripSchema, async (req: NextRequest, da
  }
  return NextResponse.json({ message: "Error creating trip", error: error.message }, { status: 500 })
  }
-}
+})

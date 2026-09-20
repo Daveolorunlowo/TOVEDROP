@@ -89,4 +89,4 @@ export const POST = withValidation(registerSchema, async (req: NextRequest, data
  console.error("REGISTER ERROR:", error)
  return NextResponse.json({ message: "Error registering user", error }, { status: 500 })
  }
-}
+})

@@ -119,4 +119,4 @@ export const POST = withValidation(acceptTripSchema, async (req: NextRequest, da
  } catch (error: any) {
  return NextResponse.json({ message: "Error accepting trip", error: error.message }, { status: 500 })
  }
-}
+})

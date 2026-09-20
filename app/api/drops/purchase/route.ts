@@ -94,4 +94,4 @@ export const POST = withValidation(purchaseSchema, async (req: NextRequest, data
  } catch (error: any) {
  return NextResponse.json({ message: "Error purchasing drops", error: error.message }, { status: 500 })
  }
-}
+})
