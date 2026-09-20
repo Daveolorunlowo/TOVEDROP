@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, TrendingUp, Car, Users, ShieldAlert,
-  Menu, X, Check, XCircle, Search, Clock, DollarSign, Activity, AlertCircle, ShieldCheck
+  Menu, X, Check, XCircle, Search, Clock, DollarSign, Activity, AlertCircle, ShieldCheck, Wallet, Package
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { cn } from '@/lib/utils'
@@ -126,10 +126,10 @@ export default function AdminDashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Total Revenue', value: `₦${stats.platformRevenue?.toLocaleString()}`, icon: DollarSign, color: 'text-green-500' },
-          { label: 'Total Trips', value: stats.totalTrips, icon: Car, color: 'text-orange-500' },
-          { label: 'Active Users', value: stats.totalUsers + activeDrivers.length, icon: Users, color: 'text-blue-500' },
-          { label: 'Drops Sold', value: stats.dropsSold, icon: Activity, color: 'text-purple-500' },
+          { label: 'Total Revenue', value: `₦${(stats?.platformRevenue || 0).toLocaleString()}`, icon: Wallet, color: 'text-green-500' },
+          { label: 'Total Trips', value: stats?.totalTrips || 0, icon: Car, color: 'text-orange-500' },
+          { label: 'Active Users', value: (stats?.totalUsers || 0) + (activeDrivers?.length || 0), icon: Users, color: 'text-blue-500' },
+          { label: 'Drops Sold', value: stats?.dropsSold || 0, icon: Package, color: 'text-purple-500' },
         ].map((s, i) => (
           <div key={i} className="p-5 rounded-2xl relative overflow-hidden group border border-white/5 bg-[#141414] hover:bg-[#1a1a1a] transition-all">
             <div className="absolute top-0 right-0 -mr-4 -mt-4 opacity-5 group-hover:opacity-10 transition-opacity">
