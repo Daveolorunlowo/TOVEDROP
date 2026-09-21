@@ -1,18 +1,17 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { subHours, subDays } from 'date-fns';
-
-// In a real production app, use something like:
-// const CRON_SECRET = process.env.CRON_SECRET || 'dev_secret';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/authOptions";
 
 export async function GET(request: Request) {
- // 1. Verify Secret Key (Example implementation)
- const authHeader = request.headers.get('authorization');
- // if (authHeader !== `Bearer ${CRON_SECRET}`) {
- // return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
- // }
+  const session = await getServerSession(authOptions);
+  
+  if (!session || !session.user || session.user.role !== "ADMIN") {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
- try {
+  try {
  const now = new Date();
  const twentyFourHoursAgo = subHours(now, 24);
  const sevenDaysAgo = subDays(now, 7);

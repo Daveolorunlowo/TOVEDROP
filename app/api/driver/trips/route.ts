@@ -10,17 +10,26 @@ export async function GET(req: Request) {
  return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
  }
 
- const driverProfile = await prisma.driverProfile.findUnique({
- where: { userId: session.user.id },
- include: { 
- user: true,
- walletTransactions: { orderBy: { createdAt: 'desc' }, include: { trip: true } }
- }
- })
+  let driverProfile = await prisma.driverProfile.findUnique({
+    where: { userId: session.user.id },
+    include: { 
+      user: true,
+      walletTransactions: { orderBy: { createdAt: 'desc' }, include: { trip: true } }
+    }
+  })
 
- if (!driverProfile) {
- return NextResponse.json({ driverProfile: null, pendingTrips: [], confirmedTrips: [] })
- }
+  if (!driverProfile) {
+    driverProfile = await prisma.driverProfile.create({
+      data: {
+        userId: session.user.id,
+        status: "APPROVED"
+      },
+      include: { 
+        user: true,
+        walletTransactions: { orderBy: { createdAt: 'desc' }, include: { trip: true } }
+      }
+    })
+  }
 
  // Get all pending trips (available for anyone to accept)
  const pendingTrips = await prisma.trip.findMany({

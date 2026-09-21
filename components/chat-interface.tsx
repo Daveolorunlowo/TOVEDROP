@@ -55,7 +55,7 @@ export function ChatInterface({
  })
 
  return () => {
- if (pusherClient) pusherClient.unsubscribe(`chat-${tripId}`)
+ if (pusherClient) pusherClient.unsubscribe(`trip-${tripId}`)
  }
  }, [tripId])
 
