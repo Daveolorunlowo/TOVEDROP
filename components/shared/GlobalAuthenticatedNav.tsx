@@ -41,7 +41,7 @@ export function GlobalAuthenticatedNav() {
  if (status !== 'authenticated' || !session?.user) return null
 
  // Don't show on admin or auth pages
- if (pathname.startsWith('/admin') || pathname.startsWith('/auth') || pathname.startsWith('/apply')) {
+ if (pathname?.startsWith('/admin') || pathname?.startsWith('/auth') || pathname?.startsWith('/apply')) {
  return null
  }
 
@@ -51,11 +51,17 @@ export function GlobalAuthenticatedNav() {
  const isDriver = session.user.role === 'DRIVER'
  const tabs = isDriver ? driverTabs : riderTabs
 
+ // Pages that render <Navbar /> already have a mobile menu with a ThemeToggle.
+ // We shouldn't render a floating ThemeToggle on these pages to prevent overlapping the hamburger menu.
+ const hasNavbar = pathname?.startsWith('/rate') || pathname?.startsWith('/book') || pathname?.startsWith('/transfer') || pathname?.startsWith('/trip') || pathname?.startsWith('/updates')
+
  return (
   <>
-   <div className="fixed top-4 right-4 z-50">
-    <ThemeToggle />
-   </div>
+   {!hasNavbar && (
+     <div className="fixed top-4 right-4 z-50">
+      <ThemeToggle />
+     </div>
+   )}
    <OrbitalNav tabs={tabs} unreadCount={unreadCount} />
   </>
  )
