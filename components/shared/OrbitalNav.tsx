@@ -28,8 +28,9 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  const pathname = usePathname()
 
  // Track current tab
+ const safePathname = pathname || ''
  const activeTabIndex = tabs.findIndex(t => 
- t.matchPrefix ? pathname.startsWith(t.href) : pathname === t.href
+ t.matchPrefix ? safePathname.startsWith(t.href) : safePathname === t.href
  )
  const validActiveIndex = activeTabIndex >= 0 ? activeTabIndex : 0
  const activeTab = tabs[validActiveIndex]
