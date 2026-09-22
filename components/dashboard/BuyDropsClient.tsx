@@ -99,9 +99,14 @@ export function BuyDropsClient({
       const d = await r.json()
       setRedir(true)
       setTimeout(() => {
-        const s = d.discountApplied ? pk.naira * FIRST_PURCHASE_DISCOUNT_PERCENTAGE : null
-        window.location.href = `/dashboard/buy-drops?payment=success&added=${pk.drops}${s ? '&saved=' + s : ''}`
-      }, 1000)
+        if (d.authorizationUrl) {
+          window.location.href = d.authorizationUrl
+        } else {
+          setErr('Could not connect to payment gateway.')
+          setRedir(false)
+          setBusy(false)
+        }
+      }, 500)
     } catch {
       setErr('Payment failed — please try again.')
       setBusy(false)

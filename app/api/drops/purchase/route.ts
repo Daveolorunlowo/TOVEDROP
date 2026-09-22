@@ -11,87 +11,93 @@ const purchaseSchema = z.object({
 })
 
 export const POST = withValidation(purchaseSchema, async (req: NextRequest, data) => {
- try {
- const session = await getServerSession(authOptions)
- 
- if (!session || !session.user) {
- return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
- }
+  try {
+    const session = await getServerSession(authOptions)
+    
+    if (!session || !session.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
 
- const { packageId } = data
- 
- const pkg = DROP_PACKAGES.find(p => p.id === packageId)
- if (!pkg) {
- return NextResponse.json({ message: "Invalid package" }, { status: 400 })
- }
+    const { packageId } = data
+    
+    const pkg = DROP_PACKAGES.find(p => p.id === packageId)
+    if (!pkg) {
+      return NextResponse.json({ message: "Invalid package" }, { status: 400 })
+    }
 
- const user = await prisma.user.findUnique({
- where: { id: session.user.id }
- })
+    const user = await prisma.user.findUnique({
+      where: { id: session.user.id }
+    })
 
- if (!user) {
- return NextResponse.json({ message: "User not found" }, { status: 404 })
- }
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 })
+    }
 
- if (user.role === 'ADMIN' || user.role === 'DRIVER') {
- return NextResponse.json({ message: "Admins and Drivers cannot possess drops" }, { status: 403 })
- }
+    if (user.role === 'ADMIN' || user.role === 'DRIVER') {
+      return NextResponse.json({ message: "Admins and Drivers cannot possess drops" }, { status: 403 })
+    }
 
- let finalAmount = pkg.naira
- let isFirstTimeDiscountApplied = false
+    let finalAmount = pkg.naira
+    if (!user.hasUsedFirstTopupDiscount) {
+      finalAmount = pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE)
+    }
 
- if (!user.hasUsedFirstTopupDiscount) {
- // Apply discount
- finalAmount = pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE)
- isFirstTimeDiscountApplied = true
- }
+    // Convert to kobo for Paystack
+    const amountInKobo = Math.round(finalAmount * 100)
 
- // MOCK PAYSTACK INITIALIZATION
- // Suppose the payment is immediately successful for testing
- const paystackRef = `mock_ref_${Date.now()}`
+    if (!process.env.PAYSTACK_SECRET_KEY) {
+      return NextResponse.json({ message: "Paystack is not configured" }, { status: 500 })
+    }
 
- const result = await prisma.$transaction(async (tx) => {
- const updatedUser = await tx.user.update({
- where: { id: user.id },
- data: {
- dropsBalance: { increment: pkg.drops },
- hasUsedFirstTopupDiscount: true
- }
- })
+    // Initialize Paystack Transaction
+    const response = await fetch('https://api.paystack.co/transaction/initialize', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: user.email,
+        amount: amountInKobo,
+        metadata: {
+          custom_fields: [
+            {
+              display_name: "User ID",
+              variable_name: "user_id",
+              value: user.id
+            },
+            {
+              display_name: "Package ID",
+              variable_name: "package_id",
+              value: pkg.id
+            },
+            {
+              display_name: "Drops Amount",
+              variable_name: "drops_amount",
+              value: pkg.drops
+            },
+            {
+              display_name: "First Purchase Discount",
+              variable_name: "first_purchase_discount",
+              value: !user.hasUsedFirstTopupDiscount
+            }
+          ]
+        }
+      })
+    })
 
- const dropTx = await tx.dropTransaction.create({
- data: {
- userId: user.id,
- type: 'PURCHASE',
- amount: pkg.drops,
- nairaAmount: finalAmount,
- package: pkg.id,
- reference: paystackRef
- }
- })
+    const paystackData = await response.json()
 
- const pricePerDrop = finalAmount / pkg.drops
+    if (!paystackData.status) {
+      return NextResponse.json({ message: paystackData.message || "Failed to initialize payment" }, { status: 400 })
+    }
 
- await tx.dropLot.create({
- data: {
- userId: user.id,
- dropTransactionId: dropTx.id,
- totalDrops: pkg.drops,
- remainingDrops: pkg.drops,
- pricePerDrop: pricePerDrop
- }
- })
-
- return updatedUser
- })
-
- return NextResponse.json({ 
- message: "Drops purchased successfully",
- dropsBalance: result.dropsBalance,
- chargedAmount: finalAmount,
- discountApplied: isFirstTimeDiscountApplied
- }, { status: 200 })
- } catch (error: any) {
- return NextResponse.json({ message: "Error purchasing drops", error: error.message }, { status: 500 })
- }
+    return NextResponse.json({ 
+      message: "Payment initialized",
+      authorizationUrl: paystackData.data.authorization_url,
+      reference: paystackData.data.reference
+    }, { status: 200 })
+  } catch (error: any) {
+    return NextResponse.json({ message: "Error purchasing drops", error: error.message }, { status: 500 })
+  }
 })

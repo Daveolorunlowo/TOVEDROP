@@ -16,6 +16,8 @@ const envSchema = z.object({
   SPOTIFY_CLIENT_ID: z.string().min(1),
   SPOTIFY_CLIENT_SECRET: z.string().min(1),
   RESEND_API_KEY: z.string().min(1),
+  PAYSTACK_SECRET_KEY: z.string().min(1).optional(),
+  NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: z.string().min(1).optional(),
 });
 
 const _env = envSchema.safeParse(process.env);

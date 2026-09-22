@@ -1,3 +1,4 @@
+import { withSentryConfig } from '@sentry/nextjs'
 import withPWAInit from 'next-pwa'
 
 const securityHeaders = [
@@ -57,4 +58,18 @@ const withPWA = withPWAInit({
   disable: false,              // Always register SW so push works in all envs
 })
 
-export default withPWA(nextConfig)
+export default withSentryConfig(
+  withPWA(nextConfig),
+  {
+    silent: true,
+    org: "tovedrop",
+    project: "tovedrop-web",
+  },
+  {
+    widenClientFileUpload: true,
+    transpileClientSDK: true,
+    hideSourceMaps: true,
+    disableLogger: true,
+    automaticVercelMonitors: true,
+  }
+)

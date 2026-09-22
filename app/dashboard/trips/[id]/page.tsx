@@ -6,6 +6,7 @@ import { ChatInterface } from '@/components/chat-interface'
 import Link from 'next/link'
 import { ArrowLeft, MapPin, Navigation, Calendar, Clock } from 'lucide-react'
 import { ShareTripButton } from '@/components/dashboard/ShareTripButton'
+import { PanicButton } from '@/components/dashboard/PanicButton'
 
 export default async function TripDetailPage({ params }: { params: { id: string } }) {
  const session = await getServerSession(authOptions)
@@ -40,9 +41,14 @@ export default async function TripDetailPage({ params }: { params: { id: string 
  <h1 className="text-2xl font-bold text-foreground">Trip Details</h1>
  </div>
  
+ <div className="flex gap-2">
  {trip.status === 'CONFIRMED' && isRider && trip.shareToken && (
  <ShareTripButton shareToken={trip.shareToken} />
  )}
+ {trip.status === 'CONFIRMED' && (
+ <PanicButton tripId={trip.id} />
+ )}
+ </div>
  </div>
 
  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
