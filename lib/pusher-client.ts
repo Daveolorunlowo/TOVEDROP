@@ -23,13 +23,28 @@ export function useResilientChannel(
 ) {
   const [isDisconnected, setIsDisconnected] = useState(false)
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  
+  const fallbackRef = useRef(fallbackPoll)
+  const onEventRef = useRef(onEvent)
+
+  // Keep refs updated without triggering re-binds
+  useEffect(() => {
+    fallbackRef.current = fallbackPoll
+    onEventRef.current = onEvent
+  }, [fallbackPoll, onEvent])
 
   useEffect(() => {
     if (!pusherClient) return
 
     // 1. Bind to the event
     const channel = pusherClient.subscribe(channelName)
-    channel.bind(eventName, onEvent)
+    
+    // Use an internal wrapper to always call the latest onEvent without re-binding
+    const eventHandler = (data: any) => {
+      if (onEventRef.current) onEventRef.current(data)
+    }
+    
+    channel.bind(eventName, eventHandler)
 
     // 2. Monitor connection state
     const handleStateChange = (states: any) => {
@@ -43,19 +58,21 @@ export function useResilientChannel(
     pusherClient.connection.bind('state_change', handleStateChange)
 
     return () => {
-      channel.unbind(eventName, onEvent)
+      channel.unbind(eventName, eventHandler)
       pusherClient.unsubscribe(channelName)
       pusherClient.connection.unbind('state_change', handleStateChange)
     }
-  }, [channelName, eventName, onEvent])
+  }, [channelName, eventName])
 
   // 3. Trigger fallback polling when disconnected
   useEffect(() => {
-    if (isDisconnected && fallbackPoll) {
+    if (isDisconnected && fallbackRef.current) {
       // Immediate poll
-      fallbackPoll()
+      fallbackRef.current()
       // Then interval
-      pollIntervalRef.current = setInterval(fallbackPoll, 5000)
+      pollIntervalRef.current = setInterval(() => {
+        if (fallbackRef.current) fallbackRef.current()
+      }, 5000)
     } else {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current)
     }
@@ -63,7 +80,7 @@ export function useResilientChannel(
     return () => {
       if (pollIntervalRef.current) clearInterval(pollIntervalRef.current)
     }
-  }, [isDisconnected, fallbackPoll])
+  }, [isDisconnected])
 
   return { isDisconnected }
 }
