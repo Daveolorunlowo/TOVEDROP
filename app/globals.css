@@ -47,33 +47,33 @@
 
 :root {
   color-scheme: dark;
-  /* TOVEDROP single source of truth brand tokens */
-  --bg-deep: #0A0A0F;
-  --surface-card: #131318;
-  --surface-elevated: #1A1A21;
+  /* TOVEDROP — Orange & Dark Gray */
+  --bg-deep: #14151A;
+  --surface-card: #1E1F26;
+  --surface-elevated: #282930;
   --border-subtle: rgba(255,255,255,0.08);
   --border-default: rgba(255,255,255,0.12);
   --text-primary: #FFFFFF;
   --text-secondary: #A1A1AA;
   --text-muted: #6B6B76;
-  --purple-brand: #8B5CF6;
-  --purple-light: #A78BFA;
+  --purple-brand: #F97316;
+  --purple-light: #FB923C;
   --orange-brand: #F97316;
-  --orange-dark: #EA6C0A;
+  --orange-dark: #EA580C;
   --status-success: #22C55E;
   --status-warning: #F97316;
   --status-danger: #EF4444;
   --status-neutral: #6B6B76;
-  --status-info: #8B5CF6;
+  --status-info: #F97316;
 
-  /* Shadcn Baseline mapped to new tokens */
+  /* Shadcn Baseline */
   --background: var(--bg-deep);
   --foreground: var(--text-primary);
   --card: var(--surface-card);
   --card-foreground: var(--text-primary);
   --popover: var(--surface-card);
   --popover-foreground: var(--text-primary);
-  --primary: var(--purple-brand);
+  --primary: var(--orange-brand);
   --primary-foreground: #FFFFFF;
   --secondary: var(--surface-elevated);
   --secondary-foreground: var(--text-primary);
@@ -84,17 +84,17 @@
   --destructive: var(--status-danger);
   --border: var(--border-default);
   --input: var(--border-subtle);
-  --ring: var(--purple-brand);
+  --ring: var(--orange-brand);
   --radius: 0.75rem;
 
   --sidebar: var(--surface-card);
   --sidebar-foreground: var(--text-primary);
-  --sidebar-primary: var(--purple-brand);
+  --sidebar-primary: var(--orange-brand);
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: var(--border-subtle);
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border-default);
-  --sidebar-ring: var(--purple-brand);
+  --sidebar-ring: var(--orange-brand);
 }
 
 @layer base {

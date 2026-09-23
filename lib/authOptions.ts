@@ -85,11 +85,7 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      // Grant 3 free drops to new users and send welcome email
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { dropsBalance: 3 }
-      })
+      // Send welcome email
       if (user.email) {
         await sendWelcomeEmail(user.email, user.name || 'Rider')
       }

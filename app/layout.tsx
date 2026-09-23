@@ -38,7 +38,7 @@ export const metadata: Metadata = {
  },
  openGraph: {
  title: 'TOVEDROP — Campus Rideshare',
- description: 'Safe, reliable, student-first rides. Get 3 FREE Drops when you join!',
+ description: 'Safe, reliable, student-first rides. ',
  url: '/',
  siteName: 'TOVEDROP',
  images: [
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
  twitter: {
  card: 'summary_large_image',
  title: 'TOVEDROP — Campus Rideshare',
- description: 'Safe, reliable, student-first rides. Get 3 FREE Drops when you join!',
+ description: 'Safe, reliable, student-first rides. ',
  images: ['/og-image.jpg'],
  },
 }
@@ -97,3 +97,4 @@ export default async function RootLayout({
     </html>
   )
 }
+

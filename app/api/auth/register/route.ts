@@ -48,7 +48,6 @@ export const POST = withValidation(registerSchema, async (req: NextRequest, data
  university,
  password: hashedPassword,
  role: "RIDER", // Default
- dropsBalance: 3,
  }
  })
 

@@ -1,4 +1,6 @@
-'use client';
+﻿import os
+
+content = '''"use client";
 
 import { useState, Suspense, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
@@ -191,9 +193,7 @@ function AuthForm() {
                 key={t}
                 onClick={() => { setTab(t); setErrors({}); resetForm(); }}
                 disabled={isProcessing}
-                className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-all ${
-                  tab === t ? 'bg-surface-card text-primary ' : 'text-muted-foreground hover:text-primary'
-                } ${isProcessing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={lex-1 py-2 text-sm font-semibold rounded-lg transition-all  }
               >
                 {t === 'login' ? 'Log In' : 'Sign Up'}
               </button>
@@ -207,7 +207,7 @@ function AuthForm() {
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                   <Input id="name" name="name" type="text" placeholder="Ada Okafor"
-                    className={`pl-10 ${errors.name ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                    className={pl-10 }
                     autoComplete="name" disabled={isProcessing} />
                 </div>
               </div>
@@ -218,7 +218,7 @@ function AuthForm() {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input id="email" name="email" type="email" placeholder="you@example.com"
-                  className={`pl-10 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+                  className={pl-10 }
                   autoComplete="email" disabled={isProcessing} />
               </div>
             </div>
@@ -245,7 +245,7 @@ function AuthForm() {
             )}
 
             {/* Morphing Drop Button System */}
-            <div className="relative z-50 flex flex-col items-center mt-6" style={{ height: '110px' }}>
+            <div className="relative flex flex-col items-center mt-6" style={{ height: '70px' }}>
               
               <button
                 type="submit"
@@ -280,7 +280,7 @@ function AuthForm() {
                 <div 
                   className="absolute z-0 pointer-events-none"
                   style={{
-                    top: '26px',
+                    top: '26px', // Center of button
                     animation: btnState === 'dropping' ? 'drop-fall-wrap 460ms cubic-bezier(0.5, 0.05, 0.7, 0.3) forwards' : 'none',
                     transform: btnState === 'squashed' ? 'translateY(55px) scale(1.6, 0.4)' : undefined,
                   }}
@@ -298,7 +298,7 @@ function AuthForm() {
                   
                   {/* Particle Burst */}
                   {[...Array(7)].map((_, i) => (
-                    <div key={i} className="absolute w-[5px] h-[5px] bg-orange-brand rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ animation: `particle-burst-${i} 600ms ease-out forwards` }} />
+                    <div key={i} className="absolute w-[5px] h-[5px] bg-orange-brand rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ animation: particle-burst- 600ms ease-out forwards }} />
                   ))}
                   
                   {/* Success Checkmark Circle */}
@@ -358,7 +358,7 @@ export default function AuthPage() {
         <AuthForm />
       </Suspense>
 
-      <style jsx global>{`
+      <style jsx global>{
         @keyframes btn-breathe {
           0%, 100% { transform: scale(1); }
           50% { transform: scale(1.015); }
@@ -405,6 +405,7 @@ export default function AuthPage() {
           to { stroke-dashoffset: 0; }
         }
         
+        /* Particle bursts with slight downward arc (gravity) */
         @keyframes particle-burst-0 {
           0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
           100% { transform: translate(calc(-50% - 16px), calc(-50% - 22px)) scale(0); opacity: 0; }
@@ -433,7 +434,13 @@ export default function AuthPage() {
           0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
           100% { transform: translate(calc(-50% + 2px), calc(-50% - 28px)) scale(0); opacity: 0; }
         }
-      `}</style>
+      }</style>
     </div>
   );
 }
+'''
+
+with open('app/auth/page.tsx', 'w', encoding='utf-8') as f:
+    f.write(content)
+
+print("Drop animation built.")

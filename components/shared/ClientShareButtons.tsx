@@ -10,7 +10,7 @@ interface ClientShareButtonsProps {
 
 export function ClientShareButtons({ referralLink, code }: ClientShareButtonsProps) {
  const [copied, setCopied] = useState(false)
- const shareText = `Use my code ${code} to get 3 FREE Drops on TOVEDROP!`
+ const shareText = `Use my code ${code} to sign up on TOVEDROP!`
 
  const handleCopy = async () => {
  try {
@@ -82,3 +82,4 @@ export function ClientShareButtons({ referralLink, code }: ClientShareButtonsPro
  </div>
  )
 }
+

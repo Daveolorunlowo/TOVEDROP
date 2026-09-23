@@ -342,7 +342,7 @@ function HeroSection() {
  { label: 'Verified Drivers', rotate: '-1.2deg' },
  { label: '100% Student Network', rotate: '0.8deg' },
  { label: '1 Drop = 1 Booking', rotate: '-0.5deg', isDrops: true },
- { label: 'Get 3 Free Drops on Sign Up', rotate: '1deg', isCyan: true },
+ { label: 'Secure & Affordable', rotate: '1deg', isCyan: true },
  ].map(({ label, rotate, isDrops, isCyan }) => (
  <div
  key={label}
@@ -628,7 +628,7 @@ function DropsSection() {
  <div className={cn('mt-10 text-center transition-all duration-700', visible ? 'opacity-100' : 'opacity-0')}>
  <p className="text-sm text-foreground/30 flex items-center justify-center gap-2">
  <DropCoin size={14} />
- <span>New users get <strong className="text-orange-brand">3 free Drops</strong> on sign up — no purchase needed</span>
+ <span>Join today and start booking rides securely across campus</span>
  </p>
  </div>
  </div>
@@ -922,3 +922,5 @@ export default function LandingPage() {
  </div>
  )
 }
+
+

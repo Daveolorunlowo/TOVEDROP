@@ -9,7 +9,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
       await resend.emails.send({
         from: 'TOVEDROP Admin <onboarding@resend.dev>',
         to: email,
-        subject: `Welcome to TOVEDROP! You've got 3 free Drops.`,
+        subject: `Welcome to TOVEDROP! Welcome aboard!`,
         html: `<p>Hi ${name}, welcome to TOVEDROP! Enjoy your free rides.</p>`,
       });
       return true;
@@ -21,7 +21,7 @@ export async function sendWelcomeEmail(email: string, name: string) {
 
   // Fallback to mock
   console.log(`[MOCK EMAIL] Sending welcome email to ${name} (${email})`)
-  console.log(`[MOCK EMAIL] Subject: Welcome to TOVEDROP! You've got 3 free Drops.`)
+  console.log(`[MOCK EMAIL] Subject: Welcome to TOVEDROP! Welcome aboard!`)
   return true
 }
 
@@ -71,4 +71,5 @@ export async function sendEmail(to: string, subject: string, html: string) {
   console.log(`[MOCK EMAIL] HTML:`, html)
   return true
 }
+
 

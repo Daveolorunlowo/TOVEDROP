@@ -15,8 +15,8 @@ export default function ContactPage() {
 
  const faqs = [
  {
- q: "How do I get my first 3 free Drops?",
- a: "Sign up, verify your student ID, and they appear in your account instantly."
+ q: "How do I get Drops?",
+ a: "You can purchase Drops securely via Paystack, or earn them by sharing your referral code with friends."
  },
  {
  q: "Can I refund unused Drops?",

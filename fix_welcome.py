@@ -1,4 +1,4 @@
-"use client"
+﻿content = '''"use client"
 
 import Link from 'next/link'
 
@@ -21,7 +21,7 @@ export default function WelcomePage() {
  key={i}
  className="w-14 h-14 rounded-full flex items-center justify-center bg-surface-elevated border border-border-default"
  style={{
- animation: `bounce 0.6s ease ${i * 0.15}s infinite alternate`,
+ animation: \ounce 0.6s ease \s infinite alternate\,
  }}
  >
  <DropCoin size={28} />
@@ -43,7 +43,10 @@ export default function WelcomePage() {
  Book Your First Ride
  </Link>
  </div>
- <style>{`@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }`}</style>
+ <style>{\@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }\}</style>
  </div>
  )
 }
+'''
+with open('app/welcome/page.tsx', 'wb') as f:
+    f.write(content.encode('utf-8'))
