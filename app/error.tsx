@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useEffect } from 'react'
 import Link from 'next/link'
@@ -55,7 +55,7 @@ export default function ErrorPage({
  <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
  <button 
  onClick={() => reset()}
- className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm bg-primary hover: hover: transition-colors"
+ className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm bg-primary hover:opacity-80 transition-colors"
  >
  Try Again
  </button>
@@ -77,3 +77,4 @@ export default function ErrorPage({
  </div>
  )
 }
+

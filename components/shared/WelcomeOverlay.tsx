@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
@@ -134,7 +134,7 @@ export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: bo
  opacity: [0.2, 0.4, 0.3, 0.2]
  }}
  transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
- className="absolute w-[60vw] h-[60vw] rounded-full blur-[100px] bg-orange-brand -translate-x-1/4 -translate-y-1/4"
+ className="absolute w-[60vw] h-[60vw] rounded-full blur-3xl bg-orange-brand -translate-x-1/4 -translate-y-1/4"
  />
  <motion.div 
  initial={{ scale: 0.5, opacity: 0 }}
@@ -143,12 +143,12 @@ export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: bo
  opacity: [0.2, 0.3, 0.2, 0.2]
  }}
  transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
- className="absolute w-[70vw] h-[70vw] rounded-full blur-[120px] bg-purple-brand translate-x-1/4 translate-y-1/4"
+ className="absolute w-[70vw] h-[70vw] rounded-full blur-3xl bg-purple-brand translate-x-1/4 translate-y-1/4"
  />
  </div>
 
  {/* A gentle glass overlay to soften everything */}
- <div className="absolute inset-0 backdrop-blur-[30px] z-10" />
+ <div className="absolute inset-0 bg-black/40 z-10" />
 
  {/* Gentle Text Reveal */}
  <AnimatePresence>
@@ -186,9 +186,9 @@ export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: bo
  <AnimatePresence>
  {phase === 'guide' && (
  <motion.div
- initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
- animate={{ opacity: 1, backdropFilter: 'blur(10px)' }}
- exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+ initial={{ opacity: 0, backdropFilter: 'none' }}
+ animate={{ opacity: 1, backdropFilter: 'none' }}
+ exit={{ opacity: 0, backdropFilter: 'none' }}
  className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4"
  >
  <motion.div
@@ -280,3 +280,5 @@ export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: bo
  </>
  );
 }
+
+
