@@ -1,6 +1,7 @@
-"use client"
+﻿"use client"
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Menu, X, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -32,6 +33,8 @@ const navLinks = [
 ]
 
 export function Navbar() {
+  const pathname = usePathname();
+  const isHomePage = pathname === '/';
  const handleBookRideClick = useBookRideNavigation()
  const { data: session, status } = useSession()
  const [mobileOpen, setMobileOpen] = useState(false)
@@ -84,7 +87,7 @@ export function Navbar() {
 
  {/* Right side: Drops + Auth */}
  <div className="hidden md:flex items-center gap-3">
- <ThemeToggle />
+ {!isHomePage && <ThemeToggle />}
  {mounted && status === 'authenticated' && session?.user && (
  <>
  <Link href="/dashboard/buy-drops" className="group flex items-center gap-1.5 bg-surface-elevated border border-border-default hover:border-purple-brand/50 hover:bg-surface-elevated/80 rounded-full px-2.5 py-1.5 transition-all cursor-pointer" title="Buy more Drops">
@@ -170,7 +173,7 @@ export function Navbar() {
  <span className="text-orange-brand font-black" style={{ fontSize: '22px' }}>DROP</span>
  </Link>
  <div className="flex items-center gap-3">
- <ThemeToggle />
+ {!isHomePage && <ThemeToggle />}
  <button onClick={() => setMobileOpen(false)} className="p-1.5 rounded-full text-foreground/50 hover:text-foreground transition-colors">
  <X className="w-5 h-5" />
  </button>
