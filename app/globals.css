@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+﻿@import 'tailwindcss';
 @config "../tailwind.config.ts";
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
@@ -46,8 +46,60 @@
 }
 
 :root {
+  color-scheme: light;
+  /* TOVEDROP ?" Orange & Light Mode */
+  --bg-deep: #F9FAFB;
+  --surface-card: #FFFFFF;
+  --surface-elevated: #F3F4F6;
+  --border-subtle: rgba(0,0,0,0.08);
+  --border-default: rgba(0,0,0,0.12);
+  --text-primary: #09090B;
+  --text-secondary: #52525B;
+  --text-muted: #71717A;
+  --purple-brand: #F97316;
+  --purple-light: #FB923C;
+  --orange-brand: #F97316;
+  --orange-dark: #EA580C;
+  --status-success: #16A34A;
+  --status-warning: #EA580C;
+  --status-danger: #DC2626;
+  --status-neutral: #71717A;
+  --status-info: #F97316;
+
+  /* Shadcn Baseline */
+  --background: var(--bg-deep);
+  --foreground: var(--text-primary);
+  --card: var(--surface-card);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface-card);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--orange-brand);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--surface-elevated);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--surface-elevated);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--orange-brand);
+  --accent-foreground: #FFFFFF;
+  --destructive: var(--status-danger);
+  --border: var(--border-default);
+  --input: var(--border-subtle);
+  --ring: var(--orange-brand);
+  --radius: 0.75rem;
+
+  --sidebar: var(--surface-card);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--orange-brand);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--border-subtle);
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border-default);
+  --sidebar-ring: var(--orange-brand);
+}
+
+.dark {
   color-scheme: dark;
-  /* TOVEDROP — Orange & Dark Gray */
+  /* TOVEDROP ?" Orange & Dark Gray */
   --bg-deep: #14151A;
   --surface-card: #1E1F26;
   --surface-elevated: #282930;
@@ -85,7 +137,6 @@
   --border: var(--border-default);
   --input: var(--border-subtle);
   --ring: var(--orange-brand);
-  --radius: 0.75rem;
 
   --sidebar: var(--surface-card);
   --sidebar-foreground: var(--text-primary);
