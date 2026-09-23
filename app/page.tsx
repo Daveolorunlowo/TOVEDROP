@@ -367,7 +367,7 @@ function HeroSection() {
  {/* Wave divider */}
  <div className="absolute bottom-0 left-0 right-0 pointer-events-none" aria-hidden="true">
  <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: '60px' }}>
- <path d="M0 60 L0 30 Q360 -10 720 30 Q1080 70 1440 20 L1440 60 Z" fill="#0F0F20" />
+ <path d="M0 60 L0 30 Q360 -10 720 30 Q1080 70 1440 20 L1440 60 Z" fill="var(--background)" />
  </svg>
  </div>
 
@@ -538,7 +538,7 @@ function DropsSection() {
  <section className="bg-background py-28 relative overflow-hidden">
  {/* Skew top */}
  <div className="absolute top-0 left-0 right-0 h-20 pointer-events-none" aria-hidden="true"
- style={{ background: '#0F0F20', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
+ style={{ background: 'var(--background)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
 
  {/* Amber radial bloom behind Popular card */}
  <div className="absolute top-1/2 left-1/2 -translate-x-1/4 -translate-y-1/2 pointer-events-none" aria-hidden="true"
@@ -652,7 +652,7 @@ function TrustSection() {
  return (
  <section className="bg-background py-28 relative overflow-hidden">
  <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
- style={{ background: '#080814', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
+ style={{ background: 'var(--background)', clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 0)' }} />
 
  {/* Giant shield outline */}
  <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
@@ -708,7 +708,7 @@ function StatsSection() {
  return (
  <section className="bg-background py-28 relative overflow-hidden">
  <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
- style={{ background: '#0C0C1E', clipPath: 'polygon(0 0, 100% 0, 100% 40%, 0 100%)' }} />
+ style={{ background: 'var(--muted)', clipPath: 'polygon(0 0, 100% 0, 100% 40%, 0 100%)' }} />
 
  <div ref={ref} className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
  <div className={cn('text-center mb-12 transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6')}>
@@ -748,7 +748,7 @@ function StatsSection() {
  </div>
  <div className="flex -space-x-2 mt-3">
  {['var(--orange-brand)','#3B82F6','var(--green-brand)','var(--orange-brand)','#22C55E'].map((c, j) => (
- <div key={j} className="w-7 h-7 rounded-full border-2 border-[#0E0E24] flex items-center justify-center text-foreground text-[9px] font-bold shrink-0" style={{ background: c }}>
+ <div key={j} className="w-7 h-7 rounded-full border-2 border-border flex items-center justify-center text-foreground text-[9px] font-bold shrink-0" style={{ background: c }}>
  {String.fromCharCode(65 + j)}
  </div>
  ))}
@@ -808,7 +808,7 @@ function DriverCTASection() {
  aria-hidden="true"
  />
  <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" aria-hidden="true"
- style={{ background: '#0C0C1E', clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 100%)' }} />
+ style={{ background: 'var(--muted)', clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 100%)' }} />
 
  {/* Speedometer SVG */}
  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none select-none" aria-hidden="true">
@@ -826,7 +826,7 @@ function DriverCTASection() {
  })}
  <line x1="180" y1="300" x2="90" y2="130" stroke="var(--orange-brand)" strokeWidth="2" strokeLinecap="round" />
  <circle cx="180" cy="300" r="8" fill="var(--orange-brand)" />
- <circle cx="180" cy="300" r="4" fill="#060611" />
+ <circle cx="180" cy="300" r="4" fill="var(--card)" />
  {[60, 110, 160, 220, 280, 320].map((x, i) => (
  <circle key={i} cx={x} cy={340} r={i % 2 === 0 ? 3 : 2} fill={i % 2 === 0 ? 'var(--orange-brand)' : 'var(--purple-brand)'} opacity={0.6} />
  ))}

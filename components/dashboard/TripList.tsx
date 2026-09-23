@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -11,13 +11,13 @@ function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
     PENDING: 'var(--orange-brand)',
     CONFIRMED: '#22c55e',
-    COMPLETED: '#555',
+    COMPLETED: 'var(--muted-foreground)',
     CANCELLED: '#ef4444',
   }
   return (
     <span
       className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-      style={{ background: colors[status] ?? '#555' }}
+      style={{ background: colors[status] ?? 'var(--muted-foreground)' }}
     />
   )
 }
@@ -26,10 +26,10 @@ function StatusChip({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string }> = {
     PENDING:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.1)' },
     CONFIRMED: { label: 'Confirmed', color: '#22c55e', bg: 'rgba(34,197,94,0.08)' },
-    COMPLETED: { label: 'Completed', color: 'var(--muted-foreground)',    bg: '#1e1e1e' },
+    COMPLETED: { label: 'Completed', color: 'var(--muted-foreground)',    bg: 'var(--border)' },
     CANCELLED: { label: 'Cancelled', color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
   }
-  const s = map[status] ?? { label: status, color: 'var(--muted-foreground)', bg: '#1e1e1e' }
+  const s = map[status] ?? { label: status, color: 'var(--muted-foreground)', bg: 'var(--border)' }
   return (
     <span
       className="inline-block text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
@@ -87,9 +87,9 @@ export function TripList({
     const hoursDifference = (tripDate.getTime() - new Date().getTime()) / (1000 * 60 * 60)
 
     if (hoursDifference <= 2) {
-      showToast('Trip cancelled — no refund (cancelled within 2 hours of trip time)')
+      showToast('Trip cancelled â€” no refund (cancelled within 2 hours of trip time)')
     } else {
-      showToast('Trip cancelled — 1 Drop refunded')
+      showToast('Trip cancelled â€” 1 Drop refunded')
     }
 
     setProcessing(tripId)
@@ -153,7 +153,7 @@ export function TripList({
                 key={trip.id}
                 className="flex items-center gap-3 px-4 py-3 transition-opacity"
                 style={{ 
-                  borderBottom: i < upcomingTrips.length - 1 ? '1px solid #1e1e1e' : 'none',
+                  borderBottom: i < upcomingTrips.length - 1 ? '1px solid var(--border)' : 'none',
                   opacity: processing === trip.id ? 0.5 : 1
                 }}
               >
@@ -165,10 +165,10 @@ export function TripList({
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold truncate" style={{ color: 'var(--foreground)' }}>
-                    {trip.driver?.name ?? 'Searching for driver…'}
+                    {trip.driver?.name ?? 'Searching for driverâ€¦'}
                   </p>
                   <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.pickup} → {trip.destination}
+                    {trip.pickup} â†’ {trip.destination}
                   </p>
                 </div>
                 <div className="shrink-0 text-right hidden sm:block">
@@ -221,9 +221,9 @@ export function TripList({
         {pastTrips.length === 0 ? (
           <div
             className="rounded-lg"
-            style={{ background: 'var(--card)', border: '1px solid #1e1e1e', padding: '20px' }}
+            style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '20px' }}
           >
-            <TrendingUp className="w-4 h-4 mb-2" style={{ color: '#2a2a2a' }} />
+            <TrendingUp className="w-4 h-4 mb-2" style={{ color: 'var(--muted-foreground)' }} />
             <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Completed trips will appear here.</p>
           </div>
         ) : (
@@ -236,7 +236,7 @@ export function TripList({
                 key={trip.id}
                 className="flex items-center gap-3 px-4 py-3 transition-colors"
                 style={{ 
-                  borderBottom: i < pastTrips.length - 1 ? '1px solid #1e1e1e' : 'none',
+                  borderBottom: i < pastTrips.length - 1 ? '1px solid var(--border)' : 'none',
                   backgroundColor: trip.status === 'CANCELLED' && trip.isOptimistic ? 'rgba(255,255,255,0.02)' : 'transparent',
                   opacity: trip.status === 'CANCELLED' ? 0.6 : 1
                 }}
@@ -251,7 +251,7 @@ export function TripList({
                     {trip.driver?.name ?? 'Unknown'}
                   </p>
                   <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.pickup} → {trip.destination}
+                    {trip.pickup} â†’ {trip.destination}
                   </p>
                 </div>
                 {trip.status === 'COMPLETED' && !trip.review ? (
@@ -282,3 +282,4 @@ export function TripList({
     </div>
   )
 }
+

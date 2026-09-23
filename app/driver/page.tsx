@@ -53,11 +53,11 @@ function CheckRow({ done, label, detail }: { done: boolean; label: string; detai
         >
           {done && <Check className="w-2.5 h-2.5" style={{ color: '#22c55e' }} />}
         </span>
-        <p className="text-xs font-medium" style={{ color: done ? '#888' : '#555' }}>{label}</p>
+        <p className="text-xs font-medium" style={{ color: done ? 'var(--text-secondary)' : 'var(--muted-foreground)' }}>{label}</p>
       </div>
       <p
         className="text-[10px] font-semibold uppercase tracking-wide"
-        style={{ color: done ? '#22c55e' : '#444' }}
+        style={{ color: done ? '#22c55e' : 'var(--border)' }}
       >
         {detail}
       </p>
@@ -530,7 +530,7 @@ export default function DriverDashboardPage() {
               <p className="text-xs mb-3" style={{ color: 'var(--muted-foreground)' }}>
                 Earned from {driverProfile.totalTrips} completed rides
               </p>
-              <p className="text-[11px] leading-relaxed" style={{ color: '#666' }}>
+              <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
                 This is a bonus <strong>from TOVEDROP</strong>. It is separate from and in addition to the transport fare riders pay you directly for the ride.
               </p>
               <div className="mt-6 p-3 rounded" style={{ background: 'var(--background)', border: '1px dashed var(--border-subtle)' }}>

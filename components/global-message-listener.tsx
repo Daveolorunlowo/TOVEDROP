@@ -70,7 +70,7 @@ export function GlobalMessageListener() {
  <X className="h-3.5 w-3.5" />
  </button>
  </div>
- <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: '#aaa' }}>
+ <p className="text-xs line-clamp-2 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
  {toast.content}
  </p>
  </div>
