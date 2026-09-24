@@ -5,7 +5,8 @@ import Link from 'next/link'
 import { ArrowLeft, Bell, MessageSquare, Loader2, CheckCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { subscribeToPushNotifications } from '@/lib/push-client'
-
+import { ThemeToggle } from '@/components/theme-toggle'
+import { SignOutButton } from '@/components/sign-out-button'
 export default function RiderSettingsPage() {
  const router = useRouter()
  const [pushEnabled, setPushEnabled] = useState(false)
@@ -92,9 +93,18 @@ export default function RiderSettingsPage() {
 
  return (
  <div className="space-y-6 animate-in fade-in duration-300 max-w-2xl pb-20">
+ <div className="flex items-center justify-between">
  <div>
  <h1 className="text-2xl font-bold mb-1 text-foreground">Settings</h1>
  <p className="text-sm text-muted-foreground mb-6">Manage your preferences and notifications.</p>
+ </div>
+ <div className="flex items-center gap-4">
+ <ThemeToggle />
+ <SignOutButton
+ variant="outline"
+ className="text-foreground text-xs border-[var(--border-default)] bg-transparent hover:bg-[var(--border)] rounded-md px-3 py-1.5 whitespace-nowrap"
+ />
+ </div>
  </div>
 
  {loading ? (

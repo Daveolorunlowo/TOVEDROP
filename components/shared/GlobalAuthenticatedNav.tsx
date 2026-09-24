@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { Car, Wallet, User, MapPin, Gift, Search, Bell } from 'lucide-react'
 import { NavTab, OrbitalNav } from '@/components/shared/OrbitalNav'
-import { ThemeToggle } from '@/components/theme-toggle'
 const riderTabs: NavTab[] = [
  { id: 'book', label: 'Book', icon: Search, href: '/book', matchPrefix: true },
  { id: 'trips', label: 'My Trips', icon: MapPin, href: '/dashboard' },
@@ -51,18 +50,7 @@ export function GlobalAuthenticatedNav() {
  const isDriver = session.user.role === 'DRIVER'
  const tabs = isDriver ? driverTabs : riderTabs
 
- // Pages that render <Navbar /> already have a mobile menu with a ThemeToggle.
- // We shouldn't render a floating ThemeToggle on these pages to prevent overlapping the hamburger menu.
- const hasNavbar = pathname?.startsWith('/rate') || pathname?.startsWith('/book') || pathname?.startsWith('/transfer') || pathname?.startsWith('/trip') || pathname?.startsWith('/updates')
-
  return (
-  <>
-   {!hasNavbar && (
-     <div className="fixed top-4 right-4 z-50">
-      <ThemeToggle />
-     </div>
-   )}
-   <OrbitalNav tabs={tabs} unreadCount={unreadCount} />
-  </>
+  <OrbitalNav tabs={tabs} unreadCount={unreadCount} />
  )
 }

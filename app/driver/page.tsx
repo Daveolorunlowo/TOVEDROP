@@ -8,7 +8,6 @@ import {
   CheckCircle, XCircle, Loader2, Check, MessageCircle
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { SignOutButton } from '@/components/sign-out-button'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
 import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
@@ -471,10 +470,6 @@ export default function DriverDashboardPage() {
             >
               Earnings & Bank
             </Link>
-            <SignOutButton
-              variant="outline"
-              className="text-foreground text-xs border-[var(--border-default)] bg-transparent hover:bg-[var(--border)] rounded-md px-3 py-1.5 whitespace-nowrap"
-            />
           </div>
         </div>
 

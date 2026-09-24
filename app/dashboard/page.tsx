@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { MapPin, Calendar, Clock, Star, Car, Plus, X, TrendingUp } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { SignOutButton } from '@/components/sign-out-button'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
@@ -69,25 +68,6 @@ export default async function DashboardPage() {
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <SignOutButton
-              variant="outline"
-              className="text-foreground text-xs border-[var(--border-default)] bg-transparent hover:bg-[var(--border)] rounded-md px-3 py-1.5 whitespace-nowrap"
-            />
-            <Link
-              href="/dashboard/referrals"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground border border-border whitespace-nowrap"
-              style={{ background: 'var(--border)' }}
-            >
-              Refer Friends
-            </Link>
-            <Link
-              href="/book"
-              className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-md text-foreground whitespace-nowrap shadow-sm transition-transform active:scale-95"
-              style={{ background: 'var(--orange-brand)' }}
-            >
-              <Plus className="w-3.5 h-3.5 shrink-0" />
-              Book a Ride
-            </Link>
           </div>
         </div>
 

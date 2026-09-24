@@ -5,7 +5,8 @@ import Link from 'next/link'
 import { ArrowLeft, Bell, MessageSquare, Loader2, CheckCircle2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { subscribeToPushNotifications } from '@/lib/push-client'
-
+import { ThemeToggle } from '@/components/theme-toggle'
+import { SignOutButton } from '@/components/sign-out-button'
 export default function DriverSettingsPage() {
  const router = useRouter()
  const [pushEnabled, setPushEnabled] = useState(false)
@@ -89,8 +90,16 @@ export default function DriverSettingsPage() {
  </Link>
  </div>
 
- <h1 className="text-2xl font-bold mb-6 text-foreground">Settings</h1>
-
+ <div className="flex items-center justify-between mb-6">
+ <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+ <div className="flex items-center gap-4">
+ <ThemeToggle />
+ <SignOutButton
+ variant="outline"
+ className="text-foreground text-xs border-[var(--border-default)] bg-transparent hover:bg-[var(--border)] rounded-md px-3 py-1.5 whitespace-nowrap"
+ />
+ </div>
+ </div>
  {loading ? (
  <div className="animate-pulse flex flex-col gap-4">
  <div className="h-10 bg-card rounded-md w-full"></div>
