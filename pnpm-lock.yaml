@@ -33,6 +33,9 @@ importers:
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
+      better-sqlite3:
+        specifier: ^13.0.3
+        version: 13.0.3
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -7341,7 +7344,6 @@ snapshots:
   better-sqlite3@13.0.3:
     dependencies:
       node-addon-api: 8.9.1
-    optional: true
 
   big.js@5.2.2: {}
 
@@ -8833,8 +8835,7 @@ snapshots:
       - '@types/node'
       - babel-plugin-macros
 
-  node-addon-api@8.9.1:
-    optional: true
+  node-addon-api@8.9.1: {}
 
   node-fetch@2.7.0:
     dependencies:

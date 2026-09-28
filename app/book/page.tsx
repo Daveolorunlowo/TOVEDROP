@@ -445,19 +445,7 @@ function BookWizard() {
  />
  </div>
 
- {/* Ride Pooling Toggle */}
- <div className="flex flex-row items-center justify-between rounded-lg border p-4 bg-surface-card">
- <div className="space-y-0.5">
- <Label className="text-base font-semibold">Pool this Ride?</Label>
- <p className="text-sm text-muted-foreground">Share this ride with others going in the same direction.</p>
- </div>
- <div 
- className={`w-11 h-6 rounded-full relative cursor-pointer transition-colors ${isPool ? 'bg-orange-brand' : 'bg-muted'}`}
- onClick={() => setIsPool(!isPool)}
- >
- <div className={`absolute top-[2px] left-[2px] bg-white w-5 h-5 rounded-full transition-transform ${isPool ? 'translate-x-5' : 'translate-x-0'}`} />
- </div>
- </div>
+
 
  <div className="bg-surface-card rounded-xl p-4 flex items-center justify-between">
  <div className="flex items-center gap-2">

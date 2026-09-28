@@ -118,37 +118,31 @@ export function LocationSearchInput({ placeholder = "Search for a location on ca
  )}
  </div>
 
- {open && query.trim() && !loading && searched && (
- <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
- {results.length > 0 ? (
- <ul className="py-1">
- {results.map((r, i) => (
- <li
- key={i}
- className="px-3 py-2 hover:bg-muted cursor-pointer flex items-start gap-2"
- onClick={() => handleSelect(r)}
- >
- <MapPin className="w-4 h-4 mt-0.5 text-primary shrink-0" />
- <span className="text-sm line-clamp-2">{r.label}</span>
- </li>
- ))}
- </ul>
- ) : (
- <div 
- className="p-4 text-sm text-center cursor-pointer hover:bg-muted/50 transition-colors"
- onClick={() => {
- setOpen(false);
- document.getElementById('map-container')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
- }}
- >
- <div className="font-medium text-primary mb-1">Location not found</div>
- <div className="text-muted-foreground">
- We don't have this location saved yet. Please tap the exact spot on the map below to set it precisely.
- </div>
- </div>
- )}
- </div>
- )}
+  {open && query.trim() && !loading && searched && (
+  <div className="absolute z-50 w-full mt-1 bg-card border border-border rounded-md shadow-lg max-h-60 overflow-y-auto">
+  <ul className="py-1">
+  <li
+  className="px-3 py-2 hover:bg-muted cursor-pointer flex items-start gap-2 border-b border-border mb-1 pb-3"
+  onClick={() => handleSelect({ label: query.trim(), lat: 0, lng: 0 })}
+  >
+  <MapPin className="w-4 h-4 mt-0.5 text-orange-brand shrink-0" />
+  <span className="text-sm font-medium text-orange-brand">
+  Use "{query.trim()}"
+  </span>
+  </li>
+  {results.map((r, i) => (
+  <li
+  key={i}
+  className="px-3 py-2 hover:bg-muted cursor-pointer flex items-start gap-2"
+  onClick={() => handleSelect(r)}
+  >
+  <MapPin className="w-4 h-4 mt-0.5 text-primary shrink-0" />
+  <span className="text-sm line-clamp-2">{r.label}</span>
+  </li>
+  ))}
+  </ul>
+  </div>
+  )}
  </div>
  );
 }
