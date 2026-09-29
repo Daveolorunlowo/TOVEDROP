@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 
-export async function GET(req: Request, { params }: { params: { shareToken: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ shareToken: string }> }) {
  try {
- const { shareToken } = params
+ const resolvedParams = await params;
+ const { shareToken } = resolvedParams
 
  const transfer = await prisma.tripTransfer.findUnique({
  where: { shareToken },

@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import crypto from 'crypto'
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
  try {
  const session = await getServerSession(authOptions)
  if (!session?.user || session.user.role !== 'DRIVER') {
@@ -17,7 +17,9 @@ export async function POST(req: Request, { params }: { params: { id: string } })
  }
 
  const driverId = session.user.id
- const tripId = params.id
+ const resolvedParams = await params;
+ const tripId = resolvedParams.id
+
 
  const trip = await prisma.trip.findUnique({
  where: { id: tripId },

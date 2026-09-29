@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
+// @ts-ignore
 import Database from 'better-sqlite3';
 import { PrismaClient } from './generated/prisma/client';
 import pg from 'pg';
@@ -21,7 +22,7 @@ async function main() {
     await prisma.adminLoginLog.deleteMany({});
     await prisma.user.deleteMany({});
     
-    const toBool = (val) => val === 1 ? true : (val === 0 ? false : val);
+    const toBool = (val: any) => val === 1 ? true : (val === 0 ? false : val);
     
     // 1. Users
     console.log("Migrating Users...");

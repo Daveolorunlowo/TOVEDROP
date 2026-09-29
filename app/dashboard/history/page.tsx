@@ -57,7 +57,7 @@ export default async function DashboardDropsHistory() {
  {drop.type === 'PURCHASE' ? '+' : '-'}{drop.amount}
  </p>
  <p className="text-[10px] text-muted-foreground uppercase font-semibold mt-0.5">
- {drop.status}
+ {drop.type}
  </p>
  </div>
  </div>

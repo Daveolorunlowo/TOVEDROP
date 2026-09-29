@@ -19,7 +19,7 @@ function getReasonText(reason: string, note?: string | null) {
  return map[reason] || "Unforeseen circumstances"
 }
 
-export async function POST(req: Request, { params }: { params: { shareToken: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ shareToken: string }> }) {
  try {
  const session = await getServerSession(authOptions)
  if (!session?.user || session.user.role !== 'DRIVER') {
@@ -27,7 +27,8 @@ export async function POST(req: Request, { params }: { params: { shareToken: str
  }
 
  const acceptingDriverId = session.user.id
- const { shareToken } = params
+ const resolvedParams = await params;
+ const { shareToken } = resolvedParams
 
  // Basic checks first without side effects
  const transferCheck = await prisma.tripTransfer.findUnique({

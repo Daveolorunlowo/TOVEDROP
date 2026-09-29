@@ -11,11 +11,11 @@ import { withValidation } from "@/lib/with-validation"
 
 const createTripSchema = z.object({
   pickup: z.string().min(2, "Pickup location is required"),
-  pickupLat: z.number({ required_error: "Pickup latitude is required" }),
-  pickupLng: z.number({ required_error: "Pickup longitude is required" }),
+  pickupLat: z.number(),
+  pickupLng: z.number(),
   destination: z.string().min(2, "Destination is required"),
-  destinationLat: z.number({ required_error: "Destination latitude is required" }),
-  destinationLng: z.number({ required_error: "Destination longitude is required" }),
+  destinationLat: z.number(),
+  destinationLng: z.number(),
   date: z.string().min(1, "Date is required"),
   time: z.string().min(1, "Time is required"),
   notes: z.string().optional(),
