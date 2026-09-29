@@ -1,8 +1,8 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, MessageCircle } from 'lucide-react'
+import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { ChatModal } from '@/components/chat-modal'
@@ -55,7 +55,7 @@ export function TripList({
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
-  
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false)  
   useEffect(() => {
     setUpcomingTrips(initialUpcoming)
     setPastTrips(initialPast)
@@ -204,13 +204,23 @@ export function TripList({
 
       {/* Trip History */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
-            Trip History
-          </p>
+        <div 
+          className="flex items-center justify-between mb-3 cursor-pointer select-none group"
+          onClick={() => setIsHistoryExpanded(!isHistoryExpanded)}
+        >
+          <div className="flex items-center gap-1.5 transition-opacity group-hover:opacity-80">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
+              Trip History
+            </p>
+            {isHistoryExpanded ? (
+              <ChevronUp className="w-3.5 h-3.5" style={{ color: 'var(--muted-foreground)' }} />
+            ) : (
+              <ChevronDown className="w-3.5 h-3.5" style={{ color: 'var(--muted-foreground)' }} />
+            )}
+          </div>
           {pastTrips.length > 0 && (
             <span
-              className="text-[10px] font-semibold px-1.5 py-0.5"
+              className="text-[10px] font-semibold px-1.5 py-0.5 transition-opacity group-hover:opacity-80"
               style={{ background: 'var(--card)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
             >
               {pastTrips.length}
@@ -218,55 +228,59 @@ export function TripList({
           )}
         </div>
 
-        {pastTrips.length === 0 ? (
-          <div
-            className="rounded-lg"
-            style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '20px' }}
-          >
-            <TrendingUp className="w-4 h-4 mb-2" style={{ color: 'var(--muted-foreground)' }} />
-            <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Completed trips will appear here.</p>
-          </div>
-        ) : (
-          <div
-            className="rounded-lg overflow-hidden"
-            style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
-          >
-            {pastTrips.map((trip, i) => (
+        {isHistoryExpanded && (
+          <div className="animate-in fade-in slide-in-from-top-2 duration-200">
+            {pastTrips.length === 0 ? (
               <div
-                key={trip.id}
-                className="flex items-center gap-3 px-4 py-3 transition-colors"
-                style={{ 
-                  borderBottom: i < pastTrips.length - 1 ? '1px solid var(--border)' : 'none',
-                  backgroundColor: trip.status === 'CANCELLED' && trip.isOptimistic ? 'rgba(255,255,255,0.02)' : 'transparent',
-                  opacity: trip.status === 'CANCELLED' ? 0.6 : 1
-                }}
+                className="rounded-lg"
+                style={{ background: 'var(--card)', border: '1px solid var(--border)', padding: '20px' }}
               >
-                <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
-                    {trip.driver ? initials(trip.driver.name!) : '?'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-medium truncate ${trip.status === 'CANCELLED' ? 'line-through decoration-white/20' : ''}`} style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.driver?.name ?? 'Unknown'}
-                  </p>
-                  <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.pickup} â†’ {trip.destination}
-                  </p>
-                </div>
-                {trip.status === 'COMPLETED' && !trip.review ? (
-                  <Link
-                    href={`/rate/${trip.id}`}
-                    className="text-[10px] font-semibold px-2 py-0.5 rounded shrink-0 flex items-center gap-1 hover:brightness-110"
-                    style={{ background: 'var(--card)', color: 'var(--orange-brand)', borderRadius: '4px' }}
-                  >
-                    <Star className="w-2.5 h-2.5" /> Rate
-                  </Link>
-                ) : (
-                  <StatusChip status={trip.status} />
-                )}
+                <TrendingUp className="w-4 h-4 mb-2" style={{ color: 'var(--muted-foreground)' }} />
+                <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>Completed trips will appear here.</p>
               </div>
-            ))}
+            ) : (
+              <div
+                className="rounded-lg overflow-hidden"
+                style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
+              >
+                {pastTrips.map((trip, i) => (
+                  <div
+                    key={trip.id}
+                    className="flex items-center gap-3 px-4 py-3 transition-colors"
+                    style={{ 
+                      borderBottom: i < pastTrips.length - 1 ? '1px solid var(--border)' : 'none',
+                      backgroundColor: trip.status === 'CANCELLED' && trip.isOptimistic ? 'rgba(255,255,255,0.02)' : 'transparent',
+                      opacity: trip.status === 'CANCELLED' ? 0.6 : 1
+                    }}
+                  >
+                    <Avatar className="w-7 h-7 shrink-0">
+                      <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
+                        {trip.driver ? initials(trip.driver.name!) : '?'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className={`text-xs font-medium truncate ${trip.status === 'CANCELLED' ? 'line-through decoration-white/20' : ''}`} style={{ color: 'var(--muted-foreground)' }}>
+                        {trip.driver?.name ?? 'Unknown'}
+                      </p>
+                      <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
+                        {trip.pickup} → {trip.destination}
+                      </p>
+                    </div>
+                    {trip.status === 'COMPLETED' && !trip.review ? (
+                      <Link
+                        href={`/rate/${trip.id}`}
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded shrink-0 flex items-center gap-1 hover:brightness-110"
+                        style={{ background: 'var(--card)', color: 'var(--orange-brand)', borderRadius: '4px' }}
+                      >
+                        <Star className="w-2.5 h-2.5" /> Rate
+                      </Link>
+                    ) : (
+                      <StatusChip status={trip.status} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
