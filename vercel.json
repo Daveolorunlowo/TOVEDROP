@@ -1,18 +1,4 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "crons": [
-    {
-      "path": "/api/cron/reminders",
-      "schedule": "0 */6 * * *"
-    },
-    {
-      "path": "/api/cron/expire-trips",
-      "schedule": "0 */4 * * *"
-    },
-    {
-      "path": "/api/cron/paystack-reconcile",
-      "schedule": "0 0 * * *"
-    }
-  ]
+  "buildCommand": "npm run build"
 }
