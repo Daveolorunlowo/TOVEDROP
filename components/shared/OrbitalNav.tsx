@@ -112,7 +112,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  {/* Backdrop for mobile */}
  <div 
  className={cn(
- "fixed inset-0 bg-background z-40 transition-opacity sm:hidden",
+ "fixed inset-0 bg-background/60 backdrop-blur-md z-40 transition-all duration-500 sm:hidden",
  isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
  )}
  aria-hidden="true"
@@ -161,7 +161,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
  isActive ? "border-primary shadow-[0_0_12px_rgba(34,197,94,0.3)]" : "border-border"
  )}
  style={{
- transform: isOpen ? `translate(${x}px, ${y}px) scale(1)` : `translate(0px, 0px) scale(0.3)`,
+ transform: isOpen ? `translate(${x}px, ${y}px) scale(1) rotate(0deg)` : `translate(0px, 0px) scale(0.3) rotate(-180deg)`,
  opacity: isOpen ? 1 : 0,
  transition: isReducedMotion 
  ? 'opacity 0.2s ease, transform 0s'
