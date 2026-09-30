@@ -25,14 +25,15 @@ import { TripList } from '@/components/dashboard/TripList'
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
-  if (!session?.user) redirect('/auth/login')
+  if (!session?.user) redirect('/auth')
 
-  if (session.user.role !== 'RIDER') {
-    redirect(getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null))
+  const redirectPath = getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null)
+  if (redirectPath !== '/dashboard') {
+    redirect(redirectPath)
   }
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
-  if (!user) redirect('/auth/login')
+  if (!user) redirect('/auth')
 
   const trips = await prisma.trip.findMany({
     where: { riderId: user.id },

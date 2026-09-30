@@ -80,7 +80,7 @@ export default async function RootLayout({
   const hasSeenWelcome = cookieStore.get('tovedrop_welcomed')?.value === 'true'
 
   return (
-    <html lang="en" className="bg-background">
+    <html lang="en" className="bg-background" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <Providers>
           <GlobalAuthenticatedNav />

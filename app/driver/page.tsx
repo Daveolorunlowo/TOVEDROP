@@ -77,7 +77,7 @@ export default function DriverDashboardPage() {
     try {
       const res = await fetch('/api/driver/trips')
       if (res.ok) setData(await res.json())
-      else if (res.status === 401) router.push('/auth/login')
+      else if (res.status === 401) router.push('/auth')
     } catch (e) {
       console.error(e)
     } finally {
