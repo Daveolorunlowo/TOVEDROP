@@ -4,15 +4,15 @@
   "crons": [
     {
       "path": "/api/cron/reminders",
-      "schedule": "* * * * *"
+      "schedule": "0 */6 * * *"
     },
     {
       "path": "/api/cron/expire-trips",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 */4 * * *"
     },
     {
       "path": "/api/cron/paystack-reconcile",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
