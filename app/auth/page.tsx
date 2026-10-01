@@ -58,13 +58,13 @@ function CheckmarkIcon() {
   );
 }
 
-type AuthState = 'idle' | 'anticipating' | 'dropping' | 'squashed' | 'splashing' | 'error';
+
 
 function AuthForm() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<'login' | 'signup'>('login');
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [btnState, setBtnState] = useState<AuthState>('idle');
+  const [isProcessing, setIsProcessing] = useState(false);
   const [errorText, setErrorText] = useState('');
   const router = useRouter();
 
@@ -74,27 +74,9 @@ function AuthForm() {
   }, [searchParams]);
 
   const intent = searchParams.get('intent');
-  const isProcessing = btnState !== 'idle' && btnState !== 'error';
 
   const resetForm = () => {
-    setBtnState('idle');
     setErrorText('');
-  };
-
-  const handleAuthResult = async (success: boolean, message?: string, redirectUrl?: string) => {
-    if (success) {
-      setBtnState('splashing');
-      await sleep(700);
-      document.body.style.opacity = '0';
-      document.body.style.transition = 'opacity 200ms ease-out';
-      await sleep(200);
-      router.push(redirectUrl || '/dashboard');
-    } else {
-      setBtnState('error');
-      setErrorText(message || 'Authentication failed');
-      await sleep(2000);
-      resetForm();
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -120,11 +102,11 @@ function AuthForm() {
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // Start physical drop animation sequence
-    setBtnState('anticipating');
+    setIsProcessing(true);
+    setErrorText('');
     
-    // Kick off the API call concurrently
-    const apiPromise = (async () => {
+    try {
+      let result;
       if (tab === 'signup') {
         const res = await fetch('/api/auth/register', {
           method: 'POST',
@@ -133,42 +115,39 @@ function AuthForm() {
         });
         if (res.ok) {
           const signInRes = await signIn('credentials', { email, password, redirect: false });
-          return signInRes?.error ? { ok: false, msg: 'Sign in failed' } : { ok: true, url: intent === 'book' ? '/book' : '/welcome' };
+          result = signInRes?.error ? { ok: false, msg: 'Sign in failed' } : { ok: true, url: intent === 'book' ? '/book' : '/welcome' };
+        } else {
+          const data = await res.json();
+          result = { ok: false, msg: data.message || 'Registration failed' };
         }
-        const data = await res.json();
-        return { ok: false, msg: data.message || 'Registration failed' };
       } else {
         const res = await signIn('credentials', { email, password, redirect: false });
-        if (res?.error) return { ok: false, msg: 'Invalid email or password' };
-        
-        if (intent === 'book') return { ok: true, url: '/book' };
-        const session = await getSession();
-        if (session?.user) {
-          return { ok: true, url: getRoleRedirectPath(session.user.role as string, (session.user as any).driverStatus as string | null) };
+        if (res?.error) {
+          result = { ok: false, msg: 'Invalid email or password' };
+        } else {
+          if (intent === 'book') {
+            result = { ok: true, url: '/book' };
+          } else {
+            await new Promise(r => setTimeout(r, 100));
+            const session = await getSession();
+            if (session?.user) {
+              result = { ok: true, url: getRoleRedirectPath(session.user.role as string, (session.user as any).driverStatus as string | null) };
+            } else {
+              result = { ok: true, url: '/dashboard' };
+            }
+          }
         }
-        return { ok: true, url: '/dashboard' };
       }
-    })();
 
-    await sleep(300); // Anticipation pump ends
-    
-    setBtnState('dropping');
-    await sleep(460); // Drop fall animation finishes
-
-    setBtnState('squashed');
-    
-    // Wait for actual auth to finish if it hasn't already
-    const result = await apiPromise;
-    await handleAuthResult(result.ok, result.msg, result.url);
-  };
-
-  const getButtonAnimation = () => {
-    switch (btnState) {
-      case 'idle': return 'btn-breathe 2.6s infinite ease-in-out';
-      case 'anticipating': return 'btn-anticipation 300ms ease-in-out';
-      case 'splashing': return 'btn-recoil 240ms ease-out';
-      case 'error': return 'btn-shake 200ms ease-in-out';
-      default: return 'none';
+      if (result.ok && result.url) {
+        window.location.href = result.url;
+      } else {
+        setErrorText(result.msg || 'Authentication failed');
+        setIsProcessing(false);
+      }
+    } catch (e) {
+      setErrorText('An unexpected error occurred');
+      setIsProcessing(false);
     }
   };
 
@@ -247,81 +226,30 @@ function AuthForm() {
             {/* Morphing Drop Button System */}
             <div className="relative z-50 flex flex-col items-center mt-6" style={{ height: '110px' }}>
               
-              <button
-                type="submit"
-                disabled={isProcessing}
-                aria-busy={isProcessing}
-                aria-live="polite"
-                className="flex items-center justify-center font-bold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-brand relative z-10"
-                style={{
-                  width: (btnState !== 'idle' && btnState !== 'error') ? '52px' : '100%',
-                  height: '52px',
-                  borderRadius: '26px',
-                  background: btnState === 'error' ? 'var(--status-danger)' : 'var(--orange-brand)',
-                  transition: 'width 300ms ease-in-out, background 200ms ease-out',
-                  animation: getButtonAnimation(),
-                }}
-              >
-                <span style={{
-                  opacity: btnState === 'idle' ? 1 : 0,
-                  transition: 'opacity 100ms ease-out',
-                  position: btnState === 'idle' ? 'relative' : 'absolute'
-                }}>
-                  {tab === 'login' ? 'Log In' : 'Create Account'}
-                </span>
-                
-                {btnState === 'error' && (
-                  <span className="absolute">Try again</span>
-                )}
-              </button>
-
-              {/* The Physical Drop */}
-              {(btnState === 'dropping' || btnState === 'squashed') && (
-                <div 
-                  className="absolute z-0 pointer-events-none"
-                  style={{
-                    top: '26px',
-                    animation: btnState === 'dropping' ? 'drop-fall-wrap 460ms cubic-bezier(0.5, 0.05, 0.7, 0.3) forwards' : 'none',
-                    transform: btnState === 'squashed' ? 'translateY(55px) scale(1.6, 0.4)' : undefined,
-                  }}
+              <Button
+                  type="submit"
+                  disabled={isProcessing}
+                  size="lg"
+                  className="w-full h-12 rounded-full font-bold transition-all relative"
                 >
-                  <div className="w-[14px] h-[14px] bg-orange-brand" style={{ borderRadius: '50% 50% 50% 0', transform: 'rotate(-45deg)' }} />
-                </div>
-              )}
+                  {isProcessing ? (
+                    <span className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Authenticating...
+                    </span>
+                  ) : tab === 'login' ? 'Log In' : 'Create Account'}
+                </Button>
 
-              {/* Splash & Checkmark Payoff */}
-              {btnState === 'splashing' && (
-                <div className="absolute z-20 pointer-events-none" style={{ top: '81px' }}>
-                  {/* Expanding Rings */}
-                  <div className="absolute border-[1.5px] border-orange-brand rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[44px]" style={{ animation: 'ring-expand 650ms ease-out forwards' }} />
-                  <div className="absolute border-[1.5px] border-orange-brand rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[44px]" style={{ animation: 'ring-expand 650ms ease-out 130ms forwards', opacity: 0 }} />
-                  
-                  {/* Particle Burst */}
-                  {[...Array(7)].map((_, i) => (
-                    <div key={i} className="absolute w-[5px] h-[5px] bg-orange-brand rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ animation: `particle-burst-${i} 600ms ease-out forwards` }} />
-                  ))}
-                  
-                  {/* Success Checkmark Circle */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[22px] h-[22px] bg-orange-brand rounded-full flex items-center justify-center" style={{ animation: 'checkmark-bounce 520ms ease-out forwards' }}>
-                    <CheckmarkIcon />
-                  </div>
-                </div>
-              )}
-
-              {/* Status Text Region */}
-              <div className="absolute top-[88px] w-full text-center text-sm font-medium h-[24px]">
-                <div style={{ opacity: (btnState === 'dropping' || btnState === 'squashed') ? 1 : 0, transition: 'opacity 200ms' }} className="text-muted-foreground absolute inset-0">
-                  Dropping you in...
-                </div>
-                <div style={{ opacity: btnState === 'splashing' ? 1 : 0, transform: btnState === 'splashing' ? 'translateY(0)' : 'translateY(8px)', transition: 'all 300ms ease-out' }} className="text-orange-brand absolute inset-0">
-                  You're in — welcome back.
-                </div>
-                <div style={{ opacity: btnState === 'error' ? 1 : 0, transition: 'opacity 200ms' }} className="text-red-500 absolute inset-0">
-                  {errorText}
+                {/* Status Text Region */}
+                <div className="absolute top-[88px] w-full text-center text-sm font-medium h-[24px]">
+                  {errorText && (
+                    <div className="text-red-500 absolute inset-0">
+                      {errorText}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
           
           <div className="relative mt-8 mb-6">
             <div className="absolute inset-0 flex items-center">
@@ -358,82 +286,7 @@ export default function AuthPage() {
         <AuthForm />
       </Suspense>
 
-      <style jsx global>{`
-        @keyframes btn-breathe {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.015); }
-        }
-        @keyframes btn-anticipation {
-          0% { transform: scaleY(1); }
-          33% { transform: scaleY(0.9); }
-          66% { transform: scaleY(1.03); }
-          85% { transform: scaleY(0.88); }
-          100% { transform: scaleY(1); }
-        }
-        @keyframes btn-recoil {
-          0% { transform: translateY(0) scaleY(1); }
-          40% { transform: translateY(-3px) scaleY(0.97); }
-          100% { transform: translateY(0) scaleY(1); }
-        }
-        @keyframes btn-shake {
-          0%, 100% { transform: translateX(0); }
-          20% { transform: translateX(-3px); }
-          40% { transform: translateX(3px); }
-          60% { transform: translateX(-2px); }
-          80% { transform: translateX(2px); }
-        }
-        @keyframes drop-fall-wrap {
-          0% { transform: translateY(0) scale(0); opacity: 0; }
-          10% { opacity: 1; transform: translateY(5px) scale(0.85, 1.3); }
-          60% { transform: translateY(35px) scale(0.78, 1.5); }
-          95% { transform: translateY(53px) scale(0.9, 1.2); }
-          100% { transform: translateY(55px) scale(1.6, 0.4); opacity: 1; }
-        }
-        @keyframes ring-expand {
-          0% { transform: scale(0.27); opacity: 0.7; }
-          100% { transform: scale(1); opacity: 0; }
-        }
-        @keyframes checkmark-bounce {
-          0% { transform: scale(0.3) rotate(-8deg); opacity: 0; }
-          30% { transform: scale(1.3) rotate(4deg); opacity: 1; }
-          60% { transform: scale(0.9) rotate(-2deg); }
-          85% { transform: scale(1.06) rotate(1deg); }
-          100% { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-        @keyframes checkmark-draw {
-          from { stroke-dashoffset: 24; }
-          to { stroke-dashoffset: 0; }
-        }
-        
-        @keyframes particle-burst-0 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% - 16px), calc(-50% - 22px)) scale(0); opacity: 0; }
-        }
-        @keyframes particle-burst-1 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% + 18px), calc(-50% - 15px)) scale(0); opacity: 0; }
-        }
-        @keyframes particle-burst-2 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% - 24px), calc(-50% + 4px)) scale(0); opacity: 0; }
-        }
-        @keyframes particle-burst-3 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% + 22px), calc(-50% + 8px)) scale(0); opacity: 0; }
-        }
-        @keyframes particle-burst-4 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% - 12px), calc(-50% + 26px)) scale(0); opacity: 0; }
-        }
-        @keyframes particle-burst-5 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% + 14px), calc(-50% + 24px)) scale(0); opacity: 0; }
-        }
-        @keyframes particle-burst-6 {
-          0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-          100% { transform: translate(calc(-50% + 2px), calc(-50% - 28px)) scale(0); opacity: 0; }
-        }
-      `}</style>
+      
     </div>
   );
 }

@@ -46,9 +46,10 @@ export const POST = withValidation(createTripSchema, async (req: NextRequest, da
  return lat >= BOWEN_BOUNDS.south && lat <= BOWEN_BOUNDS.north && lng >= BOWEN_BOUNDS.west && lng <= BOWEN_BOUNDS.east
  }
 
- if (!isWithinBounds(pickupLat, pickupLng) || !isWithinBounds(destinationLat, destinationLng)) {
- return NextResponse.json({ message: "Locations must be within Bowen University campus bounds." }, { status: 400 })
- }
+ // Removed bounds validation at user request so all locations are accepted.
+ // if (!isWithinBounds(pickupLat, pickupLng) || !isWithinBounds(destinationLat, destinationLng)) {
+ // return NextResponse.json({ message: "Locations must be within Bowen University campus bounds." }, { status: 400 })
+ // }
 
  // === IDEMPOTENCY CHECK ===
  // If a trip with this idempotency key already exists, return it (dedup)
