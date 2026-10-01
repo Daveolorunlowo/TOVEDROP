@@ -18,7 +18,7 @@ export function TripPoller({ userId }: { userId: string }) {
  router.refresh()
  }
 
- useResilientChannel(`user-trips-${userId}`, 'trip-accepted', (data) => handleEvent(data, 'accepted'), () => router.refresh())
+ useResilientChannel(`user-trips-${userId}`, 'trip-accepted', (data) => handleEvent(data, 'accepted'))
  useResilientChannel(`user-trips-${userId}`, 'trip-completed', (data) => handleEvent(data, 'completed'))
  useResilientChannel(`user-trips-${userId}`, 'trip-transferred', (data) => handleEvent(data, 'transferred'))
  useResilientChannel(`user-trips-${userId}`, 'trip-cancelled', (data) => {
