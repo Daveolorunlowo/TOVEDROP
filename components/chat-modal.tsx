@@ -72,7 +72,9 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  if (document.head.contains(style)) {
  document.head.removeChild(style)
  }
- if (pusherClient) pusherClient.unsubscribe(`trip-${tripId}`)
+ if (pusherClient) {
+ channel.unbind('new-message')
+ }
  }
  }, [tripId])
 
