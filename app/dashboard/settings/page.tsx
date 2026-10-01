@@ -93,18 +93,18 @@ export default function RiderSettingsPage() {
 
  return (
  <div className="space-y-6 animate-in fade-in duration-300 max-w-2xl pb-20">
+ <div className="flex flex-col gap-2">
  <div className="flex items-center justify-between">
- <div>
- <h1 className="text-2xl font-bold mb-1 text-foreground">Settings</h1>
- <p className="text-sm text-muted-foreground mb-6">Manage your preferences and notifications.</p>
- </div>
- <div className="flex items-center gap-4">
+ <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+ <div className="flex items-center gap-3">
  <ThemeToggle />
  <SignOutButton
  variant="outline"
- className="text-foreground text-xs border-[var(--border-default)] bg-transparent hover:bg-[var(--border)] rounded-md px-3 py-1.5 whitespace-nowrap"
+ className="text-foreground text-xs border border-border bg-transparent hover:bg-border rounded-md px-3 py-1.5 whitespace-nowrap"
  />
  </div>
+ </div>
+ <p className="text-sm text-muted-foreground">Manage your preferences and notifications.</p>
  </div>
 
  {loading ? (
@@ -124,9 +124,9 @@ export default function RiderSettingsPage() {
  <div className="flex items-center justify-between py-3 border-border">
  <div>
  <p className="text-sm font-medium text-foreground">Device Push Notifications</p>
- <p className="text-xs text-muted-foreground">Receive important trip alerts directly on your device</p>
+ <p className="text-xs text-muted-foreground pr-4">Receive important trip alerts directly on your device</p>
  </div>
- <label className="relative inline-flex items-center cursor-pointer">
+ <label className="relative inline-flex items-center cursor-pointer shrink-0">
  <input 
  type="checkbox" 
  className="sr-only peer"
