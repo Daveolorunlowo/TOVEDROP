@@ -87,9 +87,9 @@ export function TripList({
     const hoursDifference = (tripDate.getTime() - new Date().getTime()) / (1000 * 60 * 60)
 
     if (hoursDifference <= 2) {
-      showToast('Trip cancelled â€” no refund (cancelled within 2 hours of trip time)')
+      showToast('Trip cancelled - no refund (cancelled within 2 hours of trip time)')
     } else {
-      showToast('Trip cancelled â€” 1 Drop refunded')
+      showToast('Trip cancelled - 1 Drop refunded')
     }
 
     setProcessing(tripId)
@@ -165,10 +165,10 @@ export function TripList({
                 </Avatar>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-semibold truncate" style={{ color: 'var(--foreground)' }}>
-                    {trip.driver?.name ?? 'Searching for driverâ€¦'}
+                    {trip.driver?.name ?? 'Searching for driver...'}
                   </p>
                   <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.pickup} â†’ {trip.destination}
+                    {trip.pickup} &rarr; {trip.destination}
                   </p>
                 </div>
                 <div className="shrink-0 text-right hidden sm:block">
@@ -263,7 +263,7 @@ export function TripList({
                         {trip.driver?.name ?? 'Unknown'}
                       </p>
                       <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                        {trip.pickup} → {trip.destination}
+                        {trip.pickup} &rarr; {trip.destination}
                       </p>
                     </div>
                     {trip.status === 'COMPLETED' && !trip.review ? (

@@ -128,9 +128,9 @@ export function TripListClient({
  const tripDate = new Date(`${targetTrip.date} ${targetTrip.time}`)
  const isWithin2Hours = tripDate.getTime() - Date.now() < 2 * 60 * 60 * 1000
  if (isWithin2Hours && targetTrip.status === 'CONFIRMED') {
- showToast('Trip cancelled — no refund (cancelled within 2 hours of trip time)')
+ showToast('Trip cancelled - no refund (cancelled within 2 hours of trip time)')
  } else {
- showToast('Trip cancelled — 1 Drop refunded')
+ showToast('Trip cancelled - 1 Drop refunded')
  }
 
  setProcessing(tripId)
@@ -191,11 +191,11 @@ export function TripListClient({
  </Avatar>
  <div className="flex-1 min-w-0">
  <p className={`text-sm font-semibold truncate ${trip.status === 'CANCELLED' ? 'line-through opacity-70' : 'text-foreground'}`}>
- {trip.driver?.name ?? 'Searching for driver…'}
+ {trip.driver?.name ?? 'Searching for driver...'}
  </p>
  <div className="flex items-center gap-1.5 mt-0.5">
  <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.pickup}</span>
- <span className="text-[10px] text-muted-foreground/60">→</span>
+ <span className="text-[10px] text-muted-foreground/60">&rarr;</span>
  <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.destination}</span>
  </div>
  </div>
