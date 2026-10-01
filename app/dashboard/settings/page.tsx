@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
@@ -46,7 +46,7 @@ export default function RiderSettingsPage() {
  if (success) {
  setPushEnabled(true)
  setPermissionDenied(false)
- setMessage('✓ Push notifications enabled!')
+ setMessage('✓✓ Push notifications enabled!')
  } else {
  setPushEnabled(false)
  // User dismissed or denied the dialog
@@ -92,39 +92,39 @@ export default function RiderSettingsPage() {
  }
 
  return (
- <div className="space-y-6 animate-in fade-in duration-300 max-w-2xl pb-20">
- <div className="flex flex-col gap-2">
+ <div className="space-y-8 animate-in fade-in duration-300 max-w-2xl pb-20 mt-4">
+ <div className="flex flex-col gap-3">
  <div className="flex items-center justify-between">
- <h1 className="text-2xl font-bold text-foreground">Settings</h1>
- <div className="flex items-center gap-3">
+ <h1 className="text-3xl font-bold text-foreground tracking-tight">Settings</h1>
+ <div className="flex items-center gap-4">
  <ThemeToggle />
  <SignOutButton
  variant="outline"
- className="text-foreground text-xs border border-border bg-transparent hover:bg-border rounded-md px-3 py-1.5 whitespace-nowrap"
+ className="text-foreground text-sm font-medium border border-border bg-transparent hover:bg-border rounded-lg px-4 py-2 whitespace-nowrap"
  />
  </div>
  </div>
- <p className="text-sm text-muted-foreground">Manage your preferences and notifications.</p>
+ <p className="text-base text-muted-foreground">Manage your preferences and notifications.</p>
  </div>
 
  {loading ? (
- <div className="animate-pulse flex flex-col gap-4">
- <div className="h-10 bg-card rounded-md w-full"></div>
- <div className="h-10 bg-card rounded-md w-full"></div>
+ <div className="animate-pulse flex flex-col gap-6">
+ <div className="h-16 bg-card rounded-xl w-full"></div>
+ <div className="h-16 bg-card rounded-xl w-full"></div>
  </div>
  ) : (
- <div className="space-y-6">
- <div className="bg-card border border-border rounded-xl p-5">
- <div className="flex items-center gap-2 mb-4">
- <Bell className="w-5 h-5 text-primary" />
- <h2 className="font-semibold text-lg">Notifications</h2>
+ <div className="space-y-8">
+ <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm">
+ <div className="flex items-center gap-3 mb-6">
+ <Bell className="w-6 h-6 text-primary" />
+ <h2 className="font-semibold text-xl">Notifications</h2>
  </div>
  
- <div className="space-y-4">
- <div className="flex items-center justify-between py-3 border-border">
- <div>
- <p className="text-sm font-medium text-foreground">Device Push Notifications</p>
- <p className="text-xs text-muted-foreground pr-4">Receive important trip alerts directly on your device</p>
+ <div className="space-y-6">
+ <div className="flex items-center justify-between py-2 border-border">
+ <div className="flex flex-col gap-1">
+ <p className="text-base font-medium text-foreground">Device Push Notifications</p>
+ <p className="text-sm text-muted-foreground pr-4">Receive important trip alerts directly on your device</p>
  </div>
  <label className="relative inline-flex items-center cursor-pointer shrink-0">
  <input 
@@ -133,45 +133,45 @@ export default function RiderSettingsPage() {
  checked={pushEnabled}
  onChange={handleTogglePush}
  />
- <div className="w-9 h-5 bg-background peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+ <div className="w-11 h-6 bg-background peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
  </label>
  </div>
  </div>
  </div>
  
  {message && (
- <p className={`text-sm font-medium ${message.startsWith('✓') ? 'text-green-400' : permissionDenied ? 'text-red-400' : 'text-muted-foreground'}`}>
+ <p className={`text-base font-medium px-2 ${message.startsWith('✓') ? 'text-green-500' : permissionDenied ? 'text-red-500' : 'text-muted-foreground'}`}>
  {message}
  </p>
  )}
  {permissionDenied && !message && (
- <p className="text-xs text-red-400">
+ <p className="text-sm text-red-500 px-2">
  Notifications are blocked in your browser. To enable, go to your browser or phone settings and allow notifications for this site.
  </p>
  )}
 
- <div className="bg-card border border-border rounded-xl p-5">
- <div className="flex items-center gap-2 mb-4">
- <MessageSquare className="w-5 h-5 text-primary" />
- <h2 className="font-semibold text-lg">Help & Feedback</h2>
+ <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-sm">
+ <div className="flex items-center gap-3 mb-6">
+ <MessageSquare className="w-6 h-6 text-primary" />
+ <h2 className="font-semibold text-xl">Help & Feedback</h2>
  </div>
  
- <div className="space-y-4">
- <p className="text-sm text-muted-foreground mb-4">Have an issue with a trip, or an idea to make Tovedrop better? Let us know.</p>
+ <div className="space-y-6">
+ <p className="text-base text-muted-foreground mb-6">Have an issue with a trip, or an idea to make Tovedrop better? Let us know.</p>
  
  {feedbackSuccess ? (
- <div className="bg-card border border-border p-6 rounded-lg text-center">
- <CheckCircle2 className="w-8 h-8 text-primary mx-auto mb-3" />
- <h3 className="text-sm font-semibold text-foreground mb-1">Feedback Received</h3>
- <p className="text-xs text-muted-foreground">Thank you for helping us improve!</p>
+ <div className="bg-card border border-border p-8 rounded-xl text-center">
+ <CheckCircle2 className="w-10 h-10 text-primary mx-auto mb-4" />
+ <h3 className="text-base font-semibold text-foreground mb-2">Feedback Received</h3>
+ <p className="text-sm text-muted-foreground">Thank you for helping us improve!</p>
  </div>
  ) : (
- <form onSubmit={submitFeedback} className="space-y-4">
+ <form onSubmit={submitFeedback} className="space-y-5">
  <div>
  <select 
  value={feedbackType} 
  onChange={(e) => setFeedbackType(e.target.value)}
- className="w-full bg-background border border-border text-sm text-foreground rounded-lg p-3 focus:outline-none focus:border-primary transition-colors"
+ className="w-full bg-background border border-border text-base text-foreground rounded-xl p-4 focus:outline-none focus:border-primary transition-colors cursor-pointer"
  >
  <option value="ISSUE">Report an Issue</option>
  <option value="SUGGESTION">Suggest a Feature</option>
@@ -182,16 +182,16 @@ export default function RiderSettingsPage() {
  value={feedbackContent}
  onChange={(e) => setFeedbackContent(e.target.value)}
  placeholder={feedbackType === 'ISSUE' ? "Describe the issue you're facing..." : "What would you like to see in Tovedrop?"}
- className="w-full bg-background border border-border text-sm text-foreground rounded-lg p-3 min-h-[120px] focus:outline-none focus:border-primary transition-colors resize-none"
+ className="w-full bg-background border border-border text-base text-foreground rounded-xl p-4 min-h-[140px] focus:outline-none focus:border-primary transition-colors resize-none"
  required
  />
  </div>
  <button 
  type="submit" 
  disabled={feedbackSubmitting || !feedbackContent.trim()}
- className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-lg text-sm transition-colors flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+ className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-4 rounded-xl text-base transition-colors flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
  >
- {feedbackSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit Feedback'}
+ {feedbackSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Submit Feedback'}
  </button>
  </form>
  )}
