@@ -75,7 +75,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
  })
 
  // Trigger realtime event on the trip's channel (for open chat modals)
- await pusherServer.trigger(`trip-${tripId}`, 'new-message', message)
+ await pusherServer.trigger(`trip-${tripId}`, 'new-message', message).catch(e => console.error("Pusher new-message error:", e))
 
  // Trigger realtime event on the recipient's global channel (for in-app popups)
  const isSenderDriver = session.user.id === trip.driverId
@@ -87,7 +87,7 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
  ...message,
  senderName: senderName ?? 'User',
  tripId
- })
+ }).catch(e => console.error("Pusher incoming-message error:", e))
  }
 
  // Send push notification to the recipient

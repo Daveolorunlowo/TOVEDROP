@@ -59,7 +59,7 @@ export function useResilientChannel(
 
     return () => {
       channel.unbind(eventName, eventHandler)
-      pusherClient.unsubscribe(channelName)
+      // Removed pusherClient.unsubscribe(channelName) to prevent killing shared channels used by other hooks
       pusherClient.connection.unbind('state_change', handleStateChange)
     }
   }, [channelName, eventName])
