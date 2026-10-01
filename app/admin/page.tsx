@@ -1,630 +1,762 @@
-﻿"use client"
+'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { signOut } from 'next-auth/react'
 import {
-  LayoutDashboard, Car, Users, ShieldAlert,
-  Menu, Check, X, Search, DollarSign, Activity, Wallet, Package, LogOut, TrendingUp, TrendingDown, Inbox, Clock
+  CheckCircle, Search, Users, Car, TrendingUp,
+  Flag, FileText, LayoutDashboard, Menu, X,
+  Loader2, Check, ShieldAlert
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/SkeletonVariants'
+import { Skeleton } from '@/components/shared/Skeleton'
 import { cn } from '@/lib/utils'
-import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer
-} from 'recharts'
 
-function AnimatedNumber({ value, isCurrency = false }: { value: number, isCurrency?: boolean }) {
-  const [displayValue, setDisplayValue] = useState(0)
-  
-  useEffect(() => {
-    if (value === undefined || value === null) return
-    const duration = 600
-    const startValue = displayValue
-    const endValue = value
-    let startTime: number
-    let animationFrame: number
-
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
-      const t = Math.min((timestamp - startTime) / duration, 1)
-      const progress = 1 - Math.pow(1 - t, 3) // easeOutCubic
-      
-      setDisplayValue(startValue + (endValue - startValue) * progress)
-      
-      if (t < 1) {
-        animationFrame = requestAnimationFrame(step)
-      }
-    }
-    
-    animationFrame = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(animationFrame)
-  }, [value]) // Deliberately omitted displayValue to avoid loops
-
-  const formatted = Math.floor(displayValue).toLocaleString()
-  return <span className="font-mono tracking-tight">{isCurrency ? `â‚¦${formatted}` : formatted}</span>
-}
+// ─── Design tokens ─────────────────────────────────────
+// bg #111111 / surface #171717 / border #222 / divider #1e1e1e
+// sidebar: #0e0e0e / sidebar-active bg: #1a1a1a
+// label: 11px / uppercase / tracking-[0.05em] / #555
+// text: #f5f5f5 / #888 / #555
+// accent: var(--orange-brand) (amber — active nav + primary actions)
+// radius: 8px cards / 4px badges
+// ──────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { id: 'overview',  label: 'Overview',      icon: LayoutDashboard },
-  { id: 'riders',    label: 'Riders',        icon: Users },
-  { id: 'drivers',   label: 'Drivers',       icon: Car },
-  { id: 'finances',  label: 'Finances',      icon: Wallet },
-  { id: 'security',  label: 'Security',      icon: ShieldAlert },
+  { id: 'overview',  label: 'Overview',         icon: LayoutDashboard },
+  { id: 'revenue',   label: 'Revenue',          icon: TrendingUp },
+  { id: 'approvals', label: 'Driver Approvals',  icon: Car },
+  { id: 'reports',   label: 'Reports',           icon: Flag },
+  { id: 'users',     label: 'Users',             icon: Users },
+  { id: 'security',  label: 'Security',          icon: ShieldAlert },
 ]
 
-const Card = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <div className={cn("bg-card border border-border rounded-xl overflow-hidden", className)}>
-    {children}
-  </div>
-)
-
-const StatusIndicator = ({ status }: { status: string }) => {
-  const norm = status?.toLowerCase() || 'unknown'
-  let colorClass = 'bg-white/30'
-  let textClass = 'text-muted-foreground'
-  
-  if (['approved', 'active', 'completed', 'success'].includes(norm)) {
-    colorClass = 'bg-emerald-500'
-    textClass = 'text-emerald-500'
-  } else if (['pending', 'processing'].includes(norm)) {
-    colorClass = 'bg-amber-500'
-    textClass = 'text-amber-500'
-  } else if (['suspended', 'rejected', 'failed', 'cancelled'].includes(norm)) {
-    colorClass = 'bg-red-500'
-    textClass = 'text-red-500'
+function StatusChip({ status }: { status: string }) {
+  const map: Record<string, { label: string; color: string; bg: string }> = {
+    approved:  { label: 'Approved',  color: '#22c55e', bg: 'rgba(34,197,94,0.08)' },
+    pending:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.08)' },
+    suspended: { label: 'Suspended', color: '#ef4444', bg: 'rgba(239,68,68,0.08)' },
   }
-
+  const s = map[status.toLowerCase()] ?? { label: status, color: '#555', bg: '#1e1e1e' }
   return (
-    <div className="flex items-center gap-2">
-      <div className={cn("w-2 h-2 rounded-full shrink-0", colorClass)} />
-      <span className={cn("text-xs font-medium capitalize", textClass)}>{norm}</span>
+    <span
+      className="text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5"
+      style={{ background: s.bg, color: s.color, borderRadius: '4px' }}
+    >
+      {s.label}
+    </span>
+  )
+}
+
+function CheckRow({ done, label, detail }: { done: boolean; label: string; detail: string }) {
+  return (
+    <div className="flex items-center justify-between py-2.5" style={{ borderBottom: '1px solid #1e1e1e' }}>
+      <div className="flex items-center gap-2.5">
+        <span
+          className="w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+          style={{
+            background: done ? 'rgba(34,197,94,0.12)' : 'transparent',
+            border: done ? '1px solid rgba(34,197,94,0.3)' : '1px solid #333',
+          }}
+        >
+          {done && <Check className="w-2.5 h-2.5" style={{ color: '#22c55e' }} />}
+        </span>
+        <p className="text-xs font-medium" style={{ color: done ? '#888' : '#555' }}>{label}</p>
+      </div>
+      <p className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: done ? '#22c55e' : '#444' }}>
+        {detail}
+      </p>
     </div>
   )
 }
 
-const Button = ({ children, variant = 'primary', className, ...props }: any) => {
-  const base = "h-10 px-4 rounded-lg font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2"
-  const variants = {
-    primary: "bg-[#F97316] text-white hover:bg-[#ea580c] active:scale-[0.98]",
-    secondary: "bg-transparent border border-border text-foreground hover:bg-muted active:scale-[0.98]"
-  }
-  return (
-    <button className={cn(base, variants[variant as keyof typeof variants], className)} {...props}>
-      {children}
-    </button>
-  )
-}
-
-const EmptyState = ({ icon: Icon, title, desc, action }: any) => (
-  <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-    <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4">
-      <Icon className="w-6 h-6 text-muted-foreground" />
-    </div>
-    <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
-    <p className="text-xs text-muted-foreground mb-6 max-w-xs">{desc}</p>
-    {action}
-  </div>
-)
-
-const ListRow = ({ children, status, className }: any) => {
-  const norm = status?.toLowerCase() || 'unknown'
-  let borderColor = 'border-l-transparent'
-  if (['approved', 'active', 'completed', 'success'].includes(norm)) borderColor = 'border-l-emerald-500'
-  else if (['pending', 'processing'].includes(norm)) borderColor = 'border-l-amber-500'
-  else if (['suspended', 'rejected', 'failed', 'cancelled'].includes(norm)) borderColor = 'border-l-red-500'
-
-  return (
-    <div className={cn("flex items-center p-4 border-b border-border bg-card hover:bg-muted transition-colors border-l-[3px]", borderColor, className)}>
-      {children}
-    </div>
-  )
-}
-
-export default function AdminDashboardPage() {
+export default function AdminPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState('overview')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [search, setSearch] = useState('')
-  
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [processing, setProcessing] = useState<string | null>(null)
   const [securityLogs, setSecurityLogs] = useState<any[]>([])
+  const [securityLoading, setSecurityLoading] = useState(false)
+  const [revenueData, setRevenueData] = useState<any[]>([])
+  const [revenueLoading, setRevenueLoading] = useState(false)
+
+  const fetchData = async () => {
+    const start = Date.now()
+    try {
+      const res = await fetch('/api/admin/stats')
+      if (res.ok) setData(await res.json())
+      else if (res.status === 401) router.push('/auth/login')
+    } catch (e) { console.error(e) }
+    finally {
+      const elapsed = Date.now() - start
+      if (elapsed < 300) await new Promise(r => setTimeout(r, 300 - elapsed))
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await fetch('/api/admin/stats')
-        if (res.status === 401 || res.status === 403) router.push('/dashboard')
-        if (res.ok) {
-          const json = await res.json()
-          setData(json)
-        }
-      } catch (err) {
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchData()
     const id = setInterval(fetchData, 30000)
     return () => clearInterval(id)
   }, [router])
 
-  useEffect(() => {
-    if (activeTab === 'security' && securityLogs.length === 0) {
-      fetch('/api/portal/audit-log').then(r => r.json()).then(data => setSecurityLogs(data.logs || [])).catch(console.error)
-    }
-  }, [activeTab, securityLogs.length])
+  const fetchSecurityLogs = async () => {
+    setSecurityLoading(true)
+    try {
+      const res = await fetch('/api/portal/audit-log')
+      if (res.ok) {
+        const json = await res.json()
+        setSecurityLogs(json.logs || [])
+      }
+    } catch (e) { console.error(e) }
+    finally { setSecurityLoading(false) }
+  }
 
-  const handleDriverAction = async (driverId: string, action: string) => {
+  useEffect(() => {
+    if (activeTab === 'security') fetchSecurityLogs()
+    if (activeTab === 'revenue') fetchRevenue()
+  }, [activeTab])
+
+  const fetchRevenue = async () => {
+    setRevenueLoading(true)
+    try {
+      const res = await fetch('/api/admin/revenue')
+      if (res.ok) {
+        const json = await res.json()
+        setRevenueData(json.platformRevenues || [])
+      }
+    } catch (e) { console.error(e) }
+    finally { setRevenueLoading(false) }
+  }
+
+  const handleAction = async (driverId: string, action: string) => {
     setProcessing(driverId)
     try {
       const res = await fetch('/api/admin/drivers/manage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ driverId, action })
+        body: JSON.stringify({ driverId, action }),
       })
-      if (res.ok) {
-        setData((prev: any) => ({
-          ...prev,
-          drivers: prev.drivers.map((d: any) => d.id === driverId ? { ...d, status: action === 'approve' ? 'APPROVED' : action === 'suspend' ? 'SUSPENDED' : 'PENDING' } : d)
-        }))
-      }
-    } catch (err) {
-      console.error(err)
-    } finally {
-      setProcessing(null)
-    }
+      if (res.ok) await fetchData()
+      else alert((await res.json()).message ?? 'Action failed')
+    } catch { alert('Error') }
+    finally { setProcessing(null) }
   }
 
-  const handleWithdrawalAction = async (id: string, action: 'approve' | 'reject') => {
-    setProcessing(id)
-    try {
-      const res = await fetch('/api/admin/withdrawals/manage', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requestId: id, action })
-      })
-      if (res.ok) {
-        setData((prev: any) => ({
-          ...prev,
-          withdrawalRequests: prev.withdrawalRequests.map((req: any) => 
-            req.id === id ? { ...req, status: action === 'approve' ? 'APPROVED' : 'REJECTED' } : req
-          )
-        }))
-      }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setProcessing(null)
-    }
-  }
+  if (!data && !loading) return null
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 rounded-full border-2 border-border border-t-[#F97316] animate-spin" />
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest">Loading Dashboard</p>
-        </div>
-      </div>
-    )
-  }
+  const { stats, drivers, users } = data || { stats: {}, drivers: [], users: [] }
+  const pendingDrivers  = drivers.filter((d: any) => d.status === 'PENDING')
+  const suspendedDrivers = drivers.filter((d: any) => d.status === 'SUSPENDED')
 
-  const { stats, drivers, users, chartData, recentActivity } = data || { stats: {}, drivers: [], users: [], chartData: [], recentActivity: [] }
+  const allUsersList = [
+    ...users.map((u: any) => ({ ...u, type: 'Rider', detailStatus: 'approved' })),
+    ...drivers.map((d: any) => ({ ...d.user, type: 'Driver', detailStatus: d.status?.toLowerCase(), trips: d.totalTrips })),
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-  const pendingDrivers = drivers.filter((d: any) => d.status === 'PENDING')
-  const activeDrivers = drivers.filter((d: any) => d.status === 'APPROVED')
-
-  const renderOverview = () => (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      
-      {/* Stat Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: 'Platform Revenue', value: stats?.platformRevenue || 0, isCurrency: true, trend: '+12%' },
-          { label: 'Total Trips', value: stats?.totalTrips || 0, isCurrency: false, trend: '+5%' },
-          { label: 'Active Users', value: (stats?.totalUsers || 0) + (activeDrivers?.length || 0), isCurrency: false, trend: '+2%' },
-          { label: 'Drops Sold', value: stats?.dropsSold || 0, isCurrency: false, trend: '+18%' },
-        ].map((s, i) => (
-          <Card key={i} className="p-6 flex flex-col justify-between">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-4">{s.label}</p>
-            <div className="flex items-end justify-between">
-              <div className="text-3xl font-semibold text-foreground">
-                <AnimatedNumber value={s.value} isCurrency={s.isCurrency} />
-              </div>
-              <div className="flex items-center gap-1 text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded text-[10px] font-bold">
-                <TrendingUp className="w-3 h-3" />
-                <span>{s.trend}</span>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chart */}
-        <Card className="lg:col-span-2 p-6 flex flex-col">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="text-sm font-semibold text-foreground">Network Activity</h3>
-            <select className="bg-transparent border border-border rounded-md text-xs text-muted-foreground px-3 py-1.5 focus:outline-none focus:border-white/30">
-              <option>Last 7 Days</option>
-              <option>Last 30 Days</option>
-            </select>
-          </div>
-          <div className="flex-1 min-h-[250px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorTrips" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F97316" stopOpacity={0.2}/>
-                    <stop offset="95%" stopColor="#F97316" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <XAxis dataKey="date" stroke="rgba(255,255,255,0.2)" fontSize={11} tickLine={false} axisLine={false} tickMargin={12} fontFamily="monospace" />
-                <YAxis stroke="rgba(255,255,255,0.2)" fontSize={11} tickLine={false} axisLine={false} tickMargin={12} fontFamily="monospace" />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: 'var(--card)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', fontSize: '12px', color: 'var(--foreground)' }}
-                  itemStyle={{ color: '#F97316', fontWeight: '600' }}
-                />
-                <Area type="monotone" dataKey="trips" stroke="#F97316" strokeWidth={2} fill="url(#colorTrips)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        {/* Activity Feed */}
-        <Card className="flex flex-col">
-          <div className="p-6 border-b border-border">
-            <h3 className="text-sm font-semibold text-foreground">Recent Activity</h3>
-          </div>
-          <div className="flex-1 overflow-y-auto">
-            {recentActivity.length === 0 ? (
-              <EmptyState icon={Inbox} title="No Activity" desc="No events have been recorded yet." />
-            ) : (
-              <div className="divide-y divide-white/5">
-                {recentActivity.map((act: any) => (
-                  <ListRow key={act.id} status={act.type === 'TRIP' ? 'completed' : 'processing'} className="px-6 border-l-[3px]">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">{act.title}</p>
-                      <p className="text-xs text-muted-foreground truncate mt-0.5">{act.desc}</p>
-                    </div>
-                    <div className="text-[10px] text-muted-foreground font-mono shrink-0">
-                      {new Date(act.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                  </ListRow>
-                ))}
-              </div>
-            )}
-          </div>
-        </Card>
-      </div>
-    </div>
+  const filteredUsers = allUsersList.filter(u =>
+    u.name?.toLowerCase().includes(search.toLowerCase()) ||
+    u.email?.toLowerCase().includes(search.toLowerCase())
   )
 
-  const renderRiders = () => (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground">Riders</h2>
-          <p className="text-sm text-muted-foreground mt-1">Manage registered platform users.</p>
-        </div>
-        <div className="relative">
-          <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
-          <input 
-            type="text" 
-            placeholder="Search riders..." 
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 bg-card border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-white/30 w-full sm:w-64"
-          />
-        </div>
-      </div>
-
-      <Card>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-muted text-[10px] uppercase font-semibold text-muted-foreground tracking-widest border-b border-border">
-              <tr>
-                <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4">Email</th>
-                <th className="px-6 py-4 text-right">Joined</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {users.filter((u:any) => u.name?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase())).map((u: any) => (
-                <tr key={u.id} className="hover:bg-muted transition-colors">
-                  <td className="px-6 py-4 font-medium text-foreground">{u.name}</td>
-                  <td className="px-6 py-4 text-muted-foreground">{u.email}</td>
-                  <td className="px-6 py-4 text-right text-muted-foreground font-mono">{new Date(u.createdAt).toLocaleDateString()}</td>
-                </tr>
-              ))}
-              {users.length === 0 && (
-                <tr><td colSpan={3} className="p-0"><EmptyState icon={Users} title="No Riders Found" desc="No users match your criteria." /></td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-    </div>
-  )
-
-  const renderDrivers = () => (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground">Drivers</h2>
-          <p className="text-sm text-muted-foreground mt-1">Manage driver applications and active fleet.</p>
-        </div>
-        <div className="relative">
-          <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
-          <input 
-            type="text" 
-            placeholder="Search drivers..." 
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="pl-9 pr-4 py-2 bg-card border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-white/30 w-full sm:w-64"
-          />
-        </div>
-      </div>
-
-      {pendingDrivers.length > 0 && (
-        <Card className="border-amber-500/20">
-          <div className="p-6 border-b border-border bg-amber-500/5">
-             <h3 className="text-sm font-semibold text-amber-500 flex items-center gap-2">
-                <Clock className="w-4 h-4" /> Pending Applications ({pendingDrivers.length})
-             </h3>
-          </div>
-          <div className="divide-y divide-white/5">
-            {pendingDrivers.filter((d: any) => d.user.name?.toLowerCase().includes(search.toLowerCase())).map((driver: any) => (
-              <div key={driver.id} className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-muted transition-colors">
-                <div className="flex items-center gap-4">
-                  <Avatar className="w-10 h-10 border border-border">
-                    <AvatarFallback className="bg-white/5 text-foreground text-xs font-semibold">{driver.user.name?.slice(0,2).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-base font-semibold text-foreground">{driver.user.name}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{driver.user.email}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col md:items-end gap-1">
-                  <p className="text-sm text-foreground font-medium">{driver.carModel || 'Unknown Vehicle'}</p>
-                  <p className="text-xs text-muted-foreground font-mono">{driver.plateNumber || 'NO PLATE'}</p>
-                </div>
-                <div className="flex gap-3">
-                  <Button variant="secondary" onClick={() => handleDriverAction(driver.id, 'reject')} disabled={processing === driver.id}>
-                    {processing === driver.id ? '...' : 'Reject'}
-                  </Button>
-                  <Button variant="primary" onClick={() => handleDriverAction(driver.id, 'approve')} disabled={processing === driver.id}>
-                    {processing === driver.id ? '...' : 'Approve'}
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-      )}
-
-      <Card>
-         <div className="p-6 border-b border-border">
-            <h3 className="text-sm font-semibold text-foreground">Active Fleet</h3>
-         </div>
-         <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-            <thead className="bg-muted text-[10px] uppercase font-semibold text-muted-foreground tracking-widest border-b border-border">
-               <tr>
-                  <th className="px-6 py-4">Driver</th>
-                  <th className="px-6 py-4">Vehicle Details</th>
-                  <th className="px-6 py-4 text-right">Total Trips</th>
-                  <th className="px-6 py-4 text-right">Status</th>
-               </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-               {activeDrivers.filter((d: any) => d.user.name?.toLowerCase().includes(search.toLowerCase())).map((driver: any) => (
-               <tr key={driver.id} className="hover:bg-muted transition-colors">
-                  <td className="px-6 py-4">
-                     <p className="font-semibold text-foreground text-sm">{driver.user.name}</p>
-                     <p className="text-xs text-muted-foreground mt-0.5">{driver.user.email}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                     <p className="text-foreground text-sm">{driver.carModel}</p>
-                     <p className="text-muted-foreground text-xs font-mono mt-0.5">{driver.plateNumber}</p>
-                  </td>
-                  <td className="px-6 py-4 text-right text-foreground font-mono">
-                     {driver.totalTrips || 0}
-                  </td>
-                  <td className="px-6 py-4 flex justify-end">
-                     <StatusIndicator status={driver.status} />
-                  </td>
-               </tr>
-               ))}
-               {activeDrivers.length === 0 && (
-                 <tr><td colSpan={4} className="p-0"><EmptyState icon={Car} title="No Drivers" desc="There are no active drivers in the fleet." /></td></tr>
-               )}
-            </tbody>
-            </table>
-         </div>
-      </Card>
-    </div>
-  )
-
-  const renderFinances = () => {
-    const requests = data?.withdrawalRequests || []
-    const pending = requests.filter((r: any) => r.status === 'PENDING')
-    const completed = requests.filter((r: any) => r.status !== 'PENDING')
-
-    return (
-      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground">Finances & Payouts</h2>
-          <p className="text-sm text-muted-foreground mt-1">Manage revenue and driver withdrawals.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <Card className="p-6">
-             <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-2">Total System Revenue</p>
-             <div className="text-3xl font-semibold text-foreground">
-                <AnimatedNumber value={data?.stats?.totalRevenue || 0} isCurrency />
-             </div>
-           </Card>
-           <Card className="p-6">
-             <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-2">Total Driver Payouts</p>
-             <div className="text-3xl font-semibold text-foreground">
-                <AnimatedNumber value={data?.stats?.driverPayouts || 0} isCurrency />
-             </div>
-           </Card>
-        </div>
-
-        <Card>
-          <div className="p-6 border-b border-border flex items-center justify-between">
-             <h3 className="text-sm font-semibold text-foreground">Pending Withdrawals</h3>
-          </div>
-          {pending.length === 0 ? (
-            <EmptyState icon={Wallet} title="All Caught Up" desc="There are no pending driver withdrawal requests." />
-          ) : (
-            <div className="divide-y divide-white/5">
-              {pending.map((req: any) => (
-                <div key={req.id} className="p-6 flex flex-col sm:flex-row items-center justify-between gap-6 hover:bg-muted transition-colors border-l-[3px] border-l-amber-500">
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <p className="text-base font-semibold text-foreground">{req.driver?.user?.firstName} {req.driver?.user?.lastName}</p>
-                      <p className="text-xs text-muted-foreground mt-0.5">{req.driver?.user?.email}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-8">
-                    <p className="text-xl font-semibold text-foreground font-mono">â‚¦{req.amount.toLocaleString()}</p>
-                    <div className="flex items-center gap-3">
-                      <Button variant="secondary" onClick={() => handleWithdrawalAction(req.id, 'reject')} disabled={processing === req.id}>
-                        {processing === req.id ? '...' : 'Reject'}
-                      </Button>
-                      <Button variant="primary" onClick={() => handleWithdrawalAction(req.id, 'approve')} disabled={processing === req.id}>
-                        {processing === req.id ? '...' : 'Approve'}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card>
-      </div>
-    )
-  }
-
-  const renderSecurity = () => (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div>
-        <h2 className="text-2xl font-semibold text-foreground">Security & Logs</h2>
-        <p className="text-sm text-muted-foreground mt-1">System monitoring and anomaly detection.</p>
-      </div>
-      
-      <Card>
-        {securityLogs.length === 0 ? (
-          <EmptyState icon={ShieldAlert} title="No Security Logs" desc="System is operating normally. No alerts triggered." />
-        ) : (
-          <div className="divide-y divide-white/5">
-            {securityLogs.map((log: any) => (
-              <ListRow key={log.id} status={log.success ? 'success' : 'failed'}>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-foreground">{log.success ? 'Authentication Success' : 'Failed Login Attempt'}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Target: {log.email} â€¢ IP: <span className="font-mono text-muted-foreground">{log.ipAddress || 'UNKNOWN'}</span></p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-muted-foreground font-mono">{new Date(log.createdAt).toLocaleString()}</p>
-                </div>
-              </ListRow>
-            ))}
-          </div>
-        )}
-      </Card>
-    </div>
-  )
+  const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground font-sans selection:bg-[#F97316]/30">
-      {/* Sidebar */}
-      <aside className={cn(
-        'fixed inset-y-0 left-0 z-50 flex flex-col w-[260px] bg-background border-r border-border transition-transform duration-300 lg:static lg:translate-x-0',
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      )}>
-        <div className="flex items-center gap-3 px-6 h-20 border-b border-border shrink-0">
-          <div className="flex gap-[2px] items-end h-6">
-            <div className="w-[3px] h-full bg-white rounded-full"></div>
-            <div className="w-[3px] h-2/3 bg-[#F97316] rounded-full"></div>
-            <div className="w-[3px] h-1/3 bg-white/50 rounded-full"></div>
-          </div>
-          <span className="font-bold text-lg tracking-tight">Tovedrop</span>
+    <div className="flex min-h-screen" style={{ background: '#111111' }}>
+
+      {/* ── Sidebar ── */}
+      <aside
+        className={cn(
+          'fixed inset-y-0 left-0 z-50 flex flex-col lg:static lg:z-auto transition-transform duration-200 lg:translate-x-0',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+        style={{ width: '210px', background: '#0e0e0e', borderRight: '1px solid #1a1a1a' }}
+      >
+        {/* Logo */}
+        <div className="flex items-center justify-between px-5 py-5" style={{ borderBottom: '1px solid #1a1a1a' }}>
+          <a href="/" className="text-sm font-bold tracking-tight" style={{ color: '#f5f5f5' }}>
+            TOVE<span style={{ color: 'var(--orange-brand)' }}>DROP</span>
+          </a>
+          <button className="lg:hidden" onClick={() => setSidebarOpen(false)} style={{ color: '#555' }}>
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto py-6 space-y-1 px-4 [&::-webkit-scrollbar]:hidden">
-          <p className="px-4 text-[10px] font-semibold text-muted-foreground uppercase tracking-widest mb-2 mt-4">Menu</p>
+        {/* Nav label */}
+        <div className="px-5 pt-5 pb-2">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em]" style={{ color: '#333' }}>
+            Admin
+          </p>
+        </div>
+
+        {/* Nav items */}
+        <nav className="px-3 space-y-0.5 flex-1">
           {NAV_ITEMS.map(item => {
             const active = activeTab === item.id
             return (
               <button
                 key={item.id}
                 onClick={() => { setActiveTab(item.id); setSidebarOpen(false) }}
-                className={cn(
-                  'w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium transition-all duration-200 rounded-lg group',
-                  active 
-                    ? 'bg-white/10 text-foreground' 
-                    : 'text-muted-foreground hover:bg-white/5 hover:text-foreground'
-                )}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-md text-left text-xs font-medium transition-colors"
+                style={{
+                  background: active ? '#1a1a1a' : 'transparent',
+                  color: active ? 'var(--orange-brand)' : '#555',
+                  borderRadius: '6px',
+                }}
               >
-                <item.icon className={cn("w-4 h-4 transition-colors", active ? "text-[#F97316]" : "text-muted-foreground group-hover:text-foreground/80")} />
-                {item.label}
+                <item.icon className="w-3.5 h-3.5 shrink-0" />
+                <span>{item.label}</span>
+                {item.id === 'approvals' && pendingDrivers.length > 0 && (
+                  <span
+                    className="ml-auto text-[10px] font-bold px-1.5 py-0.5 tabular-nums"
+                    style={{ background: '#1e1e1e', color: 'var(--orange-brand)', borderRadius: '4px' }}
+                  >
+                    {pendingDrivers.length}
+                  </span>
+                )}
               </button>
             )
           })}
-        </div>
-
-        <div className="p-4 border-t border-border shrink-0">
-          <button 
-            onClick={() => signOut({ callbackUrl: '/' })}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-muted-foreground hover:bg-white/5 hover:text-foreground text-sm font-medium transition-colors"
-          >
-            <LogOut className="w-4 h-4" /> Log Out
-          </button>
-        </div>
+        </nav>
       </aside>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        {/* Top Header */}
-        <header className="h-20 flex items-center justify-between px-6 lg:px-10 border-b border-border shrink-0 bg-background/80 backdrop-blur-md z-40">
-          <div className="flex items-center gap-4">
-            <button className="lg:hidden p-2 rounded-lg text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors -ml-2" onClick={() => setSidebarOpen(true)}>
-              <Menu className="w-5 h-5" />
-            </button>
-            <h1 className="text-lg font-semibold text-foreground capitalize hidden sm:block">
-               {NAV_ITEMS.find(n => n.id === activeTab)?.label}
-            </h1>
-          </div>
-          <div className="flex items-center gap-4">
-             <div className="flex items-center gap-3 px-4 py-2 bg-white/5 rounded-lg border border-border">
-                <Avatar className="w-6 h-6 border border-border">
-                   <AvatarFallback className="bg-muted text-[10px] text-foreground">AD</AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                   <span className="text-xs font-semibold text-foreground leading-none">Admin</span>
-                </div>
-             </div>
-          </div>
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+
+      {/* ── Main ── */}
+      <div className="flex-1 flex flex-col min-w-0">
+
+        {/* Topbar */}
+        <header
+          className="sticky top-0 z-30 flex items-center gap-3 px-5 h-12"
+          style={{ background: '#111111', borderBottom: '1px solid #1a1a1a' }}
+        >
+          <button className="lg:hidden" onClick={() => setSidebarOpen(true)} style={{ color: '#555' }}>
+            <Menu className="w-4 h-4" />
+          </button>
+          <p className="text-xs font-semibold" style={{ color: '#888' }}>
+            {NAV_ITEMS.find(n => n.id === activeTab)?.label ?? 'Admin Panel'}
+          </p>
         </header>
 
-        {/* Dynamic Views */}
-        <div className="flex-1 overflow-y-auto p-6 lg:p-10 w-full [&::-webkit-scrollbar]:hidden bg-background">
-          <div className="max-w-6xl mx-auto">
-            {activeTab === 'overview' && renderOverview()}
-            {activeTab === 'riders' && renderRiders()}
-            {activeTab === 'drivers' && renderDrivers()}
-            {activeTab === 'finances' && renderFinances()}
-            {activeTab === 'security' && renderSecurity()}
-          </div>
-        </div>
-      </main>
+        <main className="flex-1 overflow-auto p-5 lg:p-7">
+          
+          {loading && (
+            <div>
+              <SkeletonStatCard />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="rounded-lg bg-surface-card border border-border-default p-4">
+                  <Skeleton width={120} height={12} className="mb-4" />
+                  {Array.from({ length: 4 }).map((_, i) => <SkeletonTableRow key={i} />)}
+                </div>
+                <div className="rounded-lg bg-surface-card border border-border-default p-4">
+                  <Skeleton width={120} height={12} className="mb-4" />
+                  {Array.from({ length: 4 }).map((_, i) => <SkeletonTableRow key={i} />)}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Overview ── */}
+          {!loading && activeTab === 'overview' && (
+            <div>
+              {/* Grouped stats card */}
+              <div
+                className="rounded-lg mb-6"
+                style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
+              >
+                <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: '#555' }}>
+                  Platform Stats
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
+                  {[
+                    { label: 'Total Riders',       value: String(stats.totalUsers) },
+                    { label: 'Total Drivers',      value: String(stats.totalDrivers) },
+                    { label: 'Total Trips',        value: String(stats.totalTrips) },
+                    { label: 'Pending Approvals',  value: String(pendingDrivers.length), accent: pendingDrivers.length > 0 },
+                  ].map((s, i) => (
+                    <div
+                      key={s.label}
+                      className={cn(i > 0 && 'pl-5 sm:border-l')}
+                      style={{ borderColor: '#1e1e1e', paddingRight: i < 3 ? '20px' : undefined }}
+                    >
+                      <p className="text-[11px] font-medium uppercase tracking-[0.05em] mb-1" style={{ color: '#555' }}>
+                        {s.label}
+                      </p>
+                      <p
+                        className="text-2xl font-bold tabular-nums"
+                        style={{ color: s.accent ? 'var(--orange-brand)' : '#f5f5f5', letterSpacing: '-0.02em' }}
+                      >
+                        {s.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                {pendingDrivers.length > 0 && (
+                  <div style={{ borderTop: '1px solid #1e1e1e', marginTop: '14px', paddingTop: '10px' }}>
+                    <button
+                      onClick={() => setActiveTab('approvals')}
+                      className="text-[11px] font-semibold"
+                      style={{ color: 'var(--orange-brand)' }}
+                    >
+                      Review {pendingDrivers.length} pending application{pendingDrivers.length !== 1 ? 's' : ''} →
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Two compact lists */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Pending approvals preview */}
+                <div
+                  className="rounded-lg"
+                  style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+                      Pending Approvals
+                    </p>
+                    <button
+                      onClick={() => setActiveTab('approvals')}
+                      className="text-[11px] font-semibold"
+                      style={{ color: 'var(--orange-brand)' }}
+                    >
+                      View all →
+                    </button>
+                  </div>
+                  {pendingDrivers.length === 0 ? (
+                    <p className="text-xs" style={{ color: '#444' }}>All caught up.</p>
+                  ) : (
+                    <div>
+                      {pendingDrivers.slice(0, 4).map((d: any, i: number) => (
+                        <div
+                          key={d.userId}
+                          className="flex items-center gap-3 py-2.5"
+                          style={{ borderBottom: i < Math.min(pendingDrivers.length, 4) - 1 ? '1px solid #1e1e1e' : 'none' }}
+                        >
+                          <Avatar className="w-7 h-7 shrink-0">
+                            <AvatarFallback className="text-[10px] font-bold" style={{ background: '#222', color: '#888' }}>
+                              {initials(d.user.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium truncate" style={{ color: '#f5f5f5' }}>{d.user.name}</p>
+                            <p className="text-[11px]" style={{ color: '#555' }}>{d.vehicleMake} {d.vehicleModel}</p>
+                          </div>
+                          <StatusChip status="pending" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Suspended drivers */}
+                <div
+                  className="rounded-lg"
+                  style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>
+                      Suspended Drivers
+                    </p>
+                    <button
+                      onClick={() => setActiveTab('reports')}
+                      className="text-[11px] font-semibold"
+                      style={{ color: '#888' }}
+                    >
+                      View all →
+                    </button>
+                  </div>
+                  {suspendedDrivers.length === 0 ? (
+                    <p className="text-xs" style={{ color: '#444' }}>No suspended drivers.</p>
+                  ) : (
+                    <div>
+                      {suspendedDrivers.slice(0, 4).map((d: any, i: number) => (
+                        <div
+                          key={d.userId}
+                          className="flex items-center gap-3 py-2.5"
+                          style={{ borderBottom: i < Math.min(suspendedDrivers.length, 4) - 1 ? '1px solid #1e1e1e' : 'none' }}
+                        >
+                          <Avatar className="w-7 h-7 shrink-0">
+                            <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
+                              {initials(d.user.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-medium truncate" style={{ color: '#888' }}>{d.user.name}</p>
+                            <p className="text-[11px]" style={{ color: '#444' }}>{d.rating > 0 ? d.rating.toFixed(1) + ' avg' : 'No ratings'}</p>
+                          </div>
+                          <StatusChip status="suspended" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Revenue ── */}
+          {!loading && activeTab === 'revenue' && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+                Platform Revenue Log
+              </p>
+              {revenueLoading ? (
+                <div className="flex justify-center py-10"><Loader2 className="w-5 h-5 animate-spin text-muted-foreground" /></div>
+              ) : revenueData.length === 0 ? (
+                <div
+                  className="rounded-lg h-full flex flex-col items-center justify-center min-h-[120px]"
+                  style={{ background: '#111111', border: '1px dashed #222', padding: '20px' }}
+                >
+                  <p className="text-xs" style={{ color: '#444' }}>No revenue records found.</p>
+                </div>
+              ) : (
+                <div className="rounded-lg overflow-hidden" style={{ background: '#171717', border: '1px solid #222' }}>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr>
+                          <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider whitespace-nowrap" style={{ color: '#555', borderBottom: '1px solid #222' }}>Date</th>
+                          <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Trip</th>
+                          <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider" style={{ color: '#555', borderBottom: '1px solid #222' }}>Driver</th>
+                          <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Driver Earnings</th>
+                          <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-wider text-right" style={{ color: '#555', borderBottom: '1px solid #222' }}>Platform Share</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {revenueData.map((rev, i) => (
+                          <tr key={rev.id} style={{ borderBottom: i < revenueData.length - 1 ? '1px solid #1e1e1e' : 'none' }}>
+                            <td className="px-4 py-3 text-[11px] whitespace-nowrap" style={{ color: '#888' }}>
+                              {new Date(rev.createdAt).toLocaleString()}
+                            </td>
+                            <td className="px-4 py-3 text-[11px] whitespace-nowrap" style={{ color: '#555' }}>
+                              {rev.trip?.pickup ? `${rev.trip.pickup.split(',')[0]} → ${rev.trip.destination.split(',')[0]}` : '—'}
+                            </td>
+                            <td className="px-4 py-3 text-xs whitespace-nowrap" style={{ color: '#f5f5f5' }}>
+                              {rev.trip?.driver?.user?.name || 'Unknown'}
+                            </td>
+                            <td className="px-4 py-3 text-[11px] text-right whitespace-nowrap" style={{ color: '#22c55e' }}>
+                              +₦{rev.trip?.walletTransactions?.find((t: any) => t.type === 'RIDE_EARNING')?.amount?.toLocaleString() || 0}
+                            </td>
+                            <td className="px-4 py-3 text-xs font-bold text-right whitespace-nowrap" style={{ color: '#f5f5f5' }}>
+                              +₦{rev.amount.toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Driver Approvals ── */}
+          {!loading && activeTab === 'approvals' && (
+            <div>
+              {data.autoApproveDrivers && (
+                <div className="mb-5 rounded-md flex items-start gap-2.5 p-3 text-xs" style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: '#ef4444' }}>
+                  <ShieldAlert className="w-4 h-4 mt-0.5 shrink-0" />
+                  <div>
+                    <strong>⚠ Auto-approval is currently ON.</strong> New driver applications are being approved automatically without manual review. Turn this off in environment settings before real launch.
+                  </div>
+                </div>
+              )}
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+                Driver Approvals · {pendingDrivers.length} pending
+              </p>
+
+              {pendingDrivers.length === 0 ? (
+                <div
+                  className="rounded-lg flex items-start gap-3"
+                  style={{ background: '#171717', border: '1px solid #222', padding: '20px' }}
+                >
+                  <CheckCircle className="w-4 h-4 mt-0.5 shrink-0" style={{ color: '#22c55e' }} />
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: '#888' }}>All applications reviewed</p>
+                    <p className="text-xs mt-0.5" style={{ color: '#444' }}>No pending driver applications at this time.</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {pendingDrivers.map((driver: any) => (
+                    <div
+                      key={driver.userId}
+                      className="rounded-lg"
+                      style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}
+                    >
+                      {/* Driver identity row */}
+                      <div className="flex items-center gap-3 mb-4" style={{ paddingBottom: '14px', borderBottom: '1px solid #1e1e1e' }}>
+                        <Avatar className="w-9 h-9 shrink-0">
+                          <AvatarFallback className="text-xs font-bold" style={{ background: '#1e1e1e', color: '#888' }}>
+                            {initials(driver.user.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold" style={{ color: '#f5f5f5' }}>{driver.user.name}</p>
+                          <p className="text-[11px]" style={{ color: '#555' }}>
+                            {driver.user.email} · {driver.phone}
+                          </p>
+                        </div>
+                        <StatusChip status="pending" />
+                      </div>
+
+                      {/* Verification checklist */}
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.05em] mb-2" style={{ color: '#444' }}>
+                        Verification
+                      </p>
+                      <CheckRow done label="Name & Contact" detail={driver.user.name} />
+                      <CheckRow done label="Vehicle" detail={`${driver.vehicleMake} ${driver.vehicleModel}`} />
+                      <CheckRow done label="Plate Number" detail={driver.vehiclePlate} />
+                      <CheckRow done label="License Number" detail={driver.licenseNumber} />
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 mt-4" style={{ paddingTop: '14px', borderTop: '1px solid #1e1e1e' }}>
+                        <button
+                          disabled={processing === driver.userId}
+                          onClick={() => handleAction(driver.userId, 'approve')}
+                          className="text-xs font-semibold px-3 py-1.5 rounded-md"
+                          style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', borderRadius: '6px', border: '1px solid rgba(34,197,94,0.2)' }}
+                        >
+                          {processing === driver.userId ? '…' : 'Approve Driver'}
+                        </button>
+                        <button
+                          disabled={processing === driver.userId}
+                          onClick={() => handleAction(driver.userId, 'suspend')}
+                          className="text-xs font-semibold px-3 py-1.5 rounded-md"
+                          style={{ background: '#1e1e1e', color: '#555', borderRadius: '6px' }}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Reports / Suspended ── */}
+          {!loading && activeTab === 'reports' && (
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-5" style={{ color: '#555' }}>
+                Suspended Drivers · {suspendedDrivers.length}
+              </p>
+
+              {suspendedDrivers.length === 0 ? (
+                <div
+                  className="rounded-lg"
+                  style={{ background: '#171717', border: '1px solid #1e1e1e', padding: '20px' }}
+                >
+                  <p className="text-xs" style={{ color: '#444' }}>No suspended drivers.</p>
+                </div>
+              ) : (
+                <div
+                  className="rounded-lg overflow-hidden"
+                  style={{ background: '#171717', border: '1px solid #222' }}
+                >
+                  {suspendedDrivers.map((driver: any, i: number) => (
+                    <div
+                      key={driver.userId}
+                      className="flex items-center gap-3 px-4 py-3"
+                      style={{ borderBottom: i < suspendedDrivers.length - 1 ? '1px solid #1e1e1e' : 'none' }}
+                    >
+                      <Avatar className="w-7 h-7 shrink-0">
+                        <AvatarFallback className="text-[10px] font-bold" style={{ background: '#1e1e1e', color: '#555' }}>
+                          {initials(driver.user.name)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium" style={{ color: '#888' }}>{driver.user.name}</p>
+                        <p className="text-[11px]" style={{ color: '#444' }}>{driver.user.email}</p>
+                      </div>
+                      <StatusChip status="suspended" />
+                      <button
+                        disabled={processing === driver.userId}
+                        onClick={() => handleAction(driver.userId, 'approve')}
+                        className="text-[11px] font-semibold px-2.5 py-1"
+                        style={{ background: '#1e1e1e', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
+                      >
+                        Reinstate
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Users Table ── */}
+          {!loading && activeTab === 'users' && (
+            <div>
+              <div className="flex items-center gap-4 mb-5">
+                <div className="relative flex-1 max-w-xs">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: '#444' }} />
+                  <input
+                    type="text"
+                    placeholder="Search name or email…"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                    className="w-full text-xs pl-9 pr-3 py-1.5 rounded-md outline-none"
+                    style={{
+                      background: '#171717',
+                      border: '1px solid #222',
+                      color: '#f5f5f5',
+                      borderRadius: '6px',
+                    }}
+                  />
+                </div>
+                <p className="text-[11px]" style={{ color: '#444' }}>{filteredUsers.length} users</p>
+              </div>
+
+              <div
+                className="rounded-lg overflow-hidden"
+                style={{ background: '#171717', border: '1px solid #222' }}
+              >
+                {/* Table head */}
+                <div
+                  className="grid text-[10px] font-semibold uppercase tracking-[0.05em] px-4 py-2.5"
+                  style={{
+                    gridTemplateColumns: '1fr 80px 100px 80px 60px',
+                    borderBottom: '1px solid #1e1e1e',
+                    color: '#444',
+                  }}
+                >
+                  <span>User</span>
+                  <span>Role</span>
+                  <span className="hidden sm:block">Trips / Drops</span>
+                  <span>Status</span>
+                  <span />
+                </div>
+
+                {filteredUsers.length === 0 ? (
+                  <div className="py-8 text-center">
+                    <p className="text-xs" style={{ color: '#444' }}>No users matching "{search}"</p>
+                  </div>
+                ) : (
+                  filteredUsers.map((user: any, i: number) => (
+                    <div
+                      key={user.id ?? i}
+                      className="grid items-center px-4 py-2.5"
+                      style={{
+                        gridTemplateColumns: '1fr 80px 100px 80px 60px',
+                        borderBottom: i < filteredUsers.length - 1 ? '1px solid #1e1e1e' : 'none',
+                      }}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Avatar className="w-6 h-6 shrink-0">
+                          <AvatarFallback className="text-[9px] font-bold" style={{ background: '#222', color: '#666' }}>
+                            {initials(user.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium truncate" style={{ color: '#f5f5f5' }}>{user.name}</p>
+                          <p className="text-[11px] truncate" style={{ color: '#444' }}>{user.email}</p>
+                        </div>
+                      </div>
+                      <span
+                        className="text-[10px] font-semibold px-1.5 py-0.5 w-fit"
+                        style={{
+                          background: '#1e1e1e',
+                          color: user.type === 'Driver' ? '#888' : '#666',
+                          borderRadius: '4px',
+                        }}
+                      >
+                        {user.type}
+                      </span>
+                      <span className="text-[11px] hidden sm:block" style={{ color: '#555' }}>
+                        {user.type === 'Driver' ? `${user.trips ?? 0} trips` : `${user.dropsBalance ?? 0} drops`}
+                      </span>
+                      <StatusChip status={user.detailStatus ?? 'approved'} />
+                      <div className="text-right">
+                        {user.type === 'Driver' && user.detailStatus === 'approved' && (
+                          <button
+                            disabled={processing === user.id}
+                            onClick={() => handleAction(user.id, 'suspend')}
+                            className="text-[11px] font-semibold hover:underline"
+                            style={{ color: '#444' }}
+                          >
+                            Suspend
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )}
+          {/* ── Security ── */}
+          {!loading && activeTab === 'security' && (
+            <div>
+              <div className="rounded-lg" style={{ background: '#171717', border: '1px solid #222', padding: '16px 20px' }}>
+                <div className="flex items-center justify-between mb-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: '#555' }}>Admin Login Audit Log</p>
+                  <button
+                    onClick={fetchSecurityLogs}
+                    className="text-[10px] font-semibold uppercase tracking-[0.05em] transition-opacity hover:opacity-100 opacity-50"
+                    style={{ color: 'var(--orange-brand)' }}
+                  >
+                    Refresh
+                  </button>
+                </div>
+
+                {securityLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-4 h-4 animate-spin" style={{ color: '#444' }} />
+                  </div>
+                ) : securityLogs.length === 0 ? (
+                  <p className="text-xs py-8 text-center" style={{ color: '#444' }}>No login attempts recorded yet.</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left" style={{ borderCollapse: 'collapse' }}>
+                      <thead>
+                        <tr>
+                          {['Time', 'Email', 'Result', 'IP Address', 'User Agent'].map(h => (
+                            <th key={h} className="text-[10px] font-semibold uppercase tracking-[0.05em] pb-3 pr-4" style={{ color: '#444', whiteSpace: 'nowrap' }}>{h}</th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {securityLogs.map((log: any) => (
+                          <tr key={log.id} style={{ borderTop: '1px solid #1a1a1a' }}>
+                            <td className="py-2.5 pr-4 text-[11px] tabular-nums" style={{ color: '#555', whiteSpace: 'nowrap' }}>
+                              {new Date(log.createdAt).toLocaleString()}
+                            </td>
+                            <td className="py-2.5 pr-4 text-[11px]" style={{ color: '#888' }}>{log.email}</td>
+                            <td className="py-2.5 pr-4">
+                              <span
+                                className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5"
+                                style={{
+                                  borderRadius: '4px',
+                                  background: log.success ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)',
+                                  color: log.success ? '#22c55e' : '#ef4444',
+                                }}
+                              >
+                                {log.success ? 'Success' : 'Failed'}
+                              </span>
+                            </td>
+                            <td className="py-2.5 pr-4 text-[11px] font-mono" style={{ color: '#555' }}>{log.ipAddress ?? '—'}</td>
+                            <td className="py-2.5 text-[11px]" style={{ color: '#444', maxWidth: '220px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {log.userAgent ?? '—'}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              <p className="text-[10px] mt-4" style={{ color: '#333' }}>Showing last 50 entries · Includes both Step 1 and Step 2 attempts</p>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   )
 }
-
