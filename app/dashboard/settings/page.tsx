@@ -110,6 +110,9 @@ export default function RiderSettingsPage() {
   const [feedbackSuccess, setFeedbackSuccess] = useState(false)
   const [showFeedback, setShowFeedback] = useState(false)
 
+  // Toast
+  const [toastMsg, setToastMsg] = useState('')
+
   useEffect(() => {
     if ('Notification' in window) {
       const perm = Notification.permission
@@ -175,6 +178,11 @@ export default function RiderSettingsPage() {
     }
   }
 
+  const showToast = (msg: string) => {
+    setToastMsg(msg)
+    setTimeout(() => setToastMsg(''), 3000)
+  }
+
   if (loadingInit) {
     return (
       <div className="space-y-6 animate-pulse pb-20 mt-4 max-w-2xl">
@@ -190,7 +198,7 @@ export default function RiderSettingsPage() {
     : '?'
 
   return (
-    <div className="space-y-7 animate-in fade-in duration-300 max-w-2xl pb-24 mt-4">
+    <div className="space-y-7 animate-in fade-in duration-300 max-w-2xl mx-auto px-4 sm:px-6 pb-24 mt-4">
 
       {/* ── Page Header ───────────────────────────────────── */}
       <div className="flex items-center justify-between">
@@ -286,7 +294,7 @@ export default function RiderSettingsPage() {
             label="Download My Data"
             description="Request a copy of all your trip data and activity"
             right={<ChevronRight className="w-4 h-4 text-muted-foreground" />}
-            onClick={() => alert('Data export coming soon!')}
+            onClick={() => showToast('Data export coming soon!')}
           />
         </SettingsCard>
       </div>
@@ -325,7 +333,7 @@ export default function RiderSettingsPage() {
             label="Rate Tovedrop"
             description="Love using Tovedrop? Leave us a review"
             right={<ChevronRight className="w-4 h-4 text-muted-foreground" />}
-            onClick={() => alert('Redirecting to app store...')}
+            onClick={() => showToast('Redirecting to app store...')}
           />
           <SettingsRow
             icon={AlertTriangle}
@@ -352,7 +360,7 @@ export default function RiderSettingsPage() {
             label="About Tovedrop"
             description="Version 1.0 · Terms · Privacy Policy"
             right={<ChevronRight className="w-4 h-4 text-muted-foreground" />}
-            onClick={() => alert('Tovedrop v1.0')}
+            onClick={() => showToast('Tovedrop v1.0')}
             border={false}
           />
         </SettingsCard>
@@ -444,7 +452,7 @@ export default function RiderSettingsPage() {
             description="Permanently remove your account and all data"
             danger
             right={<ChevronRight className="w-4 h-4 text-destructive/50" />}
-            onClick={() => alert('Please contact support to delete your account.')}
+            onClick={() => showToast('Please contact support to delete your account.')}
             border={false}
           />
         </SettingsCard>
@@ -453,6 +461,15 @@ export default function RiderSettingsPage() {
       <p className="text-center text-xs text-muted-foreground pb-2">
         Tovedrop · v1.0 · &copy; {new Date().getFullYear()}
       </p>
+
+      {/* ── Toast Notification ────────────────────────────── */}
+      {toastMsg && (
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className="bg-foreground text-background px-4 py-2.5 rounded-full text-sm font-medium shadow-lg whitespace-nowrap">
+            {toastMsg}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
