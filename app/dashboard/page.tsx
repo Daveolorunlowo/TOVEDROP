@@ -5,7 +5,6 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath'
 import { TripPoller } from '@/components/trip-poller'
 import { TripList } from '@/components/dashboard/TripList'
 
@@ -27,11 +26,7 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/auth')
 
-  const redirectPath = getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null)
-  if (redirectPath !== '/dashboard') {
-    redirect(redirectPath)
-  }
-
+  // Note: role-based redirect is handled in layout.tsx — no duplicate check needed here
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
   if (!user) redirect('/auth')
 

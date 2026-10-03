@@ -56,9 +56,13 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  const channel = pusherClient.subscribe(`trip-${tripId}`)
  channel.bind('new-message', (newMessage: Message) => {
  setMessages((prev) => {
- // Prevent duplicates
- if (prev.some(m => m.id === newMessage.id)) return prev
- return [...prev, newMessage]
+  // Prevent exact duplicate (same real ID already in list)
+  if (prev.some(m => m.id === newMessage.id)) return prev
+  // Remove any optimistic placeholder with matching content+sender
+  const withoutOptimistic = prev.filter(
+   m => !(m.id.startsWith('optimistic-') && m.content === newMessage.content && m.senderId === newMessage.senderId)
+  )
+  return [...withoutOptimistic, newMessage]
  })
  })
 
@@ -79,30 +83,46 @@ export function ChatModal({ tripId, currentUserId, otherPartyName, onClose }: Ch
  }, [tripId])
 
  const handleSend = async (e: React.FormEvent) => {
- e.preventDefault()
- if (!inputText.trim() || sending) return
+  e.preventDefault()
+  if (!inputText.trim() || sending) return
 
- const messageText = inputText.trim()
- setInputText("")
- setSending(true)
+  const messageText = inputText.trim()
+  setInputText("")
+  setSending(true)
 
- try {
- const res = await fetch(`/api/trips/${tripId}/messages`, {
- method: "POST",
- headers: { "Content-Type": "application/json" },
- body: JSON.stringify({ content: messageText }),
- })
- if (!res.ok) {
- const text = await res.text(); throw new Error(`Failed to send: ${res.status} ${text}`)
- }
- } catch (err: any) {
- console.error(err)
- // If it fails, put the text back so they can try again
- setInputText(messageText)
- alert(err.message)
- } finally {
- setSending(false)
- }
+  // Optimistically add message so it appears instantly for the sender
+  const optimisticId = "optimistic-" + String(Date.now())
+  const optimisticMsg: Message = {
+   id: optimisticId,
+   content: messageText,
+   senderId: currentUserId,
+   createdAt: new Date().toISOString(),
+  }
+  setMessages((prev) => [...prev, optimisticMsg])
+
+  try {
+   const res = await fetch("/api/trips/" + tripId + "/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: messageText }),
+   })
+   if (!res.ok) {
+    const text = await res.text()
+    setMessages((prev) => prev.filter((m) => m.id !== optimisticId))
+    setInputText(messageText)
+    throw new Error("Failed to send: " + res.status + " " + text)
+   }
+   const data = await res.json()
+   const savedMsg: Message = data.message
+   setMessages((prev) =>
+    prev.map((m) => (m.id === optimisticId ? savedMsg : m))
+   )
+  } catch (err: any) {
+   console.error(err)
+   alert(err.message)
+  } finally {
+   setSending(false)
+  }
  }
 
   return (
