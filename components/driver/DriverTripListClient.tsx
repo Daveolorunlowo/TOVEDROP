@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Calendar, MessageSquare, CheckCircle, Car } from 'lucide-react'
+import { Calendar, MessageSquare, CheckCircle, Car, MapPin, Clock } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PaginationControls } from '@/components/shared/PaginationControls'
 import { ChatModal } from '@/components/chat-modal'
@@ -162,14 +162,20 @@ export function DriverTripListClient({
  <p className={`text-sm font-semibold ${trip.status === 'CANCELLED' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
  {trip.rider.name}
  </p>
- <div className="flex items-center gap-1.5 mt-0.5">
- <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.pickup}</span>
- <span className="text-[10px] text-muted-foreground/60">→</span>
- <span className="text-xs text-muted-foreground truncate max-w-[120px] sm:max-w-[180px]">{trip.destination}</span>
+ <div className="mt-2 space-y-1.5 bg-surface-elevated/50 p-2 rounded-md border border-border-subtle">
+ <div className="flex items-center gap-2 overflow-hidden">
+ <MapPin className="w-3.5 h-3.5 text-orange-brand shrink-0" />
+ <span className="text-sm font-semibold text-foreground truncate">{trip.pickup}</span>
+ <span className="text-xs text-muted-foreground shrink-0">→</span>
+ <span className="text-sm font-semibold text-foreground truncate">{trip.destination}</span>
  </div>
- <p className="text-[10px] text-muted-foreground mt-1">
-   {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
- </p>
+ <div className="flex items-center gap-2">
+ <Clock className="w-3.5 h-3.5 text-blue-500 shrink-0" />
+ <span className="text-xs font-bold text-blue-500 bg-blue-500/10 px-1.5 py-0.5 rounded">
+ {trip.isScheduled ? `${trip.date} at ${trip.time}` : `Instant Pick-Up at ${trip.time}`}
+ </span>
+ </div>
+ </div>
  </div>
  </div>
  

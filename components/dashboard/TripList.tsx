@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp } from 'lucide-react'
+import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp, Calendar } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { ChatModal } from '@/components/chat-modal'
@@ -42,6 +42,39 @@ function StatusChip({ status }: { status: string }) {
 
 const initials = (name: string) =>
   name ? name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase() : '?'
+
+function downloadICS(trip: any) {
+  // If it's not scheduled, fallback to 'now'
+  const dateStr = trip.isScheduled ? `${trip.date}T${trip.time}` : new Date().toISOString()
+  const scheduledAt = new Date(dateStr).getTime()
+  
+  if (isNaN(scheduledAt)) return
+
+  const dtStart = new Date(scheduledAt).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
+  const dtEnd = new Date(scheduledAt + 30 * 60000).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z' // Assume 30 min duration
+  const summary = `TOVEDROP Ride: ${trip.pickup}`
+  const description = `Pickup: ${trip.pickup}\\nDestination: ${trip.destination}${trip.notes ? '\\nNotes: ' + trip.notes : ''}`
+  
+  const icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'BEGIN:VEVENT',
+    `DTSTART:${dtStart}`,
+    `DTEND:${dtEnd}`,
+    `SUMMARY:${summary}`,
+    `DESCRIPTION:${description}`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\\r\\n')
+
+  const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = `tovedrop-ride-${trip.id}.ics`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 
 export function TripList({
   initialUpcoming,
@@ -178,6 +211,13 @@ export function TripList({
                   <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{trip.time}</p>
                 </div>
                 <StatusChip status={trip.status} />
+                <button
+                  onClick={() => downloadICS(trip)}
+                  className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-1"
+                  aria-label="Add to Calendar"
+                >
+                  <Calendar className="w-4 h-4" />
+                </button>
                 {trip.status === 'CONFIRMED' && (
                   <button
                     onClick={() => setActiveChatTrip(trip)}
