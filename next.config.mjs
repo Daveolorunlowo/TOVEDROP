@@ -32,13 +32,7 @@ const nextConfig = {
   },
   turbopack: {},
   async redirects() {
-    return [
-      {
-        source: '/track/:path*',
-        destination: '/trip/:path*',
-        permanent: true,
-      },
-    ]
+    return []
   },
   async headers() {
     return [

@@ -104,7 +104,7 @@ export default function ApplyPage() {
  fd.append('file', idFile)
  fd.append('expected_name', formData.fullname)
  
- const pyRes = await fetch('http://localhost:8000/api/verify-id', {
+ const pyRes = await fetch('/api/driver/verify-id', {
  method: 'POST',
  body: fd
  })

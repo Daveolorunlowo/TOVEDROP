@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp, Calendar } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp, Calendar, ShieldAlert, Share2 } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { ChatModal } from '@/components/chat-modal'
+import { SosModal } from '@/components/dashboard/SosModal'
 
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
@@ -88,6 +89,7 @@ export function TripList({
   const [pastTrips, setPastTrips] = useState(initialPast)
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
+  const [activeSosTrip, setActiveSosTrip] = useState<any>(null)
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false)  
   useEffect(() => {
     setUpcomingTrips(initialUpcoming)
@@ -142,6 +144,29 @@ export function TripList({
     }
   }
 
+  const handleShare = async (tripId: string) => {
+    try {
+      const res = await fetch(`/api/trips/${tripId}/share`, { method: 'POST' })
+      if (!res.ok) throw new Error('Failed to generate link')
+      const { shareToken } = await res.json()
+      const url = `${window.location.origin}/track/${shareToken}`
+      
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Track my Tovedrop ride',
+          text: 'Track my live location on Tovedrop:',
+          url,
+        })
+      } else {
+        await navigator.clipboard.writeText(url)
+        alert('Tracking link copied to clipboard!')
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Could not share trip')
+    }
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
       {/* Upcoming Trips */}
@@ -192,6 +217,7 @@ export function TripList({
               >
                 <StatusDot status={trip.status} />
                 <Avatar className="w-7 h-7 shrink-0">
+                  <AvatarImage src={trip.driver?.image || ''} />
                   <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border)', color: 'var(--muted-foreground)' }}>
                     {trip.driver ? initials(trip.driver.name!) : '?'}
                   </AvatarFallback>
@@ -219,13 +245,29 @@ export function TripList({
                   <Calendar className="w-4 h-4" />
                 </button>
                 {trip.status === 'CONFIRMED' && (
-                  <button
-                    onClick={() => setActiveChatTrip(trip)}
-                    className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-1"
-                    aria-label="Chat"
-                  >
-                    <MessageCircle className="w-4 h-4" />
-                  </button>
+                  <>
+                    <button
+                      onClick={() => setActiveSosTrip(trip)}
+                      className="p-1 rounded shrink-0 transition-colors text-red-500 hover:bg-red-500/10 mr-1"
+                      aria-label="SOS"
+                    >
+                      <ShieldAlert className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setActiveChatTrip(trip)}
+                      className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-1"
+                      aria-label="Chat"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleShare(trip.id)}
+                      className="p-1 rounded shrink-0 transition-colors text-blue-500 hover:bg-blue-500/10 mr-1"
+                      aria-label="Share Location"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                  </>
                 )}
                 <button
                   disabled={processing === trip.id}
@@ -294,6 +336,7 @@ export function TripList({
                     }}
                   >
                     <Avatar className="w-7 h-7 shrink-0">
+                      <AvatarImage src={trip.driver?.image || ''} />
                       <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--card)', color: 'var(--muted-foreground)' }}>
                         {trip.driver ? initials(trip.driver.name!) : '?'}
                       </AvatarFallback>
@@ -331,6 +374,13 @@ export function TripList({
           currentUserId={activeChatTrip.riderId}
           otherPartyName={activeChatTrip.driver?.name ?? 'Driver'}
           onClose={() => setActiveChatTrip(null)}
+        />
+      )}
+
+      {activeSosTrip && (
+        <SosModal
+          trip={activeSosTrip}
+          onClose={() => setActiveSosTrip(null)}
         />
       )}
     </div>

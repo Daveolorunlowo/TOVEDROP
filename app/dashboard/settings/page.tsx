@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import {
   Bell, MessageSquare, Loader2, CheckCircle2,
   Shield, User, ChevronRight, MapPin, Moon,
   Smartphone, Info, Star, AlertTriangle,
-  HelpCircle, Lock, Eye, Trash2, Download,
+  HelpCircle, Lock, Eye, Trash2, Download, Camera
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import { subscribeToPushNotifications } from '@/lib/push-client'
@@ -113,6 +113,15 @@ export default function RiderSettingsPage() {
   // Toast
   const [toastMsg, setToastMsg] = useState('')
 
+  // Profile Picture
+  const [profilePic, setProfilePic] = useState(user?.image || '')
+  const [uploadingPic, setUploadingPic] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (user?.image) setProfilePic(user.image)
+  }, [user?.image])
+
   useEffect(() => {
     if ('Notification' in window) {
       const perm = Notification.permission
@@ -183,6 +192,57 @@ export default function RiderSettingsPage() {
     setTimeout(() => setToastMsg(''), 3000)
   }
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const img = new window.Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const MAX_WIDTH = 256
+        const MAX_HEIGHT = 256
+        let width = img.width
+        let height = img.height
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width
+            width = MAX_WIDTH
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height
+            height = MAX_HEIGHT
+          }
+        }
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx?.drawImage(img, 0, 0, width, height)
+        const base64Str = canvas.toDataURL('image/jpeg', 0.8)
+
+        setUploadingPic(true)
+        fetch('/api/user/profile-picture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Str })
+        }).then(res => res.json())
+          .then(data => {
+            if (data.image) setProfilePic(data.image)
+            showToast('Profile picture updated!')
+          })
+          .catch(() => showToast('Failed to update picture'))
+          .finally(() => setUploadingPic(false))
+      }
+      if (typeof event.target?.result === 'string') {
+        img.src = event.target.result
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
   if (loadingInit) {
     return (
       <div className="space-y-6 animate-pulse pb-20 mt-4 max-w-2xl">
@@ -213,8 +273,19 @@ export default function RiderSettingsPage() {
 
       {/* ── Profile Card ──────────────────────────────────── */}
       <div className="bg-gradient-to-br from-orange-brand/10 via-card to-card border border-orange-brand/20 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-brand to-orange-dark flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0">
-          {initials}
+        <div 
+          className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-brand to-orange-dark flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0 cursor-pointer overflow-hidden group"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {profilePic ? (
+            <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
+          ) : (
+            initials
+          )}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+            {uploadingPic ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />}
+          </div>
+          <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleImageUpload} />
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-bold text-foreground text-base truncate">{user?.name ?? 'Rider'}</p>

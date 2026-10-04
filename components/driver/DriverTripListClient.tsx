@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Calendar, MessageSquare, CheckCircle, Car, MapPin, Clock } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { PaginationControls } from '@/components/shared/PaginationControls'
 import { ChatModal } from '@/components/chat-modal'
 import { TransferTripModal } from '@/components/driver/TransferTripModal'
@@ -154,6 +154,7 @@ export function DriverTripListClient({
  <div className="flex items-start justify-between w-full">
  <div className="flex items-center gap-3 min-w-0">
  <Avatar className="w-9 h-9 shrink-0 border border-border">
+ <AvatarImage src={trip.rider?.image || ''} />
  <AvatarFallback className="text-[10px] font-bold bg-surface-elevated text-muted-foreground">
  {initials(trip.rider.name)}
  </AvatarFallback>
