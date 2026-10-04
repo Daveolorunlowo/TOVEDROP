@@ -113,6 +113,12 @@ export default function RiderSettingsPage() {
   // Toast
   const [toastMsg, setToastMsg] = useState('')
 
+  // Delete Account Flow (Roach Motel)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [deleteStep, setDeleteStep] = useState(1)
+  const [deleteReason, setDeleteReason] = useState('')
+  const [deleteConfirmText, setDeleteConfirmText] = useState('')
+
   // Profile Picture
   const [profilePic, setProfilePic] = useState(user?.image || '')
   const [uploadingPic, setUploadingPic] = useState(false)
@@ -346,27 +352,7 @@ export default function RiderSettingsPage() {
             description="Your name & photo are visible to matched drivers"
             right={<span className="text-xs text-muted-foreground font-medium">Drivers only</span>}
           />
-          <SettingsRow
-            icon={Lock}
-            iconBg="bg-blue-500/10"
-            iconColor="text-blue-500"
-            label="Two-Factor Authentication"
-            description="Add an extra layer of security to your account"
-            right={
-              <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                Coming soon
-              </span>
-            }
-          />
-          <SettingsRow
-            icon={Download}
-            iconBg="bg-blue-500/10"
-            iconColor="text-blue-500"
-            label="Download My Data"
-            description="Request a copy of all your trip data and activity"
-            right={<ChevronRight className="w-4 h-4 text-muted-foreground" />}
-            onClick={() => showToast('Data export coming soon!')}
-          />
+
         </SettingsCard>
       </div>
 
@@ -390,6 +376,18 @@ export default function RiderSettingsPage() {
             description="Promotions, news and product updates from Tovedrop"
             right={<Toggle checked={marketingEmails} onChange={setMarketingEmails} />}
           />
+          <SettingsRow
+            icon={Download}
+            iconBg="bg-purple-500/10"
+            iconColor="text-purple-500"
+            label="Download App"
+            description="Install TOVEDROP on your phone for faster access"
+            right={<ChevronRight className="w-4 h-4 text-muted-foreground" />}
+            onClick={() => {
+              window.dispatchEvent(new Event('force-show-pwa-install'))
+              showToast('App installation requested.')
+            }}
+          />
         </SettingsCard>
       </div>
 
@@ -397,15 +395,7 @@ export default function RiderSettingsPage() {
       <div className="space-y-2">
         <SectionHeader icon={HelpCircle} label="Help & Support" color="text-green-500" />
         <SettingsCard>
-          <SettingsRow
-            icon={Star}
-            iconBg="bg-green-500/10"
-            iconColor="text-green-500"
-            label="Rate Tovedrop"
-            description="Love using Tovedrop? Leave us a review"
-            right={<ChevronRight className="w-4 h-4 text-muted-foreground" />}
-            onClick={() => showToast('Redirecting to app store...')}
-          />
+
           <SettingsRow
             icon={AlertTriangle}
             iconBg="bg-yellow-500/10"
@@ -505,7 +495,140 @@ export default function RiderSettingsPage() {
         </div>
       )}
 
-      {/* ── Danger Zone ───────────────────────────────────── */}
+      {/* ── Roach Motel Delete Modal ──────────────────────── */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full sm:max-w-md bg-card border border-border rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl overflow-y-auto max-h-[90vh] animate-in slide-in-from-bottom-6 duration-300">
+            
+            {deleteStep === 1 && (
+              <div className="space-y-4 text-center">
+                <AlertTriangle className="w-12 h-12 text-destructive mx-auto" />
+                <h3 className="font-bold text-xl text-foreground">Are you sure?</h3>
+                <p className="text-muted-foreground text-sm">
+                  If you delete your account, you will lose all your ride history, saved locations, and rewards permanently. This action cannot be undone.
+                </p>
+                <div className="flex flex-col gap-3 mt-6">
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="w-full bg-orange-brand hover:bg-orange-dark text-white font-bold py-3.5 rounded-xl text-sm transition-colors"
+                  >
+                    No, keep my account
+                  </button>
+                  <button
+                    onClick={() => setDeleteStep(2)}
+                    className="w-full text-muted-foreground hover:bg-muted py-3.5 rounded-xl text-sm font-semibold transition-colors"
+                  >
+                    Yes, I want to delete
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {deleteStep === 2 && (
+              <div className="space-y-4">
+                <h3 className="font-bold text-xl text-center text-foreground">Before you go...</h3>
+                <p className="text-muted-foreground text-sm text-center">
+                  Please tell us why you are leaving so we can improve Tovedrop. (Required)
+                </p>
+                <textarea
+                  value={deleteReason}
+                  onChange={(e) => setDeleteReason(e.target.value)}
+                  placeholder="I'm leaving because..."
+                  className="w-full bg-background border border-border text-sm text-foreground rounded-xl px-4 py-3 min-h-[100px] focus:outline-none focus:border-orange-brand transition-colors resize-none"
+                />
+                <div className="flex flex-col gap-3 mt-4">
+                  <button
+                    disabled={deleteReason.length < 10}
+                    onClick={() => setDeleteStep(3)}
+                    className="w-full bg-orange-brand hover:bg-orange-dark text-white font-bold py-3.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Submit & Continue
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="w-full text-muted-foreground hover:bg-muted py-3.5 rounded-xl text-sm font-semibold transition-colors"
+                  >
+                    Nevermind, I'll stay
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {deleteStep === 3 && (
+              <div className="space-y-4 text-center">
+                <Star className="w-12 h-12 text-yellow-500 mx-auto" />
+                <h3 className="font-bold text-xl text-foreground">Wait! Here's a gift! 🎁</h3>
+                <p className="text-muted-foreground text-sm">
+                  We value you as a rider. Stay with us and enjoy <span className="font-bold text-foreground">50% off</span> your next 3 rides!
+                </p>
+                <div className="flex flex-col gap-3 mt-6">
+                  <button
+                    onClick={() => { setShowDeleteModal(false); showToast('Promo code STAY50 applied!'); }}
+                    className="w-full bg-orange-brand hover:bg-orange-dark text-white font-bold py-3.5 rounded-xl text-sm transition-colors"
+                  >
+                    Claim 50% Off & Stay
+                  </button>
+                  <button
+                    onClick={() => setDeleteStep(4)}
+                    className="w-full text-muted-foreground hover:bg-muted py-3.5 rounded-xl text-sm font-semibold transition-colors"
+                  >
+                    Decline offer & proceed
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {deleteStep === 4 && (
+              <div className="space-y-4">
+                <h3 className="font-bold text-xl text-center text-foreground">Final Confirmation</h3>
+                <p className="text-muted-foreground text-sm text-center">
+                  To confirm deletion, please type exactly: <br/>
+                  <span className="font-mono font-bold text-foreground select-none inline-block mt-2">I want to permanently delete my Tovedrop account</span>
+                </p>
+                <input
+                  type="text"
+                  value={deleteConfirmText}
+                  onChange={(e) => setDeleteConfirmText(e.target.value)}
+                  placeholder="Type the sentence above"
+                  className="w-full bg-background border border-border text-sm text-foreground rounded-xl px-4 py-3 focus:outline-none focus:border-destructive transition-colors mt-2"
+                />
+                <div className="flex flex-col gap-3 mt-4">
+                  <button
+                    disabled={deleteConfirmText !== 'I want to permanently delete my Tovedrop account'}
+                    onClick={() => setDeleteStep(5)}
+                    className="w-full bg-destructive hover:bg-destructive/90 text-white font-bold py-3.5 rounded-xl text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Permanently Delete Account
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteModal(false)}
+                    className="w-full text-muted-foreground hover:bg-muted py-3.5 rounded-xl text-sm font-semibold transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {deleteStep === 5 && (
+              <div className="space-y-4 text-center py-6">
+                <CheckCircle2 className="w-12 h-12 text-orange-brand mx-auto" />
+                <h3 className="font-bold text-xl text-foreground">Request Submitted</h3>
+                <p className="text-muted-foreground text-sm">
+                  Your account deletion request has been submitted. It will be reviewed by our team and processed within 30 to 90 business days.
+                </p>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="w-full mt-4 bg-orange-brand hover:bg-orange-dark text-white font-bold py-3.5 rounded-xl text-sm transition-colors"
+                >
+                  Return to Settings
+                </button>
+              </div>
+            )}
+
+          </div>
+        </div>
+      )}
       <div className="space-y-2">
         <SectionHeader icon={AlertTriangle} label="Account" color="text-destructive" />
         <SettingsCard>
@@ -523,7 +646,7 @@ export default function RiderSettingsPage() {
             description="Permanently remove your account and all data"
             danger
             right={<ChevronRight className="w-4 h-4 text-destructive/50" />}
-            onClick={() => showToast('Please contact support to delete your account.')}
+            onClick={() => { setShowDeleteModal(true); setDeleteStep(1); setDeleteReason(''); setDeleteConfirmText(''); }}
             border={false}
           />
         </SettingsCard>

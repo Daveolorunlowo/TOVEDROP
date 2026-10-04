@@ -8,29 +8,36 @@ export function InstallPrompt() {
  const [deferredPrompt, setDeferredPrompt] = useState<any>(null)
  const [showBanner, setShowBanner] = useState(false)
 
- useEffect(() => {
- const handler = (e: Event) => {
- e.preventDefault()
- setDeferredPrompt(e)
- 
- // Delay showing banner to not interrupt initial load
- setTimeout(() => {
- let hasDismissed = false
- try {
- hasDismissed = !!localStorage.getItem('tovedrop_pwa_dismissed')
- } catch (e) {}
- if (!hasDismissed) {
- setShowBanner(true)
- }
- }, 3000)
- }
+  useEffect(() => {
+    const handler = (e: Event) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+      
+      // Delay showing banner to not interrupt initial load
+      setTimeout(() => {
+        let hasDismissed = false
+        try {
+          hasDismissed = !!localStorage.getItem('tovedrop_pwa_dismissed')
+        } catch (e) {}
+        if (!hasDismissed) {
+          setShowBanner(true)
+        }
+      }, 3000)
+    }
 
- window.addEventListener('beforeinstallprompt', handler)
+    const forceShowHandler = () => {
+      try { localStorage.removeItem('tovedrop_pwa_dismissed') } catch (e) {}
+      setShowBanner(true)
+    }
 
- return () => {
- window.removeEventListener('beforeinstallprompt', handler)
- }
- }, [])
+    window.addEventListener('beforeinstallprompt', handler)
+    window.addEventListener('force-show-pwa-install', forceShowHandler)
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler)
+      window.removeEventListener('force-show-pwa-install', forceShowHandler)
+    }
+  }, [deferredPrompt])
 
  const handleInstall = async () => {
  if (!deferredPrompt) return
