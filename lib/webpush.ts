@@ -2,8 +2,10 @@ import webpush from 'web-push'
 import prisma from '@/lib/prisma'
 import { logger } from '@/lib/logger'
 
-const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ''
-const VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || ''
+const cleanKey = (key: string) => key.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
+
+const VAPID_PUBLIC_KEY = cleanKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '')
+const VAPID_PRIVATE_KEY = cleanKey(process.env.VAPID_PRIVATE_KEY || '')
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
