@@ -591,7 +591,7 @@ function DropsSection() {
  )}
 
  <p className="text-xs font-bold text-foreground/60 uppercase tracking-widest">{pkg.name}</p>
- <p className="text-lg font-semibold text-foreground/40">{pkg.price}</p>
+ <div className="h-6 w-16 bg-foreground/10 rounded-md my-0.5 animate-pulse" aria-hidden="true" />
 
  {/* Drop count */}
  <div>
