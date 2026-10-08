@@ -9,11 +9,15 @@ const VAPID_PRIVATE_KEY = cleanKey(process.env.VAPID_PRIVATE_KEY || '')
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
 if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-  webpush.setVapidDetails(
-    `mailto:support@tovedrop.com`,
-    VAPID_PUBLIC_KEY,
-    VAPID_PRIVATE_KEY
-  )
+  try {
+    webpush.setVapidDetails(
+      `mailto:support@tovedrop.com`,
+      VAPID_PUBLIC_KEY,
+      VAPID_PRIVATE_KEY
+    )
+  } catch (err) {
+    logger.warn('Failed to set VAPID details for web-push (keys might be malformed or dummy build keys)', { error: err })
+  }
 }
 
 export async function sendWebPush(userId: string, title: string, message: string, url: string = '/') {
