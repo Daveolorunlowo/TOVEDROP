@@ -1,9 +1,6 @@
 import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
-import dynamic from 'next/dynamic'
-
-// Leaflet uses the window object, so we MUST disable SSR for the tracking map
-const LiveTracker = dynamic(() => import('@/components/dashboard/LiveTracker'), { ssr: false })
+import { LiveTrackerWrapper } from './LiveTrackerWrapper'
 
 export default async function TrackPage({ params }: { params: { shareToken: string } }) {
   const trip = await prisma.trip.findUnique({
@@ -30,7 +27,7 @@ export default async function TrackPage({ params }: { params: { shareToken: stri
       </header>
 
       <main className="flex-1 w-full relative">
-        <LiveTracker trip={trip} />
+        <LiveTrackerWrapper trip={trip} />
       </main>
     </div>
   )
