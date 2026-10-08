@@ -11,6 +11,7 @@ import { NetworkIndicator } from '@/components/network-indicator'
 import { GlobalMessageListener } from '@/components/global-message-listener'
 import { ServiceWorkerRegistry } from '@/components/sw-registry'
 import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
+import { DynamicBackground } from '@/components/shared/DynamicBackground'
 
 const inter = Inter({
  subsets: ['latin'],
@@ -83,6 +84,7 @@ export default async function RootLayout({
     <html lang="en" className="bg-background" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <Providers>
+          <DynamicBackground />
           <GlobalAuthenticatedNav />
           {children}
           <InstallPrompt />

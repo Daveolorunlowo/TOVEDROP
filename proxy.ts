@@ -39,12 +39,14 @@ export async function proxy(request: NextRequest) {
 
   // No session, trying to access protected area
   if (!token && isProtected) {
+    console.log(`[PROXY] No token, redirecting to /auth from ${path}`);
     return NextResponse.redirect(new URL('/auth', request.url))
   }
 
   // Has session, on a page meant for logged-out users
   if (token && isGuestOnlyPage) {
     const redirectPath = getRoleRedirectPath(token.role as string, token.driverStatus as string | null)
+    console.log(`[PROXY] Guest page accessed with token, redirecting to ${redirectPath} from ${path}`);
     return NextResponse.redirect(new URL(redirectPath, request.url))
   }
 
@@ -57,14 +59,20 @@ export async function proxy(request: NextRequest) {
       if (path.startsWith("/api/")) {
         return NextResponse.json({ error: "Unauthorized: Admin access required" }, { status: 403 });
       }
-      return NextResponse.redirect(new URL(getRoleRedirectPath(role, driverStatus), request.url))
+      const dest = getRoleRedirectPath(role, driverStatus)
+      console.log(`[PROXY] Not admin, redirecting to ${dest} from ${path}`);
+      if (dest !== path) return NextResponse.redirect(new URL(dest, request.url))
     }
     if (path.startsWith('/driver') && role !== 'DRIVER') {
-      return NextResponse.redirect(new URL(getRoleRedirectPath(role, driverStatus), request.url))
+      const dest = getRoleRedirectPath(role, driverStatus)
+      console.log(`[PROXY] Not driver, redirecting to ${dest} from ${path}`);
+      if (dest !== path) return NextResponse.redirect(new URL(dest, request.url))
     }
     if ((path.startsWith('/dashboard') || path.startsWith('/book') || path.startsWith('/rate')) 
         && role !== 'RIDER') {
-      return NextResponse.redirect(new URL(getRoleRedirectPath(role, driverStatus), request.url))
+      const dest = getRoleRedirectPath(role, driverStatus)
+      console.log(`[PROXY] Not rider, redirecting to ${dest} from ${path}`);
+      if (dest !== path) return NextResponse.redirect(new URL(dest, request.url))
     }
   }
 

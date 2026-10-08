@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 export default function ClearCachePage() {
   const [status, setStatus] = useState('Scrubbing everything clean... 🧹');
 
   useEffect(() => {
     async function clearEverything() {
-      // 1. Clear all cookies
+      // 1. Clear all JS-accessible cookies
       document.cookie.split(";").forEach((c) => {
         document.cookie = c
           .replace(/^ +/, "")
@@ -32,9 +33,9 @@ export default function ClearCachePage() {
 
       setStatus('All clean! Redirecting you to login... 🚀');
       
-      // 4. Redirect to home/auth with a clean slate
+      // 4. Use NextAuth signOut to clear HTTP-only cookies and redirect to /auth
       setTimeout(() => {
-        window.location.href = '/auth';
+        signOut({ callbackUrl: '/auth' });
       }, 1500);
     }
 

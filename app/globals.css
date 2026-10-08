@@ -153,7 +153,24 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply text-foreground font-sans;
+    background-color: var(--background);
+  }
+  /* Dynamic Background is now handled by DynamicBackground.tsx component */
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -50px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+@keyframes background-flow {
+  0% {
+    background-position: 0% 50%, 100% 50%, top center, bottom center, 0 0;
+  }
+  100% {
+    background-position: 100% 50%, 0% 50%, top center, bottom center, 0 0;
   }
 }
 

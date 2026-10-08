@@ -28,7 +28,7 @@ export default async function DashboardPage() {
 
   // Note: role-based redirect is handled in layout.tsx — no duplicate check needed here
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
-  if (!user) redirect('/auth')
+  if (!user) redirect('/clear')
 
   const trips = await prisma.trip.findMany({
     where: { riderId: user.id },
@@ -45,7 +45,7 @@ export default async function DashboardPage() {
     name ? name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase() : '?'
 
   return (
-    <div style={{ background: 'var(--background)', minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh' }}>
       <TripPoller userId={user.id} />
 
       <div className="max-w-5xl mx-auto px-5 py-8">

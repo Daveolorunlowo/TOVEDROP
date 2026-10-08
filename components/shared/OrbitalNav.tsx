@@ -188,6 +188,7 @@ export function OrbitalNav({ tabs, unreadCount = 0 }: OrbitalNavProps) {
 
  {/* The Hub */}
  <button
+ type="button"
  onClick={() => setIsOpen(!isOpen)}
  className={cn(
  "relative flex items-center justify-center w-[60px] h-[60px] rounded-full outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111] z-10",

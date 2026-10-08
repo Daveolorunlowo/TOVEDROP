@@ -222,7 +222,7 @@ export default function AdminPage() {
   const activeNavItem = NAV_ITEMS.find(n => n.id === activeTab)
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: NAVY_0, fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'transparent', fontFamily: "'DM Sans', system-ui, sans-serif" }}>
 
       {/* ── Top Bar ── */}
       <header style={{ background: NAVY_1, borderBottom: `1px solid ${BORDER}`, position: 'sticky', top: 0, zIndex: 50 }}>
