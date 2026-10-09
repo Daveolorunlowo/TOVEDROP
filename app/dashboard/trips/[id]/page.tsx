@@ -8,11 +8,11 @@ import { ArrowLeft, MapPin, Navigation, Calendar, Clock } from 'lucide-react'
 import { ShareTripButton } from '@/components/dashboard/ShareTripButton'
 import { PanicButton } from '@/components/dashboard/PanicButton'
 
-export default async function TripDetailPage({ params }: { params: { id: string } }) {
+export default async function TripDetailPage({ params }: { params: Promise<{ id: string }> }) {
  const session = await getServerSession(authOptions)
  if (!session?.user) redirect('/api/auth/signin')
 
- const tripId = params.id
+ const tripId = (await params).id
  const trip = await prisma.trip.findUnique({
  where: { id: tripId },
  include: {

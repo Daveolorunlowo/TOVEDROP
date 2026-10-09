@@ -43,6 +43,7 @@ export default function LiveTracker({ trip }: { trip: any }) {
   const defaultCenter: [number, number] = [7.6256, 4.1843]
 
   useEffect(() => {
+    if (!pusherClient) return
     // Listen for pusher updates
     const channel = pusherClient.subscribe('global-driver-locations')
     
@@ -56,7 +57,9 @@ export default function LiveTracker({ trip }: { trip: any }) {
 
     return () => {
       channel.unbind('location-update')
-      pusherClient.unsubscribe('global-driver-locations')
+      if (pusherClient) {
+        pusherClient.unsubscribe('global-driver-locations')
+      }
     }
   }, [trip.driverId])
 

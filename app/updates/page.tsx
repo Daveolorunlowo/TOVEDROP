@@ -8,9 +8,10 @@ export const dynamic = 'force-dynamic'
 export default async function UpdatesPage({
  searchParams
 }: {
- searchParams: { page?: string }
+ searchParams: Promise<{ page?: string }>
 }) {
- const page = parseInt(searchParams.page || '1', 10)
+ const { page: pageParam } = await searchParams
+ const page = parseInt(pageParam || '1', 10)
  const itemsPerPage = 8
 
  // First fetch pinned items

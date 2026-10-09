@@ -2,9 +2,10 @@ import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { LiveTrackerWrapper } from './LiveTrackerWrapper'
 
-export default async function TrackPage({ params }: { params: { shareToken: string } }) {
+export default async function TrackPage({ params }: { params: Promise<{ shareToken: string }> }) {
+  const { shareToken } = await params
   const trip = await prisma.trip.findUnique({
-    where: { shareToken: params.shareToken },
+    where: { shareToken },
     include: { driver: true, rider: true }
   })
 

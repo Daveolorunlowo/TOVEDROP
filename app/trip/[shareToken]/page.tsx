@@ -9,8 +9,8 @@ export const metadata: Metadata = {
  robots: { index: false, follow: false }
 }
 
-export default async function TripSharePage({ params }: { params: { shareToken: string } }) {
- const { shareToken } = params
+export default async function TripSharePage({ params }: { params: Promise<{ shareToken: string }> }) {
+ const { shareToken } = await params
 
  const trip = await prisma.trip.findUnique({
  where: { shareToken },

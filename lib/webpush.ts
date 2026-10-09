@@ -16,7 +16,7 @@ if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
       VAPID_PRIVATE_KEY
     )
   } catch (err) {
-    logger.warn('Failed to set VAPID details for web-push (keys might be malformed or dummy build keys)', { error: err })
+    logger.warn('Failed to set VAPID details for web-push (keys might be malformed or dummy build keys)', { action: 'set_vapid_details', error: err })
   }
 }
 

@@ -4,11 +4,12 @@ import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { TransferAcceptClient } from '@/components/driver/TransferAcceptClient'
 
-export default async function TransferAcceptPage({ params }: { params: { shareToken: string } }) {
+export default async function TransferAcceptPage({ params }: { params: Promise<{ shareToken: string }> }) {
+ const shareToken = (await params).shareToken
  const session = await getServerSession(authOptions)
  
  if (!session?.user) {
- redirect(`/auth?intent=transfer&token=${params.shareToken}`)
+ redirect(`/auth?intent=transfer&token=${shareToken}`)
  }
 
  const user = await prisma.user.findUnique({
@@ -28,7 +29,7 @@ export default async function TransferAcceptPage({ params }: { params: { shareTo
  }
 
  const transfer = await prisma.tripTransfer.findUnique({
- where: { shareToken: params.shareToken },
+ where: { shareToken },
  include: {
  trip: {
  include: { rider: { select: { name: true } } }
