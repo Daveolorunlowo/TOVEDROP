@@ -48,19 +48,19 @@ export default async function DashboardPage() {
     <div style={{ minHeight: '100vh' }}>
       <TripPoller userId={user.id} />
 
-      <div className="max-w-5xl mx-auto px-5 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-7 md:py-8 landscape:py-3">
 
         {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-5 sm:mb-7 landscape:mb-3">
           <div className="flex-1 min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-1" style={{ color: 'var(--muted-foreground)' }}>
+            <p className="text-[11px] font-bold uppercase tracking-[0.08em] mb-1 text-white/90 drop-shadow-sm">
               Rider Dashboard
             </p>
-            <h1 className="text-2xl sm:text-3xl font-bold truncate" style={{ color: 'var(--foreground)', letterSpacing: '-0.01em' }}>
+            <h1 className="text-2xl sm:text-3xl font-extrabold truncate text-white drop-shadow-sm" style={{ letterSpacing: '-0.01em' }}>
               {user.name}
             </h1>
             {user.university && (
-              <p className="text-xs mt-0.5 truncate" style={{ color: 'var(--muted-foreground)' }}>{user.university}</p>
+              <p className="text-xs mt-0.5 truncate text-white/85 font-medium drop-shadow-sm">{user.university}</p>
             )}
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
 
         {/* ── Stats card ── */}
         <div
-          className="rounded-lg mb-6"
+          className="rounded-xl mb-6 shadow-lg backdrop-blur-md transition-all"
           style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)', padding: '16px 20px' }}
         >
           <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-4" style={{ color: 'var(--muted-foreground)' }}>

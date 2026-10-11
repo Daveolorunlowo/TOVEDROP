@@ -236,7 +236,7 @@ function HeroSection() {
 
  return (
  <section
- className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-bg-deep"
+ className="relative min-h-screen flex flex-col justify-center overflow-hidden"
  aria-label="Hero"
  >
  {/* Dot grid */}

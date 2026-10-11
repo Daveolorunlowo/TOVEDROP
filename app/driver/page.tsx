@@ -445,17 +445,17 @@ export default function DriverDashboardPage() {
               </span>
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] mb-0.5" style={{ color: 'var(--muted-foreground)' }}>
+              <p className="text-[11px] font-bold uppercase tracking-[0.08em] mb-0.5 text-white/90 drop-shadow-sm">
                 Driver Dashboard
               </p>
-              <h1 className="text-2xl sm:text-3xl font-bold truncate" style={{ color: 'var(--foreground)', letterSpacing: '-0.01em' }}>
+              <h1 className="text-2xl sm:text-3xl font-extrabold truncate text-white drop-shadow-sm" style={{ letterSpacing: '-0.01em' }}>
                 {firstName}
               </h1>
               <div className="flex flex-wrap items-center gap-2 mt-1">
                 <StatusChip status={driverProfile.status} />
                 {driverProfile.rating > 0 && (
-                  <span className="flex items-center gap-1 text-[11px] shrink-0" style={{ color: 'var(--muted-foreground)' }}>
-                    <Star className="w-3 h-3" style={{ color: 'var(--orange-brand)' }} />
+                  <span className="flex items-center gap-1 text-[11px] shrink-0 text-white/90 font-medium drop-shadow-sm">
+                    <Star className="w-3 h-3 fill-amber-300 text-amber-300" />
                     {driverProfile.rating.toFixed(1)}
                   </span>
                 )}

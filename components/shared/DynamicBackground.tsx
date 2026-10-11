@@ -12,7 +12,7 @@ export function DynamicBackground() {
   if (!mounted) return null
 
   return (
-    <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden bg-background">
+    <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
       {/* ── DOT GRID PATTERN ── */}
       <div 
         className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" 
@@ -22,19 +22,7 @@ export function DynamicBackground() {
         }}
       />
 
-      {/* ── LARGE GLOWING ORBS (ANIMATED) ── */}
-      <div 
-        className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full blur-[120px] opacity-20 dark:opacity-10 animate-float-slow"
-        style={{ background: 'var(--orange-brand)' }}
-      />
-      <div 
-        className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full blur-[140px] opacity-[0.15] dark:opacity-[0.08] animate-float-delayed"
-        style={{ background: 'var(--purple-brand)' }}
-      />
-      <div 
-        className="absolute top-[40%] left-[60%] w-[30vw] h-[30vw] rounded-full blur-[90px] opacity-[0.12] dark:opacity-[0.05] animate-float-slower"
-        style={{ background: 'var(--orange-dark)' }}
-      />
+
 
       {/* ── TOP SVG CURVE ── */}
       <div className="absolute top-0 left-0 right-0 h-48 opacity-[0.04] dark:opacity-[0.02]">

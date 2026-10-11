@@ -12,7 +12,7 @@ import { GlobalMessageListener } from '@/components/global-message-listener'
 import { ServiceWorkerRegistry } from '@/components/sw-registry'
 import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
 import { DynamicBackground } from '@/components/shared/DynamicBackground'
-
+import { CurvedBackground } from '@/components/ui/curved-background'
 const inter = Inter({
  subsets: ['latin'],
  weight: ['300', '400', '500', '600', '700'],
@@ -85,8 +85,11 @@ export default async function RootLayout({
       <body className={`${inter.className} antialiased`}>
         <Providers>
           <DynamicBackground />
+          <CurvedBackground curveStyle="asymmetric" topColorClass="bg-orange-brand" bottomColorClass="bg-transparent" animated={true} />
           <GlobalAuthenticatedNav />
-          {children}
+          <main className="relative z-10 flex-1 w-full">
+            {children}
+          </main>
           <InstallPrompt />
           <ReferralTracker />
           <GlobalMessageListener />

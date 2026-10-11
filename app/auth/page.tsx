@@ -11,6 +11,8 @@ import { getRoleRedirectPath } from '@/lib/getRoleRedirectPath';
 import { PasswordInput } from '@/components/shared/PasswordInput';
 import { Button } from '@/components/ui/button';
 
+import { WaveHeader } from '@/components/ui/wave-header';
+import { OrganicBlobBackground } from '@/components/ui/organic-blob-background';
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 function DropCoin({ size = 16 }: { size?: number }) {
@@ -152,16 +154,25 @@ function AuthForm() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-extrabold inline-block" style={{ letterSpacing: '-0.02em' }}>
-            <span className="text-foreground">TOVE</span><span className="text-orange-brand">DROP</span>
+    <div className="relative flex flex-col w-full flex-1 min-h-screen overflow-x-hidden">
+      <OrganicBlobBackground />
+      <WaveHeader animated={true}>
+        <div className="w-full flex justify-start mb-3 sm:mb-6 -mt-4 sm:-mt-8 landscape:mb-2 landscape:-mt-2">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            Back to home
           </Link>
-          <p className="mt-2 text-muted-foreground text-sm">
-            {tab === 'login' ? 'Welcome back to your campus ride platform' : 'Join the trusted student ride network'}
-          </p>
         </div>
+        <Link href="/" className="text-3xl sm:text-4xl font-extrabold inline-block" style={{ letterSpacing: '-0.02em' }}>
+          <span className="text-white">TOVE</span><span className="text-white/90">DROP</span>
+        </Link>
+        <p className="mt-1 sm:mt-2 text-white/90 text-xs sm:text-sm font-medium">
+          {tab === 'login' ? 'Welcome back to your campus ride platform' : 'Join the trusted student ride network'}
+        </p>
+      </WaveHeader>
+
+      <div className="flex-1 flex flex-col items-center px-4">
+        <div className="w-full max-w-md -mt-8 sm:-mt-12 md:-mt-16 landscape:mt-4 landscape:sm:mt-6 relative z-20 pb-12">
 
         <div className="bg-surface-card rounded-xl border border-border-default p-8 pb-16">
           <div className="flex rounded-xl bg-surface-elevated p-1 mb-7">
@@ -267,6 +278,7 @@ function AuthForm() {
             Google
           </Button>
         </div>
+        </div>
       </div>
     </div>
   );
@@ -274,19 +286,10 @@ function AuthForm() {
 
 export default function AuthPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="px-6 py-5">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="w-4 h-4" />
-          Back to home
-        </Link>
-      </div>
-      
+    <div className="min-h-screen flex flex-col bg-background">
       <Suspense fallback={<div className="flex-1 flex items-center justify-center"><div className="w-8 h-8 rounded-full border-4 border-orange-brand border-t-transparent animate-spin" /></div>}>
         <AuthForm />
       </Suspense>
-
-      
     </div>
   );
 }
