@@ -2894,6 +2894,7 @@ export const TripScalarFieldEnum = {
   riderId: 'riderId',
   driverId: 'driverId',
   driverArrivedAt: 'driverArrivedAt',
+  driverDepartedAt: 'driverDepartedAt',
   isPool: 'isPool',
   poolGroupId: 'poolGroupId',
   isScheduled: 'isScheduled',

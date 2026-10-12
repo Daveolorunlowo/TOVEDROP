@@ -70,6 +70,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const [copiedShare, setCopiedShare] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [driverArrivedNotice, setDriverArrivedNotice] = useState(!!initialTrip.driverArrivedAt)
+  const [driverDepartedNotice, setDriverDepartedNotice] = useState(!!initialTrip.driverDepartedAt)
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const latestMessageTimeRef = useRef<string | null>(null)
@@ -121,6 +123,17 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         playChime()
       })
 
+      channel.bind('driver-departed', (data: any) => {
+        if (!mounted) return
+        setDriverDepartedNotice(true)
+        setTrip((prev: any) => ({
+          ...prev,
+          driverDepartedAt: data?.departedAt || new Date().toISOString(),
+          driverArrivedAt: prev.driverArrivedAt || new Date().toISOString()
+        }))
+        playChime()
+      })
+
       channel.bind('trip-completed', () => {
         if (!mounted) return
         if (isRider) {
@@ -149,6 +162,9 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             setTrip(tripData.trip)
             if (tripData.trip.driverArrivedAt && !driverArrivedNotice) {
               setDriverArrivedNotice(true)
+            }
+            if (tripData.trip.driverDepartedAt && !driverDepartedNotice) {
+              setDriverDepartedNotice(true)
             }
             if (tripData.trip.status === 'COMPLETED' && isRider) {
               router.push(`/rate/${trip.id}`)
@@ -189,12 +205,73 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
       if (channel && pusherClient) {
         channel.unbind('new-message')
         channel.unbind('driver-arrived')
+        channel.unbind('driver-departed')
         channel.unbind('trip-completed')
         channel.unbind('trip-cancelled')
         pusherClient.unsubscribe(`trip-${trip.id}`)
       }
     }
-  }, [trip.id, currentUserId, isRider, router, driverArrivedNotice])
+  }, [trip.id, currentUserId, isRider, router, driverArrivedNotice, driverDepartedNotice])
+
+  // Driver actions
+  const handleDriverArrive = async () => {
+    setActionLoading('arrive')
+    try {
+      const res = await fetch(`/api/trips/${trip.id}/arrive`, { method: 'POST' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || 'Failed to mark arrival')
+      }
+      setDriverArrivedNotice(true)
+      setTrip((prev: any) => ({ ...prev, driverArrivedAt: new Date().toISOString() }))
+    } catch (err: any) {
+      alert(err.message || 'Error marking arrival')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleDriverDepart = async () => {
+    setActionLoading('depart')
+    try {
+      const res = await fetch(`/api/trips/${trip.id}/depart`, { method: 'POST' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || 'Failed to notify take off')
+      }
+      setDriverDepartedNotice(true)
+      setTrip((prev: any) => ({
+        ...prev,
+        driverDepartedAt: new Date().toISOString(),
+        driverArrivedAt: prev.driverArrivedAt || new Date().toISOString()
+      }))
+    } catch (err: any) {
+      alert(err.message || 'Error notifying passenger of departure')
+    } finally {
+      setActionLoading(null)
+    }
+  }
+
+  const handleDriverComplete = async () => {
+    if (!window.confirm('Mark this trip as completed?')) return
+    setActionLoading('complete')
+    try {
+      const res = await fetch('/api/trips/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tripId: trip.id })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || 'Failed to complete trip')
+      }
+      router.push('/driver')
+    } catch (err: any) {
+      alert(err.message || 'Error completing trip')
+    } finally {
+      setActionLoading(null)
+    }
+  }
 
   // Send message
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -268,8 +345,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
 
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-black/20 text-white border border-white/20 backdrop-blur-md flex items-center gap-1.5 shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              {driverArrivedNotice ? 'Driver Arrived' : 'Confirmed & Active'}
+              <span className={`w-2 h-2 rounded-full ${driverDepartedNotice ? 'bg-amber-400 animate-ping' : driverArrivedNotice ? 'bg-emerald-400 animate-pulse' : 'bg-emerald-400 animate-pulse'}`} />
+              {driverDepartedNotice ? 'Taking Off / En Route 🚗💨' : driverArrivedNotice ? 'Driver Arrived 📍' : 'Confirmed & Active'}
             </span>
           </div>
         </div>
@@ -285,7 +362,11 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               <span className="text-[11px] font-mono text-white/80 drop-shadow-sm">#{trip.id.slice(0, 8)}</span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold truncate text-white drop-shadow-sm" style={{ letterSpacing: '-0.01em' }}>
-              {driverArrivedNotice ? 'Driver at Pickup Location' : (driver?.name ? `Trip with ${driver.name}` : 'Live Trip Details')}
+              {driverDepartedNotice
+                ? `Taking Off to ${trip.destination} 🚗💨`
+                : driverArrivedNotice
+                ? 'Driver at Pickup Location 📍'
+                : (driver?.name ? `Trip with ${driver.name}` : 'Live Trip Details')}
             </h1>
             <p className="text-xs sm:text-sm mt-0.5 truncate text-white/90 font-medium drop-shadow-sm flex items-center gap-1.5">
               <span>{trip.pickup}</span>
@@ -306,8 +387,44 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
           </div>
         </div>
 
-        {/* ── Driver Arrival Live Alert Banner ── */}
-        {driverArrivedNotice && (
+        {/* ── Driver Progress Banners ── */}
+        {driverDepartedNotice ? (
+          <div
+            className="rounded-xl p-4 sm:p-5 shadow-lg backdrop-blur-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2"
+            style={{
+              background: 'var(--surface-card)',
+              border: '2px solid var(--orange-brand)',
+              boxShadow: '0 8px 30px rgba(249,115,22,0.18)'
+            }}
+          >
+            <div className="flex items-center gap-3.5">
+              <div
+                className="w-11 h-11 rounded-xl text-white flex items-center justify-center shrink-0 shadow-md animate-pulse"
+                style={{ background: 'var(--orange-brand)' }}
+              >
+                <Navigation className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-sm sm:text-base font-extrabold text-[var(--orange-brand)]">
+                  Taking Off to {trip.destination}! 🚗💨
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {driver?.name || 'Your driver'} is now taking off with you. Have a safe and smooth campus ride!
+                </p>
+              </div>
+            </div>
+            {driverPhone && (
+              <a
+                href={`tel:${driverPhone}`}
+                className="px-4 py-2.5 rounded-xl border border-border text-foreground hover:border-[var(--orange-brand)] text-xs font-bold shrink-0 flex items-center justify-center gap-1.5 shadow transition-colors cursor-pointer"
+                style={{ background: 'var(--surface-elevated)' }}
+              >
+                <Phone className="w-3.5 h-3.5 text-[var(--orange-brand)]" />
+                Call Driver
+              </a>
+            )}
+          </div>
+        ) : driverArrivedNotice ? (
           <div
             className="rounded-xl p-4 sm:p-5 shadow-lg backdrop-blur-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2"
             style={{
@@ -338,6 +455,80 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 Call Driver
               </a>
             )}
+          </div>
+        ) : null}
+
+        {/* ── Driver Progress Controls (when viewed by driver) ── */}
+        {!isRider && (
+          <div
+            className="rounded-xl p-4 sm:p-5 shadow-lg backdrop-blur-md"
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--orange-brand)] flex items-center gap-1.5">
+                  <Car className="w-4 h-4" />
+                  Driver Live Controls
+                </p>
+                <h3 className="text-base font-bold text-foreground mt-0.5">
+                  {driverDepartedNotice
+                    ? 'Taking Off / En Route to Destination'
+                    : driverArrivedNotice
+                    ? 'Arrived at Pickup — Ready to Depart?'
+                    : 'En Route to Pickup Point'}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {driverDepartedNotice
+                    ? 'Passenger and TOVEDROP have been notified that you are in transit.'
+                    : driverArrivedNotice
+                    ? 'Notify passenger and TOVEDROP once all passengers are on board.'
+                    : 'Tap "I\'ve Arrived" once you reach the passenger pickup location.'}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2.5">
+                {!driverArrivedNotice && (
+                  <button
+                    type="button"
+                    disabled={actionLoading !== null}
+                    onClick={handleDriverArrive}
+                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                  >
+                    {actionLoading === 'arrive' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <MapPin className="w-3.5 h-3.5" />}
+                    <span>I've Arrived 📍</span>
+                  </button>
+                )}
+
+                {!driverDepartedNotice ? (
+                  <button
+                    type="button"
+                    disabled={actionLoading !== null}
+                    onClick={handleDriverDepart}
+                    className="px-4 py-2.5 rounded-xl text-white text-xs font-extrabold flex items-center gap-1.5 transition-all shadow-sm hover:opacity-90 cursor-pointer disabled:opacity-50"
+                    style={{ background: 'var(--orange-brand)' }}
+                  >
+                    {actionLoading === 'depart' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Navigation className="w-3.5 h-3.5" />}
+                    <span>Taking Off with Passenger 🚀</span>
+                  </button>
+                ) : (
+                  <span className="px-3 py-1.5 rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20 text-xs font-extrabold flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                    En Route 🚗💨
+                  </span>
+                )}
+
+                <button
+                  type="button"
+                  disabled={actionLoading !== null}
+                  onClick={handleDriverComplete}
+                  className="px-4 py-2.5 rounded-xl border border-border hover:border-emerald-500 text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer disabled:opacity-50"
+                  style={{ background: 'var(--surface-elevated)' }}
+                >
+                  {actionLoading === 'complete' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />}
+                  <span>Complete Ride</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

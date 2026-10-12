@@ -159,7 +159,8 @@ model Trip {
   driverId String?
   driver   User?   @relation("DriverTrips", fields: [driverId], references: [id])
 
-  driverArrivedAt DateTime?
+  driverArrivedAt  DateTime?
+  driverDepartedAt DateTime?
 
   isPool      Boolean @default(false)
   poolGroupId String?

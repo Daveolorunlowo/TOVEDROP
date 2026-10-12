@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings
+  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -127,6 +127,52 @@ export default function DriverDashboardPage() {
       alert(err.message || 'This trip was already accepted by another driver')
     } finally { 
       setProcessing(null) 
+    }
+  }
+
+  const handleArrive = async (id: string) => {
+    setProcessing(id)
+    try {
+      const res = await fetch(`/api/trips/${id}/arrive`, { method: 'POST' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || 'Failed to notify arrival')
+      }
+      setData((prev: any) => ({
+        ...prev,
+        confirmedTrips: prev.confirmedTrips.map((t: any) =>
+          t.id === id ? { ...t, driverArrivedAt: new Date().toISOString() } : t
+        )
+      }))
+    } catch (err: any) {
+      alert(err.message || 'Error marking arrival')
+    } finally {
+      setProcessing(null)
+    }
+  }
+
+  const handleDepart = async (id: string) => {
+    setProcessing(id)
+    try {
+      const res = await fetch(`/api/trips/${id}/depart`, { method: 'POST' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.message || 'Failed to notify departure')
+      }
+      setData((prev: any) => ({
+        ...prev,
+        confirmedTrips: prev.confirmedTrips.map((t: any) =>
+          t.id === id ? {
+            ...t,
+            driverDepartedAt: new Date().toISOString(),
+            driverArrivedAt: t.driverArrivedAt || new Date().toISOString()
+          } : t
+        )
+      }))
+    } catch (err: any) {
+      alert(err.message || 'Error notifying departure')
+    } finally {
+      setProcessing(null)
     }
   }
 
@@ -726,22 +772,61 @@ export default function DriverDashboardPage() {
                           {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
                         </p>
                       </div>
-                      <button
-                disabled={processing === trip.id}
-                onClick={() => setActiveChatTrip(trip)}
-                className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-2"
-                aria-label="Chat"
-              >
-                <MessageCircle className="w-5 h-5" />
-              </button>
-              <button
-                        disabled={processing === trip.id}
-                        onClick={() => handleComplete(trip.id)}
-                        className="text-[11px] font-semibold px-2.5 py-1 shrink-0"
-                        style={{ background: 'var(--border)', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
-                      >
-                        {processing === trip.id ? '…' : 'Mark Complete'}
-                      </button>
+                      <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
+                        <Link
+                          href={`/dashboard/trips/${trip.id}`}
+                          className="text-[11px] font-semibold px-2 py-1 rounded border border-border hover:border-[var(--orange-brand)] transition-colors flex items-center gap-1 text-foreground"
+                          style={{ background: 'var(--surface-elevated)' }}
+                          title="Open Live Ride Portal"
+                        >
+                          <ExternalLink className="w-3 h-3 text-[var(--orange-brand)]" />
+                          <span>Portal</span>
+                        </Link>
+
+                        <button
+                          disabled={processing === trip.id}
+                          onClick={() => setActiveChatTrip(trip)}
+                          className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5"
+                          aria-label="Chat"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                        </button>
+
+                        {!trip.driverArrivedAt && (
+                          <button
+                            disabled={processing === trip.id}
+                            onClick={() => handleArrive(trip.id)}
+                            className="text-[11px] font-semibold px-2 py-1 rounded text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors cursor-pointer"
+                          >
+                            {processing === trip.id ? '…' : "I've Arrived 📍"}
+                          </button>
+                        )}
+
+                        {!trip.driverDepartedAt ? (
+                          <button
+                            disabled={processing === trip.id}
+                            onClick={() => handleDepart(trip.id)}
+                            className="text-[11px] font-extrabold px-2.5 py-1 rounded text-white shadow-sm transition-opacity hover:opacity-90 cursor-pointer"
+                            style={{ background: 'var(--orange-brand)' }}
+                          >
+                            {processing === trip.id ? '…' : 'Take Off 🚀'}
+                          </button>
+                        ) : (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+                            En Route 🚗💨
+                          </span>
+                        )}
+
+                        <button
+                          disabled={processing === trip.id}
+                          onClick={() => handleComplete(trip.id)}
+                          className="text-[11px] font-semibold px-2.5 py-1 shrink-0 cursor-pointer"
+                          style={{ background: 'var(--border)', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
+                        >
+                          {processing === trip.id ? '…' : 'Mark Complete'}
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>

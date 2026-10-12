@@ -23,7 +23,27 @@ function StatusDot({ status }: { status: string }) {
   )
 }
 
-function StatusChip({ status }: { status: string }) {
+function StatusChip({ status, driverDepartedAt, driverArrivedAt }: { status: string; driverDepartedAt?: any; driverArrivedAt?: any }) {
+  if (status === 'CONFIRMED' && driverDepartedAt) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md text-amber-500 bg-amber-500/10 border border-amber-500/20"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
+        Taking Off 🚀
+      </span>
+    )
+  }
+  if (status === 'CONFIRMED' && driverArrivedAt) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md text-emerald-500 bg-emerald-500/10 border border-emerald-500/20"
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+        Driver Arrived 📍
+      </span>
+    )
+  }
   const map: Record<string, { label: string; color: string; bg: string }> = {
     PENDING:   { label: 'Pending',   color: 'var(--orange-brand)', bg: 'rgba(217,119,6,0.1)' },
     CONFIRMED: { label: 'Confirmed', color: '#22c55e', bg: 'rgba(34,197,94,0.08)' },
@@ -238,7 +258,7 @@ export function TripList({
                           <h4 className="text-sm font-extrabold truncate" style={{ color: 'var(--foreground)' }}>
                             {isConfirmed ? (trip.driver?.name ?? 'Assigned Driver') : 'Searching for Available Driver...'}
                           </h4>
-                          <StatusChip status={trip.status} />
+                          <StatusChip status={trip.status} driverDepartedAt={trip.driverDepartedAt} driverArrivedAt={trip.driverArrivedAt} />
                         </div>
 
                         <p className="text-xs truncate font-medium" style={{ color: 'var(--muted-foreground)' }}>
