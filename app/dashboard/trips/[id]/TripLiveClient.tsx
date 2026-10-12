@@ -287,37 +287,76 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${trip.shareToken || trip.id}` : ''
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20">
-      {/* ── Top Navigation Bar ── */}
-      <div className="border-b border-border/60 bg-card/60 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+    <div style={{ minHeight: '100vh' }} className="text-foreground pb-24">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-7 md:py-8 landscape:py-3 space-y-6">
+
+        {/* ── Top Bar & Back Navigation on Curved Orange Wave ── */}
+        <div className="flex items-center justify-between gap-3">
           <Link
             href="/dashboard"
-            className="inline-flex items-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors group"
+            id="live-trip-back-btn"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-white/95 hover:text-white transition-all drop-shadow-sm group px-3 py-1.5 rounded-lg bg-black/15 hover:bg-black/25 backdrop-blur-md border border-white/15 cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4 mr-1.5 transition-transform group-hover:-translate-x-0.5" />
-            Back to Dashboard
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
+            <span>Back to Dashboard</span>
           </Link>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-black/20 text-white border border-white/20 backdrop-blur-md flex items-center gap-1.5 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               {driverArrivedNotice ? 'Driver Arrived' : 'Confirmed & Active'}
             </span>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
+        {/* ── Hero Title on Curved Orange Wave ── */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-2 sm:mb-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-white/90 drop-shadow-sm">
+                Live Ride Portal
+              </p>
+              <span className="text-white/60 text-xs">&middot;</span>
+              <span className="text-[11px] font-mono text-white/80 drop-shadow-sm">#{trip.id.slice(0, 8)}</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold truncate text-white drop-shadow-sm" style={{ letterSpacing: '-0.01em' }}>
+              {driverArrivedNotice ? 'Driver at Pickup Location' : (driver?.name ? `Trip with ${driver.name}` : 'Live Trip Details')}
+            </h1>
+            <p className="text-xs sm:text-sm mt-0.5 truncate text-white/90 font-medium drop-shadow-sm flex items-center gap-1.5">
+              <span>{trip.pickup}</span>
+              <span className="text-white/60">&rarr;</span>
+              <span>{trip.destination}</span>
+            </p>
+          </div>
+
+          {/* Scheduled Departure Pill on Orange Header */}
+          <div className="px-3.5 py-2 rounded-xl bg-black/20 backdrop-blur-md border border-white/20 text-white flex items-center gap-2.5 shadow-sm shrink-0 self-start sm:self-auto">
+            <Clock className="w-4 h-4 text-white/90" />
+            <div>
+              <p className="text-[9px] uppercase font-bold text-white/75 leading-none">Scheduled</p>
+              <p className="text-xs font-bold text-white mt-0.5">
+                {trip.isScheduled ? `${trip.date} at ${trip.time}` : `Instant (${trip.time})`}
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* ── Driver Arrival Live Alert Banner ── */}
         {driverArrivedNotice && (
-          <div className="p-4 sm:p-5 rounded-2xl bg-emerald-500/15 border-2 border-emerald-500 text-foreground flex items-center justify-between gap-4 shadow-lg animate-in fade-in slide-in-from-top-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md">
-                <Car className="w-5 h-5 animate-bounce" />
+          <div
+            className="rounded-xl p-4 sm:p-5 shadow-lg backdrop-blur-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2"
+            style={{
+              background: 'var(--surface-card)',
+              border: '2px solid #22c55e',
+              boxShadow: '0 8px 30px rgba(34,197,94,0.18)'
+            }}
+          >
+            <div className="flex items-center gap-3.5">
+              <div className="w-11 h-11 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-md">
+                <Car className="w-6 h-6 animate-bounce" />
               </div>
               <div>
-                <h2 className="text-sm sm:text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                <h2 className="text-sm sm:text-base font-extrabold text-emerald-500">
                   Your Driver Has Arrived at {trip.pickup}!
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -328,7 +367,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             {driverPhone && (
               <a
                 href={`tel:${driverPhone}`}
-                className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 flex items-center gap-1.5 shadow"
+                className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 flex items-center justify-center gap-1.5 shadow transition-colors cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5" />
                 Call Driver
@@ -337,50 +376,19 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
           </div>
         )}
 
-        {/* ── Hero Status Ribbon ── */}
-        <div className="bg-gradient-to-r from-card via-card to-card/90 border border-border/80 rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[11px] font-extrabold uppercase tracking-widest text-[var(--orange-brand)]">
-                  Live Trip Portal
-                </span>
-                <span className="text-muted-foreground text-xs">&middot;</span>
-                <span className="text-xs text-muted-foreground font-mono">#{trip.id.slice(0, 8)}</span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
-                {driverArrivedNotice ? 'Driver at Pickup Location' : 'Driver Accepted & En Route'}
-              </h1>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl">
-                Your ride with <span className="font-bold text-foreground">{driver?.name ?? 'your driver'}</span> is confirmed. You can coordinate in real time, track vehicle details, and share your live status.
-              </p>
-            </div>
-
-            {/* Time / Schedule Badge */}
-            <div className="bg-background/80 border border-border/80 rounded-2xl p-4 shrink-0 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[var(--orange-brand)]/10 text-[var(--orange-brand)] flex items-center justify-center shrink-0">
-                <Clock className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[10px] uppercase font-bold text-muted-foreground">Scheduled Departure</p>
-                <p className="text-sm font-extrabold text-foreground">
-                  {trip.isScheduled ? `${trip.date} at ${trip.time}` : `Instant Pick-Up (${trip.time})`}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* ── Main Two-Column Layout ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Driver Info + Route + Safety Controls (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
             {/* 1. Driver & Vehicle Showcase Card */}
-            <div className="bg-card border border-border/80 rounded-3xl p-6 shadow-sm space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-border/50">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+            <div
+              className="rounded-xl shadow-lg backdrop-blur-md transition-all p-5 sm:p-6 space-y-5"
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
+            >
+              <div className="flex items-center justify-between pb-3 border-b border-border">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
                   Verified Driver & Vehicle
-                </h2>
+                </p>
                 <span className="text-xs text-emerald-500 font-bold flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   Background Vetted
@@ -391,19 +399,19 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <Avatar className="w-16 h-16 border-2 border-border shadow-md">
+                    <Avatar className="w-14 h-14 border border-border shadow-md">
                       <AvatarImage src={driver?.image || ''} />
                       <AvatarFallback className="text-base font-bold bg-muted text-foreground">
                         {driver ? initials(driver.name) : 'TD'}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-card text-[10px]">
+                    <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-[var(--surface-card)] text-[10px] font-bold">
                       ✓
                     </span>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-extrabold text-foreground">{driver?.name ?? 'Assigned Driver'}</h3>
+                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">{driver?.name ?? 'Assigned Driver'}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-500">
                         <Star className="w-3.5 h-3.5 fill-current" />
@@ -420,10 +428,11 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   {driverPhone && (
                     <a
                       href={`tel:${driverPhone}`}
-                      className="px-3.5 py-2.5 rounded-xl bg-card hover:bg-muted border border-border text-foreground text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+                      className="px-3 py-2 rounded-xl border border-border hover:border-[var(--orange-brand)] text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                      style={{ background: 'var(--surface-elevated)' }}
                       title="Call Driver"
                     >
-                      <Phone className="w-4 h-4 text-emerald-500" />
+                      <Phone className="w-3.5 h-3.5 text-emerald-500" />
                       <span className="hidden sm:inline">Call</span>
                     </a>
                   )}
@@ -432,10 +441,10 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                       href={`https://wa.me/${driverPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${driver?.name || 'Driver'}, I am waiting at ${trip.pickup} for our TOVEDROP ride!`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+                      className="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
                       title="WhatsApp Driver"
                     >
-                      <MessageCircle className="w-4 h-4" />
+                      <MessageCircle className="w-3.5 h-3.5" />
                       <span className="hidden sm:inline">WhatsApp</span>
                     </a>
                   )}
@@ -443,7 +452,10 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               </div>
 
               {/* Vehicle Specifications Box */}
-              <div className="p-4 rounded-2xl bg-muted/30 border border-border/60 space-y-3">
+              <div
+                className="p-4 rounded-xl space-y-3"
+                style={{ background: 'var(--surface-elevated)', border: '1px solid var(--border-default)' }}
+              >
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2">
                     <Car className="w-4 h-4 text-[var(--orange-brand)]" />
@@ -461,7 +473,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
 
                   {/* Realistic License Plate Badge */}
                   {driverProfile?.vehiclePlate ? (
-                    <div className="px-3 py-1 rounded-md bg-white text-slate-900 font-mono font-black tracking-widest border-2 border-emerald-600 shadow-sm inline-flex items-center gap-1.5 text-xs">
+                    <div className="px-2.5 py-1 rounded-md bg-white text-slate-900 font-mono font-black tracking-widest border border-emerald-600 shadow-sm inline-flex items-center gap-1.5 text-xs">
                       <span className="text-[10px] text-emerald-700 font-sans font-bold">🇳🇬</span>
                       <span>{driverProfile.vehiclePlate}</span>
                     </div>
@@ -471,7 +483,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 </div>
 
                 {driverProfile?.bio && (
-                  <p className="text-xs text-muted-foreground italic pt-2 border-t border-border/40">
+                  <p className="text-xs text-muted-foreground italic pt-2 border-t border-border">
                     "{driverProfile.bio}"
                   </p>
                 )}
@@ -479,10 +491,13 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             </div>
 
             {/* 2. Pickup & Destination Route Details */}
-            <div className="bg-card border border-border/80 rounded-3xl p-6 shadow-sm space-y-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground pb-2 border-b border-border/50">
+            <div
+              className="rounded-xl shadow-lg backdrop-blur-md transition-all p-5 sm:p-6 space-y-4"
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground pb-2 border-b border-border">
                 Route & Pickup Details
-              </h2>
+              </p>
 
               <div className="space-y-4">
                 <div className="flex items-start gap-3.5">
@@ -510,7 +525,10 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 </div>
 
                 {trip.notes && (
-                  <div className="mt-3 p-3 rounded-xl bg-background border border-border text-xs text-muted-foreground">
+                  <div
+                    className="mt-3 p-3 rounded-xl text-xs text-muted-foreground"
+                    style={{ background: 'var(--surface-elevated)', border: '1px solid var(--border-default)' }}
+                  >
                     <span className="font-semibold text-foreground">Rider Note:</span> {trip.notes}
                   </div>
                 )}
@@ -518,19 +536,23 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             </div>
 
             {/* 3. Safety & Control Action Center */}
-            <div className="bg-card border border-border/80 rounded-3xl p-6 shadow-sm space-y-4">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground pb-2 border-b border-border/50">
+            <div
+              className="rounded-xl shadow-lg backdrop-blur-md transition-all p-5 sm:p-6 space-y-4"
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground pb-2 border-b border-border">
                 Trip Actions & Safety Tools
-              </h2>
+              </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Share Live Trip Button */}
                 <button
                   type="button"
                   onClick={() => setShareModalOpen(true)}
-                  className="p-3.5 rounded-2xl bg-background border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
+                  className="p-3.5 rounded-xl border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
+                  style={{ background: 'var(--surface-elevated)' }}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
                     <Share2 className="w-4 h-4" />
                   </div>
                   <div>
@@ -545,9 +567,10 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 <button
                   type="button"
                   onClick={handleDownloadCalendar}
-                  className="p-3.5 rounded-2xl bg-background border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
+                  className="p-3.5 rounded-xl border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
+                  style={{ background: 'var(--surface-elevated)' }}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-[var(--orange-brand)]/10 text-[var(--orange-brand)] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-[var(--orange-brand)]/10 text-[var(--orange-brand)] flex items-center justify-center shrink-0">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <div>
@@ -562,9 +585,9 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 <button
                   type="button"
                   onClick={() => setActiveSos(true)}
-                  className="p-3.5 rounded-2xl bg-red-500/10 border border-red-500/20 hover:border-red-500 flex items-center gap-3 text-left transition-all cursor-pointer group"
+                  className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 hover:border-red-500 flex items-center gap-3 text-left transition-all cursor-pointer group"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-red-500 text-white flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-red-500 text-white flex items-center justify-center shrink-0 shadow-sm">
                     <ShieldAlert className="w-4 h-4" />
                   </div>
                   <div>
@@ -578,9 +601,10 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   type="button"
                   disabled={cancelling}
                   onClick={handleCancelTrip}
-                  className="p-3.5 rounded-2xl bg-background border border-border hover:border-red-500 flex items-center gap-3 text-left transition-all cursor-pointer group disabled:opacity-50"
+                  className="p-3.5 rounded-xl border border-border hover:border-red-500 flex items-center gap-3 text-left transition-all cursor-pointer group disabled:opacity-50"
+                  style={{ background: 'var(--surface-elevated)' }}
                 >
-                  <div className="w-9 h-9 rounded-xl bg-muted text-muted-foreground group-hover:text-red-500 flex items-center justify-center shrink-0 transition-colors">
+                  <div className="w-9 h-9 rounded-lg bg-muted text-muted-foreground group-hover:text-red-500 flex items-center justify-center shrink-0 transition-colors">
                     {cancelling ? <Loader2 className="w-4 h-4 animate-spin" /> : <X className="w-4 h-4" />}
                   </div>
                   <div>
@@ -596,18 +620,21 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
 
           {/* Right Column: Live Chat with Driver (5 cols) */}
           <div className="lg:col-span-5">
-            <div className="bg-card border border-border/80 rounded-3xl overflow-hidden shadow-sm flex flex-col h-[600px] sticky top-24">
+            <div
+              className="rounded-xl shadow-lg backdrop-blur-md transition-all overflow-hidden flex flex-col h-[620px] sticky top-6"
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
+            >
               {/* Chat Header */}
-              <div className="p-4 border-b border-border bg-card/90 flex items-center justify-between">
+              <div className="p-4 border-b border-border flex items-center justify-between" style={{ background: 'var(--surface-elevated)' }}>
                 <div className="flex items-center gap-3">
                   <div className="relative">
-                    <Avatar className="w-9 h-9">
+                    <Avatar className="w-9 h-9 border border-border">
                       <AvatarImage src={driver?.image || ''} />
                       <AvatarFallback className="text-xs font-bold bg-muted text-foreground">
                         {driver ? initials(driver.name) : 'TD'}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-card animate-pulse" />
+                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-[var(--surface-card)] animate-pulse" />
                   </div>
                   <div>
                     <h3 className="text-xs font-bold text-foreground">Chat with {driver?.name?.split(' ')[0] ?? 'Driver'}</h3>
@@ -623,8 +650,12 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
 
               {/* Chat Message Stream */}
               <div
-                className="flex-1 overflow-y-auto p-4 space-y-3 bg-background/50"
-                style={{ backgroundImage: 'radial-gradient(var(--border) 1px, transparent 1px)', backgroundSize: '20px 20px' }}
+                className="flex-1 overflow-y-auto p-4 space-y-3"
+                style={{
+                  background: 'rgba(0,0,0,0.02)',
+                  backgroundImage: 'radial-gradient(var(--border) 1px, transparent 1px)',
+                  backgroundSize: '20px 20px'
+                }}
               >
                 {messages.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center p-6 text-muted-foreground">
@@ -644,9 +675,12 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                         <div
                           className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs font-medium break-words shadow-sm ${
                             isMe
-                              ? 'bg-[var(--orange-brand)] text-white rounded-br-sm'
-                              : 'bg-card border border-border text-foreground rounded-bl-sm'
+                              ? 'text-white rounded-br-sm'
+                              : 'border border-border text-foreground rounded-bl-sm'
                           }`}
+                          style={{
+                            background: isMe ? 'var(--orange-brand)' : 'var(--surface-elevated)'
+                          }}
                         >
                           <p className="leading-relaxed">{m.content}</p>
                           <p className={`text-[9px] mt-1 text-right font-semibold uppercase tracking-wider ${isMe ? 'text-white/80' : 'text-muted-foreground'}`}>
@@ -661,19 +695,21 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               </div>
 
               {/* Chat Input Field */}
-              <div className="p-3 border-t border-border bg-card">
+              <div className="p-3 border-t border-border" style={{ background: 'var(--surface-card)' }}>
                 <form onSubmit={handleSendMessage} className="relative flex items-center">
                   <input
                     type="text"
                     value={inputText}
                     onChange={e => setInputText(e.target.value)}
                     placeholder={`Message ${driver?.name?.split(' ')[0] ?? 'driver'}...`}
-                    className="w-full bg-muted/60 border border-border rounded-full pl-4 pr-11 py-2.5 text-xs text-foreground focus:outline-none focus:border-[var(--orange-brand)] transition-colors"
+                    className="w-full border border-border rounded-full pl-4 pr-11 py-2.5 text-xs text-foreground focus:outline-none focus:border-[var(--orange-brand)] transition-colors"
+                    style={{ background: 'var(--surface-elevated)' }}
                   />
                   <button
                     type="submit"
                     disabled={!inputText.trim() || sendingMessage}
-                    className="absolute right-1 w-8 h-8 rounded-full bg-[var(--orange-brand)] text-white flex items-center justify-center hover:opacity-90 disabled:opacity-40 transition-opacity cursor-pointer"
+                    className="absolute right-1 w-8 h-8 rounded-full text-white flex items-center justify-center hover:opacity-90 disabled:opacity-40 transition-opacity cursor-pointer shadow-sm"
+                    style={{ background: 'var(--orange-brand)' }}
                   >
                     {sendingMessage ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5 ml-0.5" />}
                   </button>
@@ -687,15 +723,18 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
       {/* ── Share Trip Modal ── */}
       {shareModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="w-full max-w-sm rounded-2xl p-6 bg-card border border-border shadow-2xl relative">
+          <div
+            className="w-full max-w-sm rounded-xl p-6 shadow-2xl relative"
+            style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
+          >
             <button
               onClick={() => setShareModalOpen(false)}
-              className="absolute top-4 right-4 p-1 rounded-full text-muted-foreground hover:text-foreground"
+              className="absolute top-4 right-4 p-1 rounded-full text-muted-foreground hover:text-foreground cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
 
-            <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-500 flex items-center justify-center mb-4">
+            <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center mb-4">
               <Share2 className="w-6 h-6" />
             </div>
 
@@ -708,7 +747,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               <input
                 readOnly
                 value={shareUrl}
-                className="w-full bg-muted border border-border rounded-xl px-3 py-2 text-xs text-muted-foreground select-all"
+                className="w-full border border-border rounded-xl px-3 py-2 text-xs text-muted-foreground select-all"
+                style={{ background: 'var(--surface-elevated)' }}
               />
               <button
                 type="button"
@@ -717,7 +757,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   setCopiedShare(true)
                   setTimeout(() => setCopiedShare(false), 2000)
                 }}
-                className="p-2.5 rounded-xl bg-[var(--orange-brand)] text-white hover:opacity-90 shrink-0 cursor-pointer"
+                className="p-2.5 rounded-xl text-white hover:opacity-90 shrink-0 cursor-pointer shadow-sm"
+                style={{ background: 'var(--orange-brand)' }}
               >
                 {copiedShare ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
               </button>
@@ -727,7 +768,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               href={`https://wa.me/?text=${encodeURIComponent(`I'm riding on TOVEDROP with ${driver?.name || 'my driver'}! Track my live trip status here: ${shareUrl}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow"
+              className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow cursor-pointer"
             >
               <MessageCircle className="w-4 h-4" />
               Share via WhatsApp
