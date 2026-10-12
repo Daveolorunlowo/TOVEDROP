@@ -41,9 +41,10 @@ export async function sendPushNotification(
           JSON.stringify(normalizedPayload)
         )
       } catch (error: any) {
-        if (error.statusCode === 404 || error.statusCode === 410) {
-          // Subscription has expired or is no longer valid
-          await prisma.pushSubscription.delete({ where: { id: sub.id } })
+        if (error.statusCode === 404 || error.statusCode === 410 || error.statusCode === 403 || error.statusCode === 401) {
+          // Subscription has expired, been revoked, or VAPID credentials mismatched — prune it
+          await prisma.pushSubscription.delete({ where: { id: sub.id } }).catch(() => {})
+          console.warn(`Pruned invalid push subscription ${sub.id} (status: ${error.statusCode})`)
         } else {
           console.error('Error sending push notification', error)
         }

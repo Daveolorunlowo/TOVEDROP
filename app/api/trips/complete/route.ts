@@ -137,11 +137,20 @@ export async function POST(req: Request) {
  const message = `Hope you enjoyed your ride. Don't forget to review your trip!`
  const url = `/dashboard`
  sendWebPush(result.trip.riderId, title, message, url)
- 
- // Trigger pusher event to notify rider in real-time
- await pusherServer.trigger(`user-trips-${result.trip.riderId}`, 'trip-completed', {
- tripId: result.trip.id
- }).catch(err => console.error("Pusher trigger failed:", err))
+  // Trigger pusher event to notify rider in real-time
+  if (pusherServer) {
+    await pusherServer.trigger(`trip-${result.trip.id}`, 'trip-completed', {
+      tripId: result.trip.id
+    }).catch(err => console.error("Pusher trip-completed trigger failed:", err))
+
+    await pusherServer.trigger(`user-trips-${result.trip.riderId}`, 'trip-completed', {
+      tripId: result.trip.id
+    }).catch(err => console.error("Pusher user-trips trigger failed:", err))
+
+    await pusherServer.trigger(`user-${result.trip.riderId}`, 'trip-completed', {
+      tripId: result.trip.id
+    }).catch(err => console.error("Pusher user trigger failed:", err))
+  }
 
  return NextResponse.json({ message: "Trip completed successfully", trip: result.trip }, { status: 200 })
  } catch (error: any) {

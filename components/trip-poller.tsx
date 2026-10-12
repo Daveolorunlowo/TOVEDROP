@@ -19,6 +19,9 @@ export function TripPoller({ userId }: { userId: string }) {
         return
       }
     }
+    if (type === 'arrived') {
+      setToastMessage(`📍 ${data.driverName || 'Your driver'} has arrived at ${data.pickup || 'the pickup point'}!`)
+    }
     if (type === 'departed') {
       setToastMessage(`🚗💨 ${data.driverName || 'Your driver'} is taking off with you to ${data.destination || 'your destination'}!`)
     }
@@ -35,6 +38,7 @@ export function TripPoller({ userId }: { userId: string }) {
   }
 
   useResilientChannel(`user-trips-${userId}`, 'trip-accepted', (data) => handleEvent(data, 'accepted'))
+  useResilientChannel(`user-trips-${userId}`, 'driver-arrived', (data) => handleEvent(data, 'arrived'))
   useResilientChannel(`user-trips-${userId}`, 'trip-departed', (data) => handleEvent(data, 'departed'))
   useResilientChannel(`user-trips-${userId}`, 'trip-completed', (data) => handleEvent(data, 'completed'))
   useResilientChannel(`user-trips-${userId}`, 'trip-transferred', (data) => handleEvent(data, 'transferred'))

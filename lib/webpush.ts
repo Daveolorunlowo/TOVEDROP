@@ -51,10 +51,10 @@ export async function sendWebPush(userId: string, title: string, message: string
         await webpush.sendNotification(pushSubscription, payload)
         logger.info('Web push sent successfully', { action: 'send_web_push', userId, endpoint: sub.endpoint })
       } catch (err: any) {
-        if (err.statusCode === 410 || err.statusCode === 404) {
-          // Subscription has expired or is no longer valid
-          await prisma.pushSubscription.delete({ where: { endpoint: sub.endpoint } })
-          logger.info('Deleted expired push subscription', { action: 'delete_subscription', userId, endpoint: sub.endpoint })
+        if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 403 || err.statusCode === 401) {
+          // Subscription has expired, revoked, or VAPID credentials mismatched — prune it
+          await prisma.pushSubscription.delete({ where: { endpoint: sub.endpoint } }).catch(() => {})
+          logger.info('Deleted expired/invalid push subscription', { action: 'delete_subscription', userId, endpoint: sub.endpoint, status: err.statusCode })
         } else {
           logger.error('Failed to send push notification to an endpoint', err, { action: 'send_web_push', userId, endpoint: sub.endpoint })
         }

@@ -53,14 +53,38 @@ export async function subscribeToPushNotifications(): Promise<boolean> {
       timeoutPromise,
     ])
 
+    const convertedVapidKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+
     // Check if already subscribed
-    const existingSubscription = await registration.pushManager.getSubscription()
+    let existingSubscription = await registration.pushManager.getSubscription()
     if (existingSubscription) {
-      await sendSubscriptionToBackend(existingSubscription)
-      return true
+      let keyMatches = false
+      const rawKey = existingSubscription.options?.applicationServerKey
+      if (rawKey) {
+        const existingKeyBytes = new Uint8Array(rawKey)
+        if (
+          existingKeyBytes.length === convertedVapidKey.length &&
+          existingKeyBytes.every((b, i) => b === convertedVapidKey[i])
+        ) {
+          keyMatches = true
+        }
+      }
+
+      if (keyMatches) {
+        await sendSubscriptionToBackend(existingSubscription)
+        return true
+      }
+
+      // If key doesn't match, unsubscribe stale subscription
+      console.info('Outdated push subscription detected. Re-subscribing with fresh VAPID keys...')
+      try {
+        await existingSubscription.unsubscribe()
+      } catch (e) {
+        console.warn('Failed to unsubscribe old push subscription', e)
+      }
+      existingSubscription = null
     }
 
-    const convertedVapidKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: convertedVapidKey,

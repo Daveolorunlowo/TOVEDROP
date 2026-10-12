@@ -290,6 +290,28 @@ export default function DriverSettingsPage() {
     setTimeout(() => setPlayingTone(false), 800)
   }
 
+  const [testingPush, setTestingPush] = useState(false)
+
+  const handleTestPush = async () => {
+    setTestingPush(true)
+    setPushMessage('Sending test push alert...')
+    try {
+      await subscribeToPushNotifications()
+      const res = await fetch('/api/user/push/test', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        setPushMessage('✅ Test notification sent! Check your device screen.')
+      } else {
+        setPushMessage(`❌ ${data.message || 'Could not send test notification.'}`)
+      }
+    } catch (e: any) {
+      setPushMessage(`❌ Error: ${e.message || 'Failed to send test push.'}`)
+    } finally {
+      setTestingPush(false)
+      setTimeout(() => setPushMessage(''), 6000)
+    }
+  }
+
   // Handle push toggle
   const handleTogglePush = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked
@@ -824,6 +846,22 @@ export default function DriverSettingsPage() {
                         />
                         <div className="w-11 h-6 bg-muted peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--orange-brand)]"></div>
                       </label>
+                    </div>
+
+                    <div className="flex items-center justify-between py-2 border-b border-border/40">
+                      <div>
+                        <p className="text-xs font-bold">Test Device Alerts</p>
+                        <p className="text-[11px] text-muted-foreground">Send an immediate test alert to this phone/browser</p>
+                      </div>
+                      <button
+                        type="button"
+                        disabled={testingPush}
+                        onClick={handleTestPush}
+                        className="text-xs font-bold px-3 py-1.5 rounded-lg border border-border hover:border-[var(--orange-brand)] transition-colors text-foreground flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      >
+                        {testingPush ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Bell className="w-3.5 h-3.5 text-[var(--orange-brand)]" />}
+                        <span>Send Test Alert</span>
+                      </button>
                     </div>
 
                     <div className="flex items-center justify-between py-2">

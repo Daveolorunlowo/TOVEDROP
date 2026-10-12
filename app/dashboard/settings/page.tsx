@@ -137,6 +137,28 @@ export default function RiderSettingsPage() {
     setLoadingInit(false)
   }, [])
 
+  const [testingPush, setTestingPush] = useState(false)
+
+  const handleTestPush = async () => {
+    setTestingPush(true)
+    setPushMsg('Sending test notification...')
+    try {
+      await subscribeToPushNotifications()
+      const res = await fetch('/api/user/push/test', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok) {
+        setPushMsg('✅ Test notification sent! Check your screen/banner.')
+      } else {
+        setPushMsg(`❌ ${data.message || 'Could not send test notification.'}`)
+      }
+    } catch (e: any) {
+      setPushMsg(`❌ Error: ${e.message || 'Failed to send test notification.'}`)
+    } finally {
+      setTestingPush(false)
+      setTimeout(() => setPushMsg(''), 6000)
+    }
+  }
+
   const handleTogglePush = async (checked: boolean) => {
     if (checked) {
       if ('Notification' in window && Notification.permission === 'denied') {
@@ -319,6 +341,21 @@ export default function RiderSettingsPage() {
             description="Get reminded before your scheduled trips"
             right={<Toggle checked={rideReminders} onChange={setRideReminders} />}
           />
+          <div className="pt-2.5 px-4 pb-3 flex items-center justify-between border-t border-border/50">
+            <div>
+              <p className="text-xs font-semibold text-foreground">Test Push Alerts</p>
+              <p className="text-[11px] text-muted-foreground">Verify that alerts pop up on this device</p>
+            </div>
+            <button
+              type="button"
+              disabled={testingPush}
+              onClick={handleTestPush}
+              className="text-xs font-bold px-3 py-1.5 rounded-lg border border-border hover:border-orange-brand transition-colors text-foreground flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              {testingPush ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Bell className="w-3.5 h-3.5 text-orange-brand" />}
+              <span>Send Test Alert</span>
+            </button>
+          </div>
         </SettingsCard>
         {pushMsg && (
           <p className={`text-xs px-2 font-medium ${pushMsg.includes('enabled') ? 'text-green-500' : permissionDenied ? 'text-destructive' : 'text-muted-foreground'}`}>
