@@ -11,7 +11,6 @@ import {
   Phone,
   MessageCircle,
   Share2,
-  Calendar,
   ShieldAlert,
   CheckCircle2,
   Clock,
@@ -20,9 +19,7 @@ import {
   X,
   Copy,
   Check,
-  Star,
-  ExternalLink,
-  AlertTriangle
+  Star
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { pusherClient } from '@/lib/pusher-client'
@@ -252,38 +249,6 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
     }
   }
 
-  // Download ICS
-  const handleDownloadCalendar = () => {
-    const dateStr = trip.isScheduled ? `${trip.date}T${trip.time}` : new Date().toISOString()
-    const scheduledAt = new Date(dateStr).getTime()
-    if (isNaN(scheduledAt)) return
-
-    const dtStart = new Date(scheduledAt).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
-    const dtEnd = new Date(scheduledAt + 30 * 60000).toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z'
-    const summary = `TOVEDROP Ride with ${driver?.name || 'Driver'}`
-    const description = `Pickup: ${trip.pickup}\\nDestination: ${trip.destination}${driverPhone ? '\\nDriver Phone: ' + driverPhone : ''}`
-
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'BEGIN:VEVENT',
-      `DTSTART:${dtStart}`,
-      `DTEND:${dtEnd}`,
-      `SUMMARY:${summary}`,
-      `DESCRIPTION:${description}`,
-      'END:VEVENT',
-      'END:VCALENDAR'
-    ].join('\r\n')
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' })
-    const link = document.createElement('a')
-    link.href = URL.createObjectURL(blob)
-    link.download = `tovedrop-ride-${trip.id}.ics`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
-
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${trip.shareToken || trip.id}` : ''
 
   return (
@@ -428,24 +393,12 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   {driverPhone && (
                     <a
                       href={`tel:${driverPhone}`}
-                      className="px-3 py-2 rounded-xl border border-border hover:border-[var(--orange-brand)] text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+                      className="px-3.5 py-2 rounded-xl border border-border hover:border-emerald-500 text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
                       style={{ background: 'var(--surface-elevated)' }}
                       title="Call Driver"
                     >
                       <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                      <span className="hidden sm:inline">Call</span>
-                    </a>
-                  )}
-                  {driverPhone && (
-                    <a
-                      href={`https://wa.me/${driverPhone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi ${driver?.name || 'Driver'}, I am waiting at ${trip.pickup} for our TOVEDROP ride!`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors shadow-sm"
-                      title="WhatsApp Driver"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">WhatsApp</span>
+                      <span>Call Driver</span>
                     </a>
                   )}
                 </div>
@@ -510,9 +463,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   </div>
                 </div>
 
-                <div className="ml-4 pl-4 border-l-2 border-dashed border-border py-1 text-xs text-muted-foreground">
-                  Direct Campus Route
-                </div>
+                <div className="ml-4 pl-4 border-l-2 border-dashed border-border/70 h-4" />
 
                 <div className="flex items-start gap-3.5">
                   <div className="w-8 h-8 rounded-full bg-[var(--orange-brand)]/10 border border-[var(--orange-brand)]/30 flex items-center justify-center text-[var(--orange-brand)] shrink-0 mt-0.5">
@@ -544,7 +495,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 Trip Actions & Safety Tools
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {/* Share Live Trip Button */}
                 <button
                   type="button"
@@ -557,27 +508,9 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   </div>
                   <div>
                     <p className="text-xs font-bold text-foreground group-hover:text-[var(--orange-brand)] transition-colors">
-                      Share Live Trip
+                      Share Ride
                     </p>
-                    <p className="text-[11px] text-muted-foreground">Send tracking link to friends</p>
-                  </div>
-                </button>
-
-                {/* Add to Calendar Button */}
-                <button
-                  type="button"
-                  onClick={handleDownloadCalendar}
-                  className="p-3.5 rounded-xl border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
-                  style={{ background: 'var(--surface-elevated)' }}
-                >
-                  <div className="w-9 h-9 rounded-lg bg-[var(--orange-brand)]/10 text-[var(--orange-brand)] flex items-center justify-center shrink-0">
-                    <Calendar className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-foreground group-hover:text-[var(--orange-brand)] transition-colors">
-                      Add to Calendar
-                    </p>
-                    <p className="text-[11px] text-muted-foreground">Phone reminder (.ics)</p>
+                    <p className="text-[11px] text-muted-foreground">Tracking link</p>
                   </div>
                 </button>
 
@@ -592,7 +525,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   </div>
                   <div>
                     <p className="text-xs font-bold text-red-500">Emergency SOS</p>
-                    <p className="text-[11px] text-muted-foreground">Siren & Security dispatch</p>
+                    <p className="text-[11px] text-muted-foreground">Security siren</p>
                   </div>
                 </button>
 
@@ -611,7 +544,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                     <p className="text-xs font-bold text-foreground group-hover:text-red-500 transition-colors">
                       Cancel Ride
                     </p>
-                    <p className="text-[11px] text-muted-foreground">Refund 1 Drop (if &gt; 2h)</p>
+                    <p className="text-[11px] text-muted-foreground">Refund policy</p>
                   </div>
                 </button>
               </div>
@@ -651,11 +584,7 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               {/* Chat Message Stream */}
               <div
                 className="flex-1 overflow-y-auto p-4 space-y-3"
-                style={{
-                  background: 'rgba(0,0,0,0.02)',
-                  backgroundImage: 'radial-gradient(var(--border) 1px, transparent 1px)',
-                  backgroundSize: '20px 20px'
-                }}
+                style={{ background: 'var(--background)' }}
               >
                 {messages.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center p-6 text-muted-foreground">
@@ -743,11 +672,11 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               Anyone with this link can track your driver details, vehicle plate, and live ride progress in real time.
             </p>
 
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2">
               <input
                 readOnly
                 value={shareUrl}
-                className="w-full border border-border rounded-xl px-3 py-2 text-xs text-muted-foreground select-all"
+                className="w-full border border-border rounded-xl px-3 py-2 text-xs text-muted-foreground select-all font-mono"
                 style={{ background: 'var(--surface-elevated)' }}
               />
               <button
@@ -757,22 +686,13 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   setCopiedShare(true)
                   setTimeout(() => setCopiedShare(false), 2000)
                 }}
-                className="p-2.5 rounded-xl text-white hover:opacity-90 shrink-0 cursor-pointer shadow-sm"
+                className="px-3.5 py-2 rounded-xl text-white hover:opacity-90 shrink-0 cursor-pointer shadow-sm flex items-center gap-1.5 text-xs font-bold"
                 style={{ background: 'var(--orange-brand)' }}
               >
                 {copiedShare ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedShare ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
-
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(`I'm riding on TOVEDROP with ${driver?.name || 'my driver'}! Track my live trip status here: ${shareUrl}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow cursor-pointer"
-            >
-              <MessageCircle className="w-4 h-4" />
-              Share via WhatsApp
-            </a>
           </div>
         </div>
       )}
