@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp, Calendar, ShieldAlert, Share2 } from 'lucide-react'
+import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp, Calendar, ShieldAlert, Share2, ArrowRight } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useRouter } from 'next/navigation'
 import { ChatModal } from '@/components/chat-modal'
@@ -202,84 +202,87 @@ export function TripList({
             </Link>
           </div>
         ) : (
-          <div
-            className="rounded-lg overflow-hidden"
-            style={{ background: 'var(--card)', border: '1px solid var(--border)' }}
-          >
-            {upcomingTrips.map((trip, i) => (
-              <div
-                key={trip.id}
-                className="flex items-center gap-3 px-4 py-3 transition-opacity"
-                style={{ 
-                  borderBottom: i < upcomingTrips.length - 1 ? '1px solid var(--border)' : 'none',
-                  opacity: processing === trip.id ? 0.5 : 1
-                }}
-              >
-                <StatusDot status={trip.status} />
-                <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarImage src={trip.driver?.image || ''} />
-                  <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border)', color: 'var(--muted-foreground)' }}>
-                    {trip.driver ? initials(trip.driver.name!) : '?'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold truncate" style={{ color: 'var(--foreground)' }}>
-                    {trip.driver?.name ?? 'Searching for driver...'}
-                  </p>
-                  <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.pickup} &rarr; {trip.destination}
-                  </p>
-                </div>
-                <div className="shrink-0 text-right hidden sm:block">
-                  <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-                    {trip.isScheduled ? trip.date : 'Instant Pick-Up'}
-                  </p>
-                  <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{trip.time}</p>
-                </div>
-                <StatusChip status={trip.status} />
-                <button
-                  onClick={() => downloadICS(trip)}
-                  className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-1"
-                  aria-label="Add to Calendar"
+          <div className="space-y-3">
+            {upcomingTrips.map((trip) => {
+              const isConfirmed = trip.status === 'CONFIRMED'
+              return (
+                <div
+                  key={trip.id}
+                  className="rounded-2xl p-4 sm:p-5 transition-all shadow-sm border"
+                  style={{
+                    background: 'var(--card)',
+                    borderColor: isConfirmed ? 'rgba(34,197,94,0.3)' : 'var(--border)'
+                  }}
                 >
-                  <Calendar className="w-4 h-4" />
-                </button>
-                {trip.status === 'CONFIRMED' && (
-                  <>
-                    <button
-                      onClick={() => setActiveSosTrip(trip)}
-                      className="p-1 rounded shrink-0 transition-colors text-red-500 hover:bg-red-500/10 mr-1"
-                      aria-label="SOS"
-                    >
-                      <ShieldAlert className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setActiveChatTrip(trip)}
-                      className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5 mr-1"
-                      aria-label="Chat"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleShare(trip.id)}
-                      className="p-1 rounded shrink-0 transition-colors text-blue-500 hover:bg-blue-500/10 mr-1"
-                      aria-label="Share Location"
-                    >
-                      <Share2 className="w-4 h-4" />
-                    </button>
-                  </>
-                )}
-                <button
-                  disabled={processing === trip.id}
-                  onClick={() => handleCancel(trip.id)}
-                  className="p-1 rounded shrink-0 transition-colors hover:bg-foreground/5"
-                  style={{ color: 'var(--muted-foreground)' }}
-                  aria-label="Cancel"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ))}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    {/* Left: Driver / Search State */}
+                    <div className="flex items-start gap-3.5 min-w-0">
+                      {isConfirmed ? (
+                        <div className="relative shrink-0">
+                          <Avatar className="w-11 h-11 border border-border shadow-sm">
+                            <AvatarImage src={trip.driver?.image || ''} />
+                            <AvatarFallback className="text-xs font-bold" style={{ background: 'var(--border)', color: 'var(--foreground)' }}>
+                              {trip.driver ? initials(trip.driver.name!) : 'TD'}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-card" />
+                        </div>
+                      ) : (
+                        <div className="w-11 h-11 rounded-2xl bg-[var(--orange-brand)]/10 border border-[var(--orange-brand)]/20 flex items-center justify-center shrink-0">
+                          <Car className="w-5 h-5 text-[var(--orange-brand)] animate-pulse" />
+                        </div>
+                      )}
+
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <h4 className="text-sm font-extrabold truncate" style={{ color: 'var(--foreground)' }}>
+                            {isConfirmed ? (trip.driver?.name ?? 'Assigned Driver') : 'Searching for Available Driver...'}
+                          </h4>
+                          <StatusChip status={trip.status} />
+                        </div>
+
+                        <p className="text-xs truncate font-medium" style={{ color: 'var(--muted-foreground)' }}>
+                          <span className="font-semibold text-foreground">{trip.pickup}</span> &rarr; <span className="font-semibold text-foreground">{trip.destination}</span>
+                        </p>
+
+                        <p className="text-[11px] mt-1" style={{ color: 'var(--muted-foreground)' }}>
+                          {trip.isScheduled ? `${trip.date} at ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Right Action Buttons */}
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                      {isConfirmed ? (
+                        <Link
+                          href={`/dashboard/trips/${trip.id}`}
+                          id={`view-live-trip-${trip.id}`}
+                          className="px-4 py-2.5 rounded-xl text-xs font-extrabold text-white flex items-center gap-2 shadow-sm transition-all hover:opacity-90 active:scale-95 cursor-pointer"
+                          style={{ background: 'var(--orange-brand)' }}
+                        >
+                          <span>View Live Ride Details</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-[var(--orange-brand)] font-semibold flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--orange-brand)]/10">
+                          <span className="w-2 h-2 rounded-full bg-[var(--orange-brand)] animate-ping" />
+                          Driver Dispatched Soon
+                        </span>
+                      )}
+
+                      <button
+                        disabled={processing === trip.id}
+                        onClick={() => handleCancel(trip.id)}
+                        className="px-3 py-2 rounded-xl text-xs font-semibold text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
+                        title="Cancel Booking"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
