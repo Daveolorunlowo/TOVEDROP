@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, MessageCircle
+  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -465,10 +465,19 @@ export default function DriverDashboardPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/driver/earnings"
-              className="text-xs font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-sm"
+              className="text-xs font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-sm transition-opacity hover:opacity-90"
               style={{ background: 'var(--border)', color: 'var(--foreground)' }}
             >
               Earnings & Bank
+            </Link>
+            <Link
+              href="/driver/settings"
+              id="driver-settings-nav-btn"
+              className="text-xs font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-sm flex items-center gap-1.5 transition-all hover:bg-white/10"
+              style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)', color: 'var(--foreground)' }}
+            >
+              <Settings className="w-3.5 h-3.5 text-[var(--orange-brand)]" />
+              Settings
             </Link>
           </div>
         </div>

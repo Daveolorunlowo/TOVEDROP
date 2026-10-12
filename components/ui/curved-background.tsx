@@ -132,14 +132,12 @@ export function CurvedBackground({
             className="absolute top-full left-0 w-full block pointer-events-none -mt-[1px]"
             viewBox="0 0 1440 320" 
             preserveAspectRatio="none"
-            style={{ height: curveHeight, color: topColor }}
+            style={{ height: curveHeight, color: '#C2410C' }}
           >
             {/* The fill="currentColor" uses the color style above */}
-            {curveStyle === 'arc' && (
+            {curveStyle === 'arc' ? (
               <path fill="currentColor" d="M0,0 L1440,0 L1440,0 Q720,320 0,0 Z" />
-            )}
-            
-            {curveStyle === 'asymmetric' && (
+            ) : (
               <path fill="currentColor" d="M0,0 L1440,0 L1440,160 C960,320 480,0 0,80 Z" />
             )}
           </svg>
