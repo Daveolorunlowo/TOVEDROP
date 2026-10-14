@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink
+  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/shared/Skeleton'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ChatModal } from '@/components/chat-modal'
+import { checkTripClash } from '@/lib/trip-schedule'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg var(--background) / surface var(--surface-card) / border var(--border-default) / divider var(--border)
@@ -279,11 +280,24 @@ export default function DriverDashboardPage() {
   if (status === 'SUSPENDED') {
     return (
       <div style={{ background: 'var(--background)', minHeight: '100vh' }} className="flex flex-col items-center justify-center p-6 text-center">
-        <XCircle className="w-12 h-12 mb-4 text-red-500" />
-        <h2 className="text-xl font-bold mb-2 text-foreground">Account Suspended</h2>
-        <p className="text-sm text-muted-foreground max-w-sm">
-          Your driver account has been suspended. Please contact support for more information or to appeal this decision.
+        <XCircle className="w-14 h-14 mb-4 text-red-500" />
+        <h2 className="text-2xl font-black mb-2 text-foreground">Account Suspended</h2>
+        <p className="text-sm text-muted-foreground max-w-md mb-3 leading-relaxed">
+          {driverProfile.lateWarningsCount >= 3
+            ? `Your driver account was suspended after reaching ${driverProfile.lateWarningsCount} late arrival warnings (>15m delay past scheduled pickup). A ₦1,000 penalty was deducted.`
+            : 'Your driver account has been temporarily suspended. Please contact TOVEDROP support to review and reactivate your account.'}
         </p>
+        <div className="p-3.5 rounded-lg border border-red-500/20 bg-red-500/10 text-xs text-red-400 max-w-sm mb-6">
+          Late Warnings Recorded: <strong>{driverProfile.lateWarningsCount || 3} / 3</strong>
+          {driverProfile.latePenaltyDeductions > 0 && (
+            <span className="block mt-1">Total Late Deductions: ₦{driverProfile.latePenaltyDeductions.toLocaleString()}</span>
+          )}
+        </div>
+        <Link href="mailto:support@tovedrop.com">
+          <Button style={{ background: 'var(--orange-brand)' }} className="text-foreground hover:opacity-90 font-bold">
+            Contact Support
+          </Button>
+        </Link>
       </div>
     )
   }
@@ -345,51 +359,88 @@ export default function DriverDashboardPage() {
           className="rounded-lg overflow-hidden"
           style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
         >
-          {reqs.map((req: any, i: number) => (
-            <div
-              key={req.id}
-              className="px-4 py-3"
-              style={{ borderBottom: i < reqs.length - 1 ? '1px solid var(--border)' : 'none' }}
-            >
-              <div className="flex items-center gap-3">
-                <Avatar className="w-7 h-7 shrink-0">
-                  <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
-                    {initials(req.rider.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
-                  <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                    {req.pickup} → {req.destination}
+          {reqs.map((req: any, i: number) => {
+            const clashInfo = checkTripClash(req, confirmedTrips)
+            return (
+              <div
+                key={req.id}
+                className="px-4 py-3"
+                style={{ borderBottom: i < reqs.length - 1 ? '1px solid var(--border)' : 'none' }}
+              >
+                <div className="flex items-center gap-3">
+                  <Avatar className="w-7 h-7 shrink-0">
+                    <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
+                      {initials(req.rider.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
+                    <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
+                      {req.pickup} → {req.destination}
+                    </p>
+                    <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                      <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.isScheduled ? `${req.date} · ${req.time}` : `Instant Pick-Up · ${req.time}`}</p>
+                      {clashInfo.clashes && (
+                        <span
+                          className="text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 border"
+                          style={{
+                            background: 'rgba(239,68,68,0.1)',
+                            color: '#ef4444',
+                            borderColor: 'rgba(239,68,68,0.25)'
+                          }}
+                          title={clashInfo.reason}
+                        >
+                          <AlertTriangle className="w-2.5 h-2.5" />
+                          <span>Clash ({clashInfo.timeDifferenceMinutes}m)</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      disabled={processing === req.id || clashInfo.clashes}
+                      onClick={() => {
+                        if (clashInfo.clashes) {
+                          alert(`Cannot accept: ${clashInfo.reason}`)
+                          return
+                        }
+                        handleAccept(req.id)
+                      }}
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded transition-opacity"
+                      style={{
+                        background: clashInfo.clashes ? 'var(--border)' : 'rgba(34,197,94,0.1)',
+                        color: clashInfo.clashes ? 'var(--muted-foreground)' : '#22c55e',
+                        cursor: clashInfo.clashes ? 'not-allowed' : 'pointer',
+                        opacity: clashInfo.clashes ? 0.6 : 1,
+                        borderRadius: '4px'
+                      }}
+                      title={clashInfo.clashes ? clashInfo.reason : 'Accept'}
+                    >
+                      {processing === req.id ? '...' : clashInfo.clashes ? 'Clash ⚠️' : 'Accept'}
+                    </button>
+                    <button
+                      disabled={processing === req.id}
+                      onClick={() => setDeclined(d => [...d, req.id])}
+                      className="text-[11px] font-semibold px-2.5 py-1"
+                      style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
+                    >
+                      Decline
+                    </button>
+                  </div>
+                </div>
+                {req.notes && (
+                  <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
+                    Note: {req.notes}
                   </p>
-                  <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.isScheduled ? `${req.date} · ${req.time}` : `Instant Pick-Up · ${req.time}`}</p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <button
-                    disabled={processing === req.id}
-                    onClick={() => handleAccept(req.id)}
-                    className="text-[11px] font-semibold px-2.5 py-1 rounded"
-                    style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', borderRadius: '4px' }}
-                  >
-                    {processing === req.id ? '...' : 'Accept'}
-                  </button>
-                  <button
-                    disabled={processing === req.id}
-                    onClick={() => setDeclined(d => [...d, req.id])}
-                    className="text-[11px] font-semibold px-2.5 py-1"
-                    style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
-                  >
-                    Decline
-                  </button>
-                </div>
+                )}
+                {clashInfo.clashes && (
+                  <p className="text-[10px] mt-1.5 ml-10 text-red-400 font-medium">
+                    ⚠️ {clashInfo.reason}
+                  </p>
+                )}
               </div>
-              {req.notes && (
-                <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
-                  Note: {req.notes}
-                </p>
-              )}
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
@@ -528,6 +579,35 @@ export default function DriverDashboardPage() {
           </div>
         </div>
 
+        {/* ── Warning Banner (if driver has accumulated late warnings) ── */}
+        {driverProfile.lateWarningsCount > 0 && driverProfile.status !== 'SUSPENDED' && (
+          <div
+            className="rounded-lg mb-6 flex items-start gap-3 p-4 border"
+            style={{
+              background: 'rgba(245, 158, 11, 0.08)',
+              borderColor: 'rgba(245, 158, 11, 0.3)',
+              color: 'var(--foreground)'
+            }}
+          >
+            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5" style={{ background: 'rgba(245, 158, 11, 0.2)' }}>
+              <AlertTriangle className="w-4 h-4 text-amber-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-bold text-amber-500 uppercase tracking-wider">
+                  Late Arrival Warning ({driverProfile.lateWarningsCount} / 3)
+                </p>
+                <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400">
+                  Suspension at 3
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                You have received {driverProfile.lateWarningsCount} warning{driverProfile.lateWarningsCount > 1 ? 's' : ''} for delayed pickup (&gt;15 mins past scheduled pickup time). Please ensure timely arrivals. Reaching 3 warnings results in account suspension and a ₦1,000 penalty deducted from your wallet.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* ── Stats card ── */}
         <div
           className="rounded-lg mb-6"
@@ -539,10 +619,10 @@ export default function DriverDashboardPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0">
             {[
               { label: 'Trips Completed', value: String(driverProfile.totalTrips) },
-              { label: 'This Week',       value: '—' },
+              { label: 'Late Warnings',   value: `${driverProfile.lateWarningsCount || 0} / 3`, isWarning: (driverProfile.lateWarningsCount || 0) > 0 },
               { label: 'Avg. Rating',     value: driverProfile.rating > 0 ? driverProfile.rating.toFixed(1) : '—' },
               { label: 'Status',          value: driverProfile.status, chip: true },
-            ].map((s, i) => (
+            ].map((s: any, i) => (
               <div
                 key={s.label}
                 className={cn(i > 0 && 'pl-5 sm:border-l')}
@@ -554,7 +634,13 @@ export default function DriverDashboardPage() {
                 {s.chip ? (
                   <StatusChip status={s.value} />
                 ) : (
-                  <p className="text-2xl font-bold tabular-nums" style={{ color: 'var(--foreground)', letterSpacing: '-0.02em' }}>
+                  <p
+                    className={cn(
+                      "text-2xl font-bold tabular-nums",
+                      s.isWarning && "text-amber-500 font-black"
+                    )}
+                    style={{ color: s.isWarning ? '#f59e0b' : 'var(--foreground)', letterSpacing: '-0.02em' }}
+                  >
                     {s.value}
                   </p>
                 )}
@@ -675,51 +761,88 @@ export default function DriverDashboardPage() {
                   className="rounded-lg overflow-hidden"
                   style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
                 >
-                  {requests.map((req: any, i: number) => (
-                    <div
-                      key={req.id}
-                      className="px-4 py-3"
-                      style={{ borderBottom: i < requests.length - 1 ? '1px solid var(--border)' : 'none' }}
-                    >
-                      <div className="flex items-center gap-3">
-                        <Avatar className="w-7 h-7 shrink-0">
-                          <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
-                            {initials(req.rider.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
-                          <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                            {req.pickup} → {req.destination}
+                  {requests.map((req: any, i: number) => {
+                    const clashInfo = checkTripClash(req, confirmedTrips)
+                    return (
+                      <div
+                        key={req.id}
+                        className="px-4 py-3"
+                        style={{ borderBottom: i < requests.length - 1 ? '1px solid var(--border)' : 'none' }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar className="w-7 h-7 shrink-0">
+                            <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
+                              {initials(req.rider.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
+                            <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
+                              {req.pickup} → {req.destination}
+                            </p>
+                            <div className="flex items-center gap-2 flex-wrap mt-0.5">
+                              <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.date} · {req.time}</p>
+                              {clashInfo.clashes && (
+                                <span
+                                  className="text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 border"
+                                  style={{
+                                    background: 'rgba(239,68,68,0.1)',
+                                    color: '#ef4444',
+                                    borderColor: 'rgba(239,68,68,0.25)'
+                                  }}
+                                  title={clashInfo.reason}
+                                >
+                                  <AlertTriangle className="w-2.5 h-2.5" />
+                                  <span>Clash with ride ({clashInfo.timeDifferenceMinutes}m)</span>
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <button
+                              disabled={processing === req.id || clashInfo.clashes}
+                              onClick={() => {
+                                if (clashInfo.clashes) {
+                                  alert(`Cannot accept: ${clashInfo.reason}`)
+                                  return
+                                }
+                                handleAccept(req.id)
+                              }}
+                              className="text-[11px] font-semibold px-2.5 py-1 rounded transition-opacity"
+                              style={{
+                                background: clashInfo.clashes ? 'var(--border)' : 'rgba(34,197,94,0.1)',
+                                color: clashInfo.clashes ? 'var(--muted-foreground)' : '#22c55e',
+                                cursor: clashInfo.clashes ? 'not-allowed' : 'pointer',
+                                opacity: clashInfo.clashes ? 0.6 : 1,
+                                borderRadius: '4px'
+                              }}
+                              title={clashInfo.clashes ? clashInfo.reason : 'Accept this ride'}
+                            >
+                              {processing === req.id ? '…' : clashInfo.clashes ? 'Clash ⚠️' : 'Accept'}
+                            </button>
+                            <button
+                              disabled={processing === req.id}
+                              onClick={() => setDeclined(d => [...d, req.id])}
+                              className="text-[11px] font-semibold px-2.5 py-1"
+                              style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
+                            >
+                              Decline
+                            </button>
+                          </div>
+                        </div>
+                        {req.notes && (
+                          <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
+                            Note: {req.notes}
                           </p>
-                          <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.date} · {req.time}</p>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                          <button
-                            disabled={processing === req.id}
-                            onClick={() => handleAccept(req.id)}
-                            className="text-[11px] font-semibold px-2.5 py-1 rounded"
-                            style={{ background: 'rgba(34,197,94,0.1)', color: '#22c55e', borderRadius: '4px' }}
-                          >
-                            {processing === req.id ? '…' : 'Accept'}
-                          </button>
-                          <button
-                            disabled={processing === req.id}
-                            onClick={() => setDeclined(d => [...d, req.id])}
-                            className="text-[11px] font-semibold px-2.5 py-1"
-                            style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
-                          >
-                            Decline
-                          </button>
-                        </div>
+                        )}
+                        {clashInfo.clashes && (
+                          <p className="text-[10px] mt-1.5 ml-10 text-red-400 font-medium">
+                            ⚠️ {clashInfo.reason}
+                          </p>
+                        )}
                       </div>
-                      {req.notes && (
-                        <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
-                          Note: {req.notes}
-                        </p>
-                      )}
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </div>

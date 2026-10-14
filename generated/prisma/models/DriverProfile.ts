@@ -32,6 +32,8 @@ export type DriverProfileAvgAggregateOutputType = {
   walletBalance: number | null
   transferCount: number | null
   alarmTimes: number | null
+  lateWarningsCount: number | null
+  latePenaltyDeductions: number | null
 }
 
 export type DriverProfileSumAggregateOutputType = {
@@ -40,6 +42,8 @@ export type DriverProfileSumAggregateOutputType = {
   walletBalance: number | null
   transferCount: number | null
   alarmTimes: number[]
+  lateWarningsCount: number | null
+  latePenaltyDeductions: number | null
 }
 
 export type DriverProfileMinAggregateOutputType = {
@@ -67,6 +71,9 @@ export type DriverProfileMinAggregateOutputType = {
   alarmEnabled: boolean | null
   alarmSound: string | null
   alarmVibrate: boolean | null
+  lateWarningsCount: number | null
+  lastLateWarningAt: Date | null
+  latePenaltyDeductions: number | null
   spotifyRefreshToken: string | null
 }
 
@@ -95,6 +102,9 @@ export type DriverProfileMaxAggregateOutputType = {
   alarmEnabled: boolean | null
   alarmSound: string | null
   alarmVibrate: boolean | null
+  lateWarningsCount: number | null
+  lastLateWarningAt: Date | null
+  latePenaltyDeductions: number | null
   spotifyRefreshToken: string | null
 }
 
@@ -124,6 +134,9 @@ export type DriverProfileCountAggregateOutputType = {
   alarmTimes: number
   alarmSound: number
   alarmVibrate: number
+  lateWarningsCount: number
+  lastLateWarningAt: number
+  latePenaltyDeductions: number
   spotifyRefreshToken: number
   _all: number
 }
@@ -135,6 +148,8 @@ export type DriverProfileAvgAggregateInputType = {
   walletBalance?: true
   transferCount?: true
   alarmTimes?: true
+  lateWarningsCount?: true
+  latePenaltyDeductions?: true
 }
 
 export type DriverProfileSumAggregateInputType = {
@@ -143,6 +158,8 @@ export type DriverProfileSumAggregateInputType = {
   walletBalance?: true
   transferCount?: true
   alarmTimes?: true
+  lateWarningsCount?: true
+  latePenaltyDeductions?: true
 }
 
 export type DriverProfileMinAggregateInputType = {
@@ -170,6 +187,9 @@ export type DriverProfileMinAggregateInputType = {
   alarmEnabled?: true
   alarmSound?: true
   alarmVibrate?: true
+  lateWarningsCount?: true
+  lastLateWarningAt?: true
+  latePenaltyDeductions?: true
   spotifyRefreshToken?: true
 }
 
@@ -198,6 +218,9 @@ export type DriverProfileMaxAggregateInputType = {
   alarmEnabled?: true
   alarmSound?: true
   alarmVibrate?: true
+  lateWarningsCount?: true
+  lastLateWarningAt?: true
+  latePenaltyDeductions?: true
   spotifyRefreshToken?: true
 }
 
@@ -227,6 +250,9 @@ export type DriverProfileCountAggregateInputType = {
   alarmTimes?: true
   alarmSound?: true
   alarmVibrate?: true
+  lateWarningsCount?: true
+  lastLateWarningAt?: true
+  latePenaltyDeductions?: true
   spotifyRefreshToken?: true
   _all?: true
 }
@@ -343,6 +369,9 @@ export type DriverProfileGroupByOutputType = {
   alarmTimes: number[]
   alarmSound: string
   alarmVibrate: boolean
+  lateWarningsCount: number
+  lastLateWarningAt: Date | null
+  latePenaltyDeductions: number
   spotifyRefreshToken: string | null
   _count: DriverProfileCountAggregateOutputType | null
   _avg: DriverProfileAvgAggregateOutputType | null
@@ -395,6 +424,9 @@ export type DriverProfileWhereInput = {
   alarmTimes?: Prisma.IntNullableListFilter<"DriverProfile">
   alarmSound?: Prisma.StringFilter<"DriverProfile"> | string
   alarmVibrate?: Prisma.BoolFilter<"DriverProfile"> | boolean
+  lateWarningsCount?: Prisma.IntFilter<"DriverProfile"> | number
+  lastLateWarningAt?: Prisma.DateTimeNullableFilter<"DriverProfile"> | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFilter<"DriverProfile"> | number
   spotifyRefreshToken?: Prisma.StringNullableFilter<"DriverProfile"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
@@ -427,6 +459,9 @@ export type DriverProfileOrderByWithRelationInput = {
   alarmTimes?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  lastLateWarningAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
   spotifyRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   walletTransactions?: Prisma.WalletTransactionOrderByRelationAggregateInput
@@ -462,6 +497,9 @@ export type DriverProfileWhereUniqueInput = Prisma.AtLeast<{
   alarmTimes?: Prisma.IntNullableListFilter<"DriverProfile">
   alarmSound?: Prisma.StringFilter<"DriverProfile"> | string
   alarmVibrate?: Prisma.BoolFilter<"DriverProfile"> | boolean
+  lateWarningsCount?: Prisma.IntFilter<"DriverProfile"> | number
+  lastLateWarningAt?: Prisma.DateTimeNullableFilter<"DriverProfile"> | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFilter<"DriverProfile"> | number
   spotifyRefreshToken?: Prisma.StringNullableFilter<"DriverProfile"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   walletTransactions?: Prisma.WalletTransactionListRelationFilter
@@ -494,6 +532,9 @@ export type DriverProfileOrderByWithAggregationInput = {
   alarmTimes?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  lastLateWarningAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
   spotifyRefreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.DriverProfileCountOrderByAggregateInput
   _avg?: Prisma.DriverProfileAvgOrderByAggregateInput
@@ -531,6 +572,9 @@ export type DriverProfileScalarWhereWithAggregatesInput = {
   alarmTimes?: Prisma.IntNullableListFilter<"DriverProfile">
   alarmSound?: Prisma.StringWithAggregatesFilter<"DriverProfile"> | string
   alarmVibrate?: Prisma.BoolWithAggregatesFilter<"DriverProfile"> | boolean
+  lateWarningsCount?: Prisma.IntWithAggregatesFilter<"DriverProfile"> | number
+  lastLateWarningAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DriverProfile"> | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatWithAggregatesFilter<"DriverProfile"> | number
   spotifyRefreshToken?: Prisma.StringNullableWithAggregatesFilter<"DriverProfile"> | string | null
 }
 
@@ -559,6 +603,9 @@ export type DriverProfileCreateInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   user: Prisma.UserCreateNestedOneWithoutDriverProfileInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutDriverInput
@@ -591,6 +638,9 @@ export type DriverProfileUncheckedCreateInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutDriverInput
   withdrawalRequests?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutDriverInput
@@ -621,6 +671,9 @@ export type DriverProfileUpdateInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutDriverProfileNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutDriverNestedInput
@@ -653,6 +706,9 @@ export type DriverProfileUncheckedUpdateInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutDriverNestedInput
   withdrawalRequests?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput
@@ -684,6 +740,9 @@ export type DriverProfileCreateManyInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
 }
 
@@ -712,6 +771,9 @@ export type DriverProfileUpdateManyMutationInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -741,6 +803,9 @@ export type DriverProfileUncheckedUpdateManyInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -783,6 +848,9 @@ export type DriverProfileCountOrderByAggregateInput = {
   alarmTimes?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  lastLateWarningAt?: Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
   spotifyRefreshToken?: Prisma.SortOrder
 }
 
@@ -792,6 +860,8 @@ export type DriverProfileAvgOrderByAggregateInput = {
   walletBalance?: Prisma.SortOrder
   transferCount?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
 }
 
 export type DriverProfileMaxOrderByAggregateInput = {
@@ -819,6 +889,9 @@ export type DriverProfileMaxOrderByAggregateInput = {
   alarmEnabled?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  lastLateWarningAt?: Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
   spotifyRefreshToken?: Prisma.SortOrder
 }
 
@@ -847,6 +920,9 @@ export type DriverProfileMinOrderByAggregateInput = {
   alarmEnabled?: Prisma.SortOrder
   alarmSound?: Prisma.SortOrder
   alarmVibrate?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  lastLateWarningAt?: Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
   spotifyRefreshToken?: Prisma.SortOrder
 }
 
@@ -856,6 +932,8 @@ export type DriverProfileSumOrderByAggregateInput = {
   walletBalance?: Prisma.SortOrder
   transferCount?: Prisma.SortOrder
   alarmTimes?: Prisma.SortOrder
+  lateWarningsCount?: Prisma.SortOrder
+  latePenaltyDeductions?: Prisma.SortOrder
 }
 
 export type DriverProfileScalarRelationFilter = {
@@ -965,6 +1043,9 @@ export type DriverProfileCreateWithoutUserInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutDriverInput
   withdrawalRequests?: Prisma.WithdrawalRequestCreateNestedManyWithoutDriverInput
@@ -995,6 +1076,9 @@ export type DriverProfileUncheckedCreateWithoutUserInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutDriverInput
   withdrawalRequests?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutDriverInput
@@ -1041,6 +1125,9 @@ export type DriverProfileUpdateWithoutUserInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutDriverNestedInput
   withdrawalRequests?: Prisma.WithdrawalRequestUpdateManyWithoutDriverNestedInput
@@ -1071,6 +1158,9 @@ export type DriverProfileUncheckedUpdateWithoutUserInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutDriverNestedInput
   withdrawalRequests?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput
@@ -1101,6 +1191,9 @@ export type DriverProfileCreateWithoutWalletTransactionsInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   user: Prisma.UserCreateNestedOneWithoutDriverProfileInput
   withdrawalRequests?: Prisma.WithdrawalRequestCreateNestedManyWithoutDriverInput
@@ -1132,6 +1225,9 @@ export type DriverProfileUncheckedCreateWithoutWalletTransactionsInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   withdrawalRequests?: Prisma.WithdrawalRequestUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1177,6 +1273,9 @@ export type DriverProfileUpdateWithoutWalletTransactionsInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutDriverProfileNestedInput
   withdrawalRequests?: Prisma.WithdrawalRequestUpdateManyWithoutDriverNestedInput
@@ -1208,6 +1307,9 @@ export type DriverProfileUncheckedUpdateWithoutWalletTransactionsInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   withdrawalRequests?: Prisma.WithdrawalRequestUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1237,6 +1339,9 @@ export type DriverProfileCreateWithoutWithdrawalRequestsInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   user: Prisma.UserCreateNestedOneWithoutDriverProfileInput
   walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutDriverInput
@@ -1268,6 +1373,9 @@ export type DriverProfileUncheckedCreateWithoutWithdrawalRequestsInput = {
   alarmTimes?: Prisma.DriverProfileCreatealarmTimesInput | number[]
   alarmSound?: string
   alarmVibrate?: boolean
+  lateWarningsCount?: number
+  lastLateWarningAt?: Date | string | null
+  latePenaltyDeductions?: number
   spotifyRefreshToken?: string | null
   walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutDriverInput
 }
@@ -1313,6 +1421,9 @@ export type DriverProfileUpdateWithoutWithdrawalRequestsInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutDriverProfileNestedInput
   walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutDriverNestedInput
@@ -1344,6 +1455,9 @@ export type DriverProfileUncheckedUpdateWithoutWithdrawalRequestsInput = {
   alarmTimes?: Prisma.DriverProfileUpdatealarmTimesInput | number[]
   alarmSound?: Prisma.StringFieldUpdateOperationsInput | string
   alarmVibrate?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  lateWarningsCount?: Prisma.IntFieldUpdateOperationsInput | number
+  lastLateWarningAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  latePenaltyDeductions?: Prisma.FloatFieldUpdateOperationsInput | number
   spotifyRefreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutDriverNestedInput
 }
@@ -1414,6 +1528,9 @@ export type DriverProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   alarmTimes?: boolean
   alarmSound?: boolean
   alarmVibrate?: boolean
+  lateWarningsCount?: boolean
+  lastLateWarningAt?: boolean
+  latePenaltyDeductions?: boolean
   spotifyRefreshToken?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.DriverProfile$walletTransactionsArgs<ExtArgs>
@@ -1447,6 +1564,9 @@ export type DriverProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   alarmTimes?: boolean
   alarmSound?: boolean
   alarmVibrate?: boolean
+  lateWarningsCount?: boolean
+  lastLateWarningAt?: boolean
+  latePenaltyDeductions?: boolean
   spotifyRefreshToken?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["driverProfile"]>
@@ -1477,6 +1597,9 @@ export type DriverProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   alarmTimes?: boolean
   alarmSound?: boolean
   alarmVibrate?: boolean
+  lateWarningsCount?: boolean
+  lastLateWarningAt?: boolean
+  latePenaltyDeductions?: boolean
   spotifyRefreshToken?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["driverProfile"]>
@@ -1507,10 +1630,13 @@ export type DriverProfileSelectScalar = {
   alarmTimes?: boolean
   alarmSound?: boolean
   alarmVibrate?: boolean
+  lateWarningsCount?: boolean
+  lastLateWarningAt?: boolean
+  latePenaltyDeductions?: boolean
   spotifyRefreshToken?: boolean
 }
 
-export type DriverProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "phone" | "area" | "bio" | "licenseNumber" | "vehicleMake" | "vehicleModel" | "vehicleColor" | "vehicleType" | "vehiclePlate" | "availability" | "preferredAreas" | "bankName" | "accountNumber" | "accountName" | "status" | "totalTrips" | "rating" | "walletBalance" | "transferCount" | "alarmEnabled" | "alarmTimes" | "alarmSound" | "alarmVibrate" | "spotifyRefreshToken", ExtArgs["result"]["driverProfile"]>
+export type DriverProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "phone" | "area" | "bio" | "licenseNumber" | "vehicleMake" | "vehicleModel" | "vehicleColor" | "vehicleType" | "vehiclePlate" | "availability" | "preferredAreas" | "bankName" | "accountNumber" | "accountName" | "status" | "totalTrips" | "rating" | "walletBalance" | "transferCount" | "alarmEnabled" | "alarmTimes" | "alarmSound" | "alarmVibrate" | "lateWarningsCount" | "lastLateWarningAt" | "latePenaltyDeductions" | "spotifyRefreshToken", ExtArgs["result"]["driverProfile"]>
 export type DriverProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   walletTransactions?: boolean | Prisma.DriverProfile$walletTransactionsArgs<ExtArgs>
@@ -1557,6 +1683,9 @@ export type $DriverProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     alarmTimes: number[]
     alarmSound: string
     alarmVibrate: boolean
+    lateWarningsCount: number
+    lastLateWarningAt: Date | null
+    latePenaltyDeductions: number
     spotifyRefreshToken: string | null
   }, ExtArgs["result"]["driverProfile"]>
   composites: {}
@@ -2009,6 +2138,9 @@ export interface DriverProfileFieldRefs {
   readonly alarmTimes: Prisma.FieldRef<"DriverProfile", 'Int[]'>
   readonly alarmSound: Prisma.FieldRef<"DriverProfile", 'String'>
   readonly alarmVibrate: Prisma.FieldRef<"DriverProfile", 'Boolean'>
+  readonly lateWarningsCount: Prisma.FieldRef<"DriverProfile", 'Int'>
+  readonly lastLateWarningAt: Prisma.FieldRef<"DriverProfile", 'DateTime'>
+  readonly latePenaltyDeductions: Prisma.FieldRef<"DriverProfile", 'Float'>
   readonly spotifyRefreshToken: Prisma.FieldRef<"DriverProfile", 'String'>
 }
     

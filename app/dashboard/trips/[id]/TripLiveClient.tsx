@@ -19,7 +19,9 @@ import {
   X,
   Copy,
   Check,
-  Star
+  Star,
+  Gift,
+  AlertTriangle
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { pusherClient } from '@/lib/pusher-client'
@@ -134,6 +136,17 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         playChime()
       })
 
+      channel.bind('trip-overdue-updated', (data: any) => {
+        if (!mounted) return
+        setTrip((prev: any) => ({
+          ...prev,
+          isOverdue: true,
+          riderCompensatedAt: data.riderCompensatedAt || prev.riderCompensatedAt || new Date().toISOString(),
+          driverPenalizedAt: data.driverPenalizedAt || prev.driverPenalizedAt || new Date().toISOString()
+        }))
+        playChime()
+      })
+
       channel.bind('trip-completed', () => {
         if (!mounted) return
         if (isRider) {
@@ -206,12 +219,27 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         channel.unbind('new-message')
         channel.unbind('driver-arrived')
         channel.unbind('driver-departed')
+        channel.unbind('trip-overdue-updated')
         channel.unbind('trip-completed')
         channel.unbind('trip-cancelled')
         pusherClient.unsubscribe(`trip-${trip.id}`)
       }
     }
   }, [trip.id, currentUserId, isRider, router, driverArrivedNotice, driverDepartedNotice])
+
+  // Instant on-demand check for overdue pickup guarantee on mount
+  useEffect(() => {
+    if (trip.status === 'CONFIRMED' && !trip.driverArrivedAt && !trip.driverDepartedAt && !trip.riderCompensatedAt) {
+      fetch(`/api/trips/${trip.id}/check-overdue`, { method: 'POST' })
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data?.trip) {
+            setTrip(data.trip)
+          }
+        })
+        .catch(() => {})
+    }
+  }, [trip.id, trip.status, trip.driverArrivedAt, trip.driverDepartedAt, trip.riderCompensatedAt])
 
   // Driver actions
   const handleDriverArrive = async () => {
@@ -457,6 +485,52 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             )}
           </div>
         ) : null}
+
+        {/* ── Overdue Pickup & Rider Compensation Banner ── */}
+        {(trip.isOverdue || trip.riderCompensatedAt) && (
+          <div
+            className="rounded-xl p-4 sm:p-5 shadow-lg backdrop-blur-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 border animate-in fade-in slide-in-from-top-2"
+            style={{
+              background: isRider ? 'rgba(34, 197, 94, 0.08)' : 'rgba(245, 158, 11, 0.08)',
+              borderColor: isRider ? 'rgba(34, 197, 94, 0.3)' : 'rgba(245, 158, 11, 0.3)',
+            }}
+          >
+            <div className="flex items-start gap-3.5">
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-sm"
+                style={{
+                  background: isRider ? 'rgba(34, 197, 94, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+                  color: isRider ? '#22c55e' : '#f59e0b'
+                }}
+              >
+                {isRider ? <Gift className="w-5 h-5 text-emerald-400" /> : <AlertTriangle className="w-5 h-5 text-amber-500" />}
+              </div>
+              <div>
+                <p
+                  className="text-[11px] font-extrabold uppercase tracking-wider flex items-center gap-1.5"
+                  style={{ color: isRider ? '#22c55e' : '#f59e0b' }}
+                >
+                  {isRider ? '🎁 On-Time Guarantee Applied (+1 Free Drop)' : '⚠️ Late Pickup Warning Notice'}
+                </p>
+                <h3 className="text-sm sm:text-base font-bold text-foreground mt-0.5">
+                  {isRider
+                    ? '1 Free Drop has been credited to your balance!'
+                    : 'Scheduled pickup was delayed by over 15 minutes'}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed max-w-xl">
+                  {isRider
+                    ? 'Because your driver was delayed by more than 15 minutes past the scheduled pickup time, we automatically reimbursed you with 1 Free Drop as part of our punctuality commitment.'
+                    : 'This ride has exceeded the 15-minute grace period without pickup. The rider received a free compensation drop, and a warning was recorded on your driver profile. (3 warnings result in suspension and a ₦1,000 penalty).'}
+                </p>
+              </div>
+            </div>
+            {isRider && (
+              <span className="self-start sm:self-center px-3 py-1.5 rounded-lg text-xs font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
+                +1 Drop Credited
+              </span>
+            )}
+          </div>
+        )}
 
         {/* ── Driver Progress Controls (when viewed by driver) ── */}
         {!isRider && (

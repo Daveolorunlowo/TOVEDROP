@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { sendPushNotification } from '@/lib/push'
 import { isAfter, subMinutes, subHours } from 'date-fns'
+import { processOverdueTrips } from '@/lib/overdue-processor'
 
 export const dynamic = 'force-dynamic'
 
@@ -103,10 +104,14 @@ export async function GET(req: Request) {
       }
     }
 
+    // 3. Process overdue trip guarantees (compensate riders and warn/penalize late drivers)
+    const overdueResults = await processOverdueTrips();
+
     return NextResponse.json({ 
       success: true, 
       processedReminders: pendingReminders.length,
-      lateAlerts: lateTrips.length
+      lateAlerts: lateTrips.length,
+      overdueResults
     });
 
   } catch (error) {

@@ -2872,6 +2872,9 @@ export const DriverProfileScalarFieldEnum = {
   alarmTimes: 'alarmTimes',
   alarmSound: 'alarmSound',
   alarmVibrate: 'alarmVibrate',
+  lateWarningsCount: 'lateWarningsCount',
+  lastLateWarningAt: 'lastLateWarningAt',
+  latePenaltyDeductions: 'latePenaltyDeductions',
   spotifyRefreshToken: 'spotifyRefreshToken'
 } as const
 
@@ -2895,6 +2898,9 @@ export const TripScalarFieldEnum = {
   driverId: 'driverId',
   driverArrivedAt: 'driverArrivedAt',
   driverDepartedAt: 'driverDepartedAt',
+  isOverdue: 'isOverdue',
+  riderCompensatedAt: 'riderCompensatedAt',
+  driverPenalizedAt: 'driverPenalizedAt',
   isPool: 'isPool',
   poolGroupId: 'poolGroupId',
   isScheduled: 'isScheduled',

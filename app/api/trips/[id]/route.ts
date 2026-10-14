@@ -45,6 +45,45 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       return NextResponse.json({ message: "Forbidden" }, { status: 403 })
     }
 
+    // Proactive check: If trip is overdue and uncompensated, process it immediately
+    if (trip.status === 'CONFIRMED' && !trip.driverArrivedAt && !trip.driverDepartedAt && !trip.riderCompensatedAt) {
+      const { checkTripOverdue } = await import('@/lib/trip-schedule')
+      const overdueStatus = checkTripOverdue(trip)
+      if (overdueStatus.isOverdue) {
+        const { processOverdueTrips } = await import('@/lib/overdue-processor')
+        await processOverdueTrips(trip.id)
+        
+        const refreshedTrip = await prisma.trip.findUnique({
+          where: { id: params.id },
+          include: {
+            driver: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                phoneNumber: true,
+                driverProfile: true
+              }
+            },
+            rider: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                phoneNumber: true
+              }
+            },
+            review: true
+          }
+        })
+        if (refreshedTrip) {
+          return NextResponse.json({ trip: refreshedTrip })
+        }
+      }
+    }
+
     return NextResponse.json({ trip })
   } catch (error: any) {
     return NextResponse.json({ message: "Error fetching trip", error: error.message }, { status: 500 })

@@ -136,6 +136,10 @@ model DriverProfile {
   alarmSound          String   @default("default")
   alarmVibrate        Boolean  @default(true)
 
+  lateWarningsCount     Int       @default(0)
+  lastLateWarningAt     DateTime?
+  latePenaltyDeductions Float     @default(0)
+
   spotifyRefreshToken String?
 }
 
@@ -161,6 +165,10 @@ model Trip {
 
   driverArrivedAt  DateTime?
   driverDepartedAt DateTime?
+
+  isOverdue          Boolean   @default(false)
+  riderCompensatedAt DateTime?
+  driverPenalizedAt  DateTime?
 
   isPool      Boolean @default(false)
   poolGroupId String?

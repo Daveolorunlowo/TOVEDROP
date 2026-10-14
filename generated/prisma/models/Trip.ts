@@ -59,6 +59,9 @@ export type TripMinAggregateOutputType = {
   driverId: string | null
   driverArrivedAt: Date | null
   driverDepartedAt: Date | null
+  isOverdue: boolean | null
+  riderCompensatedAt: Date | null
+  driverPenalizedAt: Date | null
   isPool: boolean | null
   poolGroupId: string | null
   isScheduled: boolean | null
@@ -87,6 +90,9 @@ export type TripMaxAggregateOutputType = {
   driverId: string | null
   driverArrivedAt: Date | null
   driverDepartedAt: Date | null
+  isOverdue: boolean | null
+  riderCompensatedAt: Date | null
+  driverPenalizedAt: Date | null
   isPool: boolean | null
   poolGroupId: string | null
   isScheduled: boolean | null
@@ -115,6 +121,9 @@ export type TripCountAggregateOutputType = {
   driverId: number
   driverArrivedAt: number
   driverDepartedAt: number
+  isOverdue: number
+  riderCompensatedAt: number
+  driverPenalizedAt: number
   isPool: number
   poolGroupId: number
   isScheduled: number
@@ -161,6 +170,9 @@ export type TripMinAggregateInputType = {
   driverId?: true
   driverArrivedAt?: true
   driverDepartedAt?: true
+  isOverdue?: true
+  riderCompensatedAt?: true
+  driverPenalizedAt?: true
   isPool?: true
   poolGroupId?: true
   isScheduled?: true
@@ -189,6 +201,9 @@ export type TripMaxAggregateInputType = {
   driverId?: true
   driverArrivedAt?: true
   driverDepartedAt?: true
+  isOverdue?: true
+  riderCompensatedAt?: true
+  driverPenalizedAt?: true
   isPool?: true
   poolGroupId?: true
   isScheduled?: true
@@ -217,6 +232,9 @@ export type TripCountAggregateInputType = {
   driverId?: true
   driverArrivedAt?: true
   driverDepartedAt?: true
+  isOverdue?: true
+  riderCompensatedAt?: true
+  driverPenalizedAt?: true
   isPool?: true
   poolGroupId?: true
   isScheduled?: true
@@ -332,6 +350,9 @@ export type TripGroupByOutputType = {
   driverId: string | null
   driverArrivedAt: Date | null
   driverDepartedAt: Date | null
+  isOverdue: boolean
+  riderCompensatedAt: Date | null
+  driverPenalizedAt: Date | null
   isPool: boolean
   poolGroupId: string | null
   isScheduled: boolean
@@ -383,6 +404,9 @@ export type TripWhereInput = {
   driverId?: Prisma.StringNullableFilter<"Trip"> | string | null
   driverArrivedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   driverDepartedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  isOverdue?: Prisma.BoolFilter<"Trip"> | boolean
+  riderCompensatedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  driverPenalizedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   isPool?: Prisma.BoolFilter<"Trip"> | boolean
   poolGroupId?: Prisma.StringNullableFilter<"Trip"> | string | null
   isScheduled?: Prisma.BoolFilter<"Trip"> | boolean
@@ -422,6 +446,9 @@ export type TripOrderByWithRelationInput = {
   driverId?: Prisma.SortOrderInput | Prisma.SortOrder
   driverArrivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   driverDepartedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isOverdue?: Prisma.SortOrder
+  riderCompensatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  driverPenalizedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isPool?: Prisma.SortOrder
   poolGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
   isScheduled?: Prisma.SortOrder
@@ -465,6 +492,9 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   driverId?: Prisma.StringNullableFilter<"Trip"> | string | null
   driverArrivedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   driverDepartedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  isOverdue?: Prisma.BoolFilter<"Trip"> | boolean
+  riderCompensatedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  driverPenalizedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   isPool?: Prisma.BoolFilter<"Trip"> | boolean
   poolGroupId?: Prisma.StringNullableFilter<"Trip"> | string | null
   isScheduled?: Prisma.BoolFilter<"Trip"> | boolean
@@ -503,6 +533,9 @@ export type TripOrderByWithAggregationInput = {
   driverId?: Prisma.SortOrderInput | Prisma.SortOrder
   driverArrivedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   driverDepartedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  isOverdue?: Prisma.SortOrder
+  riderCompensatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  driverPenalizedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   isPool?: Prisma.SortOrder
   poolGroupId?: Prisma.SortOrderInput | Prisma.SortOrder
   isScheduled?: Prisma.SortOrder
@@ -539,6 +572,9 @@ export type TripScalarWhereWithAggregatesInput = {
   driverId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   driverArrivedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
   driverDepartedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
+  isOverdue?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
+  riderCompensatedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
+  driverPenalizedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Trip"> | Date | string | null
   isPool?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
   poolGroupId?: Prisma.StringNullableWithAggregatesFilter<"Trip"> | string | null
   isScheduled?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
@@ -565,6 +601,9 @@ export type TripCreateInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -603,6 +642,9 @@ export type TripUncheckedCreateInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -637,6 +679,9 @@ export type TripUpdateInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -675,6 +720,9 @@ export type TripUncheckedUpdateInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -711,6 +759,9 @@ export type TripCreateManyInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -737,6 +788,9 @@ export type TripUpdateManyMutationInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -764,6 +818,9 @@ export type TripUncheckedUpdateManyInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -802,6 +859,9 @@ export type TripCountOrderByAggregateInput = {
   driverId?: Prisma.SortOrder
   driverArrivedAt?: Prisma.SortOrder
   driverDepartedAt?: Prisma.SortOrder
+  isOverdue?: Prisma.SortOrder
+  riderCompensatedAt?: Prisma.SortOrder
+  driverPenalizedAt?: Prisma.SortOrder
   isPool?: Prisma.SortOrder
   poolGroupId?: Prisma.SortOrder
   isScheduled?: Prisma.SortOrder
@@ -838,6 +898,9 @@ export type TripMaxOrderByAggregateInput = {
   driverId?: Prisma.SortOrder
   driverArrivedAt?: Prisma.SortOrder
   driverDepartedAt?: Prisma.SortOrder
+  isOverdue?: Prisma.SortOrder
+  riderCompensatedAt?: Prisma.SortOrder
+  driverPenalizedAt?: Prisma.SortOrder
   isPool?: Prisma.SortOrder
   poolGroupId?: Prisma.SortOrder
   isScheduled?: Prisma.SortOrder
@@ -866,6 +929,9 @@ export type TripMinOrderByAggregateInput = {
   driverId?: Prisma.SortOrder
   driverArrivedAt?: Prisma.SortOrder
   driverDepartedAt?: Prisma.SortOrder
+  isOverdue?: Prisma.SortOrder
+  riderCompensatedAt?: Prisma.SortOrder
+  driverPenalizedAt?: Prisma.SortOrder
   isPool?: Prisma.SortOrder
   poolGroupId?: Prisma.SortOrder
   isScheduled?: Prisma.SortOrder
@@ -1158,6 +1224,9 @@ export type TripCreateWithoutRiderInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1194,6 +1263,9 @@ export type TripUncheckedCreateWithoutRiderInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1238,6 +1310,9 @@ export type TripCreateWithoutDriverInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1274,6 +1349,9 @@ export type TripUncheckedCreateWithoutDriverInput = {
   riderId: string
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1339,6 +1417,9 @@ export type TripScalarWhereInput = {
   driverId?: Prisma.StringNullableFilter<"Trip"> | string | null
   driverArrivedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   driverDepartedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  isOverdue?: Prisma.BoolFilter<"Trip"> | boolean
+  riderCompensatedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
+  driverPenalizedAt?: Prisma.DateTimeNullableFilter<"Trip"> | Date | string | null
   isPool?: Prisma.BoolFilter<"Trip"> | boolean
   poolGroupId?: Prisma.StringNullableFilter<"Trip"> | string | null
   isScheduled?: Prisma.BoolFilter<"Trip"> | boolean
@@ -1381,6 +1462,9 @@ export type TripCreateWithoutReviewInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1418,6 +1502,9 @@ export type TripUncheckedCreateWithoutReviewInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1467,6 +1554,9 @@ export type TripUpdateWithoutReviewInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1504,6 +1594,9 @@ export type TripUncheckedUpdateWithoutReviewInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1537,6 +1630,9 @@ export type TripCreateWithoutMessagesInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1574,6 +1670,9 @@ export type TripUncheckedCreateWithoutMessagesInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1623,6 +1722,9 @@ export type TripUpdateWithoutMessagesInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1660,6 +1762,9 @@ export type TripUncheckedUpdateWithoutMessagesInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1693,6 +1798,9 @@ export type TripCreateWithoutDropLotInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1730,6 +1838,9 @@ export type TripUncheckedCreateWithoutDropLotInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1789,6 +1900,9 @@ export type TripCreateWithoutWalletTransactionsInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1826,6 +1940,9 @@ export type TripUncheckedCreateWithoutWalletTransactionsInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1875,6 +1992,9 @@ export type TripUpdateWithoutWalletTransactionsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1912,6 +2032,9 @@ export type TripUncheckedUpdateWithoutWalletTransactionsInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1945,6 +2068,9 @@ export type TripCreateWithoutPlatformRevenueInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -1982,6 +2108,9 @@ export type TripUncheckedCreateWithoutPlatformRevenueInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2031,6 +2160,9 @@ export type TripUpdateWithoutPlatformRevenueInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2068,6 +2200,9 @@ export type TripUncheckedUpdateWithoutPlatformRevenueInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2101,6 +2236,9 @@ export type TripCreateWithoutAdminRevenueInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2138,6 +2276,9 @@ export type TripUncheckedCreateWithoutAdminRevenueInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2187,6 +2328,9 @@ export type TripUpdateWithoutAdminRevenueInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2224,6 +2368,9 @@ export type TripUncheckedUpdateWithoutAdminRevenueInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2257,6 +2404,9 @@ export type TripCreateWithoutAlarmLogsInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2294,6 +2444,9 @@ export type TripUncheckedCreateWithoutAlarmLogsInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2343,6 +2496,9 @@ export type TripUpdateWithoutAlarmLogsInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2380,6 +2536,9 @@ export type TripUncheckedUpdateWithoutAlarmLogsInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2413,6 +2572,9 @@ export type TripCreateWithoutTripRemindersInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2450,6 +2612,9 @@ export type TripUncheckedCreateWithoutTripRemindersInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2499,6 +2664,9 @@ export type TripUpdateWithoutTripRemindersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2536,6 +2704,9 @@ export type TripUncheckedUpdateWithoutTripRemindersInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2569,6 +2740,9 @@ export type TripCreateWithoutTripTransfersInput = {
   notes?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2606,6 +2780,9 @@ export type TripUncheckedCreateWithoutTripTransfersInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2655,6 +2832,9 @@ export type TripUpdateWithoutTripTransfersInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2692,6 +2872,9 @@ export type TripUncheckedUpdateWithoutTripTransfersInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2726,6 +2909,9 @@ export type TripCreateManyRiderInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2753,6 +2939,9 @@ export type TripCreateManyDriverInput = {
   riderId: string
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -2779,6 +2968,9 @@ export type TripUpdateWithoutRiderInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2815,6 +3007,9 @@ export type TripUncheckedUpdateWithoutRiderInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2850,6 +3045,9 @@ export type TripUncheckedUpdateManyWithoutRiderInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2876,6 +3074,9 @@ export type TripUpdateWithoutDriverInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2912,6 +3113,9 @@ export type TripUncheckedUpdateWithoutDriverInput = {
   riderId?: Prisma.StringFieldUpdateOperationsInput | string
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2947,6 +3151,9 @@ export type TripUncheckedUpdateManyWithoutDriverInput = {
   riderId?: Prisma.StringFieldUpdateOperationsInput | string
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2975,6 +3182,9 @@ export type TripCreateManyDropLotInput = {
   driverId?: string | null
   driverArrivedAt?: Date | string | null
   driverDepartedAt?: Date | string | null
+  isOverdue?: boolean
+  riderCompensatedAt?: Date | string | null
+  driverPenalizedAt?: Date | string | null
   isPool?: boolean
   poolGroupId?: string | null
   isScheduled?: boolean
@@ -3000,6 +3210,9 @@ export type TripUpdateWithoutDropLotInput = {
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3037,6 +3250,9 @@ export type TripUncheckedUpdateWithoutDropLotInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3072,6 +3288,9 @@ export type TripUncheckedUpdateManyWithoutDropLotInput = {
   driverId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   driverArrivedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   driverDepartedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  isOverdue?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  riderCompensatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  driverPenalizedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   isPool?: Prisma.BoolFieldUpdateOperationsInput | boolean
   poolGroupId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isScheduled?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3166,6 +3385,9 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   driverId?: boolean
   driverArrivedAt?: boolean
   driverDepartedAt?: boolean
+  isOverdue?: boolean
+  riderCompensatedAt?: boolean
+  driverPenalizedAt?: boolean
   isPool?: boolean
   poolGroupId?: boolean
   isScheduled?: boolean
@@ -3206,6 +3428,9 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   driverId?: boolean
   driverArrivedAt?: boolean
   driverDepartedAt?: boolean
+  isOverdue?: boolean
+  riderCompensatedAt?: boolean
+  driverPenalizedAt?: boolean
   isPool?: boolean
   poolGroupId?: boolean
   isScheduled?: boolean
@@ -3237,6 +3462,9 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   driverId?: boolean
   driverArrivedAt?: boolean
   driverDepartedAt?: boolean
+  isOverdue?: boolean
+  riderCompensatedAt?: boolean
+  driverPenalizedAt?: boolean
   isPool?: boolean
   poolGroupId?: boolean
   isScheduled?: boolean
@@ -3268,6 +3496,9 @@ export type TripSelectScalar = {
   driverId?: boolean
   driverArrivedAt?: boolean
   driverDepartedAt?: boolean
+  isOverdue?: boolean
+  riderCompensatedAt?: boolean
+  driverPenalizedAt?: boolean
   isPool?: boolean
   poolGroupId?: boolean
   isScheduled?: boolean
@@ -3279,7 +3510,7 @@ export type TripSelectScalar = {
   updatedAt?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idempotencyKey" | "status" | "pickup" | "pickupLat" | "pickupLng" | "destination" | "destinationLat" | "destinationLng" | "date" | "time" | "notes" | "riderId" | "driverId" | "driverArrivedAt" | "driverDepartedAt" | "isPool" | "poolGroupId" | "isScheduled" | "scheduledDateTime" | "bookingFeeNaira" | "dropLotId" | "shareToken" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "idempotencyKey" | "status" | "pickup" | "pickupLat" | "pickupLng" | "destination" | "destinationLat" | "destinationLng" | "date" | "time" | "notes" | "riderId" | "driverId" | "driverArrivedAt" | "driverDepartedAt" | "isOverdue" | "riderCompensatedAt" | "driverPenalizedAt" | "isPool" | "poolGroupId" | "isScheduled" | "scheduledDateTime" | "bookingFeeNaira" | "dropLotId" | "shareToken" | "createdAt" | "updatedAt", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   rider?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   driver?: boolean | Prisma.Trip$driverArgs<ExtArgs>
@@ -3337,6 +3568,9 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     driverId: string | null
     driverArrivedAt: Date | null
     driverDepartedAt: Date | null
+    isOverdue: boolean
+    riderCompensatedAt: Date | null
+    driverPenalizedAt: Date | null
     isPool: boolean
     poolGroupId: string | null
     isScheduled: boolean
@@ -3796,6 +4030,9 @@ export interface TripFieldRefs {
   readonly driverId: Prisma.FieldRef<"Trip", 'String'>
   readonly driverArrivedAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly driverDepartedAt: Prisma.FieldRef<"Trip", 'DateTime'>
+  readonly isOverdue: Prisma.FieldRef<"Trip", 'Boolean'>
+  readonly riderCompensatedAt: Prisma.FieldRef<"Trip", 'DateTime'>
+  readonly driverPenalizedAt: Prisma.FieldRef<"Trip", 'DateTime'>
   readonly isPool: Prisma.FieldRef<"Trip", 'Boolean'>
   readonly poolGroupId: Prisma.FieldRef<"Trip", 'String'>
   readonly isScheduled: Prisma.FieldRef<"Trip", 'Boolean'>

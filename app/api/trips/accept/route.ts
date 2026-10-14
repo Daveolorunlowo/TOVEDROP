@@ -6,6 +6,7 @@ import { sendWebPush } from "@/lib/webpush"
 import { pusherServer } from "@/lib/pusher"
 import { z } from "zod"
 import { withValidation } from "@/lib/with-validation"
+import { checkTripClash } from "@/lib/trip-schedule"
 
 const acceptTripSchema = z.object({
   tripId: z.string().min(1, "Trip ID is required")
@@ -27,14 +28,35 @@ export const POST = withValidation(acceptTripSchema, async (req: NextRequest, da
  })
 
  if (!driverProfile || driverProfile.status !== "APPROVED") {
- return NextResponse.json({ message: "Driver is not approved" }, { status: 403 })
+  if (driverProfile?.status === "SUSPENDED") {
+    return NextResponse.json({ 
+      message: "Your driver account is currently suspended due to repeated late arrival penalties. Please contact support." 
+    }, { status: 403 })
+  }
+  return NextResponse.json({ message: "Driver is not approved" }, { status: 403 })
  }
 
  const shareToken = crypto.randomUUID().replace(/-/g, '').slice(0, 12)
 
  const targetTrip = await prisma.trip.findUnique({ where: { id: tripId } })
  if (!targetTrip) {
- return NextResponse.json({ message: "Trip not found" }, { status: 404 })
+  return NextResponse.json({ message: "Trip not found" }, { status: 404 })
+ }
+
+ // ── Schedule Clash Validation ──────────────────────────────────
+ const existingConfirmedTrips = await prisma.trip.findMany({
+   where: {
+     driverId: session.user.id,
+     status: 'CONFIRMED'
+   }
+ })
+
+ const clash = checkTripClash(targetTrip, existingConfirmedTrips)
+ if (clash.clashes) {
+   return NextResponse.json({
+     message: `Schedule conflict: This trip clashes with an existing confirmed ride (${clash.reason}). Drivers cannot accept overlapping trips.`,
+     clash
+   }, { status: 409 })
  }
 
  let whereClause: any = { 
