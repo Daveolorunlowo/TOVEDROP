@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle, BellRing
+  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle, BellRing, Volume2, VolumeX
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -16,6 +16,8 @@ import { ChatModal } from '@/components/chat-modal'
 import { checkTripClash } from '@/lib/trip-schedule'
 import { useDriverAlarms } from '@/hooks/useDriverAlarms'
 import { AlarmModal } from '@/components/driver/AlarmModal'
+import { HighVisibilityTripCard } from '@/components/driver/HighVisibilityTripCard'
+import { TripCommitmentModal } from '@/components/driver/TripCommitmentModal'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg var(--background) / surface var(--surface-card) / border var(--border-default) / divider var(--border)
@@ -74,11 +76,49 @@ export default function DriverDashboardPage() {
   const [declined, setDeclined] = useState<string[]>([])
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
+  const [tripForCommitment, setTripForCommitment] = useState<any | null>(null)
+  const [voiceAnnounce, setVoiceAnnounce] = useState<boolean>(true)
+  const prevRequestIdsRef = useRef<string[]>([])
 
   const { activeAlarm, dismissAlarm, triggerTestAlarm } = useDriverAlarms(
     data?.confirmedTrips || [],
     data?.driverProfile || { alarmEnabled: true, alarmTimes: [30, 10, 2], alarmSound: 'loud', alarmVibrate: true }
   )
+
+  // Voice announcement: speaks the place & time when a new request arrives
+  useEffect(() => {
+    if (!data?.pendingTrips || !voiceAnnounce) return
+    const currentIds = data.pendingTrips.map((t: any) => t.id)
+    const newTrips = data.pendingTrips.filter(
+      (t: any) => !prevRequestIdsRef.current.includes(t.id) && !declined.includes(t.id)
+    )
+
+    if (newTrips.length > 0 && prevRequestIdsRef.current.length > 0) {
+      const latest = newTrips[0]
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        try {
+          window.speechSynthesis.cancel()
+          const pickup = latest.pickup.split(',')[0]
+          const time = latest.isScheduled ? latest.time : 'Instant departure'
+          const u = new SpeechSynthesisUtterance(`New trip request: Pickup at ${pickup}. Time: ${time}.`)
+          u.rate = 1.05
+          window.speechSynthesis.speak(u)
+        } catch (e) {}
+      }
+    }
+    prevRequestIdsRef.current = currentIds
+  }, [data?.pendingTrips, voiceAnnounce, declined])
+
+  const handleOpenCommitment = (trip: any) => {
+    setTripForCommitment(trip)
+  }
+
+  const handleConfirmCommitment = async () => {
+    if (!tripForCommitment) return
+    const id = tripForCommitment.id
+    setTripForCommitment(null)
+    await handleAccept(id)
+  }
 
   const fetchData = async () => {
     const start = Date.now()
@@ -747,231 +787,120 @@ export default function DriverDashboardPage() {
           </div>
         </div>
 
-        {/* ── Incoming Requests ── */}
-            <div className="mb-6">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
-                  Incoming Requests
-                </p>
-                {requests.length > 0 && (
-                  <span
-                    className="text-[10px] font-semibold px-1.5 py-0.5"
-                    style={{ background: 'rgba(217,119,6,0.1)', color: 'var(--orange-brand)', borderRadius: '4px' }}
-                  >
-                    {requests.length} new
-                  </span>
-                )}
-              </div>
-
-              {requests.length === 0 ? (
-                <div
-                  className="rounded-lg"
-                  style={{ background: 'var(--surface-card)', border: '1px dashed var(--border-default)', padding: '20px' }}
-                >
-                  <Car className="w-4 h-4 mb-2" style={{ color: 'var(--border-subtle)' }} />
-                  <p className="text-sm font-medium" style={{ color: 'var(--muted-foreground)' }}>No new requests</p>
-                  <p className="text-xs mt-0.5" style={{ color: 'var(--muted-foreground)' }}>New trip requests will appear here.</p>
-                </div>
-              ) : (
-                <div
-                  className="rounded-lg overflow-hidden"
-                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
-                >
-                  {requests.map((req: any, i: number) => {
-                    const clashInfo = checkTripClash(req, confirmedTrips)
-                    return (
-                      <div
-                        key={req.id}
-                        className="px-4 py-3"
-                        style={{ borderBottom: i < requests.length - 1 ? '1px solid var(--border)' : 'none' }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Avatar className="w-7 h-7 shrink-0">
-                            <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
-                              {initials(req.rider.name)}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{req.rider.name}</p>
-                            <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                              {req.pickup} → {req.destination}
-                            </p>
-                            <div className="flex items-center gap-2 flex-wrap mt-0.5">
-                              <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>{req.date} · {req.time}</p>
-                              {clashInfo.clashes && (
-                                <span
-                                  className="text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1 border"
-                                  style={{
-                                    background: 'rgba(239,68,68,0.1)',
-                                    color: '#ef4444',
-                                    borderColor: 'rgba(239,68,68,0.25)'
-                                  }}
-                                  title={clashInfo.reason}
-                                >
-                                  <AlertTriangle className="w-2.5 h-2.5" />
-                                  <span>Clash with ride ({clashInfo.timeDifferenceMinutes}m)</span>
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 shrink-0">
-                            <button
-                              disabled={processing === req.id || clashInfo.clashes}
-                              onClick={() => {
-                                if (clashInfo.clashes) {
-                                  alert(`Cannot accept: ${clashInfo.reason}`)
-                                  return
-                                }
-                                handleAccept(req.id)
-                              }}
-                              className="text-[11px] font-semibold px-2.5 py-1 rounded transition-opacity"
-                              style={{
-                                background: clashInfo.clashes ? 'var(--border)' : 'rgba(34,197,94,0.1)',
-                                color: clashInfo.clashes ? 'var(--muted-foreground)' : '#22c55e',
-                                cursor: clashInfo.clashes ? 'not-allowed' : 'pointer',
-                                opacity: clashInfo.clashes ? 0.6 : 1,
-                                borderRadius: '4px'
-                              }}
-                              title={clashInfo.clashes ? clashInfo.reason : 'Accept this ride'}
-                            >
-                              {processing === req.id ? '…' : clashInfo.clashes ? 'Clash ⚠️' : 'Accept'}
-                            </button>
-                            <button
-                              disabled={processing === req.id}
-                              onClick={() => setDeclined(d => [...d, req.id])}
-                              className="text-[11px] font-semibold px-2.5 py-1"
-                              style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
-                            >
-                              Decline
-                            </button>
-                          </div>
-                        </div>
-                        {req.notes && (
-                          <p className="text-[11px] mt-2 ml-10 px-2 py-1 rounded" style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}>
-                            Note: {req.notes}
-                          </p>
-                        )}
-                        {clashInfo.clashes && (
-                          <p className="text-[10px] mt-1.5 ml-10 text-red-400 font-medium">
-                            ⚠️ {clashInfo.reason}
-                          </p>
-                        )}
-                      </div>
-                    )
-                  })}
-                </div>
+        {/* ── Incoming Requests (High Visibility Dispatch Cards) ── */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3.5">
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-black uppercase tracking-[0.08em] text-foreground">
+                Incoming Ride Requests
+              </p>
+              {requests.length > 0 && (
+                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[var(--orange-brand)] text-white shadow-xs">
+                  {requests.length} Live
+                </span>
               )}
             </div>
 
-            {/* ── Confirmed Trips ── */}
-            <div>
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
-                  Upcoming Confirmed Trips
-                </p>
-                {confirmedTrips.length > 0 && (
-                  <span
-                    className="text-[10px] font-semibold px-1.5 py-0.5"
-                    style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
-                  >
-                    {confirmedTrips.length}
-                  </span>
-                )}
-              </div>
-
-              {confirmedTrips.length === 0 ? (
-                <div
-                  className="rounded-lg"
-                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border)', padding: '20px' }}
-                >
-                  <p className="text-xs" style={{ color: 'var(--muted-foreground)' }}>No confirmed trips yet.</p>
-                </div>
+            {/* Voice Announcement Toggle */}
+            <button
+              type="button"
+              onClick={() => setVoiceAnnounce(!voiceAnnounce)}
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-lg border flex items-center gap-1.5 transition-all cursor-pointer ${
+                voiceAnnounce
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  : 'bg-muted border-border text-muted-foreground'
+              }`}
+              title="Voice announcement of place & time when new requests arrive"
+            >
+              {voiceAnnounce ? (
+                <>
+                  <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                  Voice Announce: ON
+                </>
               ) : (
-                <div
-                  className="rounded-lg overflow-hidden"
-                  style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
-                >
-                  {confirmedTrips.map((trip: any, i: number) => (
-                    <div
-                      key={trip.id}
-                      className="flex items-center gap-3 px-4 py-3"
-                      style={{ borderBottom: i < confirmedTrips.length - 1 ? '1px solid var(--border)' : 'none' }}
-                    >
-                      <Avatar className="w-7 h-7 shrink-0">
-                        <AvatarFallback className="text-[10px] font-bold" style={{ background: 'var(--border-default)', color: 'var(--muted-foreground)' }}>
-                          {initials(trip.rider.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold" style={{ color: 'var(--foreground)' }}>{trip.rider.name}</p>
-                        <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
-                          {trip.pickup} → {trip.destination}
-                        </p>
-                        <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-                          {trip.isScheduled ? `${trip.date} · ${trip.time}` : `Instant Pick-Up · ${trip.time}`}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
-                        <Link
-                          href={`/dashboard/trips/${trip.id}`}
-                          className="text-[11px] font-semibold px-2 py-1 rounded border border-border hover:border-[var(--orange-brand)] transition-colors flex items-center gap-1 text-foreground"
-                          style={{ background: 'var(--surface-elevated)' }}
-                          title="Open Live Ride Portal"
-                        >
-                          <ExternalLink className="w-3 h-3 text-[var(--orange-brand)]" />
-                          <span>Portal</span>
-                        </Link>
-
-                        <button
-                          disabled={processing === trip.id}
-                          onClick={() => setActiveChatTrip(trip)}
-                          className="p-1 rounded shrink-0 transition-colors text-[var(--orange-brand)] hover:bg-foreground/5"
-                          aria-label="Chat"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                        </button>
-
-                        {!trip.driverArrivedAt && (
-                          <button
-                            disabled={processing === trip.id}
-                            onClick={() => handleArrive(trip.id)}
-                            className="text-[11px] font-semibold px-2 py-1 rounded text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors cursor-pointer"
-                          >
-                            {processing === trip.id ? '…' : "I've Arrived 📍"}
-                          </button>
-                        )}
-
-                        {!trip.driverDepartedAt ? (
-                          <button
-                            disabled={processing === trip.id}
-                            onClick={() => handleDepart(trip.id)}
-                            className="text-[11px] font-extrabold px-2.5 py-1 rounded text-white shadow-sm transition-opacity hover:opacity-90 cursor-pointer"
-                            style={{ background: 'var(--orange-brand)' }}
-                          >
-                            {processing === trip.id ? '…' : 'Take Off 🚀'}
-                          </button>
-                        ) : (
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-500 border border-amber-500/20 flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
-                            En Route 🚗💨
-                          </span>
-                        )}
-
-                        <button
-                          disabled={processing === trip.id}
-                          onClick={() => handleComplete(trip.id)}
-                          className="text-[11px] font-semibold px-2.5 py-1 shrink-0 cursor-pointer"
-                          style={{ background: 'var(--border)', color: '#22c55e', borderRadius: '4px', border: '1px solid rgba(34,197,94,0.2)' }}
-                        >
-                          {processing === trip.id ? '…' : 'Mark Complete'}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <>
+                  <VolumeX className="w-3.5 h-3.5" />
+                  Voice Announce: OFF
+                </>
               )}
+            </button>
+          </div>
+
+          {requests.length === 0 ? (
+            <div className="rounded-2xl p-8 text-center border-2 border-dashed border-border flex flex-col items-center justify-center bg-card">
+              <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-3 text-muted-foreground">
+                <Car className="w-6 h-6" />
+              </div>
+              <p className="text-sm font-bold text-foreground">No new ride requests right now</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                When riders book trips, unmissable mission cards with high-contrast pickup spots and departure times will appear here.
+              </p>
             </div>
-</div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {requests.map((req: any) => {
+                const clashInfo = checkTripClash(req, confirmedTrips)
+                return (
+                  <HighVisibilityTripCard
+                    key={req.id}
+                    trip={req}
+                    isConfirmed={false}
+                    processing={processing === req.id}
+                    clashInfo={clashInfo}
+                    onAccept={handleOpenCommitment}
+                    onDecline={(id) => setDeclined(d => [...d, id])}
+                  />
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* ── Upcoming Confirmed Trips (High Visibility Cards) ── */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3.5">
+            <p className="text-xs font-black uppercase tracking-[0.08em] text-foreground">
+              Upcoming Confirmed Trips
+            </p>
+            {confirmedTrips.length > 0 && (
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                {confirmedTrips.length} Confirmed
+              </span>
+            )}
+          </div>
+
+          {confirmedTrips.length === 0 ? (
+            <div className="rounded-2xl p-8 text-center border border-border bg-card">
+              <p className="text-xs font-medium text-muted-foreground">No confirmed trips scheduled yet.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {confirmedTrips.map((trip: any) => (
+                <HighVisibilityTripCard
+                  key={trip.id}
+                  trip={trip}
+                  isConfirmed={true}
+                  processing={processing === trip.id}
+                  onArrive={handleArrive}
+                  onDepart={handleDepart}
+                  onComplete={handleComplete}
+                  onOpenChat={(t) => setActiveChatTrip(t)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Zero-Excuses Trip Commitment Modal ── */}
+      <TripCommitmentModal
+        trip={tripForCommitment}
+        isOpen={!!tripForCommitment}
+        isLoading={!!processing}
+        onConfirm={handleConfirmCommitment}
+        onCancel={() => setTripForCommitment(null)}
+      />
+
       {activeChatTrip && (
         <ChatModal
           tripId={activeChatTrip.id}
