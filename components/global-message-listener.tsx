@@ -57,8 +57,6 @@ export function GlobalMessageListener() {
       if (pusherClient) {
         channel.unbind('incoming-message', handleIncoming)
         fallbackChannel.unbind('incoming-message', handleIncoming)
-        pusherClient.unsubscribe(channelName)
-        pusherClient.unsubscribe(fallbackChannelName)
       }
     }
   }, [session?.user?.id])

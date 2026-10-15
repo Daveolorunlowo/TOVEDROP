@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle
+  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle, BellRing
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -14,6 +14,8 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ChatModal } from '@/components/chat-modal'
 import { checkTripClash } from '@/lib/trip-schedule'
+import { useDriverAlarms } from '@/hooks/useDriverAlarms'
+import { AlarmModal } from '@/components/driver/AlarmModal'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg var(--background) / surface var(--surface-card) / border var(--border-default) / divider var(--border)
@@ -72,6 +74,11 @@ export default function DriverDashboardPage() {
   const [declined, setDeclined] = useState<string[]>([])
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
+
+  const { activeAlarm, dismissAlarm, triggerTestAlarm } = useDriverAlarms(
+    data?.confirmedTrips || [],
+    data?.driverProfile || { alarmEnabled: true, alarmTimes: [30, 10, 2], alarmSound: 'loud', alarmVibrate: true }
+  )
 
   const fetchData = async () => {
     const start = Date.now()
@@ -560,6 +567,15 @@ export default function DriverDashboardPage() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={triggerTestAlarm}
+              className="text-xs font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-sm flex items-center gap-1.5 transition-all bg-[var(--orange-brand)]/15 border border-[var(--orange-brand)]/40 text-[var(--orange-brand)] hover:bg-[var(--orange-brand)]/25 cursor-pointer"
+              title="Test continuous, insanely loud inbuilt alarm"
+            >
+              <BellRing className="w-3.5 h-3.5 animate-pulse" />
+              Test Inbuilt Alarm
+            </button>
             <Link
               href="/driver/earnings"
               className="text-xs font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-sm transition-opacity hover:opacity-90"
@@ -962,6 +978,31 @@ export default function DriverDashboardPage() {
           currentUserId={activeChatTrip.driverId}
           otherPartyName={activeChatTrip.rider?.name ?? 'Rider'}
           onClose={() => setActiveChatTrip(null)}
+        />
+      )}
+      {activeAlarm && (
+        <AlarmModal
+          trip={activeAlarm.trip}
+          minutesBefore={activeAlarm.minutesBefore}
+          alarmSound={data?.driverProfile?.alarmSound || 'loud'}
+          alarmVibrate={data?.driverProfile?.alarmVibrate ?? true}
+          alarmDuration={60}
+          onDismiss={dismissAlarm}
+          onSnooze={async () => {
+            try {
+              await fetch('/api/alarms/snooze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  tripId: activeAlarm.trip.id,
+                  minutesBefore: activeAlarm.minutesBefore
+                })
+              })
+            } catch (err) {
+              console.error('Failed to snooze', err)
+            }
+            dismissAlarm()
+          }}
         />
       )}
     </div>

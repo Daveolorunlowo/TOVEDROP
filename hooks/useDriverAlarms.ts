@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { stopAllAlarms } from '@/lib/alarm-sounds';
 
 export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
   const [activeAlarm, setActiveAlarm] = useState<any>(null);
@@ -11,19 +12,24 @@ export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
 
       for (const trip of driverTrips) {
         if (trip.status !== 'CONFIRMED') continue;
-        const scheduledAt = new Date(`${trip.date}T${trip.time}`);
-        // Handle timezone/parsing depending on how date/time is stored
-        // Ensure scheduledAt is a valid date
+
+        let scheduledAt = new Date(`${trip.date}T${trip.time}`);
         if (isNaN(scheduledAt.getTime())) {
-            // fallback if it's stored as full ISO string in another field or just ignore
-            continue;
+          scheduledAt = new Date(`${trip.date} ${trip.time}`);
         }
+        if (isNaN(scheduledAt.getTime())) {
+          scheduledAt = new Date(trip.date);
+        }
+        if (isNaN(scheduledAt.getTime())) continue;
 
         const minsUntil = (scheduledAt.getTime() - now.getTime()) / 60000;
+        const thresholds = Array.isArray(alarmPrefs.alarmTimes)
+          ? alarmPrefs.alarmTimes
+          : [30, 10, 2];
 
-        for (const threshold of alarmPrefs.alarmTimes) {
-          // Check if we're within a 30-second window of this threshold
-          if (minsUntil <= threshold && minsUntil > threshold - 0.5) {
+        for (const threshold of thresholds) {
+          // Check if we're within a 45-second window of this threshold
+          if (minsUntil <= threshold && minsUntil > threshold - 0.75) {
             try {
               const res = await fetch(
                 `/api/alarms/check?tripId=${trip.id}&minutes=${threshold}`
@@ -45,33 +51,37 @@ export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
             } catch (err) {
               console.error('Failed to check alarm log', err);
             }
-          } else {
-             // Handle snoozed re-trigger logic here if needed
-             // but we'll fetch /api/alarms/check which can return whether it's snoozed and expired
           }
         }
       }
     };
 
-    const interval = setInterval(check, 30000);
+    const interval = setInterval(check, 15000); // Check every 15s for precision
     check(); // run immediately on mount
     return () => clearInterval(interval);
   }, [driverTrips, alarmPrefs]);
 
   const triggerTestAlarm = () => {
+    const now = new Date();
+    const departure = new Date(now.getTime() + 10 * 60000);
     setActiveAlarm({
       trip: {
         id: 'test-trip-id',
-        date: new Date().toISOString().split('T')[0],
-        time: '12:00',
+        date: departure.toISOString().split('T')[0],
+        time: departure.toTimeString().slice(0, 5),
         status: 'CONFIRMED',
-        pickupLocation: 'Test Location',
-        dropoffLocation: 'Test Dropoff',
-        rider: { name: 'Test Rider', phone: '555-0000' }
+        pickup: 'Main Campus Gate & Commercial Strip',
+        destination: 'Student Hostels & Residential Quarters',
+        rider: { name: 'Precious Adebayo' }
       },
-      minutesBefore: 30
+      minutesBefore: 10
     });
   };
 
-  return { activeAlarm, dismissAlarm: () => setActiveAlarm(null), triggerTestAlarm };
+  const dismissAlarm = () => {
+    stopAllAlarms();
+    setActiveAlarm(null);
+  };
+
+  return { activeAlarm, dismissAlarm, triggerTestAlarm };
 }

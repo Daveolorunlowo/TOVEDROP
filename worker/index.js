@@ -7,16 +7,18 @@ self.addEventListener('push', function (event) {
       data = { title: 'TOVEDROP', message: event.data.text() }
     }
     
+    const title = data.title || 'TOVEDROP'
+    const body = data.message || data.body || 'You have a new update.'
+    const url = data.url || '/'
+
     event.waitUntil(
-      self.registration.showNotification(data.title || 'TOVEDROP', {
-        body: data.message,
-        icon: '/icon-192x192.png',
-        badge: '/icon-192x192.png',
-        requireInteraction: true, // Forces the native popup to stay on screen
+      self.registration.showNotification(title, {
+        body,
+        icon: data.icon || '/icon-192x192.png',
+        badge: data.badge || '/icon-192x192.png',
+        requireInteraction: true,
         vibrate: [200, 100, 200, 100, 200],
-        data: {
-          url: data.url || '/'
-        }
+        data: { url }
       })
     )
   }

@@ -141,12 +141,22 @@ export default function RiderSettingsPage() {
 
   const handleTestPush = async () => {
     setTestingPush(true)
-    setPushMsg('Sending test notification...')
+    setPushMsg('Ensuring push registration...')
     try {
       await subscribeToPushNotifications()
-      const res = await fetch('/api/user/push/test', { method: 'POST' })
-      const data = await res.json()
-      if (res.ok) {
+      let res = await fetch('/api/user/push/test', { method: 'POST' })
+      let data = await res.json()
+
+      // If the server detected an outdated or missing subscription, force resubscribe and retry once
+      if (!res.ok && data.requiresResubscribe) {
+        setPushMsg('Updating device registration with active server key...')
+        await subscribeToPushNotifications({ force: true })
+        res = await fetch('/api/user/push/test', { method: 'POST' })
+        data = await res.json()
+      }
+
+      if (res.ok && data.success) {
+        setPushEnabled(true)
         setPushMsg('✅ Test notification sent! Check your screen/banner.')
       } else {
         setPushMsg(`❌ ${data.message || 'Could not send test notification.'}`)
@@ -155,7 +165,7 @@ export default function RiderSettingsPage() {
       setPushMsg(`❌ Error: ${e.message || 'Failed to send test notification.'}`)
     } finally {
       setTestingPush(false)
-      setTimeout(() => setPushMsg(''), 6000)
+      setTimeout(() => setPushMsg(''), 7000)
     }
   }
 
@@ -168,8 +178,8 @@ export default function RiderSettingsPage() {
         setTimeout(() => setPushMsg(''), 6000)
         return
       }
-      setPushMsg('Requesting permission...')
-      const success = await subscribeToPushNotifications()
+      setPushMsg('Registering device notifications...')
+      const success = await subscribeToPushNotifications({ force: true })
       if (success) {
         setPushEnabled(true)
         setPermissionDenied(false)

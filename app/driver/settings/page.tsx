@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -18,6 +18,7 @@ import {
   AlertCircle,
   ExternalLink,
   Play,
+  Square,
   Smartphone,
   ShieldCheck,
   Star
@@ -25,6 +26,7 @@ import {
 import { ThemeToggle } from '@/components/theme-toggle'
 import { SignOutButton } from '@/components/sign-out-button'
 import { subscribeToPushNotifications } from '@/lib/push-client'
+import { startContinuousAlarm, stopAllAlarms, AlarmController } from '@/lib/alarm-sounds'
 
 const VEHICLE_TYPES = [
   { id: 'Sedan', label: 'Sedan' },
@@ -61,10 +63,12 @@ const ALARM_INTERVAL_OPTIONS = [
 ]
 
 const ALARM_SOUNDS = [
-  { id: 'default', label: 'High Priority Alert (Brisk)', desc: 'Sharp triple pulse tone' },
-  { id: 'chime', label: 'Chime Bell (Melodic)', desc: 'Smooth ascending chime' },
-  { id: 'radar', label: 'Radar Sweep (Repeated)', desc: 'Periodic rhythmic sonar ping' },
-  { id: 'gentle', label: 'Gentle Wakeup (Subtle)', desc: 'Warm bell tone' }
+  { id: 'loud', label: 'Emergency Siren (Insanely Loud)', desc: 'Dual-tone oscillating siren with maximum loudness limiter' },
+  { id: 'urgent', label: 'Collision Alert (High Strobe)', desc: 'Rapid piercing multi-burst horn' },
+  { id: 'default', label: 'High Priority Alert (Brisk)', desc: 'Sharp quad-pulse dispatch tone' },
+  { id: 'radar', label: 'Tactical Sonar Sweep', desc: 'Deep penetrating swept sonar ping' },
+  { id: 'chime', label: 'Power Chime (Harmonic)', desc: 'Multi-harmonic bright cascading chime' },
+  { id: 'gentle', label: 'Gentle Wakeup', desc: 'Ascending melodic chime' }
 ]
 
 const NIGERIAN_BANKS = [
@@ -79,71 +83,6 @@ const NIGERIAN_BANKS = [
   'Wema Bank / ALAT',
   'Zenith Bank'
 ]
-
-// Pure Web Audio API tone generator for instant driver sound feedback
-function playAlarmTone(type: string) {
-  if (typeof window === 'undefined') return
-  try {
-    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext
-    if (!AudioCtx) return
-    const ctx = new AudioCtx()
-    const now = ctx.currentTime
-
-    if (type === 'chime') {
-      [523.25, 659.25, 783.99].forEach((freq, idx) => {
-        const osc = ctx.createOscillator()
-        const gain = ctx.createGain()
-        osc.type = 'sine'
-        osc.frequency.setValueAtTime(freq, now + idx * 0.15)
-        gain.gain.setValueAtTime(0.18, now + idx * 0.15)
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.15 + 0.6)
-        osc.connect(gain)
-        gain.connect(ctx.destination)
-        osc.start(now + idx * 0.15)
-        osc.stop(now + idx * 0.15 + 0.6)
-      })
-    } else if (type === 'radar') {
-      [880, 880, 880].forEach((freq, idx) => {
-        const osc = ctx.createOscillator()
-        const gain = ctx.createGain()
-        osc.type = 'square'
-        osc.frequency.setValueAtTime(freq, now + idx * 0.16)
-        gain.gain.setValueAtTime(0.1, now + idx * 0.16)
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.16 + 0.12)
-        osc.connect(gain)
-        gain.connect(ctx.destination)
-        osc.start(now + idx * 0.16)
-        osc.stop(now + idx * 0.16 + 0.12)
-      })
-    } else if (type === 'gentle') {
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.type = 'triangle'
-      osc.frequency.setValueAtTime(440, now)
-      gain.gain.setValueAtTime(0.2, now)
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2)
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      osc.start(now)
-      osc.stop(now + 1.2)
-    } else {
-      [750, 950, 1150].forEach((freq, idx) => {
-        const osc = ctx.createOscillator()
-        const gain = ctx.createGain()
-        osc.type = 'sawtooth'
-        osc.frequency.setValueAtTime(freq, now + idx * 0.12)
-        gain.gain.setValueAtTime(0.12, now + idx * 0.12)
-        gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.1)
-        osc.connect(gain)
-        gain.connect(ctx.destination)
-        osc.start(now + idx * 0.12)
-        osc.stop(now + idx * 0.12 + 0.1)
-      })
-    }
-  } catch (err) {
-    console.error('Audio playback error', err)
-  }
-}
 
 export default function DriverSettingsPage() {
   const router = useRouter()
@@ -280,27 +219,69 @@ export default function DriverSettingsPage() {
     })
   }
 
-  // Preview sound
-  const handlePlaySound = (soundId: string) => {
-    setPlayingTone(true)
-    playAlarmTone(soundId)
-    if (alarmVibrate && typeof navigator !== 'undefined' && navigator.vibrate) {
-      navigator.vibrate([150, 80, 150])
+  const [activeTestingSound, setActiveTestingSound] = useState<string | null>(null)
+  const testAlarmControllerRef = useRef<AlarmController | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (testAlarmControllerRef.current) {
+        testAlarmControllerRef.current.stop()
+        testAlarmControllerRef.current = null
+      }
+      stopAllAlarms()
     }
-    setTimeout(() => setPlayingTone(false), 800)
+  }, [])
+
+  // Preview sound continuously with stop toggle
+  const handleToggleSoundPreview = (soundId: string) => {
+    if (activeTestingSound === soundId) {
+      if (testAlarmControllerRef.current) {
+        testAlarmControllerRef.current.stop()
+        testAlarmControllerRef.current = null
+      }
+      setActiveTestingSound(null)
+      return
+    }
+
+    if (testAlarmControllerRef.current) {
+      testAlarmControllerRef.current.stop()
+      testAlarmControllerRef.current = null
+    }
+
+    setActiveTestingSound(soundId)
+    testAlarmControllerRef.current = startContinuousAlarm({
+      type: soundId,
+      duration: 30, // 30s continuous preview
+      vibrate: alarmVibrate,
+      volumeBoost: true,
+      onStop: () => {
+        setActiveTestingSound(null)
+        testAlarmControllerRef.current = null
+      }
+    })
   }
 
   const [testingPush, setTestingPush] = useState(false)
 
   const handleTestPush = async () => {
     setTestingPush(true)
-    setPushMessage('Sending test push alert...')
+    setPushMessage('Ensuring push registration...')
     try {
       await subscribeToPushNotifications()
-      const res = await fetch('/api/user/push/test', { method: 'POST' })
-      const data = await res.json()
-      if (res.ok) {
-        setPushMessage('✅ Test notification sent! Check your device screen.')
+      let res = await fetch('/api/user/push/test', { method: 'POST' })
+      let data = await res.json()
+
+      // If the server detected an outdated or missing subscription, force resubscribe and retry once
+      if (!res.ok && data.requiresResubscribe) {
+        setPushMessage('Updating device registration with active server key...')
+        await subscribeToPushNotifications({ force: true })
+        res = await fetch('/api/user/push/test', { method: 'POST' })
+        data = await res.json()
+      }
+
+      if (res.ok && data.success) {
+        setPushEnabled(true)
+        setPushMessage('✅ Test notification sent! Check your device banner or notification shade.')
       } else {
         setPushMessage(`❌ ${data.message || 'Could not send test notification.'}`)
       }
@@ -308,7 +289,7 @@ export default function DriverSettingsPage() {
       setPushMessage(`❌ Error: ${e.message || 'Failed to send test push.'}`)
     } finally {
       setTestingPush(false)
-      setTimeout(() => setPushMessage(''), 6000)
+      setTimeout(() => setPushMessage(''), 7000)
     }
   }
 
@@ -323,8 +304,8 @@ export default function DriverSettingsPage() {
         return
       }
 
-      setPushMessage('Requesting device permission...')
-      const success = await subscribeToPushNotifications()
+      setPushMessage('Registering device notifications...')
+      const success = await subscribeToPushNotifications({ force: true })
       if (success) {
         setPushEnabled(true)
         setPushMessage('Push notifications enabled successfully! 🔔')
@@ -762,10 +743,16 @@ export default function DriverSettingsPage() {
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold mb-2.5">Alarm Tone & Sound</label>
+                        <div className="flex items-center justify-between mb-2.5">
+                          <label className="block text-xs font-semibold">Alarm Tone & Sound</label>
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            🔊 Insanely High Gain Active
+                          </span>
+                        </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {ALARM_SOUNDS.map(sound => {
                             const isSelected = alarmSound === sound.id
+                            const isPlayingThis = activeTestingSound === sound.id
                             return (
                               <div
                                 key={sound.id}
@@ -776,8 +763,15 @@ export default function DriverSettingsPage() {
                                     : 'bg-background border-border hover:border-border/80'
                                 }`}
                               >
-                                <div>
-                                  <p className="text-xs font-bold">{sound.label}</p>
+                                <div className="pr-2">
+                                  <div className="flex items-center gap-1.5">
+                                    <p className="text-xs font-bold">{sound.label}</p>
+                                    {isPlayingThis && (
+                                      <span className="text-[10px] text-red-400 font-bold animate-pulse">
+                                        ● Ringing...
+                                      </span>
+                                    )}
+                                  </div>
                                   <p className="text-[11px] text-muted-foreground">{sound.desc}</p>
                                 </div>
                                 <button
@@ -785,12 +779,20 @@ export default function DriverSettingsPage() {
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     setAlarmSound(sound.id)
-                                    handlePlaySound(sound.id)
+                                    handleToggleSoundPreview(sound.id)
                                   }}
-                                  className="w-8 h-8 rounded-lg bg-card border border-border flex items-center justify-center text-foreground hover:text-[var(--orange-brand)] transition-colors shrink-0"
-                                  title="Test Sound"
+                                  className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all shrink-0 cursor-pointer ${
+                                    isPlayingThis
+                                      ? 'bg-red-500 text-white border-red-600 animate-pulse'
+                                      : 'bg-card border-border text-foreground hover:text-[var(--orange-brand)]'
+                                  }`}
+                                  title={isPlayingThis ? 'Stop Alarm Preview' : 'Test Alarm Continuous Playback'}
                                 >
-                                  <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                                  {isPlayingThis ? (
+                                    <Square className="w-3.5 h-3.5 fill-current" />
+                                  ) : (
+                                    <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                                  )}
                                 </button>
                               </div>
                             )

@@ -18,19 +18,31 @@ export async function POST(req: Request) {
     if (subscriptions.length === 0) {
       return NextResponse.json({
         success: false,
-        message: 'No push subscription found on server. Please toggle notification permissions in Settings or your browser first.'
+        requiresResubscribe: true,
+        message: 'No push subscription found on server. Please enable notifications on this device first.'
       }, { status: 404 })
     }
 
-    await sendPushNotification(session.user.id, {
+    const result = await sendPushNotification(session.user.id, {
       title: 'TOVEDROP Notifications Active! 🔔',
       message: 'Your device is successfully connected. You will receive instant live ride updates!',
       url: '/dashboard'
     })
 
+    if (result.sent === 0) {
+      return NextResponse.json({
+        success: false,
+        requiresResubscribe: true,
+        message: result.pruned > 0
+          ? 'Device push subscription had expired credentials and was reset. Please tap Send Test Alert again to re-sync.'
+          : 'Could not deliver test notification to your device. Please ensure notifications are enabled in your OS settings.',
+        details: result
+      }, { status: 400 })
+    }
+
     return NextResponse.json({
       success: true,
-      message: `Test notification sent to ${subscriptions.length} registered device(s)!`
+      message: `Test notification sent to ${result.sent} registered device(s)!`
     })
   } catch (error: any) {
     console.error('Error sending test push notification', error)

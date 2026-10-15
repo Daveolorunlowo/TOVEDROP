@@ -1,68 +1,10 @@
-import webpush from 'web-push'
-import prisma from '@/lib/prisma'
-import { logger } from '@/lib/logger'
-
-const cleanKey = (key: string) => key.replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_')
-
-const VAPID_PUBLIC_KEY = cleanKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '')
-const VAPID_PRIVATE_KEY = cleanKey(process.env.VAPID_PRIVATE_KEY || '')
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-
-if (VAPID_PUBLIC_KEY && VAPID_PRIVATE_KEY) {
-  try {
-    webpush.setVapidDetails(
-      `mailto:support@tovedrop.com`,
-      VAPID_PUBLIC_KEY,
-      VAPID_PRIVATE_KEY
-    )
-  } catch (err) {
-    logger.warn('Failed to set VAPID details for web-push (keys might be malformed or dummy build keys)', { action: 'set_vapid_details', error: err })
-  }
-}
+import { sendPushNotification } from './push'
 
 export async function sendWebPush(userId: string, title: string, message: string, url: string = '/') {
-  if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
-    logger.warn('Web Push not sent, missing VAPID keys', { action: 'send_web_push', userId, title })
-    return
-  }
-
-  try {
-    const subscriptions = await prisma.pushSubscription.findMany({
-      where: { userId }
-    })
-
-    if (subscriptions.length === 0) {
-      logger.info('No push subscriptions found for user', { action: 'send_web_push', userId })
-      return
-    }
-
-    const payload = JSON.stringify({
-      title,
-      message,
-      url: url.startsWith('http') ? url : `${APP_URL}${url}`
-    })
-
-    const sendPromises = subscriptions.map(async (sub) => {
-      try {
-        const pushSubscription = {
-          endpoint: sub.endpoint,
-          keys: JSON.parse(sub.keys)
-        }
-        await webpush.sendNotification(pushSubscription, payload)
-        logger.info('Web push sent successfully', { action: 'send_web_push', userId, endpoint: sub.endpoint })
-      } catch (err: any) {
-        if (err.statusCode === 410 || err.statusCode === 404 || err.statusCode === 403 || err.statusCode === 401) {
-          // Subscription has expired, revoked, or VAPID credentials mismatched — prune it
-          await prisma.pushSubscription.delete({ where: { endpoint: sub.endpoint } }).catch(() => {})
-          logger.info('Deleted expired/invalid push subscription', { action: 'delete_subscription', userId, endpoint: sub.endpoint, status: err.statusCode })
-        } else {
-          logger.error('Failed to send push notification to an endpoint', err, { action: 'send_web_push', userId, endpoint: sub.endpoint })
-        }
-      }
-    })
-
-    await Promise.all(sendPromises)
-  } catch (error) {
-    logger.error('Failed to dispatch web push notifications', error, { action: 'dispatch_web_push', userId })
-  }
+  return sendPushNotification(userId, {
+    title,
+    message,
+    body: message,
+    url
+  })
 }
