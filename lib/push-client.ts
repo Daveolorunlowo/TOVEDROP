@@ -1,3 +1,5 @@
+const cleanKey = (key: string) => (key ? key.trim().replace(/^["']|["']$/g, '').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_') : '')
+
 /**
  * Requests notification permission and subscribes to push notifications.
  * Returns true if successfully subscribed, false otherwise.
@@ -53,13 +55,13 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
   }
 
   // Fetch the active server VAPID public key dynamically
-  let vapidPublicKey = (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '').trim()
+  let vapidPublicKey = cleanKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '')
   try {
     const keyRes = await fetch('/api/user/push/vapid-key')
     if (keyRes.ok) {
       const keyData = await keyRes.json()
       if (keyData.publicKey) {
-        vapidPublicKey = keyData.publicKey.trim()
+        vapidPublicKey = cleanKey(keyData.publicKey)
       }
     }
   } catch (err) {
@@ -101,7 +103,7 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
 
       if (rawKey) {
         const existingKeyB64 = arrayBufferToBase64Url(rawKey)
-        if (existingKeyB64 === vapidPublicKey) {
+        if (cleanKey(existingKeyB64) === cleanKey(vapidPublicKey)) {
           keyMatches = true
         }
       }

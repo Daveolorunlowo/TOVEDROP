@@ -101,17 +101,36 @@ export const POST = withValidation(acceptTripSchema, async (req: NextRequest, da
  for (const trip of updatedTrips) {
  const title = 'Ride Accepted! 🎉'
  const message = `${driverName} is on the way in a ${vehicle} (⭐ ${rating}).\nPickup: ${trip.time} at ${trip.pickup}`
- const url = `/trip/${shareToken}`
+ const url = `/dashboard/trips/${trip.id}`
  
- sendWebPush(trip.riderId, title, message, url)
+ // Await Web Push to guarantee delivery before API response finishes
+ await sendWebPush(trip.riderId, title, message, url).catch(err => console.error("Web Push accept failed:", err))
  
- await pusherServer.trigger(`user-trips-${trip.riderId}`, 'trip-accepted', {
- tripId: trip.id,
- driverName,
- vehicle,
- rating,
- isPool: trip.isPool
- }).catch(err => console.error("Pusher trigger failed:", err))
+ if (pusherServer) {
+   await pusherServer.trigger(`user-trips-${trip.riderId}`, 'trip-accepted', {
+     tripId: trip.id,
+     driverName,
+     vehicle,
+     rating,
+     isPool: trip.isPool
+   }).catch(err => console.error("Pusher user-trips trigger failed:", err))
+
+   await pusherServer.trigger(`user-${trip.riderId}`, 'trip-accepted', {
+     tripId: trip.id,
+     driverName,
+     vehicle,
+     rating,
+     isPool: trip.isPool
+   }).catch(err => console.error("Pusher user trigger failed:", err))
+
+   await pusherServer.trigger(`trip-${trip.id}`, 'trip-accepted', {
+     tripId: trip.id,
+     driverName,
+     vehicle,
+     rating,
+     isPool: trip.isPool
+   }).catch(err => console.error("Pusher trip trigger failed:", err))
+ }
 
  // Schedule driver alarm push notifications
  if (driverProfile.alarmEnabled && driverProfile.alarmTimes?.length > 0) {

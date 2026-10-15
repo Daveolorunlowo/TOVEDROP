@@ -136,7 +136,7 @@ export async function POST(req: Request) {
  const title = 'You have arrived! 🎉'
  const message = `Hope you enjoyed your ride. Don't forget to review your trip!`
  const url = `/dashboard`
- sendWebPush(result.trip.riderId, title, message, url)
+ await sendWebPush(result.trip.riderId, title, message, `/rate/${result.trip.id}`).catch(err => console.error("Web Push complete failed:", err))
   // Trigger pusher event to notify rider in real-time
   if (pusherServer) {
     await pusherServer.trigger(`trip-${result.trip.id}`, 'trip-completed', {

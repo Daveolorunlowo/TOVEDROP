@@ -8,14 +8,14 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/clear')
 
- const redirectPath = getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null)
- if (redirectPath !== '/dashboard') {
- redirect(redirectPath)
- }
+  const redirectPath = getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null)
+  if (redirectPath !== '/dashboard') {
+    redirect(redirectPath)
+  }
 
- return (
- <DashboardLayoutClient>
- {children}
- </DashboardLayoutClient>
- )
+  return (
+    <DashboardLayoutClient userId={session.user.id}>
+      {children}
+    </DashboardLayoutClient>
+  )
 }

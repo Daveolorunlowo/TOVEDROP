@@ -5,7 +5,6 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { redirect } from 'next/navigation'
-import { TripPoller } from '@/components/trip-poller'
 import { TripList } from '@/components/dashboard/TripList'
 
 // ─── Design tokens ─────────────────────────────────────
@@ -46,8 +45,6 @@ export default async function DashboardPage() {
 
   return (
     <div style={{ minHeight: '100vh' }}>
-      <TripPoller userId={user.id} />
-
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-7 md:py-8 landscape:py-3">
 
         {/* ── Header ── */}

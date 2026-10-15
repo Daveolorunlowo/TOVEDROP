@@ -88,7 +88,9 @@ export function TripProgressStepper({ trip }: TripProgressStepperProps) {
     ? 4
     : trip.driverArrivedAt
     ? 3
-    : 2
+    : trip.status === 'CONFIRMED'
+    ? 2
+    : 1
 
   const steps = [
     {
@@ -190,7 +192,7 @@ export function TripProgressStepper({ trip }: TripProgressStepperProps) {
 
       {/* ── 4-Stage Campus Stepper Grid ── */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 relative">
-        {steps.map((s, idx) => {
+        {steps.map((s) => {
           const Icon = s.icon
           const isDone = s.isDone
           const isActive = s.isActive
@@ -198,48 +200,59 @@ export function TripProgressStepper({ trip }: TripProgressStepperProps) {
           return (
             <div
               key={s.num}
-              className={`p-3 rounded-xl border transition-all flex sm:flex-col items-center sm:items-start gap-3 sm:gap-2 ${
+              className={`p-3.5 rounded-xl border transition-all flex sm:flex-col items-center sm:items-start gap-3 sm:gap-2.5 ${
                 isActive
-                  ? 'bg-emerald-950/20 border-emerald-500/50 shadow-md ring-1 ring-emerald-500/20'
+                  ? 'bg-emerald-950/30 border-emerald-500/60 shadow-md ring-1 ring-emerald-500/30'
                   : isDone
                   ? 'bg-surface-elevated border-border/80'
                   : 'bg-background/50 border-border/40 opacity-60'
               }`}
             >
-              <div className="flex items-center justify-between w-full">
+              {/* On mobile: Icon is shrink-0 on the left. On sm+: Icon on left, number on right */}
+              <div className="flex items-center justify-between sm:w-full shrink-0 sm:shrink">
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold ${
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold ${
                     isActive
                       ? 'bg-emerald-500 text-white shadow-sm animate-pulse'
                       : isDone
-                      ? 'bg-emerald-500/20 text-emerald-400'
-                      : 'bg-muted text-muted-foreground'
+                      ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-muted text-muted-foreground border border-border'
                   }`}
                 >
                   {isDone && !isActive ? (
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <Check className="w-4 h-4 stroke-[3]" />
                   ) : (
-                    <Icon className="w-3.5 h-3.5" />
+                    <Icon className="w-4 h-4" />
                   )}
                 </div>
 
-                <span className="hidden sm:inline text-[9px] font-mono text-muted-foreground">
+                <span className="hidden sm:inline text-[10px] font-mono font-bold text-muted-foreground">
                   0{s.num}
                 </span>
               </div>
 
+              {/* Title & Description — min-w-0 flex-1 expands to fill mobile row width */}
               <div className="min-w-0 flex-1">
                 <p
-                  className={`text-xs font-extrabold truncate ${
-                    isActive ? 'text-emerald-400' : isDone ? 'text-foreground' : 'text-muted-foreground'
+                  className={`text-xs font-extrabold ${
+                    isActive
+                      ? 'text-emerald-400'
+                      : isDone
+                      ? 'text-foreground'
+                      : 'text-muted-foreground'
                   }`}
                 >
                   {s.title}
                 </p>
-                <p className="text-[10px] text-muted-foreground leading-tight truncate sm:whitespace-normal mt-0.5">
+                <p className="text-[11px] text-muted-foreground leading-tight mt-0.5 line-clamp-2 sm:line-clamp-none">
                   {s.desc}
                 </p>
               </div>
+
+              {/* Step number badge on mobile right side */}
+              <span className="sm:hidden text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-muted/50 text-muted-foreground shrink-0">
+                0{s.num}
+              </span>
             </div>
           )
         })}
