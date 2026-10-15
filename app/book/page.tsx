@@ -15,6 +15,7 @@ import { LocationSearchInput } from '@/components/shared/LocationSearchInput'
 import { getCampusLandmarks } from '@/lib/campus-landmarks'
 import { ConfirmModal } from '@/components/shared/ConfirmModal'
 import { useDropsBalance } from '@/hooks/useDropsBalance'
+import { ComfortableTimePicker, formatTimeFriendly } from '@/components/booking/ComfortableTimePicker'
 
 const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
 
@@ -79,10 +80,24 @@ function BookWizard() {
  setTimeStr(String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'))
  }
 
- // Effect to update time automatically if leaving now
+ // Effect to update time automatically if leaving now vs scheduled
  useEffect(() => {
  if (!isScheduled) {
  setQuickTime(0)
+ } else {
+ const d = new Date()
+ d.setHours(d.getHours() + 2)
+ let m = Math.ceil(d.getMinutes() / 15) * 15
+ if (m >= 60) {
+ d.setHours(d.getHours() + 1)
+ m = 0
+ }
+ d.setMinutes(m)
+ const yyyy = d.getFullYear()
+ const mm = String(d.getMonth() + 1).padStart(2, '0')
+ const dd = String(d.getDate()).padStart(2, '0')
+ setDateStr(`${yyyy}-${mm}-${dd}`)
+ setTimeStr(`${String(d.getHours()).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
  }
  }, [isScheduled])
 
@@ -352,51 +367,29 @@ function BookWizard() {
  </div>
  </div>
 
- {isScheduled && (
- <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
- <div className="space-y-1.5">
- <Label htmlFor="date">Date</Label>
- <div className="relative">
- <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
- <Input
- id="date"
- name="date"
- type="date"
- value={dateStr}
- onChange={(e) => setDateStr(e.target.value)}
- className={`pl-10 ${errors.date ? 'border-red-500' : ''}`}
- min={new Date().toISOString().split('T')[0]}
- />
+ {!isScheduled && (
+ <div className="p-4 rounded-2xl bg-surface-elevated border border-border-subtle flex items-start gap-3.5 animate-in fade-in duration-200">
+ <div className="w-9 h-9 rounded-xl bg-[var(--orange-brand)]/10 flex items-center justify-center shrink-0 mt-0.5 border border-[var(--orange-brand)]/20">
+ <Navigation className="w-4 h-4 text-[var(--orange-brand)] animate-pulse" />
  </div>
- {errors.date && <p className="text-xs text-red-600">{errors.date}</p>}
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="time">Time</Label>
- <div className="relative">
- <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
- <Input
- id="time"
- name="time"
- type="time"
- value={timeStr}
- onChange={(e) => setTimeStr(e.target.value)}
- className={`pl-10 ${errors.time ? 'border-red-500' : ''}`}
- />
- </div>
- {errors.time && <p className="text-xs text-red-600">{errors.time}</p>}
+ <div>
+ <p className="text-xs font-bold text-foreground">Instant Pick-Up Activated</p>
+ <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
+ We'll automatically dispatch the closest available driver on campus to your pickup location immediately upon booking. Typical driver arrival: 2–5 minutes.
+ </p>
  </div>
  </div>
  )}
 
  {isScheduled && (
- <div className="space-y-2 animate-in fade-in duration-300">
- <Label className="text-xs text-muted-foreground uppercase tracking-wider">Quick Select</Label>
- <div className="flex flex-wrap gap-2">
- <button type="button" onClick={() => setQuickTime(120)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+2h</button>
- <button type="button" onClick={() => setQuickTime(180)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+3h</button>
- <button type="button" onClick={() => setQuickTime(240)} className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-primary border border-border-subtle hover:bg-border-default transition-colors">+4h</button>
- </div>
- </div>
+ <ComfortableTimePicker
+ dateStr={dateStr}
+ timeStr={timeStr}
+ onDateChange={setDateStr}
+ onTimeChange={setTimeStr}
+ minHoursAhead={2}
+ error={errors.time || errors.date}
+ />
  )}
  </div>
  </div>
@@ -428,7 +421,7 @@ function BookWizard() {
  </div>
  <div className="flex items-center gap-2 text-sm font-semibold">
  <Clock className="w-4 h-4 text-muted-foreground" />
- <span>{timeStr}</span>
+ <span>{formatTimeFriendly(timeStr) || timeStr}</span>
  </div>
  </div>
  </div>
