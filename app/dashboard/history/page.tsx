@@ -2,12 +2,16 @@ import prisma from '@/lib/prisma'
 import { History, ArrowDownToLine, ArrowUpFromLine } from 'lucide-react'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardDropsHistory() {
  const session = await getServerSession(authOptions)
- const userId = session!.user.id
+ if (!session?.user?.id) {
+    redirect('/auth')
+  }
+  const userId = session.user.id
 
  const drops = await prisma.dropTransaction.findMany({
  where: { userId },

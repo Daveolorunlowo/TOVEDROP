@@ -3,12 +3,16 @@ import prisma from '@/lib/prisma'
 import { Car, Clock, MapPin, Search } from 'lucide-react'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/authOptions'
+import { redirect } from 'next/navigation'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardTrips() {
  const session = await getServerSession(authOptions)
- const userId = session!.user.id
+ if (!session?.user?.id) {
+    redirect('/auth')
+  }
+  const userId = session.user.id
 
  const trips = await prisma.trip.findMany({
  where: { riderId: userId },

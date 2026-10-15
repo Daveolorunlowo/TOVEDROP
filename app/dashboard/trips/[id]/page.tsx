@@ -43,6 +43,10 @@ export default async function TripDetailPage({ params }: { params: Promise<{ id:
   const isDriver = trip.driverId === session.user.id
   const isAdmin = session.user.role === 'ADMIN'
 
+  if (isDriver && !isRider) {
+    redirect(`/driver/trips/${tripId}`)
+  }
+
   if (!isRider && !isDriver && !isAdmin) {
     redirect('/dashboard')
   }

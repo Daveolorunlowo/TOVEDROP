@@ -246,7 +246,7 @@ export function HighVisibilityTripCard({
             {isConfirmed && (
               <>
                 <Link
-                  href={`/dashboard/trips/${trip.id}`}
+                  href={`/driver/trips/${trip.id}`}
                   className="px-3 py-1.5 rounded-lg border border-border hover:border-[var(--orange-brand)] transition-colors text-xs font-bold text-foreground flex items-center gap-1 bg-surface-elevated"
                 >
                   <ExternalLink className="w-3.5 h-3.5 text-[var(--orange-brand)]" />

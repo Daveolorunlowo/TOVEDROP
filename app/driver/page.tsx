@@ -109,6 +109,52 @@ export default function DriverDashboardPage() {
     prevRequestIdsRef.current = currentIds
   }, [data?.pendingTrips, voiceAnnounce, declined])
 
+  // Live GPS Location broadcaster for driver
+  useEffect(() => {
+    const driverId = data?.driverProfile?.userId
+    const driverName = data?.driverProfile?.user?.name || 'Driver'
+    if (!driverId || typeof window === 'undefined' || !('geolocation' in navigator)) return
+
+    let watchId: number | null = null
+    let lastSent = 0
+
+    const sendLocation = async (pos: GeolocationPosition) => {
+      const now = Date.now()
+      if (now - lastSent < 8000) return // Throttled to 8 seconds
+      lastSent = now
+
+      try {
+        await fetch('/api/driver/location', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            driverId,
+            driverName,
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            heading: pos.coords.heading || 0,
+            speed: pos.coords.speed || 0,
+            status: data?.confirmedTrips?.length > 0 ? 'ON_TRIP' : 'AVAILABLE'
+          })
+        })
+      } catch (err) {
+        // silent
+      }
+    }
+
+    try {
+      watchId = navigator.geolocation.watchPosition(
+        sendLocation,
+        () => {},
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+      )
+    } catch (e) {}
+
+    return () => {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId)
+    }
+  }, [data?.driverProfile?.userId, data?.driverProfile?.user?.name, data?.confirmedTrips?.length])
+
   const handleOpenCommitment = (trip: any) => {
     setTripForCommitment(trip)
   }

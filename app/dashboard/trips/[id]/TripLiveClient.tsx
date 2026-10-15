@@ -26,6 +26,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { pusherClient } from '@/lib/pusher-client'
 import { SosModal } from '@/components/dashboard/SosModal'
+import { TripProgressStepper } from '@/components/trip/TripProgressStepper'
 
 interface Message {
   id: string
@@ -75,6 +76,13 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const [driverDepartedNotice, setDriverDepartedNotice] = useState(!!initialTrip.driverDepartedAt)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
+  const quickMessages = [
+    "I'm waiting outside 📍",
+    "Coming down in 2 mins 🏃",
+    "I'm by the gate 🚪",
+    "I see your car! 👋"
+  ]
+
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const latestMessageTimeRef = useRef<string | null>(null)
 
@@ -82,6 +90,17 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const driver = trip.driver
   const driverProfile = driver?.driverProfile
   const driverPhone = driverProfile?.phone || driver?.phoneNumber || ''
+
+  const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${trip.shareToken || trip.id}` : ''
+
+  const getWhatsAppShareUrl = () => {
+    const driverName = driver?.name || 'My driver'
+    const plate = driverProfile?.vehiclePlate ? ` (${driverProfile.vehiclePlate})` : ''
+    const text = encodeURIComponent(
+      `Hey! I'm on a TOVEDROP campus ride with ${driverName}${plate}. You can track my live ride status here: ${shareUrl}`
+    )
+    return `https://api.whatsapp.com/send?text=${text}`
+  }
 
   const initials = (name: string) =>
     name ? name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase() : '?'
@@ -354,8 +373,6 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
     }
   }
 
-  const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${trip.shareToken || trip.id}` : ''
-
   return (
     <div style={{ minHeight: '100vh' }} className="text-foreground pb-24">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-5 sm:py-7 md:py-8 landscape:py-3 space-y-6">
@@ -363,12 +380,12 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         {/* ── Top Bar & Back Navigation on Curved Orange Wave ── */}
         <div className="flex items-center justify-between gap-3">
           <Link
-            href="/dashboard"
+            href={isRider ? "/dashboard" : "/driver"}
             id="live-trip-back-btn"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-white/95 hover:text-white transition-all drop-shadow-sm group px-3 py-1.5 rounded-lg bg-black/15 hover:bg-black/25 backdrop-blur-md border border-white/15 cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
-            <span>Back to Dashboard</span>
+            <span>{isRider ? "Back to Dashboard" : "Back to Driver Hub"}</span>
           </Link>
 
           <div className="flex items-center gap-2">
@@ -414,6 +431,9 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             </div>
           </div>
         </div>
+
+        {/* ── Real-Time Journey Lifecycle Stepper & Live Countdown ── */}
+        <TripProgressStepper trip={trip} />
 
         {/* ── Driver Progress Banners ── */}
         {driverDepartedNotice ? (
@@ -888,6 +908,20 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 <div ref={messagesEndRef} className="h-1" />
               </div>
 
+              {/* Quick Pre-Set Message Chips */}
+              <div className="px-3 pt-2 pb-1.5 flex items-center gap-1.5 overflow-x-auto no-scrollbar border-t border-border/70" style={{ background: 'var(--surface-elevated)' }}>
+                {quickMessages.map((msg, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => setInputText(msg)}
+                    className="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold bg-card hover:bg-muted text-muted-foreground hover:text-foreground border border-border shadow-xs transition-colors cursor-pointer"
+                  >
+                    {msg}
+                  </button>
+                ))}
+              </div>
+
               {/* Chat Input Field */}
               <div className="p-3 border-t border-border" style={{ background: 'var(--surface-card)' }}>
                 <form onSubmit={handleSendMessage} className="relative flex items-center">
@@ -958,6 +992,17 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 <span>{copiedShare ? 'Copied' : 'Copy'}</span>
               </button>
             </div>
+
+            {/* WhatsApp 1-Click Share Button */}
+            <a
+              href={getWhatsAppShareUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full mt-3 py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] active:scale-[0.98] text-white text-xs font-black flex items-center justify-center gap-2 shadow-sm transition-all"
+            >
+              <MessageCircle className="w-4 h-4 fill-white" />
+              <span>Share via WhatsApp 💬</span>
+            </a>
           </div>
         </div>
       )}

@@ -8,7 +8,10 @@ export const dynamic = 'force-dynamic'
 
 export default async function BuyDropsPage() {
   const session = await getServerSession(authOptions)
-  const userId = session!.user.id
+  if (!session?.user?.id) {
+    redirect('/auth')
+  }
+  const userId = session.user.id
 
   const user = await prisma.user.findUnique({
     where: { id: userId }
