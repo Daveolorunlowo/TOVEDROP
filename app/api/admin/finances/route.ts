@@ -140,7 +140,7 @@ export async function GET() {
  estNairaValue = r.dropLots.reduce((sum, lot) => sum + (lot.remainingDrops * lot.pricePerDrop), 0)
  } else {
  // Fallback approximation if no active dropLots found but dropsBalance > 0
- estNairaValue = r.dropsBalance * 45 // Approximating ~45 NGN per drop
+ estNairaValue = r.dropsBalance * 100 // Approximating 100 NGN per drop
  }
 
  ridersNairaValue += estNairaValue

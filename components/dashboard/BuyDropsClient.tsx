@@ -183,7 +183,7 @@ export function BuyDropsClient({
 
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-base font-bold text-foreground">{p.drops} Drops</span>
+                        <span className="text-base font-bold text-foreground">{p.drops} {p.drops === 1 ? 'Drop' : 'Drops'}</span>
                         {p.badge && (
                           <span className="text-[10px] font-bold text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full uppercase tracking-wider">
                             {p.badge}
@@ -226,7 +226,7 @@ export function BuyDropsClient({
             {busy ? (
               <><Loader2 className="w-5 h-5 animate-spin" /> Processing...</>
             ) : (
-              <>Buy {pkg?.drops} Drops for ₦{pkg ? (isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira).toLocaleString() : ''} <ArrowRight className="w-5 h-5" /></>
+              <>Buy {pkg?.drops} {pkg?.drops === 1 ? 'Drop' : 'Drops'} for ₦{pkg ? (isFirstTime ? pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE) : pkg.naira).toLocaleString() : ''} <ArrowRight className="w-5 h-5" /></>
             )}
           </button>
           <p className="text-center text-xs text-foreground/20 mt-3">

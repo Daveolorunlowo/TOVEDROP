@@ -2,7 +2,7 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
-import { DRIVER_COMPLETION_INCENTIVE, DROP_PACKAGES } from "@/lib/config"
+import { DRIVER_COMPLETION_INCENTIVE, DROP_PACKAGES, DROP_PRICE_NAIRA } from "@/lib/config"
 import { sendWebPush } from "@/lib/webpush"
 import { pusherServer } from "@/lib/pusher"
 
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
  const isFreeDrop = bookingFee === 0
  
  if (isFreeDrop) {
- bookingFee = 45 // Assumed base value for promotional/free drops
+ bookingFee = DROP_PRICE_NAIRA // Assumed base value for promotional/free drops
  }
 
  const driverShare = 12 // Flat fee for driver on every ride

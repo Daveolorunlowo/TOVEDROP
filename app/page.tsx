@@ -562,7 +562,7 @@ function DropsSection() {
  </div>
 
  {/* Bento grid */}
- <div className={cn('grid grid-cols-2 lg:grid-cols-4 gap-3 items-end transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
+ <div className={cn('grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 items-end transition-all duration-700', visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8')}>
  {packages.map((pkg, i) => {
  const isPopular = pkg.name === 'Popular'
  return (
@@ -591,15 +591,15 @@ function DropsSection() {
  )}
 
  <p className="text-xs font-bold text-foreground/60 uppercase tracking-widest">{pkg.name}</p>
- <div className="h-6 w-16 bg-foreground/10 rounded-md my-0.5 animate-pulse" aria-hidden="true" />
+ <p className="text-xl font-black text-foreground tracking-tight">{pkg.price}</p>
 
  {/* Drop count */}
  <div>
  <span className="font-extrabold tabular-nums" style={{ fontSize: isPopular ? '56px' : '42px', letterSpacing: '-0.04em', color: 'var(--orange-brand)', lineHeight: 1 }}>
  {pkg.drops}
  </span>
- <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--purple-brand)' }}>Drops</p>
- <p className="text-[11px] text-foreground/30 mt-0.5">= {pkg.bookings} bookings</p>
+ <p className="text-xs font-semibold mt-0.5" style={{ color: 'var(--purple-brand)' }}>{pkg.drops === 1 ? 'Drop' : 'Drops'}</p>
+ <p className="text-[11px] text-foreground/30 mt-0.5">= {pkg.bookings} {pkg.bookings === 1 ? 'booking' : 'bookings'}</p>
  </div>
 
  {/* Coin row */}
@@ -612,13 +612,13 @@ function DropsSection() {
  {pkg.coins > 10 && <span className="text-[10px] text-foreground/30">+more</span>}
  </div>
 
- <button
- type="button"
- className="w-full py-2.5 rounded-xl text-sm font-bold text-foreground transition-all duration-200 hover:scale-[1.03]"
- 
- >
- Buy Now
- </button>
+ <Link
+              href="/dashboard/buy-drops"
+              className="w-full text-center py-2.5 rounded-xl text-sm font-bold text-foreground transition-all duration-200 hover:scale-[1.03]"
+              style={{ background: isPopular ? 'var(--orange-brand)' : 'var(--surface-elevated)' }}
+            >
+              Buy Now
+            </Link>
  </div>
  )
  })}
