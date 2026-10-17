@@ -18,6 +18,10 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().min(1),
   PAYSTACK_SECRET_KEY: z.string().min(1).optional(),
   NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY: z.string().min(1).optional(),
+  FLUTTERWAVE_SECRET_KEY: z.string().min(1).optional(),
+  FLUTTERWAVE_PUBLIC_KEY: z.string().min(1).optional(),
+  FLUTTERWAVE_SECRET_HASH: z.string().min(1).optional(),
+  NEXT_PUBLIC_FLUTTERWAVE_PUBLIC_KEY: z.string().min(1).optional(),
 });
 
 const _env = envSchema.safeParse(process.env);

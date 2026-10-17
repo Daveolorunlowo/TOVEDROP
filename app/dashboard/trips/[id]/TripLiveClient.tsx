@@ -87,9 +87,13 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const latestMessageTimeRef = useRef<string | null>(null)
 
   const isRider = trip.riderId === currentUserId
+  const rider = trip.rider
   const driver = trip.driver
   const driverProfile = driver?.driverProfile
   const driverPhone = driverProfile?.phone || driver?.phoneNumber || ''
+  const riderPhone = rider?.phoneNumber || ''
+  const contactPhone = isRider ? driverPhone : riderPhone
+  const contactLabel = isRider ? 'Driver' : 'Rider'
 
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${trip.shareToken || trip.id}` : ''
 
@@ -457,18 +461,20 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   Taking Off to {trip.destination}! 🚗💨
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {driver?.name || 'Your driver'} is now taking off with you. Have a safe and smooth campus ride!
+                  {isRider
+                    ? `${driver?.name || 'Your driver'} is now taking off with you. Have a safe and smooth campus ride!`
+                    : `Taking off with ${rider?.name || 'your rider'}. Have a safe and smooth campus ride!`}
                 </p>
               </div>
             </div>
-            {driverPhone && (
+            {contactPhone && (
               <a
-                href={`tel:${driverPhone}`}
+                href={`tel:${contactPhone}`}
                 className="px-4 py-2.5 rounded-xl border border-border text-foreground hover:border-[var(--orange-brand)] text-xs font-bold shrink-0 flex items-center justify-center gap-1.5 shadow transition-colors cursor-pointer"
                 style={{ background: 'var(--surface-elevated)' }}
               >
                 <Phone className="w-3.5 h-3.5 text-[var(--orange-brand)]" />
-                Call Driver
+                Call {contactLabel}
               </a>
             )}
           </div>
@@ -487,20 +493,22 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               </div>
               <div>
                 <h2 className="text-sm sm:text-base font-extrabold text-emerald-500">
-                  Your Driver Has Arrived at {trip.pickup}!
+                  {isRider ? `Your Driver Has Arrived at ${trip.pickup}!` : `You Have Arrived at ${trip.pickup}!`}
                 </h2>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Please proceed to your pickup point. Your driver is waiting for you.
+                  {isRider
+                    ? 'Please proceed to your pickup point. Your driver is waiting for you.'
+                    : `Waiting for ${rider?.name?.split(' ')[0] || 'the rider'} to meet you at pickup point.`}
                 </p>
               </div>
             </div>
-            {driverPhone && (
+            {contactPhone && (
               <a
-                href={`tel:${driverPhone}`}
+                href={`tel:${contactPhone}`}
                 className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shrink-0 flex items-center justify-center gap-1.5 shadow transition-colors cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5" />
-                Call Driver
+                Call {contactLabel}
               </a>
             )}
           </div>
@@ -637,22 +645,22 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             >
               <div className="flex items-center justify-between pb-3 border-b border-border">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">
-                  Verified Driver & Vehicle
+                  {isRider ? 'Verified Driver & Vehicle' : 'Campus Rider Details'}
                 </p>
                 <span className="text-xs text-emerald-500 font-bold flex items-center gap-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  Background Vetted
+                  {isRider ? 'Background Vetted' : 'Verified Student/Staff'}
                 </span>
               </div>
 
-              {/* Driver Profile Info */}
+              {/* Driver/Rider Profile Info */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <Avatar className="w-14 h-14 border border-border shadow-md">
-                      <AvatarImage src={driver?.image || ''} />
+                      <AvatarImage src={(isRider ? driver?.image : rider?.image) || ''} />
                       <AvatarFallback className="text-base font-bold bg-muted text-foreground">
-                        {driver ? initials(driver.name) : 'TD'}
+                        {isRider ? (driver ? initials(driver.name) : 'TD') : (rider ? initials(rider.name) : 'RD')}
                       </AvatarFallback>
                     </Avatar>
                     <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center border-2 border-[var(--surface-card)] text-[10px] font-bold">
@@ -661,29 +669,37 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                   </div>
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">{driver?.name ?? 'Assigned Driver'}</h3>
+                    <h3 className="text-base sm:text-lg font-extrabold text-foreground">
+                      {isRider ? (driver?.name ?? 'Assigned Driver') : (rider?.name ?? 'Campus Rider')}
+                    </h3>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-500">
-                        <Star className="w-3.5 h-3.5 fill-current" />
-                        {driverProfile?.rating > 0 ? driverProfile.rating.toFixed(1) : '5.0'}
-                      </span>
-                      <span className="text-muted-foreground text-xs">&middot;</span>
-                      <span className="text-xs text-muted-foreground">{driverProfile?.totalTrips ?? 0} campus rides</span>
+                      {isRider ? (
+                        <>
+                          <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-500">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                            {driverProfile?.rating > 0 ? driverProfile.rating.toFixed(1) : '5.0'}
+                          </span>
+                          <span className="text-muted-foreground text-xs">&middot;</span>
+                          <span className="text-xs text-muted-foreground">{driverProfile?.totalTrips ?? 0} campus rides</span>
+                        </>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">{rider?.email ?? 'Campus Passenger'}</span>
+                      )}
                     </div>
                   </div>
                 </div>
 
                 {/* Direct Action Contacts */}
                 <div className="flex items-center gap-2 shrink-0">
-                  {driverPhone && (
+                  {contactPhone && (
                     <a
-                      href={`tel:${driverPhone}`}
+                      href={`tel:${contactPhone}`}
                       className="px-3.5 py-2 rounded-xl border border-border hover:border-emerald-500 text-foreground text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
                       style={{ background: 'var(--surface-elevated)' }}
-                      title="Call Driver"
+                      title={`Call ${contactLabel}`}
                     >
                       <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>Call Driver</span>
+                      <span>Call {contactLabel}</span>
                     </a>
                   )}
                 </div>
@@ -777,42 +793,46 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               style={{ background: 'var(--surface-card)', border: '1px solid var(--border-default)' }}
             >
               <p className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground pb-2 border-b border-border">
-                Trip Actions & Safety Tools
+                {isRider ? 'Trip Actions & Safety Tools' : 'Trip Management'}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {/* Share Live Trip Button */}
-                <button
-                  type="button"
-                  onClick={() => setShareModalOpen(true)}
-                  className="p-3.5 rounded-xl border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
-                  style={{ background: 'var(--surface-elevated)' }}
-                >
-                  <div className="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
-                    <Share2 className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-foreground group-hover:text-[var(--orange-brand)] transition-colors">
-                      Share Ride
-                    </p>
-                    <p className="text-[11px] text-muted-foreground">Tracking link</p>
-                  </div>
-                </button>
+              <div className={isRider ? "grid grid-cols-1 sm:grid-cols-3 gap-3" : "grid grid-cols-1 gap-3"}>
+                {/* Share Live Trip Button (Rider Only) */}
+                {isRider && (
+                  <button
+                    type="button"
+                    onClick={() => setShareModalOpen(true)}
+                    className="p-3.5 rounded-xl border border-border hover:border-[var(--orange-brand)] flex items-center gap-3 text-left transition-all cursor-pointer group"
+                    style={{ background: 'var(--surface-elevated)' }}
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-500 flex items-center justify-center shrink-0">
+                      <Share2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-foreground group-hover:text-[var(--orange-brand)] transition-colors">
+                        Share Ride
+                      </p>
+                      <p className="text-[11px] text-muted-foreground">Tracking link</p>
+                    </div>
+                  </button>
+                )}
 
-                {/* Campus SOS Button */}
-                <button
-                  type="button"
-                  onClick={() => setActiveSos(true)}
-                  className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 hover:border-red-500 flex items-center gap-3 text-left transition-all cursor-pointer group"
-                >
-                  <div className="w-9 h-9 rounded-lg bg-red-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <ShieldAlert className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-red-500">Emergency SOS</p>
-                    <p className="text-[11px] text-muted-foreground">Security siren</p>
-                  </div>
-                </button>
+                {/* Campus SOS Button (Rider Only) */}
+                {isRider && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveSos(true)}
+                    className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 hover:border-red-500 flex items-center gap-3 text-left transition-all cursor-pointer group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-red-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+                      <ShieldAlert className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-bold text-red-500">Emergency SOS</p>
+                      <p className="text-[11px] text-muted-foreground">Security siren</p>
+                    </div>
+                  </button>
+                )}
 
                 {/* Cancel Ride Button */}
                 <button
@@ -829,14 +849,16 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                     <p className="text-xs font-bold text-foreground group-hover:text-red-500 transition-colors">
                       Cancel Ride
                     </p>
-                    <p className="text-[11px] text-muted-foreground">Refund policy</p>
+                    <p className="text-[11px] text-muted-foreground">
+                      {isRider ? 'Refund policy' : 'Driver cancellation policy'}
+                    </p>
                   </div>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Right Column: Live Chat with Driver (5 cols) */}
+          {/* Right Column: Live Chat with Driver/Rider (5 cols) */}
           <div className="lg:col-span-5">
             <div
               className="rounded-xl shadow-lg backdrop-blur-md transition-all overflow-hidden flex flex-col h-[620px] sticky top-6"
@@ -847,15 +869,17 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <Avatar className="w-9 h-9 border border-border">
-                      <AvatarImage src={driver?.image || ''} />
+                      <AvatarImage src={(isRider ? driver?.image : rider?.image) || ''} />
                       <AvatarFallback className="text-xs font-bold bg-muted text-foreground">
-                        {driver ? initials(driver.name) : 'TD'}
+                        {isRider ? (driver ? initials(driver.name) : 'TD') : (rider ? initials(rider.name) : 'RD')}
                       </AvatarFallback>
                     </Avatar>
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 border border-[var(--surface-card)] animate-pulse" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-bold text-foreground">Chat with {driver?.name?.split(' ')[0] ?? 'Driver'}</h3>
+                    <h3 className="text-xs font-bold text-foreground">
+                      Chat with {isRider ? (driver?.name?.split(' ')[0] ?? 'Driver') : (rider?.name?.split(' ')[0] ?? 'Rider')}
+                    </h3>
                     <p className="text-[10px] text-emerald-500 font-semibold uppercase tracking-wider">Active Connection</p>
                   </div>
                 </div>
@@ -948,8 +972,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         </div>
       </div>
 
-      {/* ── Share Trip Modal ── */}
-      {shareModalOpen && (
+      {/* ── Share Trip Modal (Rider Only) ── */}
+      {isRider && shareModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div
             className="w-full max-w-sm rounded-xl p-6 shadow-2xl relative"
@@ -1007,8 +1031,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         </div>
       )}
 
-      {/* ── Emergency SOS Siren Modal ── */}
-      {activeSos && (
+      {/* ── Emergency SOS Siren Modal (Rider Only) ── */}
+      {isRider && activeSos && (
         <SosModal trip={trip} onClose={() => setActiveSos(false)} />
       )}
     </div>

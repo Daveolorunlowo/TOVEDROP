@@ -58,7 +58,11 @@ export async function sendPushNotification(
             endpoint: sub.endpoint,
             keys: JSON.parse(sub.keys)
           },
-          jsonPayload
+          jsonPayload,
+          {
+            TTL: 3600,
+            urgency: 'high'
+          }
         )
         result.sent++
       } catch (error: any) {

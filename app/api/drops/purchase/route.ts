@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma"
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from "@/lib/config"
 import { z } from "zod"
 import { withValidation } from "@/lib/with-validation"
+import { initiateFlutterwavePayment } from "@/lib/flutterwave"
 
 const purchaseSchema = z.object({
   packageId: z.string().min(1, "Package ID is required")
@@ -42,62 +43,78 @@ export const POST = withValidation(purchaseSchema, async (req: NextRequest, data
       finalAmount = pkg.naira * (1 - FIRST_PURCHASE_DISCOUNT_PERCENTAGE)
     }
 
-    // Convert to kobo for Paystack
-    const amountInKobo = Math.round(finalAmount * 100)
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000').replace(/\/$/, '')
+    const redirectUrl = `${appUrl}/api/drops/callback/flutterwave`
 
-    if (!process.env.PAYSTACK_SECRET_KEY) {
-      return NextResponse.json({ message: "Paystack is not configured" }, { status: 500 })
+    // Check for Flutterwave configuration
+    if (process.env.FLUTTERWAVE_SECRET_KEY) {
+      try {
+        const { authorizationUrl, reference } = await initiateFlutterwavePayment({
+          user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            phoneNumber: user.phoneNumber,
+          },
+          pkg,
+          finalAmount,
+          isFirstPurchase: !user.hasUsedFirstTopupDiscount,
+          redirectUrl,
+          appUrl,
+        })
+
+        return NextResponse.json({
+          message: "Payment initialized",
+          authorizationUrl,
+          reference,
+        }, { status: 200 })
+      } catch (flwErr: any) {
+        return NextResponse.json({ 
+          message: flwErr.message || "Failed to initialize Flutterwave payment" 
+        }, { status: 400 })
+      }
     }
 
-    // Initialize Paystack Transaction
-    const response = await fetch('https://api.paystack.co/transaction/initialize', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: user.email,
-        amount: amountInKobo,
-        metadata: {
-          custom_fields: [
-            {
-              display_name: "User ID",
-              variable_name: "user_id",
-              value: user.id
-            },
-            {
-              display_name: "Package ID",
-              variable_name: "package_id",
-              value: pkg.id
-            },
-            {
-              display_name: "Drops Amount",
-              variable_name: "drops_amount",
-              value: pkg.drops
-            },
-            {
-              display_name: "First Purchase Discount",
-              variable_name: "first_purchase_discount",
-              value: !user.hasUsedFirstTopupDiscount
-            }
-          ]
-        }
+    // Fallback: If only Paystack is configured during migration
+    if (process.env.PAYSTACK_SECRET_KEY) {
+      const amountInKobo = Math.round(finalAmount * 100)
+      const response = await fetch('https://api.paystack.co/transaction/initialize', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: user.email,
+          amount: amountInKobo,
+          metadata: {
+            custom_fields: [
+              { display_name: "User ID", variable_name: "user_id", value: user.id },
+              { display_name: "Package ID", variable_name: "package_id", value: pkg.id },
+              { display_name: "Drops Amount", variable_name: "drops_amount", value: pkg.drops },
+              { display_name: "First Purchase Discount", variable_name: "first_purchase_discount", value: !user.hasUsedFirstTopupDiscount }
+            ]
+          }
+        })
       })
-    })
 
-    const paystackData = await response.json()
+      const paystackData = await response.json()
+      if (!paystackData.status) {
+        return NextResponse.json({ message: paystackData.message || "Failed to initialize payment" }, { status: 400 })
+      }
 
-    if (!paystackData.status) {
-      return NextResponse.json({ message: paystackData.message || "Failed to initialize payment" }, { status: 400 })
+      return NextResponse.json({ 
+        message: "Payment initialized",
+        authorizationUrl: paystackData.data.authorization_url,
+        reference: paystackData.data.reference
+      }, { status: 200 })
     }
 
     return NextResponse.json({ 
-      message: "Payment initialized",
-      authorizationUrl: paystackData.data.authorization_url,
-      reference: paystackData.data.reference
-    }, { status: 200 })
+      message: "Payment service is not configured. Please set FLUTTERWAVE_SECRET_KEY in your environment." 
+    }, { status: 500 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error purchasing drops", error: error.message }, { status: 500 })
   }
 })
+

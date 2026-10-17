@@ -115,6 +115,36 @@ export function TripList({
     setUpcomingTrips(initialUpcoming)
     setPastTrips(initialPast)
   }, [initialUpcoming, initialPast])
+
+  // Automatic refresh at specific intervals to catch driver acceptance and status updates
+  useEffect(() => {
+    const hasPending = upcomingTrips.some(t => t.status === 'PENDING')
+    // Faster poll (5s) when rider is waiting for driver acceptance, otherwise 12s
+    const pollInterval = hasPending ? 5000 : 12000
+
+    const interval = setInterval(() => {
+      router.refresh()
+    }, pollInterval)
+
+    const handleFocus = () => {
+      router.refresh()
+    }
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        router.refresh()
+      }
+    }
+
+    window.addEventListener('focus', handleFocus)
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('focus', handleFocus)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
+  }, [upcomingTrips, router])
   
   // Custom styled Toast/Alert fallback if we don't have a toast library available
   // In a real app we'd use sonner or similar.

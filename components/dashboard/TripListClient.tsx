@@ -82,6 +82,35 @@ export function TripListClient({
  setTrips(initialTrips)
  }, [initialTrips])
 
+ // Automatic periodic refresh to catch trip status updates and driver assignments
+ useEffect(() => {
+ const hasPending = trips.some(t => t.status === 'PENDING')
+ const pollInterval = hasPending ? 5000 : 12000
+
+ const interval = setInterval(() => {
+ router.refresh()
+ }, pollInterval)
+
+ const handleFocus = () => {
+ router.refresh()
+ }
+
+ const handleVisibility = () => {
+ if (document.visibilityState === 'visible') {
+ router.refresh()
+ }
+ }
+
+ window.addEventListener('focus', handleFocus)
+ document.addEventListener('visibilitychange', handleVisibility)
+
+ return () => {
+ clearInterval(interval)
+ window.removeEventListener('focus', handleFocus)
+ document.removeEventListener('visibilitychange', handleVisibility)
+ }
+ }, [trips, router])
+
  useEffect(() => {
  if (subtab !== 'upcoming') return;
  const hasPending = trips.some(t => t.status === 'PENDING');

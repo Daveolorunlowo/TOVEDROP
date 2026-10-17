@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import { Check, X, MapPin, Clock, Users, ArrowRight } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { PaginationControls } from '@/components/shared/PaginationControls'
+import { TripCommitmentModal } from '@/components/driver/TripCommitmentModal'
+import { formatTripSchedule } from '@/lib/trip-schedule'
 
 const initials = (name: string) => name?.slice(0, 2).toUpperCase() ?? '?'
 
@@ -27,6 +29,7 @@ export function RequestsListClient({
  const [declined, setDeclined] = useState<string[]>([])
  const [processing, setProcessing] = useState<string | null>(null)
  const [requests, setRequests] = useState(initialRequests)
+ const [tripForCommitment, setTripForCommitment] = useState<any | null>(null)
 
  useEffect(() => {
  try {
@@ -125,7 +128,7 @@ export function RequestsListClient({
  <>
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {groupedRequests.map((trip) => {
- const isScheduled = trip.isScheduled;
+ const schedule = formatTripSchedule(trip);
  return (
  <div 
  key={trip.id} 
@@ -149,8 +152,10 @@ export function RequestsListClient({
  </div>
  </div>
  <div className="text-right">
- <p className="text-xs font-semibold text-foreground">{trip.time}</p>
- <p className="text-[10px] text-muted-foreground">{trip.isScheduled ? trip.date : 'Instant Pick-Up'}</p>
+ <p className="text-xs font-bold text-foreground">{schedule.timeFormatted}</p>
+ <p className="text-[10px] text-muted-foreground font-medium">
+   {schedule.dayName}, {schedule.shortDate}
+ </p>
  </div>
  </div>
 
@@ -188,14 +193,14 @@ export function RequestsListClient({
  </button>
  <button
  disabled={processing === trip.id}
- onClick={() => handleAccept(trip.id)}
+ onClick={() => setTripForCommitment(trip)}
  className="flex-1 py-2.5 rounded-lg text-xs font-semibold bg-orange-brand text-primary-foreground hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center gap-1.5"
  >
  {processing === trip.id ? (
  <span className="w-4 h-4 border-2 border-border border-t-white rounded-full animate-spin" />
  ) : (
  <>
- Accept <ArrowRight className="w-3.5 h-3.5" />
+ Accept ({schedule.shortDayName} · {schedule.timeFormatted})
  </>
  )}
  </button>
@@ -213,6 +218,20 @@ export function RequestsListClient({
  itemsPerPage={itemsPerPage}
  />
  )}
+
+ {/* Trip Commitment Confirmation Modal */}
+ <TripCommitmentModal
+   trip={tripForCommitment}
+   isOpen={!!tripForCommitment}
+   isLoading={processing === tripForCommitment?.id}
+   onConfirm={async () => {
+     if (!tripForCommitment) return
+     const id = tripForCommitment.id
+     setTripForCommitment(null)
+     await handleAccept(id)
+   }}
+   onCancel={() => setTripForCommitment(null)}
+ />
  </>
  )
 }

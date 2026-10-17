@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { MapPin, Navigation, Clock } from 'lucide-react'
+import { MapPin, Navigation, Clock, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { formatTripSchedule } from '@/lib/trip-schedule'
 
 type TransferAcceptClientProps = {
  transfer: any
@@ -65,6 +66,7 @@ export function TransferAcceptClient({ transfer }: TransferAcceptClientProps) {
  }
 
  const earnings = transfer.trip.isPool ? 'Pool ride earnings' : (transfer.trip.bookingFeeNaira ? `₦${Math.round(transfer.trip.bookingFeeNaira * 0.7)}` : 'Standard earnings')
+ const schedule = formatTripSchedule(transfer.trip)
 
  return (
  <div className="min-h-screen flex items-start justify-center bg-background p-6 pt-12">
@@ -95,10 +97,10 @@ export function TransferAcceptClient({ transfer }: TransferAcceptClientProps) {
  <Clock className="w-4 h-4 text-orange-brand mt-0.5 shrink-0" />
  <div className="min-w-0">
  <p className="text-[10px] uppercase font-bold text-orange-brand">
-   {transfer.trip.isScheduled ? 'Scheduled' : 'Instant Pick-Up'}
+   {transfer.trip.isScheduled ? 'Scheduled Departure' : 'Instant Pick-Up'}
  </p>
  <p className="text-sm font-bold text-orange-brand">
-   {transfer.trip.isScheduled ? `${transfer.trip.date} at ${transfer.trip.time}` : transfer.trip.time}
+   {schedule.dayName}, {schedule.shortDate} · {schedule.timeFormatted}
  </p>
  </div>
  </div>
@@ -124,6 +126,24 @@ export function TransferAcceptClient({ transfer }: TransferAcceptClientProps) {
  <p className="text-3xl font-mono font-bold text-foreground">{timeRemaining || '--:--'}</p>
  </div>
 
+ {/* Day, Date, Time Confirmation Banner */}
+ <div className="p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-1">
+   <div className="flex items-center justify-between text-xs font-black uppercase text-emerald-400">
+     <span className="flex items-center gap-1.5">
+       <Calendar className="w-3.5 h-3.5" />
+       Schedule Commitment:
+     </span>
+     {schedule.relativeDay && (
+       <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-black">
+         {schedule.relativeDay}
+       </span>
+     )}
+   </div>
+   <p className="text-sm font-black text-foreground pt-0.5">
+     {schedule.dayName}, {schedule.fullDate} at {schedule.timeFormatted}
+   </p>
+ </div>
+
  </div>
 
  <div className="p-4 bg-surface-elevated border-t border-border flex gap-3">
@@ -133,9 +153,9 @@ export function TransferAcceptClient({ transfer }: TransferAcceptClientProps) {
  <Button 
  onClick={handleAccept} 
  disabled={isAccepting || timeRemaining === '00:00'}
- className="flex-1 bg-orange-brand hover:brightness-110 text-white font-bold"
+ className="flex-1 bg-orange-brand hover:brightness-110 text-white font-bold text-xs"
  >
- {isAccepting ? 'Accepting...' : 'Accept This Trip →'}
+ {isAccepting ? 'Accepting...' : `Confirm Accept (${schedule.shortDayName} · ${schedule.timeFormatted}) →`}
  </Button>
  </div>
 

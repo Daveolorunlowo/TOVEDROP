@@ -600,7 +600,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
 
  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
  {[
- { label: 'Total Cash Collected', value: `₦${financesData.company.totalCashCollected.toLocaleString()}`, sub: 'All-Time via Paystack' },
+ { label: 'Total Cash Collected', value: `₦${financesData.company.totalCashCollected.toLocaleString()}`, sub: 'All-Time via Flutterwave' },
  { label: 'Recognized Revenue', value: `₦${financesData.company.recognizedRevenue.toLocaleString()}`, sub: 'All-Time Earned Profit' },
  { label: 'Outstanding Liability', value: `₦${financesData.company.outstandingLiability.toLocaleString()}`, sub: 'Unredeemed Rider Drops' },
  { label: 'Total Driver Payouts', value: `₦${financesData.company.totalDriverPayouts.toLocaleString()}`, sub: 'All-Time Committed' },
@@ -669,7 +669,7 @@ export function AdminLegacyClient({ initialTab }: { initialTab: string }) {
  </div>
  <div className="h-10 w-px bg-border hidden sm:block"></div>
  <p className="text-xs text-gray-400 max-w-xs leading-relaxed">
- This is the sum of all driver wallet balances that have not yet been paid out via Paystack transfers.
+ This is the sum of all driver wallet balances that have not yet been paid out via Flutterwave transfers.
  </p>
  </div>
  

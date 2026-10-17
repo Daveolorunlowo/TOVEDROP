@@ -150,3 +150,102 @@ export function checkTripOverdue(
 
   return { isOverdue: false, minutesPast: Math.max(0, minutesPast) };
 }
+
+export interface TripScheduleFormatted {
+  dayName: string;
+  shortDayName: string;
+  fullDate: string;
+  shortDate: string;
+  timeFormatted: string;
+  time24: string;
+  relativeDay: string;
+  isScheduled: boolean;
+  countdownText: string;
+  dueStatus: 'urgent' | 'imminent' | 'upcoming' | 'later';
+}
+
+/**
+ * Generates human-friendly Day, Date, and Time representations for drivers and riders.
+ */
+export function formatTripSchedule(trip: TripTimeData | any): TripScheduleFormatted {
+  const d = getTripDateTime(trip);
+  const isScheduled = !!trip?.isScheduled;
+
+  // Day names (e.g. "Sunday", "Monday")
+  const dayName = d.toLocaleDateString('en-US', { weekday: 'long' });
+  const shortDayName = d.toLocaleDateString('en-US', { weekday: 'short' });
+
+  // Dates (e.g. "18 October 2026", "18 Oct 2026")
+  const fullDate = d.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+  const shortDate = d.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+  // Time in 12-hour format with AM/PM (e.g. "2:30 PM")
+  const timeFormatted = d.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const time24 = `${hours}:${minutes}`;
+
+  // Relative day (Today, Tomorrow, Yesterday, or empty)
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const targetStart = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const diffDays = Math.round((targetStart - todayStart) / (1000 * 60 * 60 * 24));
+
+  let relativeDay = '';
+  if (diffDays === 0) relativeDay = 'Today';
+  else if (diffDays === 1) relativeDay = 'Tomorrow';
+  else if (diffDays === -1) relativeDay = 'Yesterday';
+
+  // Countdown & Due status
+  let countdownText = 'Immediate / Right Now';
+  let dueStatus: 'urgent' | 'imminent' | 'upcoming' | 'later' = 'urgent';
+
+  if (!isScheduled) {
+    countdownText = '⚡ Immediate Pick-Up';
+    dueStatus = 'urgent';
+  } else {
+    const diffMs = d.getTime() - now.getTime();
+    const diffMins = Math.floor(diffMs / (60 * 1000));
+
+    if (diffMs <= 0 || diffMins <= 5) {
+      countdownText = '🚨 Due Right Now';
+      dueStatus = 'urgent';
+    } else if (diffMins <= 15) {
+      countdownText = `⏰ In ${diffMins} mins`;
+      dueStatus = 'imminent';
+    } else if (diffMins < 60) {
+      countdownText = `⏰ In ${diffMins} mins`;
+      dueStatus = 'upcoming';
+    } else {
+      const h = Math.floor(diffMins / 60);
+      const m = diffMins % 60;
+      countdownText = `📅 In ${h}h ${m > 0 ? `${m}m` : ''}`;
+      dueStatus = 'later';
+    }
+  }
+
+  return {
+    dayName,
+    shortDayName,
+    fullDate,
+    shortDate,
+    timeFormatted,
+    time24,
+    relativeDay,
+    isScheduled,
+    countdownText,
+    dueStatus,
+  };
+}

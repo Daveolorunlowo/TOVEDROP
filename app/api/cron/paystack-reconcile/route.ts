@@ -13,9 +13,19 @@ export async function GET(request: Request) {
   */
 
   try {
+    const flwSecret = process.env.FLUTTERWAVE_SECRET_KEY
+    if (flwSecret) {
+      // Delegate to Flutterwave reconciliation
+      const flwRes = await fetch(new URL('/api/cron/flutterwave-reconcile', request.url).toString(), {
+        method: 'GET',
+      })
+      const flwData = await flwRes.json()
+      return NextResponse.json(flwData, { status: flwRes.status })
+    }
+
     const secret = process.env.PAYSTACK_SECRET_KEY
     if (!secret) {
-      return NextResponse.json({ message: "Server misconfiguration" }, { status: 500 })
+      return NextResponse.json({ message: "Payment service is not configured" }, { status: 500 })
     }
 
     // Fetch transactions from the last 24 hours

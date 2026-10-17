@@ -10,7 +10,7 @@ export default function PrivacyPolicy() {
         <li><strong>Account Information:</strong> Name, email address, phone number, and profile picture.</li>
         <li><strong>Location Data:</strong> To connect riders with drivers, we collect precise location data from drivers when they are "Available" or "On Trip". We also allow riders to share live tracking links.</li>
         <li><strong>Communication Data:</strong> In-app chat messages are processed through Pusher and temporarily stored to facilitate coordination between riders and drivers.</li>
-        <li><strong>Transaction Data:</strong> Purchases of Drops and withdrawal requests are tracked. Note: We do not store your raw credit card numbers; payment processing is handled entirely by Paystack.</li>
+        <li><strong>Transaction Data:</strong> Purchases of Drops and withdrawal requests are tracked. Note: We do not store your raw credit card numbers; payment processing is handled entirely by Flutterwave.</li>
       </ul>
 
       <h2>2. How We Use Your Data</h2>
@@ -26,7 +26,7 @@ export default function PrivacyPolicy() {
       <p>Tovedrop does not sell your personal data to third-party marketers. We only share information in the following scenarios:</p>
       <ul>
         <li><strong>Between Users:</strong> Your name and profile picture are shared with your assigned driver/rider. If you use the SOS/Share feature, your location is shared with your designated contacts.</li>
-        <li><strong>Service Providers:</strong> We share minimal necessary data with vendors (e.g., Paystack for payments, Vercel for hosting, Pusher for WebSockets).</li>
+        <li><strong>Service Providers:</strong> We share minimal necessary data with vendors (e.g., Flutterwave for payments, Vercel for hosting, Pusher for WebSockets).</li>
         <li><strong>Legal Compliance:</strong> We will disclose information to campus authorities or law enforcement if required by law or in emergency situations involving threats to physical safety.</li>
       </ul>
 

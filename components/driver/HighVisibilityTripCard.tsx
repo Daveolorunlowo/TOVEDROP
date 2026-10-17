@@ -4,6 +4,7 @@ import React from 'react'
 import { MapPin, Navigation, Clock, AlertTriangle, Check, Volume2, User, ExternalLink, MessageCircle } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import Link from 'next/link'
+import { formatTripSchedule } from '@/lib/trip-schedule'
 
 interface HighVisibilityTripCardProps {
   trip: any
@@ -61,6 +62,7 @@ export function HighVisibilityTripCard({
   onOpenChat
 }: HighVisibilityTripCardProps) {
   const countdown = getCountdownBadge(trip.date, trip.time, trip.isScheduled)
+  const schedule = formatTripSchedule(trip)
 
   // Voice announcement helper
   const handleSpeakDetails = (e: React.MouseEvent) => {
@@ -69,7 +71,7 @@ export function HighVisibilityTripCard({
     try {
       window.speechSynthesis.cancel()
       const pickupShort = trip.pickup.split(',')[0]
-      const timeAnnounce = trip.isScheduled ? `${trip.time}` : 'Instant pickup right now'
+      const timeAnnounce = trip.isScheduled ? `${schedule.dayName}, ${schedule.timeFormatted}` : 'Instant pickup right now'
       const text = `Trip for ${trip.rider?.name || 'Rider'}. Pickup at ${pickupShort}. Time: ${timeAnnounce}.`
       const utterance = new SpeechSynthesisUtterance(text)
       utterance.rate = 1.05
@@ -114,7 +116,7 @@ export function HighVisibilityTripCard({
                 countdown.isUrgent ? 'text-amber-500' : 'text-foreground'
               }`}
             >
-              {trip.isScheduled ? `${trip.time} · ${trip.date}` : `RIGHT NOW (${trip.time})`}
+              {schedule.dayName}, {schedule.shortDate} · {schedule.timeFormatted}
             </span>
           </div>
         </div>
@@ -222,7 +224,7 @@ export function HighVisibilityTripCard({
                   type="button"
                   disabled={processing || clashInfo?.clashes}
                   onClick={() => onAccept(trip)}
-                  className={`px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider text-white shadow-md transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider text-white shadow-md transition-all flex items-center gap-1.5 cursor-pointer ${
                     clashInfo?.clashes
                       ? 'bg-border text-muted-foreground cursor-not-allowed opacity-60'
                       : 'bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98]'
@@ -235,7 +237,7 @@ export function HighVisibilityTripCard({
                   ) : (
                     <>
                       <Check className="w-4 h-4 stroke-[3]" />
-                      Accept & Lock In
+                      Accept ({schedule.shortDayName} · {schedule.timeFormatted})
                     </>
                   )}
                 </button>

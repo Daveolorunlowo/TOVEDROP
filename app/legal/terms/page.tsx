@@ -19,7 +19,7 @@ export default function TermsOfService() {
         All transactions on Tovedrop are conducted using our internal virtual currency called "Drops". 
       </p>
       <ul>
-        <li>Drops must be purchased via our authorized payment processor (Paystack) using a debit card or bank transfer.</li>
+        <li>Drops must be purchased via our authorized payment processor (Flutterwave) using a debit card or bank transfer.</li>
         <li>Drops hold a fixed monetary equivalence as displayed within the app at the time of purchase.</li>
         <li>Riders use Drops to pay for trips.</li>
         <li>Drivers earn Drops for completed trips, which can later be withdrawn to their local bank account.</li>

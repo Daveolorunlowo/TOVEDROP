@@ -230,7 +230,7 @@ export function BuyDropsClient({
             )}
           </button>
           <p className="text-center text-xs text-foreground/20 mt-3">
-            Secure payment via Paystack · Instant activation
+            Secure payment via Flutterwave · Instant activation
           </p>
         </div>
 
@@ -259,7 +259,7 @@ export function BuyDropsClient({
             <div className="absolute inset-0 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
             <Lock className="absolute inset-0 m-auto w-5 h-5 text-foreground/40" />
           </div>
-          <p className="text-sm font-semibold text-foreground/30">Redirecting to Paystack...</p>
+          <p className="text-sm font-semibold text-foreground/30">Redirecting to Flutterwave...</p>
         </div>
       )}
 

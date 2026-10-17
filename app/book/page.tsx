@@ -4,7 +4,23 @@ import { Suspense } from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { MapPin, Navigation, Calendar, Clock, Search, CheckCircle2, ChevronRight, ArrowLeft } from 'lucide-react'
+import { 
+  MapPin, 
+  Navigation, 
+  Calendar, 
+  Clock, 
+  Search, 
+  CheckCircle2, 
+  ChevronRight, 
+  ArrowLeft,
+  Pencil,
+  ShieldCheck,
+  AlertCircle,
+  Sparkles,
+  MessageSquare,
+  Coins,
+  Info
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,12 +28,44 @@ import { addToOfflineQueue } from '@/lib/offline-queue'
 import { Footer } from '@/components/footer'
 import type { MapPoint } from '@/components/map-picker'
 import { LocationSearchInput } from '@/components/shared/LocationSearchInput'
+import { subscribeToPushNotifications } from '@/lib/push-client'
 import { getCampusLandmarks } from '@/lib/campus-landmarks'
 import { ConfirmModal } from '@/components/shared/ConfirmModal'
 import { useDropsBalance } from '@/hooks/useDropsBalance'
 import { ComfortableTimePicker, formatTimeFriendly } from '@/components/booking/ComfortableTimePicker'
 
 const CAMPUS_LANDMARKS = getCampusLandmarks().map(l => ({ name: l.label, lat: l.lat, lng: l.lng }))
+
+const WIZARD_STEPS = [
+  { step: 1, name: 'Locations' },
+  { step: 2, name: 'Schedule' },
+  { step: 3, name: 'Summary' },
+]
+
+function formatFriendlyDate(dateStr: string): string {
+  if (!dateStr) return ''
+  try {
+    const parts = dateStr.split('-').map(Number)
+    if (parts.length !== 3 || parts.some(isNaN)) return dateStr
+    const [y, m, d] = parts
+    const target = new Date(y, m - 1, d)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    target.setHours(0, 0, 0, 0)
+
+    const diffDays = Math.round((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+    const weekday = target.toLocaleDateString('en-US', { weekday: 'short' })
+    const month = target.toLocaleDateString('en-US', { month: 'short' })
+    const day = target.getDate()
+    const year = target.getFullYear()
+
+    if (diffDays === 0) return `Today (${weekday}, ${day} ${month})`
+    if (diffDays === 1) return `Tomorrow (${weekday}, ${day} ${month})`
+    return `${weekday}, ${day} ${month} ${year}`
+  } catch {
+    return dateStr
+  }
+}
 
 const generateId = () => {
  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -212,6 +260,9 @@ function BookWizard() {
  
  if (res.ok) {
  // 200 (idempotent hit) or 201 (newly created) — both are success
+ if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
+ subscribeToPushNotifications({ force: false }).catch(() => {})
+ }
  router.push('/dashboard')
  return
  }
@@ -265,31 +316,66 @@ function BookWizard() {
  <main className="flex-1 py-10 px-4">
  <div className="max-w-4xl mx-auto">
  {/* Progress Indicator */}
- <div className="mb-8 flex items-center justify-center space-x-2 md:space-x-4">
- {[1, 2, 3].map((s) => (
- <div key={s} className="flex items-center">
- <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm transition-colors duration-300 ${step >= s ? 'bg-orange-brand text-white' : 'bg-muted text-muted-foreground'}`}>
- {step > s ? <CheckCircle2 className="w-5 h-5 text-white" /> : s}
+ <div className="mb-8 flex items-center justify-center">
+ <div className="flex items-center">
+ {WIZARD_STEPS.map((s, idx) => (
+ <div key={s.step} className="flex items-center">
+ <button
+ type="button"
+ disabled={s.step > step}
+ onClick={() => {
+ if (s.step < step) {
+ setStep(s.step)
+ setErrors({})
+ }
+ }}
+ className={`flex items-center gap-2 group transition-all ${s.step < step ? 'cursor-pointer hover:opacity-90' : 'cursor-default'}`}
+ >
+ <div
+ className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs transition-colors duration-300 ${
+ step >= s.step
+ ? 'bg-orange-brand text-white shadow-sm'
+ : 'bg-muted text-muted-foreground'
+ }`}
+ >
+ {step > s.step ? <CheckCircle2 className="w-4 h-4 text-white" /> : s.step}
  </div>
- {s < 3 && (
- <div className={`w-8 md:w-16 h-1 ml-2 md:ml-4 rounded-full transition-colors duration-300 ${step > s ? 'bg-orange-brand' : 'bg-muted'}`} />
+ <span
+ className={`text-xs font-semibold transition-colors hidden sm:inline ${
+ step === s.step
+ ? 'text-foreground'
+ : step > s.step
+ ? 'text-muted-foreground group-hover:text-orange-brand'
+ : 'text-muted-foreground/60'
+ }`}
+ >
+ {s.name}
+ </span>
+ </button>
+ {idx < WIZARD_STEPS.length - 1 && (
+ <div
+ className={`w-8 md:w-16 h-0.5 mx-2 md:mx-3 rounded-full transition-colors duration-300 ${
+ step > s.step ? 'bg-orange-brand' : 'bg-border'
+ }`}
+ />
  )}
  </div>
  ))}
  </div>
+ </div>
 
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
  {/* Form */}
- <div className="bg-card rounded-xl border border-border p-8 min-h-[420px] flex flex-col relative overflow-hidden">
- <h1 className="text-2xl font-extrabold text-muted-foreground mb-1">
+ <div className="bg-card rounded-xl border border-border p-6 sm:p-8 min-h-[420px] flex flex-col relative overflow-hidden">
+ <h1 className="text-2xl font-extrabold text-foreground mb-1">
  {step === 1 && "Where are you going?"}
  {step === 2 && "When do you need a ride?"}
- {step === 3 && "Review & Confirm"}
+ {step === 3 && "Booking Summary & Confirmation"}
  </h1>
- <p className="text-sm text-muted-foreground mb-7">
+ <p className="text-sm text-muted-foreground mb-6">
  {step === 1 && "Tap on the map or use a landmark to set locations."}
  {step === 2 && "Select a date and time for your pickup."}
- {step === 3 && "Add any notes and review your booking details."}
+ {step === 3 && "Double-check your pickup, destination, and details before requesting."}
  </p>
 
  <form onSubmit={handleSubmit} className="space-y-5 flex-1 flex flex-col" noValidate>
@@ -397,75 +483,223 @@ function BookWizard() {
 
  {/* STEP 3: Details & Review */}
  {step === 3 && (
- <div className="space-y-5 animate-in fade-in slide-in- duration-300">
- <div className="bg-surface-elevated rounded-xl p-4 border border-border-subtle space-y-3">
- <div className="flex items-start gap-3">
- <MapPin className="w-5 h-5 text-primary mt-0.5" />
+ <div className="space-y-4 animate-in fade-in slide-in-from-right-2 duration-300">
+ {/* Double-check banner */}
+ <div className="p-3 rounded-xl bg-orange-brand/10 border border-orange-brand/20 flex items-center justify-between text-xs text-orange-brand font-medium">
+ <div className="flex items-center gap-2">
+ <Sparkles className="w-4 h-4 shrink-0 text-orange-brand" />
+ <span>Please double-check your trip details before booking</span>
+ </div>
+ <span className="text-[11px] font-bold uppercase tracking-wider bg-orange-brand/20 px-2.5 py-0.5 rounded-full">
+ Step 3 of 3
+ </span>
+ </div>
+
+ {/* Section 1: Route Review Card */}
+ <div className="bg-surface-elevated rounded-xl p-4 sm:p-5 border border-border-default shadow-sm space-y-4">
+ <div className="flex items-center justify-between pb-2.5 border-b border-border-subtle">
+ <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground flex items-center gap-1.5">
+ <Navigation className="w-3.5 h-3.5 text-orange-brand" />
+ Route Summary
+ </span>
+ <button
+ type="button"
+ onClick={() => setStep(1)}
+ className="text-xs font-semibold text-orange-brand hover:underline flex items-center gap-1 transition-colors"
+ title="Change pickup or destination"
+ >
+ <Pencil className="w-3 h-3" />
+ Edit Route
+ </button>
+ </div>
+
+ <div className="relative pl-6 space-y-5">
+ {/* Visual Route Line */}
+ <div className="absolute left-[9px] top-[14px] bottom-[14px] w-0.5 bg-gradient-to-b from-orange-brand via-orange-brand/60 to-purple-brand" />
+
+ {/* Pickup */}
+ <div className="relative">
+ <div className="absolute -left-[23px] top-1 w-4 h-4 rounded-full bg-surface-card border-2 border-orange-brand flex items-center justify-center shadow-sm">
+ <div className="w-1.5 h-1.5 rounded-full bg-orange-brand" />
+ </div>
  <div>
- <p className="text-xs text-muted-foreground uppercase tracking-wider">Pickup</p>
- <p className="text-sm font-medium">{pickupText}</p>
+ <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pickup Location</p>
+ <p className="text-sm sm:text-base font-semibold text-foreground mt-0.5 break-words">
+ {pickupPoint?.label || pickupText || 'Not specified'}
+ </p>
  </div>
  </div>
- <div className="w-0.5 h-4 bg-border ml-[9px]" />
- <div className="flex items-start gap-3">
- <Navigation className="w-5 h-5 text-muted-foreground mt-0.5" />
+
+ {/* Destination */}
+ <div className="relative">
+ <div className="absolute -left-[23px] top-1 w-4 h-4 rounded-full bg-surface-card border-2 border-purple-brand flex items-center justify-center shadow-sm">
+ <MapPin className="w-2.5 h-2.5 text-purple-brand" />
+ </div>
  <div>
- <p className="text-xs text-muted-foreground uppercase tracking-wider">Destination</p>
- <p className="text-sm font-medium">{destinationText}</p>
+ <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Destination</p>
+ <p className="text-sm sm:text-base font-semibold text-foreground mt-0.5 break-words">
+ {destinationPoint?.label || destinationText || 'Not specified'}
+ </p>
  </div>
- </div>
- <div className="border-t border-border mt-3 pt-3 flex items-center justify-between">
- <div className="flex items-center gap-2 text-sm">
- <Calendar className="w-4 h-4 text-muted-foreground" />
- <span>{dateStr}</span>
- </div>
- <div className="flex items-center gap-2 text-sm font-semibold">
- <Clock className="w-4 h-4 text-muted-foreground" />
- <span>{formatTimeFriendly(timeStr) || timeStr}</span>
  </div>
  </div>
  </div>
 
- {/* Optional note */}
- <div className="space-y-1.5">
- <Label htmlFor="note">Note for driver <span className="text-muted-foreground font-normal">(optional)</span></Label>
+ {/* Section 2: Ride Timing & Service Type */}
+ <div className="bg-surface-elevated rounded-xl p-4 sm:p-5 border border-border-default shadow-sm space-y-3">
+ <div className="flex items-center justify-between pb-2.5 border-b border-border-subtle">
+ <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground flex items-center gap-1.5">
+ <Clock className="w-3.5 h-3.5 text-orange-brand" />
+ Ride Schedule
+ </span>
+ <button
+ type="button"
+ onClick={() => setStep(2)}
+ className="text-xs font-semibold text-orange-brand hover:underline flex items-center gap-1 transition-colors"
+ title="Change schedule"
+ >
+ <Pencil className="w-3 h-3" />
+ Change Time
+ </button>
+ </div>
+
+ <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+ {/* Booking Type */}
+ <div className="p-3 rounded-lg bg-surface-card border border-border-subtle flex items-start gap-3">
+ <div className="w-8 h-8 rounded-lg bg-orange-brand/10 text-orange-brand flex items-center justify-center shrink-0 mt-0.5">
+ {isScheduled ? <Calendar className="w-4 h-4" /> : <Navigation className="w-4 h-4 animate-pulse" />}
+ </div>
+ <div>
+ <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Booking Type</p>
+ <p className="text-sm font-bold text-foreground">
+ {isScheduled ? 'Scheduled Ride' : 'Instant Pick-Up'}
+ </p>
+ <p className="text-[11px] text-muted-foreground mt-0.5">
+ {isScheduled ? 'Reserved in advance' : 'Leaves immediately (2–5 mins)'}
+ </p>
+ </div>
+ </div>
+
+ {/* Time Details */}
+ <div className="p-3 rounded-lg bg-surface-card border border-border-subtle flex items-start gap-3">
+ <div className="w-8 h-8 rounded-lg bg-purple-brand/10 text-purple-brand flex items-center justify-center shrink-0 mt-0.5">
+ <Clock className="w-4 h-4" />
+ </div>
+ <div>
+ <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Pickup Time</p>
+ <p className="text-sm font-bold text-foreground">
+ {isScheduled ? (formatTimeFriendly(timeStr) || timeStr) : 'Right Now'}
+ </p>
+ <p className="text-[11px] text-muted-foreground mt-0.5">
+ {isScheduled ? formatFriendlyDate(dateStr) : 'Immediate dispatch'}
+ </p>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ {/* Section 3: Driver Note / Special Instructions */}
+ <div className="bg-surface-elevated rounded-xl p-4 sm:p-5 border border-border-default shadow-sm space-y-2">
+ <div className="flex items-center justify-between">
+ <Label htmlFor="note" className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground flex items-center gap-1.5">
+ <MessageSquare className="w-3.5 h-3.5 text-orange-brand" />
+ Note for Driver <span className="font-normal text-muted-foreground/75 normal-case">(optional)</span>
+ </Label>
+ </div>
  <Input
  id="note"
  name="note"
  value={noteStr}
  onChange={(e) => setNoteStr(e.target.value)}
- placeholder="e.g. I have luggage, please bring a saloon car"
+ placeholder="e.g. Waiting in front of the faculty, holding a bag..."
+ className="bg-surface-card border-border-subtle focus-visible:ring-orange-brand/30 text-sm"
  />
+ <p className="text-[11px] text-muted-foreground flex items-center gap-1">
+ <Info className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+ Your driver will see this note immediately after accepting your ride.
+ </p>
  </div>
 
-
-
- <div className="bg-surface-card rounded-xl p-4 flex items-center justify-between">
- <div className="flex items-center gap-2">
- <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
- <circle cx="10" cy="10" r="9" fill="url(#bdc)" />
- <path d="M10 5 C10 5 7 9 7 11.5 A3 3 0 0 0 13 11.5 C13 9 10 5 10 5Z" fill="white" opacity="0.85" />
- <defs><linearGradient id="bdc" x1="0" y1="0" x2="20" y2="20" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="var(--orange-brand)" /><stop offset="100%" stopColor="var(--orange-brand)" /></linearGradient></defs>
- </svg>
- <span className="text-sm font-semibold text-orange-brand">This booking costs 1 Drop</span>
- </div>
- <span className="text-xs text-muted-foreground">{loading ? <div className="h-4 w-12 bg-muted animate-pulse rounded inline-block align-middle" /> : drops} Drops remaining</span>
+ {/* Section 4: Fare & Payment Summary */}
+ <div className="bg-surface-elevated rounded-xl p-4 sm:p-5 border border-border-default shadow-sm space-y-3">
+ <div className="flex items-center justify-between pb-2.5 border-b border-border-subtle">
+ <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-muted-foreground flex items-center gap-1.5">
+ <Coins className="w-3.5 h-3.5 text-orange-brand" />
+ Fare & Payment Summary
+ </span>
+ <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+ Fixed Campus Rate
+ </span>
  </div>
 
- {errors.general && <p className="text-sm font-semibold text-red-600 bg-red-100 p-3 rounded-md">{errors.general}</p>}
+ <div className="space-y-2 text-sm">
+ <div className="flex items-center justify-between">
+ <span className="text-muted-foreground">Standard Campus Fare</span>
+ <span className="font-bold text-foreground">1 Drop</span>
+ </div>
+ <div className="flex items-center justify-between">
+ <span className="text-muted-foreground">Your Current Balance</span>
+ <span className="font-semibold text-foreground">
+ {loading ? '...' : `${drops} ${drops === 1 ? 'Drop' : 'Drops'}`}
+ </span>
+ </div>
+ <div className="border-t border-border-subtle pt-2 flex items-center justify-between">
+ <span className="font-semibold text-foreground text-sm">Balance After Ride</span>
+ <span className={`font-bold ${drops >= 1 ? 'text-orange-brand' : 'text-red-500'}`}>
+ {loading ? '...' : `${Math.max(0, drops - 1)} ${drops - 1 === 1 ? 'Drop' : 'Drops'}`}
+ </span>
+ </div>
+ </div>
+
+ {!loading && drops < 1 && (
+ <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 flex items-start gap-2 text-xs text-red-600 font-medium">
+ <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+ <div>
+ <span>Insufficient balance. You need 1 Drop to request this trip.</span>
+ <button
+ type="button"
+ onClick={() => router.push('/dashboard/buy-drops')}
+ className="block mt-1 font-bold underline hover:text-red-700"
+ >
+ Buy Drops now →
+ </button>
+ </div>
+ </div>
+ )}
+ </div>
+
+ {errors.general && (
+ <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-xs font-semibold text-red-600 flex items-center gap-2">
+ <AlertCircle className="w-4 h-4 shrink-0" />
+ <span>{errors.general}</span>
+ </div>
+ )}
  </div>
  )}
 
  {/* Form Footer Actions */}
  <div className="mt-auto pt-6 flex items-center gap-3">
  {step > 1 && (
- <Button type="button" variant="outline" size="lg" onClick={handlePrevStep} className="px-4">
+ <Button 
+ type="button" 
+ variant="outline" 
+ size="lg" 
+ onClick={handlePrevStep} 
+ className="px-4 gap-2 text-muted-foreground hover:text-foreground"
+ >
  <ArrowLeft className="w-5 h-5" />
+ <span className="hidden sm:inline font-medium">Back</span>
  </Button>
  )}
  
  {step < 3 ? (
- <Button type="button" size="lg" onClick={handleNextStep} className="flex-1 text-white font-semibold" style={{ backgroundColor: 'var(--orange-brand)' }}>
+ <Button 
+ type="button" 
+ size="lg" 
+ onClick={handleNextStep} 
+ className="flex-1 text-white font-semibold shadow-md transition-all hover:brightness-105 active:scale-[0.99]" 
+ style={{ backgroundColor: 'var(--orange-brand)' }}
+ >
  Next Step <ChevronRight className="w-5 h-5 ml-1" />
  </Button>
  ) : (
@@ -474,21 +708,30 @@ function BookWizard() {
  type="button"
  size="lg"
  onClick={() => router.push('/dashboard/buy-drops')}
- className="flex-1 text-white font-semibold"
+ className="flex-1 text-white font-semibold shadow-md"
  style={{ backgroundColor: 'var(--orange-brand)' }}
  >
- Buy Drops
+ Buy Drops to Request Ride
  </Button>
  ) : (
  <Button
  type="submit"
  size="lg"
  disabled={submitting || loading}
- className="flex-1 text-white font-semibold"
+ className="flex-1 text-white font-semibold shadow-md transition-all hover:brightness-105 active:scale-[0.99]"
  style={{ backgroundColor: 'var(--orange-brand)' }}
  >
- <Search className="w-4 h-4 mr-2" />
- {submitting ? 'Requesting...' : (loading ? 'Loading...' : 'Confirm & Book Ride')}
+ {submitting ? (
+ <>
+ <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+ Requesting Ride...
+ </>
+ ) : (
+ <>
+ <CheckCircle2 className="w-4 h-4 mr-2" />
+ Confirm & Request Ride
+ </>
+ )}
  </Button>
  )
  )}
@@ -517,11 +760,85 @@ function BookWizard() {
  </div>
  </div>
  )}
- {step > 1 && (
- <div className="hidden lg:flex items-center justify-center bg-card/50 rounded-xl border border-border/50 p-8 h-[200px] text-center text-muted-foreground animate-in fade-in duration-500">
- <div className="space-y-3">
- <Navigation className="w-10 h-10 mx-auto text-border" />
- <p className="text-sm">Ready for the next step.</p>
+
+ {step === 2 && (
+ <div className="bg-card rounded-xl border border-border p-5 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-400">
+ <div className="flex items-center gap-2.5 pb-3 border-b border-border">
+ <div className="w-9 h-9 rounded-xl bg-orange-brand/10 text-orange-brand flex items-center justify-center shrink-0">
+ <Clock className="w-5 h-5" />
+ </div>
+ <div>
+ <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Timing Guide</p>
+ <p className="text-sm font-bold text-foreground">Campus Ride Options</p>
+ </div>
+ </div>
+
+ <div className="space-y-3 text-xs text-muted-foreground leading-relaxed">
+ <div className="p-3 rounded-lg bg-surface-elevated border border-border-subtle">
+ <p className="font-bold text-foreground mb-1 flex items-center gap-1.5">
+ <Navigation className="w-3.5 h-3.5 text-orange-brand" /> Instant Pick-Up
+ </p>
+ <p className="text-[11px]">Best when you are packed and ready to go. The closest active campus driver is dispatched immediately (2–5 mins).</p>
+ </div>
+
+ <div className="p-3 rounded-lg bg-surface-elevated border border-border-subtle">
+ <p className="font-bold text-foreground mb-1 flex items-center gap-1.5">
+ <Calendar className="w-3.5 h-3.5 text-orange-brand" /> Scheduled Ride
+ </p>
+ <p className="text-[11px]">Must be at least 2 hours in advance. Gives campus drivers time to claim your upcoming journey.</p>
+ </div>
+ </div>
+ </div>
+ )}
+
+ {step === 3 && (
+ <div className="bg-card rounded-xl border border-border p-5 flex flex-col gap-5 animate-in fade-in slide-in-from-right-4 duration-400">
+ <div className="flex items-center gap-2.5 pb-3 border-b border-border">
+ <div className="w-9 h-9 rounded-xl bg-orange-brand/10 text-orange-brand flex items-center justify-center shrink-0">
+ <ShieldCheck className="w-5 h-5" />
+ </div>
+ <div>
+ <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Peace of Mind</p>
+ <p className="text-sm font-bold text-foreground">Rider Protection</p>
+ </div>
+ </div>
+
+ <div className="space-y-3.5 text-xs">
+ <div className="flex items-start gap-2.5">
+ <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+ <div>
+ <span className="font-semibold text-foreground">Verified Campus Drivers</span>
+ <p className="text-muted-foreground text-[11px] mt-0.5">Every driver is a registered Bowen University student or staff member.</p>
+ </div>
+ </div>
+
+ <div className="flex items-start gap-2.5">
+ <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+ <div>
+ <span className="font-semibold text-foreground">Live GPS Tracking</span>
+ <p className="text-muted-foreground text-[11px] mt-0.5">Track your driver in real-time on your dashboard as soon as they accept.</p>
+ </div>
+ </div>
+
+ <div className="flex items-start gap-2.5">
+ <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+ <div>
+ <span className="font-semibold text-foreground">In-App Chat & Contact</span>
+ <p className="text-muted-foreground text-[11px] mt-0.5">Message or call your driver directly with one tap.</p>
+ </div>
+ </div>
+
+ <div className="flex items-start gap-2.5">
+ <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+ <div>
+ <span className="font-semibold text-foreground">Fixed Rate Guarantee</span>
+ <p className="text-muted-foreground text-[11px] mt-0.5">Always 1 Drop. Zero surge pricing, no hidden costs.</p>
+ </div>
+ </div>
+ </div>
+
+ <div className="p-3 rounded-lg bg-surface-elevated border border-border-subtle text-[11px] text-muted-foreground leading-relaxed">
+ 💡 <strong className="text-foreground">Reminder:</strong> You can cancel your trip anytime without penalty before your driver departs.
  </div>
  </div>
  )}

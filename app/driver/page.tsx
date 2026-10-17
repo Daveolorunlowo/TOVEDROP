@@ -183,8 +183,27 @@ export default function DriverDashboardPage() {
 
   useEffect(() => {
     fetchData()
-    const id = setInterval(fetchData, 15000)
-    return () => clearInterval(id)
+    // Poll every 8s for live incoming requests and status transitions
+    const id = setInterval(fetchData, 8000)
+
+    const handleFocus = () => {
+      fetchData()
+    }
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        fetchData()
+      }
+    }
+
+    window.addEventListener('focus', handleFocus)
+    document.addEventListener('visibilitychange', handleVisibility)
+
+    return () => {
+      clearInterval(id)
+      window.removeEventListener('focus', handleFocus)
+      document.removeEventListener('visibilitychange', handleVisibility)
+    }
   }, [router])
 
   const handleAccept = async (id: string) => {

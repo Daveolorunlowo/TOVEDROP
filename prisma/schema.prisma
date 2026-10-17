@@ -300,7 +300,7 @@ model DropTransaction {
   amount      Int // positive = credit, negative = debit
   nairaAmount Float? // only set for PURCHASE type
   package     String?
-  reference   String? // Paystack reference, PURCHASE only
+  reference   String? // Payment gateway reference (Flutterwave tx_ref), PURCHASE only
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
 

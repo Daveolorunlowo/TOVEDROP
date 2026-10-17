@@ -1,15 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { subscribeToPushNotifications, getNotificationPermission } from '@/lib/push-client'
 import { Bell, Check, X } from 'lucide-react'
 
 export function RiderNotificationBanner() {
+  const { data: session } = useSession()
   const [showBanner, setShowBanner] = useState(false)
   const [loading, setLoading] = useState(false)
   const [subscribed, setSubscribed] = useState(false)
 
   useEffect(() => {
+    if (!session?.user?.id) return
+
     let dismissed = false
     try {
       dismissed = !!localStorage.getItem('tovedrop_rider_notif_dismissed')
@@ -25,10 +29,10 @@ export function RiderNotificationBanner() {
 
     // If permission is default and not previously dismissed, show the prompt banner after a short delay
     if (perm === 'default' && !dismissed) {
-      const timer = setTimeout(() => setShowBanner(true), 2000)
+      const timer = setTimeout(() => setShowBanner(true), 1500)
       return () => clearTimeout(timer)
     }
-  }, [])
+  }, [session?.user?.id])
 
   const handleEnable = async () => {
     setLoading(true)
