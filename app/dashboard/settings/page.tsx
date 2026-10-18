@@ -141,13 +141,28 @@ export default function RiderSettingsPage() {
 
   const handleTestPush = async () => {
     setTestingPush(true)
-    setPushMsg('Ensuring push registration...')
+    setPushMsg('Connecting device notifications...')
     try {
-      await subscribeToPushNotifications()
+      await subscribeToPushNotifications({ force: true })
+
+      // Trigger immediate on-device notification banner so user gets immediate visual confirmation
+      if ('serviceWorker' in navigator) {
+        try {
+          const reg = await navigator.serviceWorker.ready
+          await reg.showNotification('TOVEDROP: Test Alert 🔔', {
+            body: 'If you see this, native notifications are working perfectly on this device!',
+            icon: '/icon-192x192.png',
+            badge: '/icon-192x192.png',
+            vibrate: [200, 100, 200]
+          })
+        } catch (localErr) {
+          console.warn('Local notification error:', localErr)
+        }
+      }
+
       let res = await fetch('/api/user/push/test', { method: 'POST' })
       let data = await res.json()
 
-      // If the server detected an outdated or missing subscription, force resubscribe and retry once
       if (!res.ok && data.requiresResubscribe) {
         setPushMsg('Updating device registration with active server key...')
         await subscribeToPushNotifications({ force: true })
@@ -157,7 +172,7 @@ export default function RiderSettingsPage() {
 
       if (res.ok && data.success) {
         setPushEnabled(true)
-        setPushMsg('✅ Test notification sent! Check your screen/banner.')
+        setPushMsg('✅ Test notification dispatched! Check your desktop banner or notification center.')
       } else {
         setPushMsg(`❌ ${data.message || 'Could not send test notification.'}`)
       }
@@ -165,7 +180,7 @@ export default function RiderSettingsPage() {
       setPushMsg(`❌ Error: ${e.message || 'Failed to send test notification.'}`)
     } finally {
       setTestingPush(false)
-      setTimeout(() => setPushMsg(''), 7000)
+      setTimeout(() => setPushMsg(''), 9000)
     }
   }
 

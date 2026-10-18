@@ -75,22 +75,20 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
 
   try {
     // Ensure service worker is registered and ready
-    let registration: ServiceWorkerRegistration | undefined
+    let registration = await navigator.serviceWorker.register('/sw-custom.js')
+    
+    // Check for updates and wait for worker to become active if needed
     try {
-      registration = await navigator.serviceWorker.getRegistration()
+      await registration.update()
     } catch (e) {}
 
-    if (!registration) {
-      registration = await navigator.serviceWorker.register('/sw-custom.js')
-    }
-
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('SW ready timeout')), 6000)
+    const readyFallback = new Promise<ServiceWorkerRegistration>((resolve) =>
+      setTimeout(() => resolve(registration), 2500)
     )
 
     registration = await Promise.race([
       navigator.serviceWorker.ready,
-      timeoutPromise,
+      readyFallback,
     ])
 
     const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey)

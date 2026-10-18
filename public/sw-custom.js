@@ -1,5 +1,10 @@
-self.skipWaiting();
-self.clients.claim();
+self.addEventListener('install', function (event) {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', function (event) {
+  event.waitUntil(self.clients.claim());
+});
 
 // ----------------------------------------------------------------------
 // Push Notification Event Listener
