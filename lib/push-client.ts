@@ -111,6 +111,8 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
         console.info('Outdated or mismatched push subscription detected. Unsubscribing...')
         try {
           await existingSubscription.unsubscribe()
+          // Brief pause for browser and FCM push service to flush old registration
+          await new Promise((r) => setTimeout(r, 250))
         } catch (e) {
           console.warn('Failed to unsubscribe old push subscription:', e)
         }
@@ -132,7 +134,7 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
     return true
   } catch (error) {
     console.warn('Push subscription failed:', error)
-    return true // Permission was granted, UI toggle stays on
+    return false
   }
 }
 

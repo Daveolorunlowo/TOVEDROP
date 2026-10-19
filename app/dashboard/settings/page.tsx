@@ -145,21 +145,6 @@ export default function RiderSettingsPage() {
     try {
       await subscribeToPushNotifications({ force: true })
 
-      // Trigger immediate on-device notification banner so user gets immediate visual confirmation
-      if ('serviceWorker' in navigator) {
-        try {
-          const reg = await navigator.serviceWorker.ready
-          await reg.showNotification('TOVEDROP: Test Alert 🔔', {
-            body: 'If you see this, native notifications are working perfectly on this device!',
-            icon: '/icon-192x192.png',
-            badge: '/icon-192x192.png',
-            vibrate: [200, 100, 200]
-          })
-        } catch (localErr) {
-          console.warn('Local notification error:', localErr)
-        }
-      }
-
       let res = await fetch('/api/user/push/test', { method: 'POST' })
       let data = await res.json()
 
@@ -172,7 +157,20 @@ export default function RiderSettingsPage() {
 
       if (res.ok && data.success) {
         setPushEnabled(true)
-        setPushMsg('✅ Test notification dispatched! Check your desktop banner or notification center.')
+        setPushMsg('✅ Push notification verified! Device is connected to live trip alerts.')
+
+        // Trigger visual confirmation
+        if ('serviceWorker' in navigator) {
+          try {
+            const reg = await navigator.serviceWorker.ready
+            await reg.showNotification('TOVEDROP: Live Alerts Active 🔔', {
+              body: 'Connected to live push server! You will receive instant trip notifications.',
+              icon: '/icon-192x192.png',
+              badge: '/icon-192x192.png',
+              vibrate: [200, 100, 200]
+            })
+          } catch (localErr) {}
+        }
       } else {
         setPushMsg(`❌ ${data.message || 'Could not send test notification.'}`)
       }

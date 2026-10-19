@@ -104,7 +104,12 @@ export const POST = withValidation(acceptTripSchema, async (req: NextRequest, da
  const url = `/dashboard/trips/${trip.id}`
  
  // Await Web Push to guarantee delivery before API response finishes
- await sendWebPush(trip.riderId, title, message, url).catch(err => console.error("Web Push accept failed:", err))
+ try {
+   const pushResult = await sendWebPush(trip.riderId, title, message, url)
+   console.log(`[Trip Accept] Web Push dispatch result for rider ${trip.riderId}:`, pushResult)
+ } catch (err) {
+   console.error("[Trip Accept] Web Push accept failed:", err)
+ }
  
  if (pusherServer) {
    await pusherServer.trigger(`user-trips-${trip.riderId}`, 'trip-accepted', {
