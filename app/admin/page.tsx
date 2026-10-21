@@ -9,8 +9,9 @@ import {
   Clock, CheckCircle2, XCircle, Search, Eye, Sparkles,
   ArrowUpRight, ArrowDownRight, Layers, BarChart3,
   Calendar, DollarSign, Award, BellRing, Droplet,
-  PieChart as PieIcon, Zap
+  PieChart as PieIcon, Zap, LogOut
 } from 'lucide-react'
+import { signOut } from 'next-auth/react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar,
   PieChart, Pie, Cell, XAxis, YAxis, Tooltip, CartesianGrid
@@ -117,6 +118,7 @@ export default function AdminPage() {
   const [pulse, setPulse] = useState(false)
   const [chartMode, setChartMode] = useState<'all' | 'trips' | 'revenue' | 'drops'>('trips')
   const [isMounted, setIsMounted] = useState(false)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
 
   useEffect(() => {
     setIsMounted(true)
@@ -387,6 +389,16 @@ export default function AdminPage() {
               <span className="text-xs font-bold text-foreground">Admin</span>
             </div>
 
+            {/* Log Out Button */}
+            <button
+              onClick={() => setShowLogoutConfirm(true)}
+              title="Sign out of Admin Portal"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card hover:bg-red-500/10 border border-border hover:border-red-500/30 text-muted-foreground hover:text-red-500 transition-all text-xs font-bold cursor-pointer shadow-sm"
+            >
+              <LogOut className="w-3.5 h-3.5 text-red-500" />
+              <span className="hidden sm:inline">Log Out</span>
+            </button>
+
             <button
               onClick={() => setMobileNav(v => !v)}
               className="xl:hidden p-2 rounded-xl bg-card border border-border text-muted-foreground hover:text-foreground cursor-pointer"
@@ -426,6 +438,17 @@ export default function AdminPage() {
                 </button>
               )
             })}
+
+            {/* Mobile Log Out Button */}
+            <div className="pt-2 mt-2 border-t border-border">
+              <button
+                onClick={() => { setMobileNav(false); setShowLogoutConfirm(true) }}
+                className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-red-500 hover:bg-red-500/10 transition-all cursor-pointer"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out of HQ
+              </button>
+            </div>
           </div>
         )}
       </header>
@@ -1296,6 +1319,45 @@ export default function AdminPage() {
           user={selectedUser}
           onClose={() => setSelectedUser(null)}
         />
+      )}
+
+      {/* ── Sign Out Confirmation Modal ── */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-sm bg-card border border-border rounded-2xl p-6 shadow-2xl animate-in zoom-in-95 duration-200 relative">
+            <button 
+              onClick={() => setShowLogoutConfirm(false)}
+              className="absolute top-4 right-4 p-1.5 text-muted-foreground hover:text-foreground hover:bg-surface-elevated rounded-lg transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            
+            <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center justify-center mb-4 mx-auto text-red-500 shadow-sm">
+              <LogOut className="w-6 h-6 ml-0.5" />
+            </div>
+            
+            <h3 className="text-lg font-bold text-foreground text-center mb-1">Sign out of Admin HQ?</h3>
+            <p className="text-xs text-muted-foreground text-center mb-6">
+              You will be securely logged out and returned to the authentication portal.
+            </p>
+            
+            <div className="flex flex-col gap-2.5">
+              <button 
+                className="w-full py-2.5 rounded-xl font-bold text-xs bg-red-600 hover:bg-red-700 text-white transition-all cursor-pointer shadow-sm flex items-center justify-center gap-2"
+                onClick={() => signOut({ callbackUrl: '/auth' })}
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Yes, Sign Out
+              </button>
+              <button 
+                className="w-full py-2.5 rounded-xl font-bold text-xs bg-surface-elevated hover:bg-muted text-foreground border border-border transition-all cursor-pointer"
+                onClick={() => setShowLogoutConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
     </div>
