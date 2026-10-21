@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation'
 import {
   LayoutDashboard, TrendingUp, Car, Flag, Users,
   ShieldAlert, Menu, X, Loader2, Check, ChevronRight,
-  Activity, AlertTriangle, RefreshCw,
-  Clock, CheckCircle2, XCircle, Search
+  Activity, AlertTriangle, RefreshCw, Banknote,
+  Clock, CheckCircle2, XCircle, Search, Eye
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { SkeletonStatCard, SkeletonTableRow } from '@/components/shared/SkeletonVariants'
+import { SkeletonTableRow } from '@/components/shared/SkeletonVariants'
 import { Skeleton } from '@/components/shared/Skeleton'
+import { UserActivityModal } from '@/components/admin/UserActivityModal'
 import { cn } from '@/lib/utils'
 
 const GOLD = 'var(--orange-brand)'
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
   { id: 'overview',   label: 'Overview',         icon: LayoutDashboard },
   { id: 'revenue',    label: 'Revenue',           icon: TrendingUp },
   { id: 'approvals',  label: 'Driver Approvals',  icon: Car },
+  { id: 'payouts',    label: 'Payouts',           icon: Banknote },
   { id: 'reports',    label: 'Reports',           icon: Flag },
   { id: 'users',      label: 'Users',             icon: Users },
   { id: 'security',   label: 'Security',          icon: ShieldAlert },
@@ -44,11 +46,30 @@ function initials(name?: string) {
   return name.split(' ').map((p: string) => p[0]).join('').slice(0, 2).toUpperCase()
 }
 
+function formatDateTime(dateStr?: string | Date) {
+  if (!dateStr) return '—'
+  try {
+    const d = new Date(dateStr)
+    if (isNaN(d.getTime())) return '—'
+    return d.toLocaleString('en-NG', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    })
+  } catch {
+    try {
+      return new Date(dateStr).toLocaleDateString()
+    } catch {
+      return String(dateStr)
+    }
+  }
+}
+
 function Badge({ status }: { status: string }) {
   const map: Record<string, { label: string; color: string; bg: string; dot: string }> = {
     approved:  { label: 'Approved',  color: GREEN, bg: GREEN_DIM, dot: GREEN },
     pending:   { label: 'Pending',   color: GOLD,  bg: GOLD_DIM,  dot: GOLD  },
     suspended: { label: 'Suspended', color: RED,   bg: RED_DIM,   dot: RED   },
+    rejected:  { label: 'Rejected',  color: RED,   bg: RED_DIM,   dot: RED   },
   }
   const s = map[status.toLowerCase()] ?? { label: status, color: TEXT_MD, bg: 'var(--border-subtle)', dot: TEXT_MD }
   return (
@@ -150,6 +171,7 @@ export default function AdminPage() {
   const [securityLoading, setSecurityLoading] = useState(false)
   const [revenueData, setRevenueData] = useState<any[]>([])
   const [revenueLoading, setRevenueLoading] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<any>(null)
   const [pulse, setPulse] = useState(false)
 
   const fetchData = async () => {
@@ -161,34 +183,59 @@ export default function AdminPage() {
         setPulse(true)
         setTimeout(() => setPulse(false), 600)
       } else if (res.status === 401) {
-        router.push('/auth/login')
+        router.push('/auth')
       }
-    } catch (e) { console.error(e) }
-    finally {
+    } catch (e) {
+      console.error('Error fetching admin stats:', e)
+    } finally {
       const elapsed = Date.now() - start
       if (elapsed < 300) await new Promise(r => setTimeout(r, 300 - elapsed))
       setLoading(false)
     }
   }
 
-  useEffect(() => { fetchData() }, [])
+  useEffect(() => {
+    fetchData()
+    if (typeof window !== 'undefined') {
+      const tabParam = new URLSearchParams(window.location.search).get('tab')
+      if (tabParam && NAV_ITEMS.some(n => n.id === tabParam)) {
+        setActiveTab(tabParam)
+      }
+    }
+  }, [])
 
   const fetchSecurityLogs = async () => {
     setSecurityLoading(true)
     try {
-      const res = await fetch('/api/admin/security-logs')
-      if (res.ok) setSecurityLogs(await res.json())
-    } catch (e) { console.error(e) }
-    finally { setSecurityLoading(false) }
+      const res = await fetch('/api/portal/audit-log')
+      if (res.ok) {
+        const json = await res.json()
+        setSecurityLogs(Array.isArray(json) ? json : (json?.logs || []))
+      }
+    } catch (e) {
+      console.error('Error fetching security logs:', e)
+    } finally {
+      setSecurityLoading(false)
+    }
   }
 
   const fetchRevenue = async () => {
     setRevenueLoading(true)
     try {
       const res = await fetch('/api/admin/revenue')
-      if (res.ok) setRevenueData(await res.json())
-    } catch (e) { console.error(e) }
-    finally { setRevenueLoading(false) }
+      if (res.ok) {
+        const json = await res.json()
+        const rows = Array.isArray(json) ? json : (json?.platformRevenues || [])
+        setRevenueData(Array.isArray(rows) ? rows : [])
+      } else {
+        setRevenueData([])
+      }
+    } catch (e) {
+      console.error('Error fetching revenue:', e)
+      setRevenueData([])
+    } finally {
+      setRevenueLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -196,28 +243,102 @@ export default function AdminPage() {
     if (activeTab === 'revenue' && revenueData.length === 0) fetchRevenue()
   }, [activeTab])
 
-  const handleAction = async (driverId: string, action: 'approve' | 'reject' | 'suspend') => {
+  const handleAction = async (driverId: string, action: 'approve' | 'reject' | 'suspend' | 'unsuspend') => {
     setProcessing(driverId)
     try {
-      await fetch('/api/admin/drivers', {
+      const res = await fetch('/api/admin/drivers/manage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ driverId, action }),
       })
-      await fetchData()
-    } catch (e) { console.error(e) }
-    finally { setProcessing(null) }
+      if (res.ok) {
+        await fetchData()
+      } else {
+        const err = await res.json()
+        alert(err.message || 'Action failed')
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Network error')
+    } finally {
+      setProcessing(null)
+    }
   }
 
-  const stats = data
-    ? { totalUsers: data.totalUsers ?? 0, totalDrivers: data.totalDrivers ?? 0, totalTrips: data.totalTrips ?? 0 }
-    : { totalUsers: 0, totalDrivers: 0, totalTrips: 0 }
-  const pendingDrivers: any[] = data?.pendingDrivers ?? []
-  const suspendedDrivers: any[] = data?.suspendedDrivers ?? []
-  const allUsers: any[] = data?.users ?? []
+  const handlePayoutAction = async (id: string, action: 'approve' | 'reject') => {
+    setProcessing(id)
+    try {
+      const res = await fetch('/api/admin/withdrawals/manage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requestId: id, action })
+      })
+      if (res.ok) {
+        await fetchData()
+      } else {
+        const err = await res.json()
+        alert(err.message || 'Action failed')
+      }
+    } catch (e) {
+      console.error(e)
+      alert('Network error')
+    } finally {
+      setProcessing(null)
+    }
+  }
+
+  // Robustly extract stats mapping from API response
+  const rawStats = data?.stats || {}
+  const stats = {
+    totalUsers: rawStats.totalUsers ?? (data?.totalUsers ?? 0),
+    totalDrivers: rawStats.totalDrivers ?? (data?.totalDrivers ?? 0),
+    totalTrips: rawStats.totalTrips ?? (data?.totalTrips ?? 0),
+    completedTrips: rawStats.completedTrips ?? 0,
+    platformRevenue: rawStats.platformRevenue ?? 0,
+    driverPayouts: rawStats.driverPayouts ?? 0,
+  }
+
+  // Drivers and pending/suspended splits
+  const driversList: any[] = Array.isArray(data?.drivers) ? data.drivers : []
+  const pendingDrivers = driversList.filter((d: any) => d.status === 'PENDING')
+  const suspendedDrivers = driversList.filter((d: any) => d.status === 'SUSPENDED')
+
+  // Withdrawal requests
+  const withdrawalRequests: any[] = Array.isArray(data?.withdrawalRequests) ? data.withdrawalRequests : []
+  const pendingPayouts = withdrawalRequests.filter((r: any) => r.status === 'PENDING')
+
+  // Combined users list with proper types and statuses
+  const ridersList: any[] = (Array.isArray(data?.users) ? data.users : []).map((u: any) => ({
+    ...u,
+    type: 'Rider',
+    detailStatus: 'approved',
+  }))
+  const driverUsersList: any[] = driversList.map((d: any) => ({
+    ...d.user,
+    id: d.userId || d.user?.id,
+    type: 'Driver',
+    detailStatus: d.status?.toLowerCase() || 'pending',
+    trips: d.totalTrips ?? 0,
+    rating: d.rating ?? 0,
+    driverProfile: d,
+  }))
+
+  const allUsers = [...ridersList, ...driverUsersList].sort(
+    (a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+  )
+
   const filteredUsers = search.trim()
-    ? allUsers.filter((u: any) => u.name?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase()))
+    ? allUsers.filter((u: any) =>
+        u.name?.toLowerCase().includes(search.toLowerCase()) ||
+        u.email?.toLowerCase().includes(search.toLowerCase())
+      )
     : allUsers
+
+  const totalRevenueAmount = Array.isArray(revenueData)
+    ? revenueData.reduce((acc: number, row: any) => acc + (Number(row.amount) || 0), 0)
+    : 0
+  const totalTransactionsCount = Array.isArray(revenueData) ? revenueData.length : 0
+  const avgRevenuePerTrip = totalTransactionsCount > 0 ? totalRevenueAmount / totalTransactionsCount : 0
 
   const activeNavItem = NAV_ITEMS.find(n => n.id === activeTab)
 
@@ -244,6 +365,8 @@ export default function AdminPage() {
           <nav className="hidden lg:flex items-center gap-0.5 mx-4 flex-1">
             {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
               const active = activeTab === id
+              const badgeCount = id === 'approvals' ? pendingDrivers.length : (id === 'payouts' ? pendingPayouts.length : 0)
+
               return (
                 <button key={id} onClick={() => { setActiveTab(id); setMobileNav(false) }}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150"
@@ -254,10 +377,10 @@ export default function AdminPage() {
                   }}>
                   <Icon className="w-3.5 h-3.5" />
                   {label}
-                  {id === 'approvals' && pendingDrivers.length > 0 && (
+                  {badgeCount > 0 && (
                     <span className="w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black ml-0.5"
                       style={{ background: GOLD, color: 'var(--primary-foreground)' }}>
-                      {pendingDrivers.length}
+                      {badgeCount}
                     </span>
                   )}
                 </button>
@@ -266,8 +389,8 @@ export default function AdminPage() {
           </nav>
 
           <div className="ml-auto flex items-center gap-3">
-            <button onClick={fetchData}
-              className="w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-100 opacity-50"
+            <button onClick={fetchData} title="Refresh data"
+              className="w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 hover:opacity-100 opacity-50 cursor-pointer"
               style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid ${BORDER}` }}>
               <RefreshCw className={cn('w-3.5 h-3.5', pulse && 'animate-spin')} style={{ color: TEXT_MD }} />
             </button>
@@ -275,7 +398,7 @@ export default function AdminPage() {
               style={{ background: `linear-gradient(135deg, ${GOLD} 0%, var(--orange-dark) 100%)`, color: 'var(--primary-foreground)' }}>
               A
             </div>
-            <button className="lg:hidden" onClick={() => setMobileNav(v => !v)}>
+            <button className="lg:hidden cursor-pointer" onClick={() => setMobileNav(v => !v)}>
               {mobileNav
                 ? <X className="w-5 h-5" style={{ color: TEXT_MD }} />
                 : <Menu className="w-5 h-5" style={{ color: TEXT_MD }} />}
@@ -288,12 +411,22 @@ export default function AdminPage() {
           <div className="lg:hidden px-4 pb-3 flex flex-col gap-0.5" style={{ borderTop: `1px solid ${BORDER_LO}` }}>
             {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
               const active = activeTab === id
+              const badgeCount = id === 'approvals' ? pendingDrivers.length : (id === 'payouts' ? pendingPayouts.length : 0)
+
               return (
                 <button key={id} onClick={() => { setActiveTab(id); setMobileNav(false) }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-semibold w-full text-left transition-all"
+                  className="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold w-full text-left transition-all cursor-pointer"
                   style={{ color: active ? GOLD : TEXT_MD, background: active ? GOLD_DIM : 'transparent' }}>
-                  <Icon className="w-4 h-4" />
-                  {label}
+                  <div className="flex items-center gap-2">
+                    <Icon className="w-4 h-4" />
+                    {label}
+                  </div>
+                  {badgeCount > 0 && (
+                    <span className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black"
+                      style={{ background: GOLD, color: 'var(--primary-foreground)' }}>
+                      {badgeCount}
+                    </span>
+                  )}
                 </button>
               )
             })}
@@ -351,7 +484,7 @@ export default function AdminPage() {
 
             {pendingDrivers.length > 0 && (
               <button onClick={() => setActiveTab('approvals')}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90 cursor-pointer"
                 style={{ background: 'linear-gradient(90deg, rgba(249, 115, 22, 0.14) 0%, rgba(249, 115, 22, 0.08) 100%)', border: '1px solid rgba(249, 115, 22, 0.25)', color: GOLD }}>
                 <AlertTriangle className="w-4 h-4" />
                 Review {pendingDrivers.length} pending driver application{pendingDrivers.length !== 1 ? 's' : ''}
@@ -370,7 +503,7 @@ export default function AdminPage() {
                 ) : (
                   <div>
                     {pendingDrivers.slice(0, 4).map((d: any, i: number) => (
-                      <div key={d.userId} className="flex items-center gap-3 py-3"
+                      <div key={d.userId || d.id} className="flex items-center gap-3 py-3"
                         style={{ borderBottom: i < Math.min(pendingDrivers.length, 4) - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
                         <Avatar className="w-8 h-8 shrink-0">
                           <AvatarFallback className="text-[10px] font-black"
@@ -378,7 +511,9 @@ export default function AdminPage() {
                         </Avatar>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold truncate" style={{ color: TEXT_HI }}>{d.user?.name}</p>
-                          <p className="text-[11px]" style={{ color: TEXT_LO }}>{d.vehicleMake} {d.vehicleModel}</p>
+                          <p className="text-[11px]" style={{ color: TEXT_LO }}>
+                            {d.vehicleMake || d.vehiclePlate ? `${d.vehicleMake ?? ''} ${d.vehicleModel ?? ''} • ${d.vehiclePlate ?? ''}` : 'Vehicle pending'}
+                          </p>
                         </div>
                         <Badge status="pending" />
                       </div>
@@ -397,7 +532,7 @@ export default function AdminPage() {
                 ) : (
                   <div>
                     {suspendedDrivers.slice(0, 4).map((d: any, i: number) => (
-                      <div key={d.userId} className="flex items-center gap-3 py-3"
+                      <div key={d.userId || d.id} className="flex items-center gap-3 py-3"
                         style={{ borderBottom: i < Math.min(suspendedDrivers.length, 4) - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
                         <Avatar className="w-8 h-8 shrink-0">
                           <AvatarFallback className="text-[10px] font-black"
@@ -428,29 +563,83 @@ export default function AdminPage() {
 
         {/* ─── REVENUE ─── */}
         {!loading && activeTab === 'revenue' && (
-          <div className="space-y-4">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <StatCard
+                label="Total Platform Revenue"
+                value={`₦${totalRevenueAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                sub="Cumulative commission earned"
+                accent={true}
+                icon={TrendingUp}
+              />
+              <StatCard
+                label="Monetized Trips"
+                value={String(totalTransactionsCount)}
+                sub="Recorded commission entries"
+                icon={Activity}
+              />
+              <StatCard
+                label="Avg Cut / Trip"
+                value={`₦${avgRevenuePerTrip.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                sub="Average platform share"
+                icon={Car}
+              />
+            </div>
+
             <Card>
               <SectionHeader title="Revenue Overview" />
               {revenueLoading ? (
                 <div className="flex items-center justify-center py-16">
                   <Loader2 className="w-5 h-5 animate-spin" style={{ color: GOLD }} />
                 </div>
-              ) : revenueData.length === 0 ? (
+              ) : !Array.isArray(revenueData) || revenueData.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 gap-3">
                   <TrendingUp className="w-8 h-8 opacity-20" style={{ color: TEXT_MD }} />
                   <p className="text-sm" style={{ color: TEXT_LO }}>No revenue data available yet.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
-                  {revenueData.map((row: any, i: number) => (
-                    <div key={i} className="flex items-center justify-between py-3"
-                      style={{ borderBottom: i < revenueData.length - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
-                      <span className="text-sm font-medium" style={{ color: TEXT_HI }}>{row.label ?? row.period}</span>
-                      <span className="text-sm font-black tabular-nums" style={{ color: GOLD }}>
-                        £{typeof row.amount === 'number' ? row.amount.toFixed(2) : row.amount}
-                      </span>
-                    </div>
-                  ))}
+                  {revenueData.map((row: any, i: number) => {
+                    const tripRoute = row.trip?.pickup && row.trip?.destination
+                      ? `${row.trip.pickup} → ${row.trip.destination}`
+                      : null
+                    const title = tripRoute || row.label || row.period || (row.tripId ? `Trip Commission (Trip #${String(row.tripId).slice(-6)})` : `Platform Revenue #${i + 1}`)
+                    const driverName = row.trip?.driver?.name ? `Driver: ${row.trip.driver.name}` : null
+                    const formattedDate = formatDateTime(row.createdAt)
+                    const amountFormatted = Number(row.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+
+                    return (
+                      <div key={row.id ?? i} className="flex items-center justify-between py-3.5 gap-4"
+                        style={{ borderBottom: i < revenueData.length - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-semibold truncate" style={{ color: TEXT_HI }}>
+                            {title}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            {driverName && (
+                              <span className="text-[11px] font-medium" style={{ color: TEXT_MD }}>
+                                {driverName}
+                              </span>
+                            )}
+                            {driverName && formattedDate && <span className="text-[10px]" style={{ color: TEXT_LO }}>•</span>}
+                            {formattedDate && (
+                              <span className="text-[11px]" style={{ color: TEXT_LO }}>
+                                {formattedDate}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <span className="text-sm font-black tabular-nums" style={{ color: GOLD }}>
+                            +₦{amountFormatted}
+                          </span>
+                          <p className="text-[10px] uppercase font-bold tracking-wider mt-0.5" style={{ color: GREEN }}>
+                            Settled
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               )}
             </Card>
@@ -469,50 +658,152 @@ export default function AdminPage() {
                 </div>
               </Card>
             ) : (
-              pendingDrivers.map((d: any) => (
-                <Card key={d.userId}>
-                  <div className="flex items-start gap-4">
-                    <Avatar className="w-12 h-12 shrink-0">
-                      <AvatarFallback className="text-sm font-black"
-                        style={{ background: GOLD_DIM, color: GOLD }}>{initials(d.user?.name)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-bold" style={{ color: TEXT_HI }}>{d.user?.name}</p>
-                        <Badge status="pending" />
-                      </div>
-                      <p className="text-xs mb-3" style={{ color: TEXT_MD }}>{d.user?.email}</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                        {[
-                          { label: 'Vehicle', value: `${d.vehicleMake ?? '—'} ${d.vehicleModel ?? ''}` },
-                          { label: 'Year',    value: d.vehicleYear ?? '—' },
-                          { label: 'Colour',  value: d.vehicleColour ?? '—' },
-                          { label: 'Plate',   value: d.licensePlate ?? '—' },
-                        ].map(item => (
-                          <div key={item.label}>
-                            <p className="text-[10px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: TEXT_LO }}>{item.label}</p>
-                            <p className="text-xs font-semibold" style={{ color: TEXT_HI }}>{item.value}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <button disabled={processing === d.userId} onClick={() => handleAction(d.userId, 'approve')}
-                          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-90 disabled:opacity-50"
-                          style={{ background: GREEN_DIM, color: GREEN, border: '1px solid rgba(52,211,153,0.3)' }}>
-                          {processing === d.userId ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
-                          Approve
-                        </button>
-                        <button disabled={processing === d.userId} onClick={() => handleAction(d.userId, 'reject')}
-                          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-90 disabled:opacity-50"
-                          style={{ background: RED_DIM, color: RED, border: '1px solid rgba(248,113,113,0.3)' }}>
-                          <XCircle className="w-3 h-3" />
-                          Reject
-                        </button>
+              pendingDrivers.map((d: any) => {
+                const driverId = d.userId || d.id
+                return (
+                  <Card key={driverId}>
+                    <div className="flex items-start gap-4">
+                      <Avatar className="w-12 h-12 shrink-0">
+                        <AvatarFallback className="text-sm font-black"
+                          style={{ background: GOLD_DIM, color: GOLD }}>{initials(d.user?.name)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="text-sm font-bold" style={{ color: TEXT_HI }}>{d.user?.name}</p>
+                          <Badge status="pending" />
+                        </div>
+                        <p className="text-xs mb-3" style={{ color: TEXT_MD }}>{d.user?.email}</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                          {[
+                            { label: 'Vehicle', value: `${d.vehicleMake ?? ''} ${d.vehicleModel ?? ''}`.trim() || '—' },
+                            { label: 'Plate',   value: d.vehiclePlate ?? d.licensePlate ?? '—' },
+                            { label: 'Colour',  value: d.vehicleColor ?? d.vehicleColour ?? '—' },
+                            { label: 'Phone',   value: d.phone ?? d.user?.phoneNumber ?? d.area ?? '—' },
+                          ].map(item => (
+                            <div key={item.label}>
+                              <p className="text-[10px] font-semibold uppercase tracking-widest mb-0.5" style={{ color: TEXT_LO }}>{item.label}</p>
+                              <p className="text-xs font-semibold" style={{ color: TEXT_HI }}>{item.value}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button disabled={processing === driverId} onClick={() => handleAction(driverId, 'approve')}
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer"
+                            style={{ background: GREEN_DIM, color: GREEN, border: '1px solid rgba(52,211,153,0.3)' }}>
+                            {processing === driverId ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                            Approve
+                          </button>
+                          <button disabled={processing === driverId} onClick={() => handleAction(driverId, 'reject')}
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer"
+                            style={{ background: RED_DIM, color: RED, border: '1px solid rgba(248,113,113,0.3)' }}>
+                            <XCircle className="w-3 h-3" />
+                            Reject
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Card>
-              ))
+                  </Card>
+                )
+              })
+            )}
+          </div>
+        )}
+
+        {/* ─── PAYOUTS (WITHDRAWALS) ─── */}
+        {!loading && activeTab === 'payouts' && (
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <StatCard
+                label="Pending Payout Requests"
+                value={String(pendingPayouts.length)}
+                sub="Awaiting admin approval"
+                accent={pendingPayouts.length > 0}
+                icon={Banknote}
+              />
+              <StatCard
+                label="Total Driver Payouts"
+                value={`₦${Number(stats.driverPayouts || 0).toLocaleString()}`}
+                sub="Processed to driver wallets"
+                icon={TrendingUp}
+              />
+            </div>
+
+            <Card>
+              <SectionHeader title="Pending Withdrawal Requests" />
+              {pendingPayouts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 gap-3">
+                  <CheckCircle2 className="w-8 h-8 opacity-30" style={{ color: GREEN }} />
+                  <p className="text-sm" style={{ color: TEXT_LO }}>No pending driver withdrawal requests.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-border">
+                  {pendingPayouts.map((req: any) => (
+                    <div key={req.id} className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="w-9 h-9 shrink-0">
+                          <AvatarFallback className="text-xs font-black" style={{ background: GOLD_DIM, color: GOLD }}>
+                            {initials(req.driver?.user?.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-semibold" style={{ color: TEXT_HI }}>{req.driver?.user?.name || 'Driver'}</p>
+                          <p className="text-xs" style={{ color: TEXT_MD }}>
+                            {req.driver?.bankName ?? 'Bank'} • {req.driver?.accountNumber ?? 'Account'} ({req.driver?.accountName ?? ''})
+                          </p>
+                          <p className="text-[10px] mt-0.5" style={{ color: TEXT_LO }}>
+                            Requested {formatDateTime(req.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                        <span className="text-base font-black tabular-nums" style={{ color: GREEN }}>
+                          ₦{Number(req.amount || 0).toLocaleString()}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            disabled={processing === req.id}
+                            onClick={() => handlePayoutAction(req.id, 'approve')}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer flex items-center gap-1"
+                            style={{ background: GREEN_DIM, color: GREEN, border: '1px solid rgba(52,211,153,0.3)' }}
+                          >
+                            {processing === req.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                            Approve
+                          </button>
+                          <button
+                            disabled={processing === req.id}
+                            onClick={() => handlePayoutAction(req.id, 'reject')}
+                            className="px-3 py-1.5 rounded-lg text-xs font-bold transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer flex items-center gap-1"
+                            style={{ background: RED_DIM, color: RED, border: '1px solid rgba(248,113,113,0.3)' }}
+                          >
+                            <XCircle className="w-3 h-3" />
+                            Reject
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
+
+            {withdrawalRequests.filter((r: any) => r.status !== 'PENDING').length > 0 && (
+              <Card>
+                <SectionHeader title="Past Withdrawals" />
+                <div className="divide-y divide-border">
+                  {withdrawalRequests.filter((r: any) => r.status !== 'PENDING').slice(0, 10).map((req: any) => (
+                    <div key={req.id} className="py-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold" style={{ color: TEXT_HI }}>{req.driver?.user?.name || 'Driver'}</p>
+                        <p className="text-[11px]" style={{ color: TEXT_LO }}>{formatDateTime(req.createdAt)}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs font-bold" style={{ color: TEXT_HI }}>₦{Number(req.amount || 0).toLocaleString()}</p>
+                        <Badge status={req.status?.toLowerCase() || 'approved'} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
             )}
           </div>
         )}
@@ -529,24 +820,35 @@ export default function AdminPage() {
                 </div>
               ) : (
                 <div>
-                  {suspendedDrivers.map((d: any, i: number) => (
-                    <div key={d.userId} className="flex items-center gap-3 py-3"
-                      style={{ borderBottom: i < suspendedDrivers.length - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
-                      <Avatar className="w-9 h-9 shrink-0">
-                        <AvatarFallback className="text-xs font-black"
-                          style={{ background: RED_DIM, color: RED }}>{initials(d.user?.name)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs font-semibold" style={{ color: TEXT_MD }}>{d.user?.name}</p>
-                        <p className="text-[11px]" style={{ color: TEXT_LO }}>{d.user?.email}</p>
+                  {suspendedDrivers.map((d: any, i: number) => {
+                    const driverId = d.userId || d.id
+                    return (
+                      <div key={driverId} className="flex items-center gap-3 py-3"
+                        style={{ borderBottom: i < suspendedDrivers.length - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
+                        <Avatar className="w-9 h-9 shrink-0">
+                          <AvatarFallback className="text-xs font-black"
+                            style={{ background: RED_DIM, color: RED }}>{initials(d.user?.name)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold" style={{ color: TEXT_MD }}>{d.user?.name}</p>
+                          <p className="text-[11px]" style={{ color: TEXT_LO }}>{d.user?.email}</p>
+                        </div>
+                        <div className="text-right mr-3">
+                          <p className="text-xs font-black tabular-nums mb-0.5" style={{ color: TEXT_HI }}>{d.totalTrips ?? d.trips ?? 0}</p>
+                          <p className="text-[10px] uppercase tracking-widest" style={{ color: TEXT_LO }}>trips</p>
+                        </div>
+                        <Badge status="suspended" />
+                        <button
+                          disabled={processing === driverId}
+                          onClick={() => handleAction(driverId, 'unsuspend')}
+                          className="ml-2 px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all hover:opacity-90 disabled:opacity-50 cursor-pointer"
+                          style={{ background: GREEN_DIM, color: GREEN, border: '1px solid rgba(52,211,153,0.3)' }}
+                        >
+                          Un-suspend
+                        </button>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs font-black tabular-nums mb-0.5" style={{ color: TEXT_HI }}>{d.trips ?? 0}</p>
-                        <p className="text-[10px] uppercase tracking-widest" style={{ color: TEXT_LO }}>trips</p>
-                      </div>
-                      <Badge status="suspended" />
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </Card>
@@ -560,7 +862,7 @@ export default function AdminPage() {
               <div className="flex items-center justify-between mb-4 gap-3">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: TEXT_LO }} />
-                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users…"
+                  <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search users by name or email…"
                     className="w-full text-xs pl-9 pr-3 py-2 outline-none"
                     style={{ background: NAVY_2, border: `1px solid ${BORDER}`, borderRadius: '10px', color: TEXT_HI }} />
                 </div>
@@ -568,12 +870,12 @@ export default function AdminPage() {
               </div>
 
               <div className="grid text-[10px] font-bold uppercase tracking-widest px-3 pb-2"
-                style={{ gridTemplateColumns: '1fr 80px 100px 90px 70px', color: TEXT_LO, borderBottom: `1px solid ${BORDER}` }}>
+                style={{ gridTemplateColumns: '1fr 80px 100px 90px 120px', color: TEXT_LO, borderBottom: `1px solid ${BORDER}` }}>
                 <span>User</span>
                 <span>Role</span>
                 <span className="hidden sm:block">Activity</span>
                 <span>Status</span>
-                <span />
+                <span className="text-right">Actions</span>
               </div>
 
               {filteredUsers.length === 0 ? (
@@ -582,41 +884,68 @@ export default function AdminPage() {
                 </div>
               ) : (
                 <div>
-                  {filteredUsers.map((user: any, i: number) => (
-                    <div key={user.id ?? i}
-                      className="grid items-center px-3 py-3 transition-all rounded-xl hover:bg-white/[0.02]"
-                      style={{ gridTemplateColumns: '1fr 80px 100px 90px 70px', borderBottom: i < filteredUsers.length - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <Avatar className="w-7 h-7 shrink-0">
-                          <AvatarFallback className="text-[9px] font-black"
-                            style={{ background: user.type === 'Driver' ? BLUE_DIM : GOLD_DIM, color: user.type === 'Driver' ? BLUE : GOLD }}>
-                            {initials(user.name)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="min-w-0">
-                          <p className="text-xs font-semibold truncate" style={{ color: TEXT_HI }}>{user.name}</p>
-                          <p className="text-[11px] truncate" style={{ color: TEXT_LO }}>{user.email}</p>
+                  {filteredUsers.map((user: any, i: number) => {
+                    const userId = user.id
+                    return (
+                      <div key={userId ?? i}
+                        className="grid items-center px-3 py-3 transition-all rounded-xl hover:bg-white/[0.02]"
+                        style={{ gridTemplateColumns: '1fr 80px 100px 90px 120px', borderBottom: i < filteredUsers.length - 1 ? `1px solid ${BORDER_LO}` : 'none' }}>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <Avatar className="w-7 h-7 shrink-0">
+                            <AvatarFallback className="text-[9px] font-black"
+                              style={{ background: user.type === 'Driver' ? BLUE_DIM : GOLD_DIM, color: user.type === 'Driver' ? BLUE : GOLD }}>
+                              {initials(user.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="min-w-0">
+                            <p className="text-xs font-semibold truncate" style={{ color: TEXT_HI }}>{user.name || 'Unnamed'}</p>
+                            <p className="text-[11px] truncate" style={{ color: TEXT_LO }}>{user.email}</p>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest"
+                          style={{ color: user.type === 'Driver' ? BLUE : TEXT_MD }}>
+                          {user.type}
+                        </span>
+                        <span className="text-[11px] hidden sm:block" style={{ color: TEXT_LO }}>
+                          {user.type === 'Driver' ? `${user.trips ?? 0} trips` : `${user.dropsBalance ?? 0} drops`}
+                        </span>
+                        <div>
+                          <Badge status={user.detailStatus ?? 'approved'} />
+                        </div>
+                        <div className="flex items-center justify-end gap-2 text-right">
+                          <button
+                            type="button"
+                            onClick={() => setSelectedUser(user)}
+                            className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded transition-all hover:opacity-100 opacity-60 cursor-pointer"
+                            style={{ color: GOLD, background: GOLD_DIM }}
+                            title="View user activity"
+                          >
+                            View
+                          </button>
+                          {user.type === 'Driver' && user.detailStatus === 'approved' && (
+                            <button
+                              disabled={processing === userId}
+                              onClick={() => handleAction(userId, 'suspend')}
+                              className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded transition-all hover:opacity-100 opacity-60 hover:opacity-100 cursor-pointer"
+                              style={{ color: RED, background: RED_DIM }}
+                            >
+                              Suspend
+                            </button>
+                          )}
+                          {user.type === 'Driver' && user.detailStatus === 'suspended' && (
+                            <button
+                              disabled={processing === userId}
+                              onClick={() => handleAction(userId, 'unsuspend')}
+                              className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded transition-all hover:opacity-100 opacity-60 hover:opacity-100 cursor-pointer"
+                              style={{ color: GREEN, background: GREEN_DIM }}
+                            >
+                              Restore
+                            </button>
+                          )}
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest"
-                        style={{ color: user.type === 'Driver' ? BLUE : TEXT_MD }}>
-                        {user.type}
-                      </span>
-                      <span className="text-[11px] hidden sm:block" style={{ color: TEXT_LO }}>
-                        {user.type === 'Driver' ? `${user.trips ?? 0} trips` : `${user.dropsBalance ?? 0} drops`}
-                      </span>
-                      <Badge status={user.detailStatus ?? 'approved'} />
-                      <div className="text-right">
-                        {user.type === 'Driver' && user.detailStatus === 'approved' && (
-                          <button disabled={processing === user.id} onClick={() => handleAction(user.id, 'suspend')}
-                            className="text-[10px] font-bold uppercase tracking-widest transition-all hover:opacity-100 opacity-40"
-                            style={{ color: RED }}>
-                            Suspend
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </Card>
@@ -633,9 +962,9 @@ export default function AdminPage() {
                   <p className="text-sm font-bold" style={{ color: TEXT_HI }}>Admin Login Audit Log</p>
                 </div>
                 <button onClick={fetchSecurityLogs}
-                  className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest transition-all hover:opacity-100 opacity-50"
+                  className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest transition-all hover:opacity-100 opacity-50 cursor-pointer"
                   style={{ color: GOLD }}>
-                  <RefreshCw className="w-3 h-3" />
+                  <RefreshCw className={cn("w-3 h-3", securityLoading && "animate-spin")} />
                   Refresh
                 </button>
               </div>
@@ -695,6 +1024,14 @@ export default function AdminPage() {
         )}
 
       </main>
+
+      {/* User Activity Modal */}
+      {selectedUser && (
+        <UserActivityModal
+          user={selectedUser}
+          onClose={() => setSelectedUser(null)}
+        />
+      )}
     </div>
   )
 }

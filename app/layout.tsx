@@ -73,6 +73,8 @@ export const viewport: Viewport = {
 }
 
 import { cookies } from 'next/headers'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/authOptions'
 
 export default async function RootLayout({
   children,
@@ -81,11 +83,19 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies()
   const hasSeenWelcome = cookieStore.get('tovedrop_welcomed')?.value === 'true'
+  const session = await getServerSession(authOptions)
 
   return (
     <html lang="en" className="bg-background" suppressHydrationWarning>
       <body className={`${inter.className} antialiased`}>
         <Providers>
+          {!hasSeenWelcome && (
+            <WelcomeOverlay
+              hasSeenWelcome={hasSeenWelcome}
+              initialFirstName={session?.user?.name?.split(' ')[0] || ''}
+              initialRole={(session?.user as any)?.role || 'RIDER'}
+            />
+          )}
           <DynamicBackground />
           <CurvedBackground curveStyle="asymmetric" topColorClass="bg-orange-brand" bottomColorClass="bg-transparent" animated={true} />
           <GlobalAuthenticatedNav />
@@ -98,7 +108,6 @@ export default async function RootLayout({
           <ServiceWorkerRegistry />
           <AutoRefreshManager />
           <RiderNotificationBanner />
-          <WelcomeOverlay hasSeenWelcome={hasSeenWelcome} />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </Providers>
         <NetworkIndicator />

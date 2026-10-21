@@ -6,79 +6,83 @@ import { z } from "zod"
 import { withValidation } from "@/lib/with-validation"
 
 const adminWithdrawalSchema = z.object({
-  requestId: z.string().min(1, "Request ID is required"),
+  requestId: z.string().optional(),
+  withdrawalId: z.string().optional(),
   action: z.enum(["approve", "reject"])
+}).refine(data => !!(data.requestId || data.withdrawalId), {
+  message: "Request ID is required"
 })
 
 export const POST = withValidation(adminWithdrawalSchema, async (req: NextRequest, data) => {
- try {
- const session = await getServerSession(authOptions)
- if (!session || !session.user || session.user.role !== 'ADMIN') {
- return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
- }
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session || !session.user || session.user.role !== 'ADMIN') {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
 
- const { requestId, action } = data
+    const requestId = data.requestId || data.withdrawalId!
+    const { action } = data
 
- const request = await prisma.withdrawalRequest.findUnique({
- where: { id: requestId }
- })
+    const request = await prisma.withdrawalRequest.findUnique({
+      where: { id: requestId }
+    })
 
- if (!request) {
- return NextResponse.json({ message: "Withdrawal request not found" }, { status: 404 })
- }
+    if (!request) {
+      return NextResponse.json({ message: "Withdrawal request not found" }, { status: 404 })
+    }
 
- if (request.status !== "PENDING") {
- return NextResponse.json({ message: "Request already processed" }, { status: 400 })
- }
+    if (request.status !== "PENDING") {
+      return NextResponse.json({ message: "Request already processed" }, { status: 400 })
+    }
 
- const result = await prisma.$transaction(async (tx) => {
- let updatedRequest
- 
- if (action === 'approve') {
- updatedRequest = await tx.withdrawalRequest.update({
- where: { id: requestId },
- data: { 
-   status: "APPROVED",
-   approvedByAdminId: session.user.id
- }
- })
- } else if (action === 'reject') {
- updatedRequest = await tx.withdrawalRequest.update({
- where: { id: requestId },
- data: { 
-   status: "REJECTED",
-   approvedByAdminId: session.user.id
- }
- })
+    const result = await prisma.$transaction(async (tx) => {
+      let updatedRequest
+      
+      if (action === 'approve') {
+        updatedRequest = await tx.withdrawalRequest.update({
+          where: { id: requestId },
+          data: { 
+            status: "APPROVED",
+            approvedByAdminId: session.user.id
+          }
+        })
+      } else if (action === 'reject') {
+        updatedRequest = await tx.withdrawalRequest.update({
+          where: { id: requestId },
+          data: { 
+            status: "REJECTED",
+            approvedByAdminId: session.user.id
+          }
+        })
 
- // Refund driver
- await tx.driverProfile.update({
- where: { id: request.driverId },
- data: {
- walletBalance: { increment: request.amount }
- }
- })
+        // Refund driver
+        await tx.driverProfile.update({
+          where: { id: request.driverId },
+          data: {
+            walletBalance: { increment: request.amount }
+          }
+        })
 
- // Record refund
- await tx.walletTransaction.create({
- data: {
- driverId: request.driverId,
- type: "ADJUSTMENT",
- amount: request.amount,
- description: `Refund for rejected withdrawal request of ₦${request.amount}`
- }
- })
- }
+        await tx.walletTransaction.create({
+          data: {
+            driverId: request.driverId,
+            type: "ADJUSTMENT",
+            amount: request.amount,
+            description: `Refund for rejected withdrawal request #${requestId}`
+          }
+        })
+      }
 
- return updatedRequest
- })
+      return updatedRequest
+    })
 
- return NextResponse.json({ 
- message: `Withdrawal request ${action}d successfully`, 
- request: result 
- }, { status: 200 })
+    return NextResponse.json({ 
+      message: `Withdrawal ${action}d successfully`,
+      request: result 
+    }, { status: 200 })
 
- } catch (error: any) {
- return NextResponse.json({ message: "Error processing withdrawal request", error: error.message }, { status: 500 })
- }
+  } catch (error: any) {
+    console.error("Admin withdrawal manage error:", error)
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+  }
 })

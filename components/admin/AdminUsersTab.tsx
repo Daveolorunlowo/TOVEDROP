@@ -3,6 +3,7 @@ import { PaginationControls } from '@/components/shared/PaginationControls'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Search } from 'lucide-react'
 import { initials } from '@/lib/utils'
+import { RiderActionClient } from '@/components/admin/RiderActionClient'
 
 export async function AdminUsersTab({ searchParams }: { searchParams: { page?: string, q?: string } }) {
  const page = parseInt(searchParams.page || '1', 10)
@@ -97,9 +98,7 @@ export async function AdminUsersTab({ searchParams }: { searchParams: { page?: s
 
           {/* Actions Footer */}
           <div className="mt-auto pt-4 border-t border-border flex justify-end">
-            <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-bold text-primary bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors">
-              View Details
-            </button>
+            <RiderActionClient user={user} />
           </div>
 
         </div>

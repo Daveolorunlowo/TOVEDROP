@@ -1,19 +1,48 @@
-﻿'use client';
+'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Car, Gift, ChevronRight, Check, Star, Users, Activity, LineChart } from 'lucide-react';
+import { MapPin, Car, Star, Users, Activity, LineChart, ChevronRight, Check, X } from 'lucide-react';
 
-export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: boolean }) {
-  const { data: session, status } = useSession();
-  const [phase, setPhase] = useState<'idle' | 'glow' | 'text' | 'fade' | 'guide' | 'done'>(
-    hasSeenWelcome ? 'done' : 'idle'
-  );
+interface WelcomeOverlayProps {
+  hasSeenWelcome?: boolean;
+  initialFirstName?: string;
+  initialRole?: string;
+}
+
+export function WelcomeOverlay({
+  hasSeenWelcome = false,
+  initialFirstName = '',
+  initialRole = 'RIDER',
+}: WelcomeOverlayProps) {
+  const pathname = usePathname();
+  const { data: session } = useSession();
+
+  // Never display on public guest routes, auth pages, or initial welcome onboarding
+  const isPublicPage =
+    pathname === '/' ||
+    pathname.startsWith('/auth') ||
+    pathname.startsWith('/welcome') ||
+    pathname.startsWith('/clear') ||
+    pathname.startsWith('/terms') ||
+    pathname.startsWith('/privacy');
+
+  const [phase, setPhase] = useState<'greeting' | 'fade' | 'guide' | 'done'>(() => {
+    if (hasSeenWelcome || isPublicPage) return 'done';
+    return 'greeting';
+  });
+
   const [guideStep, setGuideStep] = useState(0);
-  
-  const firstName = session?.user?.name?.split(' ')[0] || 'there';
-  const role = (session?.user as any)?.role || 'RIDER';
+
+  const firstName =
+    initialFirstName ||
+    session?.user?.name?.split(' ')[0] ||
+    'there';
+
+  const rawRole = (initialRole || (session?.user as any)?.role || 'RIDER').toUpperCase();
+  const role = ['RIDER', 'DRIVER', 'ADMIN'].includes(rawRole) ? rawRole : 'RIDER';
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -23,262 +52,299 @@ export function WelcomeOverlay({ hasSeenWelcome = false }: { hasSeenWelcome?: bo
     return 'Good Night';
   };
 
+  const dismiss = useCallback(() => {
+    // Set cookie so navigation and in-session page refreshes don't re-trigger
+    document.cookie = 'tovedrop_welcomed=true; path=/; SameSite=Lax';
+    try {
+      sessionStorage.setItem('tovedrop_welcomed', 'true');
+      localStorage.setItem(`hasSeenGuide_${role}`, 'true');
+    } catch (e) {}
+    setPhase('done');
+  }, [role]);
+
+  // Lock body scroll while overlay is active to prevent background scrolling
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      setPhase('done');
-      return;
+    if (phase !== 'done') {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
     }
+  }, [phase]);
 
-    if (status === 'authenticated' && phase === 'idle') {
-      // Set session cookie so it doesn't show again on reload/navigate
-      document.cookie = "tovedrop_welcomed=true; path=/";
-      
-      let hasSeenGuide = false;
-      try {
-        hasSeenGuide = localStorage.getItem(`hasSeenGuide_${role}`) === 'true';
-      } catch (e) {}
+  // Handle sequence progression
+  useEffect(() => {
+    if (phase === 'done' || isPublicPage) return;
 
-      // Warm, gentle sequence
-      setPhase('glow');
-      setTimeout(() => setPhase('text'), 600);
-      setTimeout(() => setPhase('fade'), 3600);
-      
-      setTimeout(() => {
-        if (!hasSeenGuide) setPhase('guide');
-        else setPhase('done');
-      }, 4400);
-    }
-  }, [status, role, phase]);
+    let hasSeenGuide = false;
+    try {
+      hasSeenGuide = localStorage.getItem(`hasSeenGuide_${role}`) === 'true';
+    } catch (e) {}
 
-  // If already welcomed or finished, render nothing
-  if (phase === 'done') return null;
+    // Gentle reading time for the personal greeting
+    const fadeTimer = setTimeout(() => {
+      setPhase('fade');
+    }, 2800);
 
-  // Even if status is 'loading' or unauthenticated, if phase is NOT done,
-  // we MUST render the background to block the dashboard from flashing.
-  const isWelcomeActive = ['idle', 'glow', 'text', 'fade'].includes(phase);
+    const nextPhaseTimer = setTimeout(() => {
+      if (!hasSeenGuide) {
+        setPhase('guide');
+      } else {
+        dismiss();
+      }
+    }, 3400);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(nextPhaseTimer);
+    };
+  }, [phase, isPublicPage, role, dismiss]);
+
+  // If on a public route, do not render anything
+  if (isPublicPage) return null;
+
   const greeting = getGreeting();
 
- const guideContent = {
- RIDER: [
- {
- icon: <MapPin className="w-12 h-12 text-orange-brand" />,
- title: 'Request a Ride',
- desc: 'Enter your pickup and destination on campus. We will match you with a trusted student driver.'
- },
- {
- icon: <Car className="w-12 h-12 text-orange-brand" />,
- title: 'Meet Your Driver',
- desc: 'Track your driver in real-time. All drivers are verified students for your safety.'
- },
- {
- icon: <Star className="w-12 h-12 text-orange-brand" />,
- title: 'Safety First',
- desc: 'All our drivers are students verified with valid university IDs to ensure a secure ride.'
- }
- ],
- DRIVER: [
- {
- icon: <MapPin className="w-12 h-12 text-orange-brand" />,
- title: 'Accept Trips',
- desc: 'Toggle yourself online to start receiving ride requests from students on campus.'
- },
- {
- icon: <Car className="w-12 h-12 text-orange-brand" />,
- title: 'Drive & Earn',
- desc: 'Use the built-in navigation to pick up riders. Your earnings are securely tracked.'
- },
- {
- icon: <Star className="w-12 h-12 text-orange-brand" />,
- title: 'Build Your Reputation',
- desc: 'Provide great service to earn 5-star ratings and become a top-tier campus driver.'
- }
- ],
- ADMIN: [
- {
- icon: <Users className="w-12 h-12 text-orange-brand" />,
- title: 'Manage Users',
- desc: 'Oversee all riders and drivers. Approve new driver applications and resolve disputes.'
- },
- {
- icon: <Activity className="w-12 h-12 text-orange-brand" />,
- title: 'Monitor Platform',
- desc: 'Keep an eye on active trips, system health, and real-time campus activity.'
- },
- {
- icon: <LineChart className="w-12 h-12 text-orange-brand" />,
- title: 'Review Analytics',
- desc: 'Track revenue, growth metrics, and drop usage across the platform.'
- }
- ]
- };
+  const guideContent = {
+    RIDER: [
+      {
+        icon: <MapPin className="w-10 h-10 text-orange-brand" />,
+        title: 'Request a Ride',
+        desc: 'Enter your pickup and destination on campus. We match you with a verified student driver.',
+      },
+      {
+        icon: <Car className="w-10 h-10 text-orange-brand" />,
+        title: 'Meet Your Driver',
+        desc: 'Track your driver in real-time. All drivers are verified students for your safety.',
+      },
+      {
+        icon: <Star className="w-10 h-10 text-orange-brand" />,
+        title: 'Campus Safe',
+        desc: 'All rides are monitored and insured on campus. Tap SOS anytime for immediate campus security.',
+      },
+    ],
+    DRIVER: [
+      {
+        icon: <MapPin className="w-10 h-10 text-orange-brand" />,
+        title: 'Accept Trips',
+        desc: 'Toggle yourself online to start receiving ride requests from verified students on campus.',
+      },
+      {
+        icon: <Car className="w-10 h-10 text-orange-brand" />,
+        title: 'Drive & Earn',
+        desc: 'Follow the built-in campus routing. Your earnings are securely tracked in real time.',
+      },
+      {
+        icon: <Star className="w-10 h-10 text-orange-brand" />,
+        title: 'Build Your Reputation',
+        desc: 'Provide reliable service to earn top ratings and unlock priority booking perks.',
+      },
+    ],
+    ADMIN: [
+      {
+        icon: <Users className="w-10 h-10 text-orange-brand" />,
+        title: 'Manage Users',
+        desc: 'Oversee all riders and drivers, approve verifications, and resolve student disputes.',
+      },
+      {
+        icon: <Activity className="w-10 h-10 text-orange-brand" />,
+        title: 'Monitor Platform',
+        desc: 'Keep an eye on active trips, system telemetry, and real-time campus ride flow.',
+      },
+      {
+        icon: <LineChart className="w-10 h-10 text-orange-brand" />,
+        title: 'Review Analytics',
+        desc: 'Track platform performance, ride volumes, and drop usage across campus.',
+      },
+    ],
+  };
 
- const steps = guideContent[role as keyof typeof guideContent] || guideContent.RIDER;
+  const steps = guideContent[role as keyof typeof guideContent] || guideContent.RIDER;
 
- return (
- <>
- <AnimatePresence>
- {isWelcomeActive && (
- <motion.div
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- exit={{ opacity: 0 }}
- transition={{ duration: 0.8, ease: 'easeInOut' }}
- className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-bg-deep"
- >
- {/* The Warm Glowing Orbs Background (App Theme) */}
- <div className="absolute inset-0 z-0 flex items-center justify-center mix-blend-screen opacity-50">
- <motion.div 
- initial={{ scale: 0.5, opacity: 0 }}
- animate={{ 
- scale: [0.8, 1.2, 0.9, 1.1],
- opacity: [0.2, 0.4, 0.3, 0.2]
- }}
- transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
- className="absolute w-[60vw] h-[60vw] rounded-full blur-3xl bg-orange-brand -translate-x-1/4 -translate-y-1/4"
- />
- <motion.div 
- initial={{ scale: 0.5, opacity: 0 }}
- animate={{ 
- scale: [1, 1.3, 0.9, 1.2],
- opacity: [0.2, 0.3, 0.2, 0.2]
- }}
- transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
- className="absolute w-[70vw] h-[70vw] rounded-full blur-3xl bg-purple-brand translate-x-1/4 translate-y-1/4"
- />
- </div>
+  return (
+    <AnimatePresence>
+      {phase !== 'done' && (
+        <motion.div
+          key="welcome-root-overlay"
+          initial={false}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[99999] flex items-center justify-center overflow-hidden bg-[#0A0D14]"
+          style={{ opacity: 1, backgroundColor: '#0A0D14' }}
+        >
+          {/* Ambient Glowing Background - Completely opaque backdrop to eliminate dashboard glimpse */}
+          <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">
+            <motion.div
+              animate={{
+                scale: [0.9, 1.15, 0.95, 1.1],
+                opacity: [0.25, 0.45, 0.3, 0.25],
+              }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute w-[60vw] h-[60vw] max-w-[550px] max-h-[550px] rounded-full blur-[100px] bg-orange-brand -translate-x-1/4 -translate-y-1/4"
+            />
+            <motion.div
+              animate={{
+                scale: [1, 1.25, 0.9, 1.15],
+                opacity: [0.2, 0.35, 0.2, 0.2],
+              }}
+              transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+              className="absolute w-[70vw] h-[70vw] max-w-[650px] max-h-[650px] rounded-full blur-[120px] bg-purple-brand translate-x-1/4 translate-y-1/4"
+            />
+            {/* Dark glass tint to maintain maximum contrast */}
+            <div className="absolute inset-0 bg-[#0A0D14]/50 backdrop-blur-[2px]" />
+          </div>
 
- {/* A gentle glass overlay to soften everything */}
- <div className="absolute inset-0 bg-black/40 z-10" />
+          {/* Quick Skip Control in Top-Right */}
+          <button
+            onClick={dismiss}
+            type="button"
+            aria-label="Skip welcome screen"
+            className="absolute top-5 right-5 sm:top-6 sm:right-6 z-30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-white/70 hover:text-white bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-all active:scale-95 flex items-center gap-1.5 shadow-lg cursor-pointer"
+          >
+            <span>Skip</span>
+            <X className="w-3.5 h-3.5" />
+          </button>
 
- {/* Gentle Text Reveal */}
- <AnimatePresence>
- {phase === 'text' && (
- <div className="relative z-20 flex flex-col items-center justify-center text-center px-6">
- 
- <motion.h1 
- initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
- animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
- exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
- transition={{ delay: 0.3, duration: 1, ease: 'easeOut' }}
- className="text-5xl md:text-7xl font-bold tracking-tight mb-2 text-primary drop-shadow-xl"
- >
- {greeting},
- </motion.h1>
- 
- <motion.h2
- initial={{ opacity: 0 }}
- animate={{ opacity: 1 }}
- exit={{ opacity: 0 }}
- transition={{ delay: 1, duration: 1.5, ease: 'easeInOut' }}
- className="text-4xl md:text-6xl font-medium text-primary opacity-90 drop-shadow-md"
- >
- {firstName}
- </motion.h2>
+          {/* Center Stage: Smooth Transition Between Greeting and Guide */}
+          <div className="relative z-20 w-full h-full flex items-center justify-center p-4">
+            <AnimatePresence mode="wait">
+              {(phase === 'greeting' || phase === 'fade') && (
+                <motion.div
+                  key="greeting-view"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{
+                    opacity: phase === 'fade' ? 0 : 1,
+                    y: phase === 'fade' ? -15 : 0,
+                    filter: phase === 'fade' ? 'blur(6px)' : 'blur(0px)',
+                  }}
+                  exit={{ opacity: 0, y: -20, filter: 'blur(8px)' }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  className="flex flex-col items-center justify-center text-center px-6 max-w-lg mx-auto"
+                >
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-brand/15 border border-orange-brand/30 text-orange-brand text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
+                    <span className="w-2 h-2 rounded-full bg-orange-brand animate-ping" />
+                    Campus Rideshare
+                  </div>
 
- </div>
- )}
- </AnimatePresence>
- </motion.div>
- )}
- </AnimatePresence>
+                  <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight mb-2 text-white drop-shadow-xl">
+                    {greeting},
+                  </h1>
 
- {/* Automated Guide */}
- <AnimatePresence>
- {phase === 'guide' && (
- <motion.div
- initial={{ opacity: 0, backdropFilter: 'none' }}
- animate={{ opacity: 1, backdropFilter: 'none' }}
- exit={{ opacity: 0, backdropFilter: 'none' }}
- className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 p-4"
- >
- <motion.div
- initial={{ y: 50, opacity: 0, scale: 0.95 }}
- animate={{ y: 0, opacity: 1, scale: 1 }}
- exit={{ y: 20, opacity: 0, scale: 0.95 }}
- transition={{ type: 'spring', damping: 20, stiffness: 200 }}
- className="bg-surface-card border border-border-subtle rounded-xl w-full max-w-md overflow-hidden shadow-2xl relative"
- >
- <div className="flex w-full h-1 bg-surface-elevated">
- <motion.div 
- className="h-full bg-orange-brand" 
- initial={{ width: '0%' }}
- animate={{ width: `${((guideStep + 1) / steps.length) * 100}%` }}
- />
- </div>
+                  <h2 className="text-3xl sm:text-5xl font-bold text-orange-brand drop-shadow-md">
+                    {firstName}
+                  </h2>
 
- <div className="p-8">
- <div className="flex justify-center mb-6">
- <div className="w-24 h-24 rounded-full bg-surface-elevated flex items-center justify-center shadow-inner relative overflow-hidden">
- <div className="absolute inset-0 bg-orange-brand/10 blur-xl rounded-full animate-pulse" />
- <AnimatePresence mode="wait">
- <motion.div
- key={guideStep}
- initial={{ scale: 0, rotate: -45 }}
- animate={{ scale: 1, rotate: 0 }}
- exit={{ scale: 0, rotate: 45 }}
- transition={{ type: 'spring', stiffness: 300, damping: 20 }}
- className="relative z-10"
- >
- {steps[guideStep].icon}
- </motion.div>
- </AnimatePresence>
- </div>
- </div>
- 
- <div className="text-center h-28">
- <AnimatePresence mode="wait">
- <motion.div
- key={guideStep}
- initial={{ opacity: 0, x: 20 }}
- animate={{ opacity: 1, x: 0 }}
- exit={{ opacity: 0, x: -20 }}
- >
- <h2 className="text-2xl font-bold text-primary mb-2 tracking-tight">
- {steps[guideStep].title}
- </h2>
- <p className="text-muted-foreground text-sm leading-relaxed">
- {steps[guideStep].desc}
- </p>
- </motion.div>
- </AnimatePresence>
- </div>
- </div>
+                  <p className="mt-4 text-sm sm:text-base text-white/70 font-medium tracking-wide">
+                    Your campus ride, your trusted driver
+                  </p>
+                </motion.div>
+              )}
 
- <div className="p-4 bg-bg-deep flex justify-between items-center border-t border-border-subtle">
- <div className="flex gap-1.5 ml-2">
- {steps.map((_, i) => (
- <div 
- key={i} 
- className={`h-1.5 rounded-full transition-all duration-300 ${i === guideStep ? 'w-4 bg-orange-brand' : 'w-1.5 bg-surface-elevated'}`} 
- />
- ))}
- </div>
- 
- <button
- onClick={() => {
- if (guideStep < steps.length - 1) setGuideStep(s => s + 1);
- else {
- try {
- localStorage.setItem(`hasSeenGuide_${role}`, 'true');
- } catch (e) {}
- setPhase('done');
- }
- }}
- className="bg-orange-brand hover:bg-orange-dark text-white px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all active:scale-95 hover:shadow-md"
- >
- {guideStep < steps.length - 1 ? (
- <>Next <ChevronRight className="w-4 h-4" /></>
- ) : (
- <>Get Started <Check className="w-4 h-4" /></>
- )}
- </button>
- </div>
- </motion.div>
- </motion.div>
- )}
- </AnimatePresence>
- </>
- );
+              {phase === 'guide' && (
+                <motion.div
+                  key="guide-view"
+                  initial={{ opacity: 0, scale: 0.94, y: 15 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.96, y: -10 }}
+                  transition={{ type: 'spring', damping: 24, stiffness: 220 }}
+                  className="w-full max-w-md bg-[#111624] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative"
+                >
+                  {/* Step Progress Bar */}
+                  <div className="w-full h-1 bg-white/10">
+                    <motion.div
+                      className="h-full bg-orange-brand"
+                      initial={{ width: '0%' }}
+                      animate={{ width: `${((guideStep + 1) / steps.length) * 100}%` }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </div>
+
+                  <div className="p-7 sm:p-8">
+                    {/* Step Icon */}
+                    <div className="flex justify-center mb-6">
+                      <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center shadow-inner relative overflow-hidden">
+                        <div className="absolute inset-0 bg-orange-brand/15 blur-xl rounded-full animate-pulse" />
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={guideStep}
+                            initial={{ scale: 0.5, opacity: 0, rotate: -20 }}
+                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                            exit={{ scale: 0.5, opacity: 0, rotate: 20 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                            className="relative z-10"
+                          >
+                            {steps[guideStep].icon}
+                          </motion.div>
+                        </AnimatePresence>
+                      </div>
+                    </div>
+
+                    {/* Step Description */}
+                    <div className="text-center min-h-[100px] flex flex-col justify-center">
+                      <AnimatePresence mode="wait">
+                        <motion.div
+                          key={guideStep}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.25 }}
+                        >
+                          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 tracking-tight">
+                            {steps[guideStep].title}
+                          </h3>
+                          <p className="text-white/70 text-sm leading-relaxed">
+                            {steps[guideStep].desc}
+                          </p>
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div className="p-4 sm:p-5 bg-[#0D111C] flex justify-between items-center border-t border-white/10">
+                    {/* Dots */}
+                    <div className="flex gap-1.5 ml-2">
+                      {steps.map((_, i) => (
+                        <div
+                          key={i}
+                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                            i === guideStep ? 'w-5 bg-orange-brand' : 'w-1.5 bg-white/20'
+                          }`}
+                        />
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        if (guideStep < steps.length - 1) {
+                          setGuideStep((s) => s + 1);
+                        } else {
+                          dismiss();
+                        }
+                      }}
+                      className="bg-orange-brand hover:bg-orange-dark text-white px-5 sm:px-6 py-2.5 rounded-full font-bold text-sm flex items-center gap-2 transition-all active:scale-95 shadow-md hover:shadow-orange-brand/20 cursor-pointer"
+                    >
+                      {guideStep < steps.length - 1 ? (
+                        <>
+                          <span>Next</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </>
+                      ) : (
+                        <>
+                          <span>Get Started</span>
+                          <Check className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
-
-
