@@ -135,6 +135,17 @@ export const POST = withValidation(acceptTripSchema, async (req: NextRequest, da
      rating,
      isPool: trip.isPool
    }).catch(err => console.error("Pusher trip trigger failed:", err))
+
+   await pusherServer.trigger('global-trips', 'trip-accepted', {
+     tripId: trip.id,
+     driverId: session.user.id
+   }).catch(err => console.error("Pusher global-trips accept trigger failed:", err))
+
+   await pusherServer.trigger('admin-alerts', 'trip-status-changed', {
+     tripId: trip.id,
+     status: 'CONFIRMED',
+     driverName
+   }).catch(err => console.error("Pusher admin-alerts trigger failed:", err))
  }
 
  // Schedule driver alarm push notifications

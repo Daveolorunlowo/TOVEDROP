@@ -186,6 +186,21 @@ export default function AdminPage() {
         setActiveTab(tabParam)
       }
     }
+
+    const handleRealtimeAdminEvent = () => {
+      fetchData()
+    }
+    const handleRealtimeTripUpdated = () => {
+      fetchData()
+    }
+
+    window.addEventListener('tovedrop:admin-event', handleRealtimeAdminEvent)
+    window.addEventListener('tovedrop:trip-updated', handleRealtimeTripUpdated)
+
+    return () => {
+      window.removeEventListener('tovedrop:admin-event', handleRealtimeAdminEvent)
+      window.removeEventListener('tovedrop:trip-updated', handleRealtimeTripUpdated)
+    }
   }, [])
 
   const fetchSecurityLogs = async () => {

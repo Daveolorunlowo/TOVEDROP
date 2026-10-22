@@ -150,6 +150,11 @@ export async function POST(req: Request) {
     await pusherServer.trigger(`user-${result.trip.riderId}`, 'trip-completed', {
       tripId: result.trip.id
     }).catch(err => console.error("Pusher user trigger failed:", err))
+
+    await pusherServer.trigger('admin-alerts', 'trip-status-changed', {
+      tripId: result.trip.id,
+      status: 'COMPLETED'
+    }).catch(err => console.error("Pusher admin-alerts trigger failed:", err))
   }
 
  return NextResponse.json({ message: "Trip completed successfully", trip: result.trip }, { status: 200 })

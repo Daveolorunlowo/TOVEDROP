@@ -183,7 +183,7 @@ export default function DriverDashboardPage() {
 
   useEffect(() => {
     fetchData()
-    // Poll every 8s for live incoming requests and status transitions
+    // Poll every 8s as fallback safety net
     const id = setInterval(fetchData, 8000)
 
     const handleFocus = () => {
@@ -196,13 +196,22 @@ export default function DriverDashboardPage() {
       }
     }
 
+    // Instant Zero-Delay updates from Pusher / Service Worker
+    const handleInstantUpdate = () => {
+      fetchData()
+    }
+
     window.addEventListener('focus', handleFocus)
     document.addEventListener('visibilitychange', handleVisibility)
+    window.addEventListener('tovedrop:new-trip', handleInstantUpdate)
+    window.addEventListener('tovedrop:trip-updated', handleInstantUpdate)
 
     return () => {
       clearInterval(id)
       window.removeEventListener('focus', handleFocus)
       document.removeEventListener('visibilitychange', handleVisibility)
+      window.removeEventListener('tovedrop:new-trip', handleInstantUpdate)
+      window.removeEventListener('tovedrop:trip-updated', handleInstantUpdate)
     }
   }, [router])
 

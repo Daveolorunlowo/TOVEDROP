@@ -136,13 +136,21 @@ export function TripList({
       }
     }
 
+    const handleInstantSync = () => {
+      router.refresh()
+    }
+
     window.addEventListener('focus', handleFocus)
     document.addEventListener('visibilitychange', handleVisibility)
+    window.addEventListener('tovedrop:trip-updated', handleInstantSync)
+    window.addEventListener('tovedrop:drops-updated', handleInstantSync)
 
     return () => {
       clearInterval(interval)
       window.removeEventListener('focus', handleFocus)
       document.removeEventListener('visibilitychange', handleVisibility)
+      window.removeEventListener('tovedrop:trip-updated', handleInstantSync)
+      window.removeEventListener('tovedrop:drops-updated', handleInstantSync)
     }
   }, [upcomingTrips, router])
   

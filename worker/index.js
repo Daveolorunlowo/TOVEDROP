@@ -18,6 +18,8 @@ self.addEventListener('push', function (event) {
         badge: data.badge || '/icon-192x192.png',
         requireInteraction: true,
         vibrate: [200, 100, 200, 100, 200],
+        tag: data.tag || 'tovedrop-alert-' + Date.now(),
+        renotify: true,
         data: { url }
       })
     )
