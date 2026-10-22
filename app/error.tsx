@@ -73,18 +73,31 @@ export default function ErrorPage({
 
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <button 
-            onClick={() => reset()}
-            className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm bg-primary hover:opacity-80 transition-colors"
+            onClick={() => {
+              window.location.reload()
+            }}
+            className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm bg-primary hover:opacity-80 transition-colors cursor-pointer"
           >
             Try Again
           </button>
           
-          <Link 
-            href={dashboardPath}
-            className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm border border-border hover:bg-background transition-colors"
+          <button 
+            onClick={() => {
+              window.location.href = dashboardPath
+            }}
+            className="w-full sm:w-auto px-6 py-3 rounded-md text-foreground font-semibold text-sm border border-border hover:bg-background transition-colors cursor-pointer"
           >
             {session?.user ? 'Go to Dashboard' : 'Back to Home'}
-          </Link>
+          </button>
+        </div>
+
+        <div className="mt-4">
+          <a
+            href="/clear"
+            className="text-xs text-orange-brand/80 hover:text-orange-brand underline transition-colors"
+          >
+            Clean Reset (Clear cache & session)
+          </a>
         </div>
       </div>
 

@@ -32,8 +32,14 @@ if (fs.existsSync(envPath)) {
     envContent += `\nNEXTAUTH_URL="${newUrl}"\n`;
   }
 
+  if (envContent.match(/^NEXT_PUBLIC_APP_URL=.*$/m)) {
+    envContent = envContent.replace(/^NEXT_PUBLIC_APP_URL=.*$/m, `NEXT_PUBLIC_APP_URL="${newUrl}"`);
+  } else {
+    envContent += `\nNEXT_PUBLIC_APP_URL="${newUrl}"\n`;
+  }
+
   fs.writeFileSync(envPath, envContent);
-  console.log(`✅ Success! Updated .env NEXTAUTH_URL to: ${newUrl}`);
+  console.log(`✅ Success! Updated .env NEXTAUTH_URL and NEXT_PUBLIC_APP_URL to: ${newUrl}`);
   console.log(`📱 On your phone, visit: ${newUrl}`);
 } else {
   console.error('❌ Could not find .env file in the current directory.');
