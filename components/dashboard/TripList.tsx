@@ -116,39 +116,27 @@ export function TripList({
     setPastTrips(initialPast)
   }, [initialUpcoming, initialPast])
 
-  // Automatic refresh at specific intervals to catch driver acceptance and status updates
+  // Automatic refresh when rider has pending trips or receives real-time events
   useEffect(() => {
     const hasPending = upcomingTrips.some(t => t.status === 'PENDING')
-    // Faster poll (5s) when rider is waiting for driver acceptance, otherwise 12s
-    const pollInterval = hasPending ? 5000 : 12000
+    let interval: NodeJS.Timeout | null = null
 
-    const interval = setInterval(() => {
-      router.refresh()
-    }, pollInterval)
-
-    const handleFocus = () => {
-      router.refresh()
-    }
-
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
+    // Only poll if rider is actively waiting on a pending ride request
+    if (hasPending) {
+      interval = setInterval(() => {
         router.refresh()
-      }
+      }, 15000)
     }
 
     const handleInstantSync = () => {
       router.refresh()
     }
 
-    window.addEventListener('focus', handleFocus)
-    document.addEventListener('visibilitychange', handleVisibility)
     window.addEventListener('tovedrop:trip-updated', handleInstantSync)
     window.addEventListener('tovedrop:drops-updated', handleInstantSync)
 
     return () => {
-      clearInterval(interval)
-      window.removeEventListener('focus', handleFocus)
-      document.removeEventListener('visibilitychange', handleVisibility)
+      if (interval) clearInterval(interval)
       window.removeEventListener('tovedrop:trip-updated', handleInstantSync)
       window.removeEventListener('tovedrop:drops-updated', handleInstantSync)
     }

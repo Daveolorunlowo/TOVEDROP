@@ -59,40 +59,20 @@ export function AutoRefreshManager() {
     } catch (e) {}
   }
 
-  // ── 1. Periodic background refresh interval (every 8 seconds) ──────────
+  // ── Listen to custom ride update events instead of polling ──────────
   useEffect(() => {
     if (!session?.user?.id) return
 
-    // Auto-refresh interval
-    const interval = setInterval(() => {
-      // Only refresh if the document is active or was recently active
-      triggerRefresh()
-    }, 8000)
-
-    // ── 2. Visibility change & focus refresh ──────────────────────────────
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        triggerRefresh()
-      }
-    }
-
-    const handleFocus = () => {
+    const handleRideUpdate = () => {
       triggerRefresh()
     }
 
-    const handleOnline = () => {
-      triggerRefresh()
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    window.addEventListener('focus', handleFocus)
-    window.addEventListener('online', handleOnline)
+    window.addEventListener('tovedrop:trip-updated', handleRideUpdate)
+    window.addEventListener('tovedrop:drops-updated', handleRideUpdate)
 
     return () => {
-      clearInterval(interval)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-      window.removeEventListener('focus', handleFocus)
-      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('tovedrop:trip-updated', handleRideUpdate)
+      window.removeEventListener('tovedrop:drops-updated', handleRideUpdate)
     }
   }, [session?.user?.id])
 

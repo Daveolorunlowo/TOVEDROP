@@ -11,7 +11,6 @@ import { NetworkIndicator } from '@/components/network-indicator'
 import { GlobalMessageListener } from '@/components/global-message-listener'
 import { ServiceWorkerRegistry } from '@/components/sw-registry'
 import { AutoRefreshManager } from '@/components/shared/AutoRefreshManager'
-import { RiderNotificationBanner } from '@/components/dashboard/RiderNotificationBanner'
 import { WelcomeOverlay } from '@/components/shared/WelcomeOverlay'
 import { DynamicBackground } from '@/components/shared/DynamicBackground'
 import { CurvedBackground } from '@/components/ui/curved-background'
@@ -107,7 +106,6 @@ export default async function RootLayout({
           <GlobalMessageListener />
           <ServiceWorkerRegistry />
           <AutoRefreshManager />
-          <RiderNotificationBanner />
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </Providers>
         <NetworkIndicator />
