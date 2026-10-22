@@ -4,6 +4,8 @@ import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
 import { withValidation } from "@/lib/with-validation"
+import { sendWebPush } from "@/lib/webpush"
+import { sendEmail } from "@/lib/email"
 
 const adminWithdrawalSchema = z.object({
   requestId: z.string().optional(),
@@ -24,7 +26,12 @@ export const POST = withValidation(adminWithdrawalSchema, async (req: NextReques
     const { action } = data
 
     const request = await prisma.withdrawalRequest.findUnique({
-      where: { id: requestId }
+      where: { id: requestId },
+      include: {
+        driver: {
+          include: { user: true }
+        }
+      }
     })
 
     if (!request) {
@@ -75,6 +82,41 @@ export const POST = withValidation(adminWithdrawalSchema, async (req: NextReques
 
       return updatedRequest
     })
+
+    // Notify driver via Push Notification and Email asynchronously
+    if (request.driver?.userId) {
+      if (action === 'approve') {
+        sendWebPush(
+          request.driver.userId,
+          "Withdrawal Approved! 💸",
+          `Your payout of ₦${request.amount.toLocaleString()} has been approved and processed.`,
+          "/driver/earnings"
+        ).catch(e => console.error("[Withdrawal Push Notify Error]:", e))
+
+        if (request.driver.user?.email) {
+          sendEmail(
+            request.driver.user.email,
+            "Your TOVEDROP Payout is Approved! 💸",
+            `<p>Hi ${request.driver.user.name || 'Driver'},</p><p>Great news! Your withdrawal request for <strong>₦${request.amount.toLocaleString()}</strong> has been approved by admin and disbursed to your bank account.</p><p>Bank: ${request.driver.bankName || 'N/A'}<br/>Account: ${request.driver.accountNumber || 'N/A'} (${request.driver.accountName || ''})</p>`
+          ).catch(e => console.error("[Withdrawal Email Notify Error]:", e))
+        }
+      } else if (action === 'reject') {
+        sendWebPush(
+          request.driver.userId,
+          "Withdrawal Request Update",
+          `Your payout request for ₦${request.amount.toLocaleString()} was declined. The funds have been refunded to your wallet.`,
+          "/driver/earnings"
+        ).catch(e => console.error("[Withdrawal Push Notify Error]:", e))
+
+        if (request.driver.user?.email) {
+          sendEmail(
+            request.driver.user.email,
+            "Update regarding your TOVEDROP Withdrawal",
+            `<p>Hi ${request.driver.user.name || 'Driver'},</p><p>Your withdrawal request for <strong>₦${request.amount.toLocaleString()}</strong> was not approved at this time. The full amount has been refunded back to your driver wallet balance.</p>`
+          ).catch(e => console.error("[Withdrawal Email Notify Error]:", e))
+        }
+      }
+    }
 
     return NextResponse.json({ 
       message: `Withdrawal ${action}d successfully`,

@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
+import { sendWebPush } from "@/lib/webpush"
+import { sendEmail } from "@/lib/email"
 
 export async function POST(req: Request) {
   try {
@@ -34,6 +36,9 @@ export async function POST(req: Request) {
           { userId: driverId },
           { id: driverId }
         ]
+      },
+      include: {
+        user: true
       }
     })
 
@@ -48,11 +53,52 @@ export async function POST(req: Request) {
       data: { status: targetStatus }
     })
 
-    if (action === "approve") {
+    if (action === "approve" || action === "unsuspend") {
       await prisma.user.update({
         where: { id: profile.userId },
         data: { role: "DRIVER" }
       })
+    }
+
+    // Driver notification dispatch
+    if (profile.userId) {
+      if (action === "approve") {
+        sendWebPush(
+          profile.userId,
+          "Driver Application Approved! 🎉",
+          "Welcome to the TOVEDROP fleet! You can now start accepting rides on campus.",
+          "/driver"
+        ).catch(e => console.error("[Driver Push Error]:", e))
+
+        if (profile.user?.email) {
+          sendEmail(
+            profile.user.email,
+            "Welcome to the TOVEDROP Driver Fleet! 🎉",
+            `<p>Hi ${profile.user.name || 'Driver'},</p><p>Congratulations! Your TOVEDROP driver application has been approved by admin. You can now log into your driver dashboard and begin accepting passenger rides on campus!</p><p><a href="https://tovedrop.vercel.app/driver">Go to Driver Dashboard</a></p>`
+          ).catch(e => console.error("[Driver Email Error]:", e))
+        }
+      } else if (action === "suspend") {
+        sendWebPush(
+          profile.userId,
+          "Driver Account Suspended",
+          "Your driver account has been suspended by administration. Please contact support for assistance.",
+          "/driver/suspended"
+        ).catch(e => console.error("[Driver Push Error]:", e))
+      } else if (action === "unsuspend") {
+        sendWebPush(
+          profile.userId,
+          "Driver Account Restored! 🚗",
+          "Your driver account has been reactivated. You may now continue accepting rides.",
+          "/driver"
+        ).catch(e => console.error("[Driver Push Error]:", e))
+      } else if (action === "reject") {
+        sendWebPush(
+          profile.userId,
+          "Driver Application Update",
+          "Your driver verification request was not approved at this time.",
+          "/driver/rejected"
+        ).catch(e => console.error("[Driver Push Error]:", e))
+      }
     }
 
     const actionPastTense: Record<string, string> = {
@@ -62,7 +108,10 @@ export async function POST(req: Request) {
       reject: "rejected"
     }
 
-    return NextResponse.json({ message: `Driver ${actionPastTense[action]} successfully`, profile: updatedProfile }, { status: 200 })
+    return NextResponse.json({ 
+      message: `Driver ${actionPastTense[action]} successfully`, 
+      profile: updatedProfile 
+    }, { status: 200 })
   } catch (error: any) {
     return NextResponse.json({ message: "Error updating driver", error: error.message }, { status: 500 })
   }

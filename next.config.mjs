@@ -50,6 +50,8 @@ const withPWA = withPWAInit({
   skipWaiting: true,
   sw: 'sw-custom.js',          // Use our hand-crafted service worker
   disable: false,              // Always register SW so push works in all envs
+  buildExcludes: [/.*\.map$/, /.*\.js\.map$/, /middleware-manifest\.json$/],
+  publicExcludes: ['!noprecache/**/*', '!*.map', '!**/*.map'],
 })
 
 export default withSentryConfig(

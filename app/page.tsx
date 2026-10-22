@@ -444,13 +444,15 @@ function HowItWorksSection() {
 
  <div className="relative">
  <svg
+ viewBox="0 0 1000 900"
+ preserveAspectRatio="none"
  className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none hidden lg:block"
  style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, overflow: 'visible' }}
  xmlns="http://www.w3.org/2000/svg"
  aria-hidden="true"
  >
  <path
- d="M 50% 60 C 30% 180, 70% 300, 50% 440 C 30% 580, 70% 700, 50% 820"
+ d="M 500 60 C 300 180, 700 300, 500 440 C 300 580, 700 700, 500 820"
  fill="none"
  stroke="var(--purple-brand)"
  strokeWidth="1.5"
