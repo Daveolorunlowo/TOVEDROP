@@ -1,5 +1,4 @@
 import { PrismaClient } from '../generated/prisma/client'
-import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const prismaClientSingleton = () => {
@@ -8,13 +7,12 @@ const prismaClientSingleton = () => {
   const connectionString = rawUrl?.replace(/[?&]channel_binding=[^&]*/g, (match) =>
     match.startsWith('?') ? '?' : ''
   ).replace(/\?&/, '?').replace(/\?$/, '')
-  const pool = new Pool({ 
+  const adapter = new PrismaPg({ 
     connectionString, 
     ssl: { rejectUnauthorized: false },
     max: 10,
     connectionTimeoutMillis: 10000
   })
-  const adapter = new PrismaPg(pool)
   return new PrismaClient({ adapter })
 }
 

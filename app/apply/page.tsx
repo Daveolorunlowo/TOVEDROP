@@ -1,493 +1,503 @@
 "use client"
-'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
-import { Check, User, FileText, CalendarDays, Upload, ChevronRight, ChevronLeft, Shield, Zap, Car } from 'lucide-react'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { useSession, signIn } from 'next-auth/react'
+import { Check, User, Car, FileText, CalendarDays, Upload, Shield, AlertCircle, Loader2 } from 'lucide-react'
+import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Progress } from '@/components/ui/progress'
 import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { PasswordInput } from '@/components/shared/PasswordInput'
 import { cn } from '@/lib/utils'
-import { signIn } from 'next-auth/react'
 
 const STEPS = [
- { number: 1, label: 'Personal Info', icon: User },
- { number: 2, label: 'Vehicle Info', icon: Car },
- { number: 3, label: 'Documents', icon: FileText },
- { number: 4, label: 'Availability', icon: CalendarDays },
+  { number: 1, label: 'Personal', icon: User },
+  { number: 2, label: 'Vehicle', icon: Car },
+  { number: 3, label: 'Verification', icon: FileText },
+  { number: 4, label: 'Availability', icon: CalendarDays },
 ]
 
-const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-const AREAS = ['Main Campus', 'Legon Area', 'East Legon', 'Airport Area', 'Osu / Ring Road', 'Tema', 'Adenta', 'Achimota']
+const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export default function ApplyPage() {
- const router = useRouter()
- const { data: session, update } = useSession()
- const [step, setStep] = useState(1)
- const [submitted, setSubmitted] = useState(false)
- const [autoApproved, setAutoApproved] = useState(false)
- const [formData, setFormData] = useState({
- fullname: '',
- phone: '',
- email: '',
- password: '',
- bio: '',
- license: '',
- make: '',
- year: '',
- plate: '',
- notes: '',
- })
- const [selectedDays, setSelectedDays] = useState<string[]>([])
- const [selectedAreas, setSelectedAreas] = useState<string[]>([])
- const [errors, setErrors] = useState<Record<string, string>>({})
- 
- // KYC ID Upload
- const [idFile, setIdFile] = useState<File | null>(null)
- const [kycStatus, setKycStatus] = useState<string | null>(null)
- const [processing, setProcessing] = useState(false)
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  const [step, setStep] = useState(1)
+  const [submitted, setSubmitted] = useState(false)
+  const [autoApproved, setAutoApproved] = useState(false)
+  const [processing, setProcessing] = useState(false)
 
- const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
- setFormData({ ...formData, [e.target.name]: e.target.value })
- }
+  const [formData, setFormData] = useState({
+    fullname: '',
+    phone: '',
+    email: '',
+    password: '',
+    license: '',
+    make: '',
+    color: '',
+    plate: '',
+  })
 
- const validateStep1 = () => {
- const errs: Record<string, string> = {}
- if (!formData.fullname.trim()) errs.fullname = 'Full name is required.'
- if (!formData.phone.trim()) errs.phone = 'Phone number is required.'
- if (!formData.email.includes('@')) errs.email = 'Valid email is required.'
- if (formData.password.length < 8) errs.password = 'Password must be at least 8 characters.'
- return errs
- }
+  const [selectedDays, setSelectedDays] = useState<string[]>(['Mon', 'Tue', 'Wed', 'Thu', 'Fri'])
+  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [idFile, setIdFile] = useState<File | null>(null)
+  const [kycStatus, setKycStatus] = useState<string | null>(null)
 
- const validateStep2 = () => {
- const errs: Record<string, string> = {}
- if (!formData.make.trim()) errs.make = 'Vehicle make/model is required.'
- if (!formData.plate.trim()) errs.plate = 'Plate number is required.'
- return errs
- }
+  // Pre-fill user data if already logged in
+  useEffect(() => {
+    if (session?.user) {
+      setFormData(prev => ({
+        ...prev,
+        fullname: session.user?.name || prev.fullname,
+        email: session.user?.email || prev.email,
+        phone: (session.user as any)?.phoneNumber || prev.phone,
+      }))
+    }
+  }, [session])
 
- const validateStep3 = () => {
- const errs: Record<string, string> = {}
- if (!formData.license.trim()) errs.license = 'License number is required.'
- return errs
- }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
- const handleNext = async (e: React.FormEvent) => {
- e.preventDefault()
- let errs: Record<string, string> = {}
- if (step === 1) errs = validateStep1()
- if (step === 2) errs = validateStep2()
- if (step === 3) errs = validateStep3()
- if (step === 4) {
- if (selectedDays.length === 0) errs.days = 'Please select at least one day.'
- }
- setErrors(errs)
- 
- if (Object.keys(errs).length === 0) {
- if (step === 3) {
- if (!idFile) {
- setErrors({ ...errs, license: 'Please upload an ID card for KYC verification.' })
- return
- }
- 
- // Verify ID with Python Microservice
- setProcessing(true)
- try {
- const fd = new FormData()
- fd.append('file', idFile)
- fd.append('expected_name', formData.fullname)
- 
- const pyRes = await fetch('/api/driver/verify-id', {
- method: 'POST',
- body: fd
- })
- 
- if (pyRes.ok) {
- const pyData = await pyRes.json()
- if (pyData.is_verified) {
- setKycStatus('VERIFIED')
- } else {
- setKycStatus('FAILED')
- }
- }
- } catch (e) {
- console.error("KYC Service unreachable", e)
- // Default to PENDING if Python service is down
- } finally {
- setProcessing(false)
- setStep(4)
- }
- } else if (step < 4) {
- setStep((s) => s + 1)
- } else {
- setProcessing(true)
- try {
- const res = await fetch('/api/driver/apply', {
- method: 'POST',
- headers: { 'Content-Type': 'application/json' },
- body: JSON.stringify({
- name: formData.fullname,
- email: formData.email,
- password: formData.password,
- phone: formData.phone,
- area: selectedAreas.join(', '),
- availability: selectedDays.join(', '),
- bio: formData.bio,
- licenseNumber: formData.license,
- vehicleMake: formData.make,
- vehicleModel: formData.year,
- vehiclePlate: formData.plate,
- vehicleColor: "Unknown",
- isVerified: kycStatus === 'VERIFIED'
- })
- })
- const data = await res.json()
- if (res.ok) {
- await signIn('credentials', { 
- email: formData.email, 
- password: formData.password, 
- redirect: false 
- })
- setSubmitted(true)
- if (data.autoApproved) {
- setAutoApproved(true)
- }
- } else {
- alert(data.message || 'Failed to submit application')
- }
- } catch (err) {
- alert('An error occurred')
- } finally {
- setProcessing(false)
- }
- }
- }
- }
+  const validateStep1 = () => {
+    const errs: Record<string, string> = {}
+    if (!formData.phone.trim()) errs.phone = 'Phone number is required.'
+    
+    // Only require name/email/password if guest
+    if (!session?.user) {
+      if (!formData.fullname.trim()) errs.fullname = 'Full name is required.'
+      if (!formData.email.includes('@')) errs.email = 'Valid email is required.'
+      if (formData.password.length < 8) errs.password = 'Password must be at least 8 characters.'
+    }
+    return errs
+  }
 
- if (submitted) {
- return (
- <div className="flex flex-col min-h-screen">
- <Navbar />
- <main className="flex-1 flex items-center justify-center px-4 py-20">
- <div className="max-w-md w-full text-center">
- <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
- <Shield className="w-10 h-10 text-emerald-600" />
- </div>
- <h1 className="text-2xl font-extrabold text-muted-foreground mb-2">
- {autoApproved ? "You're approved! Welcome to TOVEDROP" : "Application Submitted!"}
- </h1>
- <p className="text-muted-foreground leading-relaxed mb-6">
- {autoApproved 
- ? "Your driver account is active. Log in with your email and password to start accepting rides immediately." 
- : "Thank you for applying to join our trusted driver community. Our team will review your documents within 2–3 business days and contact you via email with next steps."}
- </p>
- <a href={autoApproved ? "/driver" : "/"} className={buttonVariants({ className: "bg-primary hover:bg-primary/90 text-foreground font-semibold" })}>
- {autoApproved ? "Log in & go to Dashboard" : "Back to Home"}
- </a>
- </div>
- </main>
- <Footer />
- </div>
- )
- }
+  const validateStep2 = () => {
+    const errs: Record<string, string> = {}
+    if (!formData.make.trim()) errs.make = 'Vehicle make and model is required.'
+    if (!formData.plate.trim()) errs.plate = 'License plate is required.'
+    return errs
+  }
 
- return (
- <div className="flex flex-col min-h-screen">
- <Navbar />
- <main className="flex-1 py-10 px-4">
- <div className="max-w-2xl mx-auto">
+  const validateStep3 = () => {
+    const errs: Record<string, string> = {}
+    if (!formData.license.trim()) errs.license = "Driver's license number is required."
+    if (!idFile) errs.idFile = 'Please upload a photo of your ID or Driver License.'
+    return errs
+  }
 
- {/* Header */}
- <div className="text-center mb-8">
- <span className="inline-block bg-primary/10 text-primary border border-primary/20 text-xs font-semibold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">
- Become a Driver
- </span>
- <h1 className="text-3xl font-extrabold text-muted-foreground text-balance">
- Join our trusted driver community
- </h1>
- <p className="mt-2 text-muted-foreground">
- Earn income on your own schedule. We&apos;ll get you vetted and ready in days.
- </p>
- </div>
+  const handleNext = async (e: React.FormEvent) => {
+    e.preventDefault()
+    let errs: Record<string, string> = {}
 
- {/* Progress bar */}
- <div className="mb-8">
- <div className="flex items-center justify-center mb-2">
- {STEPS.map((s, idx) => {
- const isDone = s.number < step
- const isActive = s.number === step
- return (
- <div key={s.number} className="flex items-center flex-1">
- <div className="flex flex-col items-center flex-1">
- <div
- className={cn(
- 'w-3 h-3 rounded-full transition-all shrink-0',
- isDone || isActive ? 'bg-orange-brand' : 'bg-surface-elevated border border-border-default'
- )}
- />
- <span className={cn(
- 'mt-2 text-[11px] font-semibold uppercase tracking-[0.05em] hidden sm:block whitespace-nowrap',
- isActive ? 'text-primary' : isDone ? 'text-orange-brand' : 'text-muted-foreground'
- )}>
- {s.label}
- </span>
- </div>
- {idx < STEPS.length - 1 && (
- <div className={cn(
- 'flex-1 h-[3px] mx-2 mb-4 sm:mb-5 rounded-full',
- s.number < step ? 'bg-orange-brand' : 'bg-surface-elevated'
- )} />
- )}
- </div>
- )
- })}
- </div>
- </div>
+    if (step === 1) errs = validateStep1()
+    if (step === 2) errs = validateStep2()
+    if (step === 3) errs = validateStep3()
+    if (step === 4) {
+      if (selectedDays.length === 0) errs.days = 'Select at least one day.'
+    }
 
- {/* Form card */}
- <div className="bg-surface-card border border-border-default rounded-xl p-8 relative">
- 
- <form onSubmit={handleNext} className="space-y-5" noValidate>
+    setErrors(errs)
 
- {/* Step 1: Personal Info */}
- {step === 1 && (
- <>
- <div>
- <h2 className="text-lg font-bold text-muted-foreground mb-0.5">Personal Information</h2>
- <p className="text-sm text-muted-foreground">Tell us a bit about yourself.</p>
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="fullname" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Full Name</Label>
- <Input id="fullname" name="fullname" value={formData.fullname} onChange={handleInputChange} placeholder="Emeka Nwosu" className={errors.fullname ? 'border-red-500' : ''} />
- {errors.fullname && <p className="text-xs text-red-600">{errors.fullname}</p>}
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="phone" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Phone Number</Label>
- <Input id="phone" name="phone" value={formData.phone} onChange={handleInputChange} type="tel" placeholder="+234 80 000 0000" className={errors.phone ? 'border-red-500' : ''} />
- {errors.phone && <p className="text-xs text-red-600">{errors.phone}</p>}
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Email Address</Label>
- <Input id="email" name="email" value={formData.email} onChange={handleInputChange} type="email" placeholder="you@email.com" className={errors.email ? 'border-red-500' : ''} />
- {errors.email && <p className="text-xs text-red-600">{errors.email}</p>}
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Password</Label>
- <PasswordInput id="password" name="password" value={formData.password} onChange={handleInputChange} placeholder="Min 8 characters" className={errors.password ? 'border-red-500 focus-visible:ring-red-500' : ''} showIcon={false} />
- {errors.password && <p className="text-xs text-red-600">{errors.password}</p>}
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="bio" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Short Bio <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
- <Textarea
- id="bio"
- name="bio"
- value={formData.bio}
- onChange={handleInputChange}
- placeholder="Tell students a bit about yourself and your driving experience..."
- rows={3}
- />
- </div>
- </>
- )}
+    if (Object.keys(errs).length === 0) {
+      if (step < 4) {
+        setStep(step + 1)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        return
+      }
 
- {/* Step 2: Vehicle Info */}
- {step === 2 && (
- <>
- <div>
- <h2 className="text-lg font-bold text-muted-foreground mb-0.5">Vehicle Information</h2>
- <p className="text-sm text-muted-foreground">What will you be driving?</p>
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="make" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Vehicle Make & Model</Label>
- <Input id="make" name="make" value={formData.make} onChange={handleInputChange} placeholder="e.g. Toyota Camry" className={errors.make ? 'border-red-500' : ''} />
- {errors.make && <p className="text-xs text-red-600">{errors.make}</p>}
- </div>
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5">
- <Label htmlFor="year" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Year <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
- <Input id="year" name="year" value={formData.year} onChange={handleInputChange} placeholder="e.g. 2018" />
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="plate" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">License Plate</Label>
- <Input id="plate" name="plate" value={formData.plate} onChange={handleInputChange} placeholder="e.g. GR-1234-21" className={errors.plate ? 'border-red-500' : ''} />
- {errors.plate && <p className="text-xs text-red-600">{errors.plate}</p>}
- </div>
- </div>
- </>
- )}
+      // Step 4 final submission
+      setProcessing(true)
+      try {
+        const res = await fetch('/api/driver/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: session?.user?.name || formData.fullname,
+            email: session?.user?.email || formData.email,
+            password: formData.password || undefined,
+            phone: formData.phone,
+            area: 'Campus & Hostels',
+            availability: selectedDays.join(', '),
+            licenseNumber: formData.license,
+            vehicleMake: formData.make,
+            vehicleModel: '',
+            vehicleColor: formData.color || 'Standard',
+            vehiclePlate: formData.plate,
+            isVerified: kycStatus === 'VERIFIED'
+          })
+        })
 
- {/* Step 3: Documents */}
- {step === 3 && (
- <>
- <div>
- <h2 className="text-lg font-bold text-muted-foreground mb-0.5">Documents</h2>
- <p className="text-sm text-muted-foreground">All documents are reviewed by our team and kept secure.</p>
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="license" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Driver&apos;s License Number</Label>
- <Input id="license" name="license" value={formData.license} onChange={handleInputChange} placeholder="NGA-DL-00000000" className={errors.license ? 'border-red-500' : ''} />
- {errors.license && <p className="text-xs text-red-600">{errors.license}</p>}
- </div>
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5">
- <Label htmlFor="make" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Vehicle Make & Model</Label>
- <Input id="make" name="make" value={formData.make} onChange={handleInputChange} placeholder="Toyota Corolla" className={errors.make ? 'border-red-500' : ''} />
- {errors.make && <p className="text-xs text-red-600">{errors.make}</p>}
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="year" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Year</Label>
- <Input id="year" name="year" value={formData.year} onChange={handleInputChange} placeholder="2019" type="number" min={2000} max={2025} />
- </div>
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="plate" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">License Plate Number</Label>
- <Input id="plate" name="plate" value={formData.plate} onChange={handleInputChange} placeholder="GR-1234-22" className={errors.plate ? 'border-red-500' : ''} />
- {errors.plate && <p className="text-xs text-red-600">{errors.plate}</p>}
- </div>
+        const data = await res.json()
+        if (res.ok) {
+          if (!session?.user && formData.password) {
+            await signIn('credentials', { 
+              email: formData.email, 
+              password: formData.password, 
+              redirect: false 
+            })
+          }
+          setSubmitted(true)
+          if (data.autoApproved) {
+            setAutoApproved(true)
+          }
+        } else {
+          alert(data.message || 'Failed to submit application')
+        }
+      } catch (err) {
+        alert('An error occurred during application submission')
+      } finally {
+        setProcessing(false)
+      }
+    }
+  }
 
- <div className="space-y-1.5">
- <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Student ID / National ID (Required for KYC)</Label>
- <label
- htmlFor="idFile"
- className={`flex flex-col items-center justify-center gap-2 border ${idFile ? 'border-green-500 bg-green-500/10' : 'border-border-default bg-surface-elevated'} rounded-xl p-4 cursor-pointer hover:border-purple-brand/40 transition-colors`}
- >
- <Upload className={`w-5 h-5 ${idFile ? 'text-green-500' : 'text-muted-foreground'}`} />
- <span className={`text-sm font-medium ${idFile ? 'text-green-500' : 'text-primary'}`}>
- {idFile ? idFile.name : 'Click to upload your ID card'}
- </span>
- <span className="text-xs text-muted-foreground">PNG, JPG · max 5MB</span>
- <input 
- type="file" 
- id="idFile" 
- className="hidden" 
- accept="image/png, image/jpeg" 
- onChange={(e) => {
- if (e.target.files && e.target.files[0]) {
- setIdFile(e.target.files[0])
- }
- }} 
- />
- </label>
- </div>
- 
- {[
- { label: "Driver's License (photo)", name: 'licenseFile' },
- { label: 'Vehicle Insurance', name: 'insuranceFile' },
- { label: 'Roadworthy Certificate', name: 'roadworthyFile' },
- ].map((field) => (
- <div key={field.name} className="space-y-1.5 opacity-50 pointer-events-none">
- <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">{field.label}</Label>
- <label
- htmlFor={field.name}
- className="flex flex-col items-center justify-center gap-2 border border-border-default bg-surface-elevated rounded-xl p-4 cursor-pointer hover:border-purple-brand/40 transition-colors"
- >
- <Upload className="w-5 h-5 text-muted-foreground" />
- <span className="text-sm font-medium text-primary">
- Click to upload or drag &amp; drop
- </span>
- <span className="text-xs text-muted-foreground">PNG, JPG or PDF · max 5MB</span>
- <input type="file" id={field.name} className="hidden" disabled />
- </label>
- </div>
- ))}
- </>
- )}
+  if (submitted) {
+    return (
+      <div className="flex flex-col min-h-screen bg-background">
+        <Navbar />
+        <main className="flex-1 flex items-center justify-center px-4 pt-24 pb-16">
+          <div className="max-w-md w-full text-center bg-surface-card border border-border-default rounded-2xl p-8 shadow-xl">
+            <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
+              <Shield className="w-8 h-8 text-emerald-500" />
+            </div>
+            <h1 className="text-xl font-extrabold text-foreground mb-2">
+              {autoApproved ? "You're Approved! 🎉" : "Application Received!"}
+            </h1>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+              {autoApproved 
+                ? "Your driver account is active. You can now access your Driver Dashboard to start accepting rides." 
+                : "Thank you for applying. Our admin team will review your credentials and activate your driver account shortly."}
+            </p>
+            <a 
+              href={autoApproved ? "/driver" : "/dashboard"} 
+              className={buttonVariants({ className: "w-full bg-orange-brand hover:bg-orange-dark text-white font-bold text-xs py-3 rounded-xl shadow-md" })}
+            >
+              {autoApproved ? "Go to Driver Dashboard" : "Return to Dashboard"}
+            </a>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
- {/* Step 4: Availability */}
- {step === 4 && (
- <>
- <div>
- <h2 className="text-lg font-bold text-muted-foreground mb-0.5">Availability & Route</h2>
- <p className="text-sm text-muted-foreground">When and where do you usually drive?</p>
- </div>
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      <Navbar />
+      
+      <main className="flex-1 pt-24 pb-16 px-4">
+        <div className="max-w-xl mx-auto">
 
- <div className="space-y-2">
- <Label className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Available Days</Label>
- <div className="flex flex-wrap gap-2">
- {DAYS.map((day) => (
- <button
- key={day}
- type="button"
- onClick={() =>
- setSelectedDays((d) =>
- d.includes(day) ? d.filter((x) => x !== day) : [...d, day]
- )
- }
- className={cn(
- 'px-3 py-1.5 rounded-full text-sm font-medium border transition-colors',
- selectedDays.includes(day)
- ? 'bg-primary text-foreground border-primary'
- : 'bg-card text-foreground border-border hover:border-primary/40'
- )}
- >
- {day.slice(0, 3)}
- </button>
- ))}
- </div>
- {errors.days && <p className="text-xs text-red-600">{errors.days}</p>}
- </div>
+          {/* Clean Header */}
+          <div className="text-center mb-6">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              Join Our Driver Community
+            </h1>
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              Earn on your campus schedule. Safe, student-vetted rides.
+            </p>
+          </div>
 
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-1.5">
- <Label htmlFor="startTime" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">From (time)</Label>
- <Input id="startTime" name="startTime" type="time" defaultValue="06:00" />
- </div>
- <div className="space-y-1.5">
- <Label htmlFor="endTime" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">To (time)</Label>
- <Input id="endTime" name="endTime" type="time" defaultValue="20:00" />
- </div>
- </div>
+          {/* Stepper Progress */}
+          <div className="flex items-center justify-between mb-8 px-2 max-w-sm mx-auto">
+            {STEPS.map((s, idx) => {
+              const isDone = s.number < step
+              const isActive = s.number === step
+              return (
+                <div key={s.number} className="flex items-center flex-1 last:flex-none">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className={cn(
+                        'w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all shadow-sm',
+                        isDone && 'bg-emerald-500 text-white',
+                        isActive && 'bg-orange-brand text-white ring-4 ring-orange-brand/20',
+                        !isDone && !isActive && 'bg-surface-elevated text-muted-foreground border border-border-default'
+                      )}
+                    >
+                      {isDone ? <Check className="w-4 h-4 stroke-[2.5]" /> : s.number}
+                    </div>
+                    <span className="text-[10px] font-semibold mt-1 text-muted-foreground uppercase tracking-wider">
+                      {s.label}
+                    </span>
+                  </div>
 
- <div className="space-y-1.5">
- <Label htmlFor="notes" className="text-[11px] font-semibold uppercase tracking-[0.05em] text-muted-foreground">Additional Notes <span className="font-normal normal-case tracking-normal">(optional)</span></Label>
- <Textarea
- id="notes"
- name="notes"
- value={formData.notes}
- onChange={handleInputChange}
- placeholder="e.g. I can only take airport runs on weekends"
- rows={3}
- />
- </div>
- </>
- )}
+                  {idx < STEPS.length - 1 && (
+                    <div 
+                      className={cn(
+                        'flex-1 h-[2px] mx-2 -mt-4 transition-colors',
+                        s.number < step ? 'bg-orange-brand' : 'bg-border-default'
+                      )} 
+                    />
+                  )}
+                </div>
+              )
+            })}
+          </div>
 
- {/* Nav buttons */}
- <div className="flex gap-4 pt-4">
- {step > 1 && (
- <Button type="button" variant="outline" className="flex-1 border-border-default hover:bg-surface-elevated" onClick={() => setStep(s => s - 1)} disabled={processing}>
- <ChevronLeft className="w-4 h-4 mr-2" /> Back
- </Button>
- )}
- <Button type="submit" className="flex-1 bg-orange-brand hover:brightness-110 text-primary-foreground font-bold" disabled={processing}>
- {processing ? (
- <span className="flex items-center">
- <Zap className="w-4 h-4 mr-2 animate-pulse" /> Processing...
- </span>
- ) : step === 4 ? 'Submit Application' : (
- <span className="flex items-center">Next <ChevronRight className="w-4 h-4 ml-1" /></span>
- )}
- </Button>
- </div>
- </form>
- </div>
+          {/* Clean Form Card */}
+          <div className="bg-surface-card border border-border-default rounded-2xl p-6 sm:p-8 shadow-xl">
+            <form onSubmit={handleNext} className="space-y-4" noValidate>
 
- <p className="text-center text-xs text-muted-foreground mt-6">
- Questions? Email us at{' '}
- <a href="mailto:drivers@tovedrop.com" className="text-primary hover:underline">
- drivers@tovedrop.com
- </a>
- </p>
- </div>
- </main>
- <Footer />
- </div>
- )
+              {/* ── STEP 1: Personal Info ── */}
+              {step === 1 && (
+                <>
+                  <div className="border-b border-border-default/60 pb-3 mb-2">
+                    <h2 className="text-sm font-bold text-foreground">Personal Information</h2>
+                    <p className="text-xs text-muted-foreground">Contact details for ride notifications.</p>
+                  </div>
+
+                  {session?.user ? (
+                    <div className="p-3 rounded-xl bg-surface-elevated border border-border-default flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-bold text-foreground">{session.user.name}</p>
+                        <p className="text-[11px] text-muted-foreground">{session.user.email}</p>
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">
+                        Verified Student
+                      </span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-1">
+                        <Label htmlFor="fullname" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Full Name</Label>
+                        <Input 
+                          id="fullname" 
+                          name="fullname" 
+                          value={formData.fullname} 
+                          onChange={handleInputChange} 
+                          placeholder="e.g. Emeka Nwosu" 
+                          className={errors.fullname ? 'border-red-500' : ''} 
+                        />
+                        {errors.fullname && <p className="text-[11px] text-red-500">{errors.fullname}</p>}
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email Address</Label>
+                        <Input 
+                          id="email" 
+                          name="email" 
+                          type="email"
+                          value={formData.email} 
+                          onChange={handleInputChange} 
+                          placeholder="you@email.com" 
+                          className={errors.email ? 'border-red-500' : ''} 
+                        />
+                        {errors.email && <p className="text-[11px] text-red-500">{errors.email}</p>}
+                      </div>
+
+                      <div className="space-y-1">
+                        <Label htmlFor="password" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Account Password</Label>
+                        <PasswordInput 
+                          id="password" 
+                          name="password" 
+                          value={formData.password} 
+                          onChange={handleInputChange} 
+                          placeholder="Min 8 characters" 
+                          className={errors.password ? 'border-red-500' : ''} 
+                          showIcon={false} 
+                        />
+                        {errors.password && <p className="text-[11px] text-red-500">{errors.password}</p>}
+                      </div>
+                    </>
+                  )}
+
+                  <div className="space-y-1">
+                    <Label htmlFor="phone" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Phone Number (WhatsApp Active)</Label>
+                    <Input 
+                      id="phone" 
+                      name="phone" 
+                      type="tel"
+                      value={formData.phone} 
+                      onChange={handleInputChange} 
+                      placeholder="+234 80 000 0000" 
+                      className={errors.phone ? 'border-red-500' : ''} 
+                    />
+                    {errors.phone && <p className="text-[11px] text-red-500">{errors.phone}</p>}
+                  </div>
+                </>
+              )}
+
+              {/* ── STEP 2: Vehicle Info ── */}
+              {step === 2 && (
+                <>
+                  <div className="border-b border-border-default/60 pb-3 mb-2">
+                    <h2 className="text-sm font-bold text-foreground">Vehicle Details</h2>
+                    <p className="text-xs text-muted-foreground">What vehicle will you use for campus rides?</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label htmlFor="make" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Vehicle Make & Model</Label>
+                    <Input 
+                      id="make" 
+                      name="make" 
+                      value={formData.make} 
+                      onChange={handleInputChange} 
+                      placeholder="e.g. Toyota Corolla / Keke / Camry" 
+                      className={errors.make ? 'border-red-500' : ''} 
+                    />
+                    {errors.make && <p className="text-[11px] text-red-500">{errors.make}</p>}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="plate" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">License Plate</Label>
+                      <Input 
+                        id="plate" 
+                        name="plate" 
+                        value={formData.plate} 
+                        onChange={handleInputChange} 
+                        placeholder="e.g. LAG-123-AB" 
+                        className={errors.plate ? 'border-red-500' : ''} 
+                      />
+                      {errors.plate && <p className="text-[11px] text-red-500">{errors.plate}</p>}
+                    </div>
+
+                    <div className="space-y-1">
+                      <Label htmlFor="color" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Vehicle Color</Label>
+                      <Input 
+                        id="color" 
+                        name="color" 
+                        value={formData.color} 
+                        onChange={handleInputChange} 
+                        placeholder="e.g. Silver, Black" 
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* ── STEP 3: Verification Documents ── */}
+              {step === 3 && (
+                <>
+                  <div className="border-b border-border-default/60 pb-3 mb-2">
+                    <h2 className="text-sm font-bold text-foreground">Driver Verification</h2>
+                    <p className="text-xs text-muted-foreground">Required for campus trust and rider safety.</p>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label htmlFor="license" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Driver&apos;s License Number</Label>
+                    <Input 
+                      id="license" 
+                      name="license" 
+                      value={formData.license} 
+                      onChange={handleInputChange} 
+                      placeholder="NGA-DL-00000000" 
+                      className={errors.license ? 'border-red-500' : ''} 
+                    />
+                    {errors.license && <p className="text-[11px] text-red-500">{errors.license}</p>}
+                  </div>
+
+                  <div className="space-y-1 pt-1">
+                    <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Student ID or Driver License Photo</Label>
+                    <label
+                      htmlFor="idFile"
+                      className={cn(
+                        "flex flex-col items-center justify-center gap-2 border rounded-xl p-5 cursor-pointer transition-colors",
+                        idFile ? "border-emerald-500 bg-emerald-500/10" : "border-border-default bg-surface-elevated hover:border-orange-brand/50"
+                      )}
+                    >
+                      <Upload className={cn("w-6 h-6", idFile ? "text-emerald-500" : "text-muted-foreground")} />
+                      <span className={cn("text-xs font-semibold", idFile ? "text-emerald-500" : "text-foreground")}>
+                        {idFile ? idFile.name : 'Click to select photo (JPEG, PNG)'}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground">Clear photo showing your name and photo</span>
+                      <input 
+                        type="file" 
+                        id="idFile" 
+                        className="hidden" 
+                        accept="image/png, image/jpeg, image/jpg" 
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files[0]) {
+                            setIdFile(e.target.files[0])
+                          }
+                        }} 
+                      />
+                    </label>
+                    {errors.idFile && <p className="text-[11px] text-red-500">{errors.idFile}</p>}
+                  </div>
+                </>
+              )}
+
+              {/* ── STEP 4: Availability ── */}
+              {step === 4 && (
+                <>
+                  <div className="border-b border-border-default/60 pb-3 mb-2">
+                    <h2 className="text-sm font-bold text-foreground">Available Driving Days</h2>
+                    <p className="text-xs text-muted-foreground">Which days are you open to accepting rides?</p>
+                  </div>
+
+                  <div className="space-y-2 py-2">
+                    <div className="flex flex-wrap gap-2">
+                      {DAYS.map((day) => {
+                        const isSelected = selectedDays.includes(day)
+                        return (
+                          <button
+                            key={day}
+                            type="button"
+                            onClick={() =>
+                              setSelectedDays(prev =>
+                                prev.includes(day) ? prev.filter(x => x !== day) : [...prev, day]
+                              )
+                            }
+                            className={cn(
+                              'px-3.5 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer',
+                              isSelected 
+                                ? 'bg-orange-brand text-white border-orange-brand shadow-sm' 
+                                : 'bg-surface-elevated text-muted-foreground border-border-default hover:text-foreground'
+                            )}
+                          >
+                            {day}
+                          </button>
+                        )
+                      })}
+                    </div>
+                    {errors.days && <p className="text-[11px] text-red-500">{errors.days}</p>}
+                  </div>
+                </>
+              )}
+
+              {/* Nav / Submit Actions */}
+              <div className="flex items-center gap-3 pt-4 border-t border-border-default/60">
+                {step > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setStep(step - 1)}
+                    className="px-4 py-2.5 rounded-xl bg-surface-elevated border border-border-default text-xs font-bold text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    Back
+                  </button>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="flex-1 py-3 px-4 rounded-xl bg-orange-brand hover:bg-orange-dark active:scale-[0.99] text-white font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {processing ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Submitting Application...</span>
+                    </>
+                  ) : (
+                    <span>{step === 4 ? 'Submit Application' : 'Next Step →'}</span>
+                  )}
+                </button>
+              </div>
+
+            </form>
+          </div>
+
+          <p className="text-center text-[11px] text-muted-foreground mt-6">
+            Questions? Contact driver support at <span className="text-foreground font-medium">support@tovedrop.com</span>
+          </p>
+
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
 }

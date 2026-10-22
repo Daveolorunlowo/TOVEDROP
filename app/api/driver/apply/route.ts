@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server"
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { sendEmail } from "@/lib/email"
@@ -7,58 +9,109 @@ import { sendWebPush } from '@/lib/webpush'
 
 export async function POST(req: Request) {
   try {
+    const session = await getServerSession(authOptions)
     const data = await req.json()
     const { name, email, password, phone, area, availability, bio, licenseNumber, vehicleMake, vehicleModel, vehicleColor, vehiclePlate, isVerified } = data
 
-    if (!name || !email || !password || !licenseNumber || !vehiclePlate) {
-      return NextResponse.json({ message: "Missing required fields" }, { status: 400 })
+    const targetName = session?.user?.name || name
+    const targetEmail = session?.user?.email || email
+
+    if (!targetName || !targetEmail || !licenseNumber || !vehiclePlate) {
+      return NextResponse.json({ message: "Missing required fields (Name, Email, License, Vehicle Plate)" }, { status: 400 })
     }
 
-    const exists = await prisma.user.findUnique({
-      where: { email }
-    })
-
-    if (exists) {
-      return NextResponse.json({ message: "Email already registered" }, { status: 400 })
+    if (!session?.user && !password) {
+      return NextResponse.json({ message: "Password is required for new registration" }, { status: 400 })
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10)
 
     let driverStatus = 'PENDING'
     if (process.env.AUTO_APPROVE_DRIVERS === 'true' || isVerified === true) {
       driverStatus = 'APPROVED'
     }
 
-    // Create user and driver profile in a transaction
-    const user = await prisma.$transaction(async (tx) => {
-      const newUser = await tx.user.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-          role: "DRIVER",
-          dropsBalance: 0
-        }
+    let user: any = null
+
+    if (session?.user?.id) {
+      // 1. Existing logged-in user applying to be a driver
+      const existingProfile = await prisma.driverProfile.findUnique({
+        where: { userId: session.user.id }
       })
 
-      await tx.driverProfile.create({
-        data: {
-          userId: newUser.id,
-          phone,
-          area,
-          availability,
-          bio,
-          licenseNumber,
-          vehicleMake,
-          vehicleModel,
-          vehicleColor,
-          vehiclePlate,
-          status: driverStatus
+      if (existingProfile) {
+        return NextResponse.json({ 
+          message: `You have already applied! Your driver status is currently: ${existingProfile.status}`,
+          status: existingProfile.status 
+        }, { status: 400 })
+      }
+
+      user = await prisma.$transaction(async (tx) => {
+        await tx.driverProfile.create({
+          data: {
+            userId: session.user.id,
+            phone: phone || '',
+            area: area || 'Main Campus',
+            availability: availability || 'All Days',
+            bio: bio || '',
+            licenseNumber,
+            vehicleMake: vehicleMake || 'Vehicle',
+            vehicleModel: vehicleModel || '',
+            vehicleColor: vehicleColor || 'Unknown',
+            vehiclePlate,
+            status: driverStatus
+          }
+        })
+
+        if (driverStatus === 'APPROVED') {
+          await tx.user.update({
+            where: { id: session.user.id },
+            data: { role: 'DRIVER' }
+          })
         }
+
+        return tx.user.findUnique({ where: { id: session.user.id } })
+      })
+    } else {
+      // 2. New guest registration
+      const exists = await prisma.user.findUnique({
+        where: { email: targetEmail }
       })
 
-      return newUser
-    })
+      if (exists) {
+        return NextResponse.json({ message: "An account with this email already exists. Please sign in to apply." }, { status: 400 })
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      user = await prisma.$transaction(async (tx) => {
+        const newUser = await tx.user.create({
+          data: {
+            name: targetName,
+            email: targetEmail,
+            password: hashedPassword,
+            role: driverStatus === 'APPROVED' ? "DRIVER" : "RIDER",
+            dropsBalance: 0
+          }
+        })
+
+        await tx.driverProfile.create({
+          data: {
+            userId: newUser.id,
+            phone: phone || '',
+            area: area || 'Main Campus',
+            availability: availability || 'All Days',
+            bio: bio || '',
+            licenseNumber,
+            vehicleMake: vehicleMake || 'Vehicle',
+            vehicleModel: vehicleModel || '',
+            vehicleColor: vehicleColor || 'Unknown',
+            vehiclePlate,
+            status: driverStatus
+          }
+        })
+
+        return newUser
+      })
+    }
 
     if (driverStatus === 'APPROVED') {
       await sendEmail(email, 'DriverApproved', JSON.stringify({ name, phone, vehiclePlate }))
