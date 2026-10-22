@@ -4,7 +4,6 @@ import { authOptions } from '@/lib/authOptions'
 import prisma from '@/lib/prisma'
 import { sendEmail } from '@/lib/email'
 import { sendWhatsAppMessage } from '@/lib/whatsapp'
-import { sendWebPush } from '@/lib/webpush'
 import { pusherServer } from '@/lib/pusher'
 
 function getReasonText(reason: string, note?: string | null) {
@@ -118,60 +117,12 @@ If you have any concerns about this change, please contact us.
  ).catch(e => console.error("WhatsApp send failed", e))
  }
 
-  // Immediate real-time notifications to Rider and Original Driver
-  const transferTasks: Promise<any>[] = []
+ // Trigger Pusher for Rider
+ await pusherServer.trigger(`user-trips-${rider.id}`, 'trip-transferred', {
+ tripId: transferCheck.tripId
+ }).catch(e => console.error("Pusher trigger failed", e))
 
-  // Push notification to Rider
-  transferTasks.push(
-    sendWebPush(
-      rider.id,
-      "Driver Updated for your Ride 🚗",
-      `Your trip scheduled for ${transferCheck.trip.time} has been transferred to ${newDriver?.name || 'a new driver'}.`,
-      `/dashboard/trips/${transferCheck.tripId}`
-    ).catch(e => console.error("Transfer rider push failed:", e))
-  )
-
-  // Push notification to transferring driver
-  if (transferCheck.fromDriverId) {
-    transferTasks.push(
-      sendWebPush(
-        transferCheck.fromDriverId,
-        "Trip Transfer Accepted! ✅",
-        `${newDriver?.name || 'Another driver'} accepted your transferred ride for ${transferCheck.trip.time}.`,
-        "/driver"
-      ).catch(e => console.error("Transfer driver push failed:", e))
-    )
-  }
-
-  // Trigger Pusher for Rider, Driver, and Global Trip
-  if (pusherServer) {
-    transferTasks.push(
-      pusherServer.trigger(`user-trips-${rider.id}`, 'trip-transferred', {
-        tripId: transferCheck.tripId,
-        newDriverName: newDriver?.name,
-        newDriverVehicle: `${newDriver?.driverProfile?.vehicleMake ?? ''} ${newDriver?.driverProfile?.vehicleModel ?? ''}`
-      }).catch(e => console.error("Pusher rider trigger failed:", e)),
-      pusherServer.trigger(`user-${rider.id}`, 'trip-transferred', {
-        tripId: transferCheck.tripId,
-        newDriverName: newDriver?.name
-      }).catch(e => console.error("Pusher user trigger failed:", e)),
-      pusherServer.trigger(`user-${transferCheck.fromDriverId}`, 'transfer-accepted', {
-        tripId: transferCheck.tripId,
-        acceptedBy: newDriver?.name
-      }).catch(e => console.error("Pusher fromDriver trigger failed:", e)),
-      pusherServer.trigger(`trip-${transferCheck.tripId}`, 'trip-transferred', {
-        tripId: transferCheck.tripId,
-        newDriverName: newDriver?.name
-      }).catch(e => console.error("Pusher trip trigger failed:", e))
-    )
-  }
-
-  await Promise.race([
-    Promise.allSettled(transferTasks),
-    new Promise(r => setTimeout(r, 600))
-  ])
-
-  return NextResponse.json({ success: true })
+ return NextResponse.json({ success: true })
 
  } catch (error: any) {
  console.error('Transfer accept error:', error)

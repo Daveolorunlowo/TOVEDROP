@@ -99,28 +99,20 @@ export const authOptions: NextAuthOptions = {
       // If user is present (happens on initial sign in)
       if (user) {
         // Credentials login already returns the full DB user
-        token.role = user.role || 'RIDER'
-        token.id = user.id || (token.sub as string)
+        token.role = user.role
+        token.id = user.id
         token.university = user.university
-        token.dropsBalance = user.dropsBalance ?? 3
+        token.dropsBalance = user.dropsBalance
         
-        if (token.role === 'DRIVER') {
+        if (user.role === 'DRIVER') {
           const driver = await prisma.driverProfile.findUnique({
-            where: { userId: (user.id || token.sub) as string },
+            where: { userId: user.id },
             select: { status: true }
           })
           token.driverStatus = driver?.status ?? null
         } else {
           token.driverStatus = null
         }
-      }
-
-      // Ensure token.id is always populated from token.sub if missing
-      if (!token.id && token.sub) {
-        token.id = token.sub as string
-      }
-      if (!token.role) {
-        token.role = 'RIDER'
       }
       
       if (trigger === "update") {
@@ -129,7 +121,7 @@ export const authOptions: NextAuthOptions = {
         
         if (token.role === 'DRIVER') {
           const driver = await prisma.driverProfile.findUnique({
-            where: { userId: (token.id || token.sub) as string },
+            where: { userId: token.id as string },
             select: { status: true }
           })
           token.driverStatus = driver?.status ?? null
@@ -139,14 +131,14 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.role = (token.role as string) || 'RIDER'
-        session.user.id = (token.id || token.sub) as string
+        session.user.role = token.role as string
+        session.user.id = token.id as string
         session.user.university = token.university as string | null
         
         if (token.role === 'ADMIN' || token.role === 'DRIVER') {
           session.user.dropsBalance = 0
         } else {
-          session.user.dropsBalance = typeof token.dropsBalance === 'number' ? token.dropsBalance : 0
+          session.user.dropsBalance = token.dropsBalance as number
         }
 
         session.user.driverStatus = token.driverStatus as string | null

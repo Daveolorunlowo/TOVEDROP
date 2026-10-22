@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server"
 import crypto from "crypto"
 import prisma from "@/lib/prisma"
-import { pusherServer } from "@/lib/pusher"
-import { sendWebPush } from "@/lib/webpush"
 
 export async function POST(req: Request) {
   try {
@@ -83,28 +81,6 @@ export async function POST(req: Request) {
           }
         })
       })
-
-      // Instant Real-Time Alert to User & Admins
-      if (pusherServer) {
-        await pusherServer.trigger(`user-${userId}`, 'drops-updated', {
-          amount: dropsAmount,
-          message: `+${dropsAmount} Drops added to your balance! 💧`
-        }).catch(err => console.error("[Paystack Webhook] Pusher drops-updated failed:", err))
-
-        await pusherServer.trigger('admin-alerts', 'new-drops-purchase', {
-          userId,
-          amount: dropsAmount,
-          nairaAmount: amountInNaira,
-          reference
-        }).catch(err => console.error("[Paystack Webhook] Pusher admin-alerts failed:", err))
-      }
-
-      await sendWebPush(
-        userId,
-        'Drops Added! 💧',
-        `+${dropsAmount} Drops have been successfully credited to your wallet. Happy riding!`,
-        '/dashboard'
-      ).catch(err => console.error("[Paystack Webhook] Web Push failed:", err))
     }
 
     return NextResponse.json({ message: "Webhook processed" }, { status: 200 })

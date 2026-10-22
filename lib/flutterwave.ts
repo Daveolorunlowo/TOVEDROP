@@ -1,7 +1,5 @@
 import prisma from "@/lib/prisma"
 import { DROP_PACKAGES, FIRST_PURCHASE_DISCOUNT_PERCENTAGE } from "@/lib/config"
-import { pusherServer } from "@/lib/pusher"
-import { sendWebPush } from "@/lib/webpush"
 
 export interface FlutterwaveCustomer {
   id: string
@@ -228,28 +226,6 @@ export async function creditDropsFromFlutterwave(flwData: any) {
       },
     })
   })
-
-  // Instant Real-Time Alert to User & Admins
-  if (pusherServer) {
-    await pusherServer.trigger(`user-${userId}`, 'drops-updated', {
-      amount: dropsAmount,
-      message: `+${dropsAmount} Drops added to your balance! 💧`
-    }).catch(err => console.error("[Flutterwave] Pusher drops-updated failed:", err))
-
-    await pusherServer.trigger('admin-alerts', 'new-drops-purchase', {
-      userId,
-      amount: dropsAmount,
-      nairaAmount: amountInNaira,
-      reference
-    }).catch(err => console.error("[Flutterwave] Pusher admin-alerts failed:", err))
-  }
-
-  await sendWebPush(
-    userId,
-    'Drops Added! 💧',
-    `+${dropsAmount} Drops have been successfully credited to your wallet. Happy riding!`,
-    '/dashboard'
-  ).catch(err => console.error("[Flutterwave] Web Push failed:", err))
 
   return {
     success: true,

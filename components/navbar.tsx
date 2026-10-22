@@ -35,7 +35,6 @@ const navLinks = [
 export function Navbar() {
   const pathname = usePathname()
   const isHomePage = pathname === '/'
-  const isApplyPage = pathname === '/apply'
   const handleBookRideClick = useBookRideNavigation()
   const { data: session, status } = useSession()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -89,40 +88,36 @@ export function Navbar() {
             </Link>
 
             {/* Desktop center links */}
-            {!isApplyPage && (
-              <nav className="hidden md:flex items-center gap-8" aria-label="Primary navigation">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={link.isBookRide ? handleBookRideClick : undefined}
-                    className="text-[13.5px] font-medium text-foreground/60 hover:text-foreground transition-colors duration-200 tracking-wide"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </nav>
-            )}
+            <nav className="hidden md:flex items-center gap-8" aria-label="Primary navigation">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={link.isBookRide ? handleBookRideClick : undefined}
+                  className="text-[13.5px] font-medium text-foreground/60 hover:text-foreground transition-colors duration-200 tracking-wide"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
 
             {/* Right side: Drops + Auth */}
             <div className="hidden md:flex items-center gap-3">
               {!isHomePage && <ThemeToggle />}
               {mounted && status === 'authenticated' && session?.user && (
                 <>
-                  {!isApplyPage && (
-                    <Link href="/dashboard/buy-drops" className="group flex items-center gap-1.5 bg-surface-elevated border border-border-default hover:border-purple-brand/50 hover:bg-surface-elevated/80 rounded-full px-2.5 py-1.5 transition-all cursor-pointer" title="Buy more Drops">
-                      <DropCoin className="w-3.5 h-3.5 shrink-0 group-hover:scale-110 transition-transform" />
-                      {dropsLoading ? (
-                        <div className="h-4 w-6 bg-border-default animate-pulse rounded" />
-                      ) : (
-                        <span className="text-[12px] font-bold text-primary tabular-nums">{dropsBalance ?? session.user.dropsBalance ?? 0}</span>
-                      )}
-                      <span className="text-[11px] text-purple-brand font-semibold mr-0.5">Drops</span>
-                      <span className="text-[10px] font-black text-foreground bg-purple-brand rounded-full w-3.5 h-3.5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        +
-                      </span>
-                    </Link>
-                  )}
+                  <Link href="/dashboard/buy-drops" className="group flex items-center gap-1.5 bg-surface-elevated border border-border-default hover:border-purple-brand/50 hover:bg-surface-elevated/80 rounded-full px-2.5 py-1.5 transition-all cursor-pointer" title="Buy more Drops">
+                    <DropCoin className="w-3.5 h-3.5 shrink-0 group-hover:scale-110 transition-transform" />
+                    {dropsLoading ? (
+                      <div className="h-4 w-6 bg-border-default animate-pulse rounded" />
+                    ) : (
+                      <span className="text-[12px] font-bold text-primary tabular-nums">{dropsBalance ?? session.user.dropsBalance ?? 0}</span>
+                    )}
+                    <span className="text-[11px] text-purple-brand font-semibold mr-0.5">Drops</span>
+                    <span className="text-[10px] font-black text-foreground bg-purple-brand rounded-full w-3.5 h-3.5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      +
+                    </span>
+                  </Link>
                   <div className="relative shrink-0 ml-2">
                     <Avatar className="w-8 h-8">
                       <AvatarFallback

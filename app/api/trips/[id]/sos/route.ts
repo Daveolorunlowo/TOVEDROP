@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/authOptions"
 import prisma from "@/lib/prisma"
 import { pusherServer } from "@/lib/pusher"
-import { sendWebPush } from "@/lib/webpush"
 
 export async function POST(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
@@ -39,30 +38,13 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
     })
 
     // Alert admins via pusher
-    if (pusherServer) {
-      await pusherServer.trigger('admin-alerts', 'sos-triggered', {
-        tripId,
-        sender: session.user.name,
-        role: senderRole,
-        content,
-        lat, lng
-      }).catch(err => console.error("Pusher SOS trigger failed:", err))
-    }
-
-    // Instant Web Push to all Admins
-    try {
-      const admins = await prisma.user.findMany({
-        where: { role: 'ADMIN' },
-        select: { id: true }
-      })
-      if (admins.length > 0) {
-        await Promise.allSettled(
-          admins.map(adm => sendWebPush(adm.id, '🚨 SOS EMERGENCY ALERT!', content, `/admin`))
-        )
-      }
-    } catch (err) {
-      console.error("[SOS] Admin push notification failed:", err)
-    }
+    await pusherServer.trigger('admin-alerts', 'sos-triggered', {
+      tripId,
+      sender: session.user.name,
+      role: senderRole,
+      content,
+      lat, lng
+    })
 
     return NextResponse.json({ message: "SOS Alert Sent" }, { status: 200 })
   } catch (error: any) {

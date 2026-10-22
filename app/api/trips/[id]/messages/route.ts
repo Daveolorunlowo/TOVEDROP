@@ -117,19 +117,17 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
         }).catch(e => console.error("Pusher incoming-message error:", e))
       )
 
-      // Send WebPush notification in background and ensure it's in pushTasks
+      // Send WebPush notification in background
       const title = `New message from ${senderName ? senderName.split(' ')[0] : (isSenderDriver ? 'driver' : 'rider')}`
       const notificationContent = message.content.length > 50 ? `${message.content.substring(0, 47)}...` : message.content
       const url = isSenderDriver ? (trip.shareToken ? `/trip/${trip.shareToken}` : `/dashboard/trips/${tripId}`) : '/driver'
-      pushTasks.push(
-        sendWebPush(recipientId, title, notificationContent, url).catch(e => console.error("WebPush error:", e))
-      )
+      sendWebPush(recipientId, title, notificationContent, url).catch(e => console.error("WebPush error:", e))
     }
 
-    // 3. Race against a 500ms timeout so the sender's UI responds instantaneously while guaranteeing dispatch
+    // 3. Race against a 300ms timeout so the sender's UI responds instantaneously
     await Promise.race([
       Promise.allSettled(pushTasks),
-      new Promise(resolve => setTimeout(resolve, 500))
+      new Promise(resolve => setTimeout(resolve, 300))
     ])
 
     return NextResponse.json({ message }, { status: 201 })

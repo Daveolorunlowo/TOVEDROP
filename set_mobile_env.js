@@ -1,15 +1,11 @@
-import os from 'os';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const os = require('os');
+const fs = require('fs');
+const path = require('path');
 
 function getLocalIp() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
-    for (const iface of interfaces[name] || []) {
+    for (const iface of interfaces[name]) {
       // Skip internal (127.0.0.1) and non-IPv4 addresses
       if (iface.family === 'IPv4' && !iface.internal) {
         return iface.address;
@@ -32,15 +28,10 @@ if (fs.existsSync(envPath)) {
     envContent += `\nNEXTAUTH_URL="${newUrl}"\n`;
   }
 
-  if (envContent.match(/^NEXT_PUBLIC_APP_URL=.*$/m)) {
-    envContent = envContent.replace(/^NEXT_PUBLIC_APP_URL=.*$/m, `NEXT_PUBLIC_APP_URL="${newUrl}"`);
-  } else {
-    envContent += `\nNEXT_PUBLIC_APP_URL="${newUrl}"\n`;
-  }
-
   fs.writeFileSync(envPath, envContent);
-  console.log(`✅ Success! Updated .env NEXTAUTH_URL and NEXT_PUBLIC_APP_URL to: ${newUrl}`);
+  console.log(`✅ Success! Updated .env NEXTAUTH_URL to: ${newUrl}`);
   console.log(`📱 On your phone, visit: ${newUrl}`);
+  console.log(`⚠️  Make sure to restart your Next.js server!`);
 } else {
   console.error('❌ Could not find .env file in the current directory.');
 }

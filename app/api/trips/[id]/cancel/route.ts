@@ -87,40 +87,20 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
  const message = `Your TOVEDROP trip for ${fullTrip.date} at ${fullTrip.time} has been cancelled. ${refundReason}`
  const url = `/dashboard/trips/${tripId}`
 
-  // Fast guaranteed dispatch of cancellation notifications
-  const cancelTasks: Promise<any>[] = []
-
   // Notify Rider
   if (fullTrip.riderId) {
-    cancelTasks.push(
-      sendWebPush(fullTrip.riderId, title, message, url).catch(e => console.error("[Cancel WebPush Error]:", e)),
-      pusherServer.trigger(`user-trips-${fullTrip.riderId}`, 'trip-cancelled', { tripId, title, message }).catch(e => console.error("Pusher error:", e)),
-      pusherServer.trigger(`user-${fullTrip.riderId}`, 'trip-cancelled', { tripId, title, message }).catch(e => console.error("Pusher error:", e))
-    )
+    sendWebPush(fullTrip.riderId, title, message, url)
+    pusherServer.trigger(`user-trips-${fullTrip.riderId}`, 'trip-cancelled', { tripId }).catch(e => console.error("Pusher error:", e))
   }
 
   // Notify Driver
   if (fullTrip.driverId) {
-    cancelTasks.push(
-      sendWebPush(fullTrip.driverId, title, message, '/driver').catch(e => console.error("[Cancel Driver WebPush Error]:", e)),
-      pusherServer.trigger(`user-trips-${fullTrip.driverId}`, 'trip-cancelled', { tripId, title, message }).catch(e => console.error("Pusher error:", e)),
-      pusherServer.trigger(`user-${fullTrip.driverId}`, 'trip-cancelled', { tripId, title, message }).catch(e => console.error("Pusher error:", e))
-    )
+    sendWebPush(fullTrip.driverId, title, message, '/driver')
+    pusherServer.trigger(`user-trips-${fullTrip.driverId}`, 'trip-cancelled', { tripId }).catch(e => console.error("Pusher error:", e))
   }
   
-  // Also notify global and admin channels
-  if (pusherServer) {
-    cancelTasks.push(
-      pusherServer.trigger(`trip-${tripId}`, 'trip-cancelled', { tripId, title, message }).catch(e => console.error("Pusher error:", e)),
-      pusherServer.trigger('admin-alerts', 'trip-cancelled', { tripId, title, message }).catch(e => console.error("Pusher error:", e))
-    )
-  }
-
-  // Await push tasks with 700ms race ceiling to guarantee delivery before response
-  await Promise.race([
-    Promise.allSettled(cancelTasks),
-    new Promise(r => setTimeout(r, 700))
-  ])
+  // Also notify the global trip channel in case anyone is watching the specific trip
+  pusherServer.trigger(`trip-${tripId}`, 'trip-cancelled', { tripId }).catch(e => console.error("Pusher error:", e))
  }
  
  revalidatePath('/dashboard')

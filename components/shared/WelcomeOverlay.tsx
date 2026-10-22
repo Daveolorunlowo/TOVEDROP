@@ -71,23 +71,23 @@ export function WelcomeOverlay({
     }
   }, [phase]);
 
-  // Handle sequence progression: display greeting, then automatically disappear after few seconds
+  // Handle sequence progression: display greeting, then smoothly fade out
   useEffect(() => {
-    if (isPublicPage || hasSeenWelcome) return;
+    if (phase === 'done' || isPublicPage) return;
 
     const fadeTimer = setTimeout(() => {
       setPhase('fade');
-    }, 2000);
+    }, 2400);
 
     const doneTimer = setTimeout(() => {
       dismiss();
-    }, 2600);
+    }, 3000);
 
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(doneTimer);
     };
-  }, [isPublicPage, hasSeenWelcome, dismiss]);
+  }, [phase, isPublicPage, dismiss]);
 
   // If on a public route, do not render anything
   if (isPublicPage) return null;
@@ -101,11 +101,12 @@ export function WelcomeOverlay({
         <motion.div
           key="welcome-root-overlay"
           initial={false}
-          animate={{ opacity: phase === 'fade' ? 0 : 1 }}
+          animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.6, ease: 'easeInOut' }}
           onClick={dismiss}
           className="fixed inset-0 z-[99999] flex items-center justify-center overflow-hidden bg-[#0A0D14] cursor-pointer"
+          style={{ opacity: 1, backgroundColor: '#0A0D14' }}
         >
           {/* Ambient Glowing Background */}
           <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none overflow-hidden">

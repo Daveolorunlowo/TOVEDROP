@@ -195,57 +195,32 @@ export const POST = withValidation(createTripSchema, async (req: NextRequest, da
  destination,
  })
 
-  // === INSTANT REAL-TIME DISPATCH (Zero Delay Delivery) ===
-  const dispatchTasks: Promise<any>[] = []
+ // === RESPOND IMMEDIATELY ===
+ // Return success as soon as the trip is durably committed.
+ // All downstream notifications are fire-and-forget below.
+ const response = NextResponse.json({ message: "Trip created successfully", trip: result }, { status: 201 })
 
-  // 1. Pusher instant broadcast to all active drivers and admins
-  if (pusherServer) {
-    dispatchTasks.push(
-      pusherServer.trigger('global-trips', 'new-trip', {
-        trip: result,
-        pickup,
-        destination,
-        date,
-        time,
-        riderName: session.user.name || 'Student'
-      }).catch(err => console.error("[Trip Create] Pusher global-trips failed:", err)),
-      pusherServer.trigger('admin-alerts', 'new-trip', {
-        tripId: result.id,
-        pickup,
-        destination,
-        date,
-        time,
-        riderName: session.user.name || 'Student',
-        createdAt: result.createdAt
-      }).catch(err => console.error("[Trip Create] Pusher admin-alerts failed:", err))
-    )
-  }
+ // Notify drivers in the background via Web Push (fire-and-forget)
+ prisma.driverProfile.findMany({
+ where: { status: 'APPROVED' },
+ }).then(async (drivers) => {
+ if (drivers.length > 0) {
+ const title = 'New Ride Request'
+ const message = `${pickup} → ${destination}\n${date} at ${time}`
+ const url = '/driver'
+ 
+ await Promise.all(
+ drivers.map(driver => sendWebPush(driver.userId, title, message, url))
+ )
+ }
+ }).catch(err => console.error("Background Web Push driver broadcast failed:", err))
 
-  // 2. Immediate Web Push broadcast to all approved drivers
-  const pushPromise = prisma.driverProfile.findMany({
-    where: { status: 'APPROVED' },
-    select: { userId: true }
-  }).then(async (drivers) => {
-    if (drivers.length > 0) {
-      const title = 'New Ride Request 🚗'
-      const message = `${pickup} → ${destination} • ${date} at ${time}`
-      const url = '/driver'
-      await Promise.allSettled(
-        drivers.map(driver => sendWebPush(driver.userId, title, message, url))
-      )
-    }
-  }).catch(err => console.error("[Trip Create] Driver push broadcast error:", err))
+ // Trigger pusher event to all drivers (fire-and-forget)
+ pusherServer.trigger('global-trips', 'new-trip', {
+ trip: result
+ }).catch(err => console.error("Background Pusher trigger failed:", err))
 
-  dispatchTasks.push(pushPromise)
-
-  // Guarantee notifications leave server before lambda freezes (max 700ms timeout race)
-  await Promise.race([
-    Promise.allSettled(dispatchTasks),
-    new Promise(r => setTimeout(r, 700))
-  ])
-
-  return NextResponse.json({ message: "Trip created successfully", trip: result }, { status: 201 })
-
+ return response
  } catch (error: any) {
  logger.error("Trip creation failed", error, {
  action: "CREATE_TRIP_ERROR",

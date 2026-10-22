@@ -25,15 +25,9 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
   if (!session?.user) redirect('/auth')
 
-  const userId = session.user.id || (session.user.email ? (await prisma.user.findUnique({
-    where: { email: session.user.email },
-    select: { id: true }
-  }))?.id : null)
-
-  if (!userId) redirect('/auth')
-
-  const user = await prisma.user.findUnique({ where: { id: userId } })
-  if (!user) redirect('/auth')
+  // Note: role-based redirect is handled in layout.tsx — no duplicate check needed here
+  const user = await prisma.user.findUnique({ where: { id: session.user.id } })
+  if (!user) redirect('/clear')
 
   const trips = await prisma.trip.findMany({
     where: { riderId: user.id },
@@ -83,7 +77,7 @@ export default async function DashboardPage() {
               { label: 'Trips Taken',   value: String(tripsTaken) },
               { label: 'Upcoming',      value: String(upcomingTrips.length) },
               { label: 'Avg. Rating',   value: '—' },
-              { label: 'Drops Balance', value: String(user.dropsBalance ?? 0), accent: true },
+              { label: 'Drops Balance', value: String(user.dropsBalance), accent: true },
             ].map((s, i) => (
               <div key={s.label} className={`${i > 0 ? 'pl-6' : ''} ${i < 3 ? 'pr-6' : ''}`}>
                 <p className="text-[11px] font-medium uppercase tracking-[0.05em] mb-1" style={{ color: 'var(--muted-foreground)' }}>
@@ -98,8 +92,8 @@ export default async function DashboardPage() {
               </div>
             ))}
           </div>
-          <div style={{ borderTop: '1px solid var(--border)', marginTop: '14px', paddingTop: (user.dropsBalance ?? 0) === 0 ? '14px' : '10px' }}>
-            {(user.dropsBalance ?? 0) === 0 ? (
+          <div style={{ borderTop: '1px solid var(--border)', marginTop: '14px', paddingTop: user.dropsBalance === 0 ? '14px' : '10px' }}>
+            {user.dropsBalance === 0 ? (
               <Link
                 href="/dashboard/buy-drops"
                 className="block w-full text-center py-2.5 rounded-lg text-xs font-bold text-foreground shadow-lg transition-transform active:scale-[0.98] hover:brightness-110"

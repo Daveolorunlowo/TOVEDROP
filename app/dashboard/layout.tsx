@@ -6,7 +6,7 @@ import { DashboardLayoutClient } from '@/components/dashboard/DashboardLayoutCli
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions)
-  if (!session?.user) redirect('/auth')
+  if (!session?.user) redirect('/clear')
 
   const redirectPath = getRoleRedirectPath(session.user.role as string, session.user.driverStatus as string | null)
   if (redirectPath !== '/dashboard') {
