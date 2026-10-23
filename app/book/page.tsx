@@ -367,16 +367,17 @@ function BookWizard() {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
  {/* Form */}
  <div className="bg-card rounded-xl border border-border p-6 sm:p-8 min-h-[420px] flex flex-col relative overflow-hidden">
- <h1 className="text-2xl font-extrabold text-foreground mb-1">
+ <h1 className={`text-2xl font-extrabold text-foreground ${step === 1 ? 'mb-6' : 'mb-1'}`}>
  {step === 1 && "Where are you going?"}
  {step === 2 && "When do you need a ride?"}
  {step === 3 && "Booking Summary & Confirmation"}
  </h1>
+ {step > 1 && (
  <p className="text-sm text-muted-foreground mb-6">
- {step === 1 && "Tap on the map or use a landmark to set locations."}
  {step === 2 && "Select a date and time for your pickup."}
  {step === 3 && "Double-check your pickup, destination, and details before requesting."}
  </p>
+ )}
 
  <form onSubmit={handleSubmit} className="space-y-5 flex-1 flex flex-col" noValidate>
  {/* STEP 1: Locations */}
