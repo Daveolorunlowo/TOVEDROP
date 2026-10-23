@@ -4,57 +4,50 @@ import bcrypt from "bcryptjs"
 
 export async function GET() {
   try {
-    const email = "testdriver@tovedrop.com"
-    const password = "password123"
-    const hashedPassword = await bcrypt.hash(password, 10)
-
-    // Check if exists
-    let user = await prisma.user.findUnique({ where: { email } })
-
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          name: "Test Driver",
-          email,
-          password: hashedPassword,
-          role: "DRIVER",
-          dropsBalance: 0,
-          driverProfile: {
-            create: {
-              status: "APPROVED",
-              phone: "555-0199",
-              licenseNumber: "TEST-LICENSE-001",
-              vehiclePlate: "TEST-PLATE",
-            }
-          }
-        }
-      })
-    } else {
-      // Ensure they are approved driver
-      await prisma.user.update({
-        where: { email },
-        data: { role: "DRIVER" }
-      })
-      await prisma.driverProfile.upsert({
-        where: { userId: user.id },
-        update: { status: "APPROVED" },
-        create: {
-          userId: user.id,
-          status: "APPROVED",
-          licenseNumber: "TEST-LICENSE-001",
-        }
-      })
-    }
+    const rawUrl = process.env.DATABASE_URL || "postgresql://neondb_owner:npg_v5LAkEz6rGcM@ep-summer-moon-ay1fb9vh-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
     
-    return NextResponse.json({ 
-      success: true, 
-      message: "Test driver created successfully!",
-      credentials: { email, password }
+    let parsed: any = null
+    try {
+      const u = new URL(rawUrl)
+      parsed = {
+        hasEnvVar: !!process.env.DATABASE_URL,
+        protocol: u.protocol,
+        username: u.username,
+        host: u.host,
+        database: u.pathname,
+        search: u.search,
+        passwordLength: u.password?.length || 0,
+      }
+    } catch (e: any) {
+      parsed = { parseError: e.message }
+    }
+
+    // Try a simple query
+    const userCount = await prisma.user.count()
+
+    return NextResponse.json({
+      success: true,
+      diagnostics: parsed,
+      userCount,
     })
   } catch (error: any) {
+    const rawUrl = process.env.DATABASE_URL || ""
+    let parsed: any = null
+    try {
+      const u = new URL(rawUrl)
+      parsed = {
+        hasEnvVar: !!process.env.DATABASE_URL,
+        username: u.username,
+        host: u.host,
+        search: u.search,
+      }
+    } catch {}
+
     return NextResponse.json({ 
       success: false, 
+      diagnostics: parsed,
       error: error.message,
+      code: error.code,
     }, { status: 500 })
   }
 }
