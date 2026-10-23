@@ -96,6 +96,7 @@ function BookWizard() {
  const idempotencyKeyRef = useRef<string>(generateId())
  const initializedRef = useRef<boolean>(false)
  const prevIsScheduledRef = useRef<boolean>(false)
+ const step3EnteredAtRef = useRef<number>(0)
  
  // Wizard state
  const [step, setStep] = useState<number>(1)
@@ -195,10 +196,13 @@ function BookWizard() {
  const handleNextStep = () => {
  if (step === 1 && validateStep1()) {
  setStep(2)
+ if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
  } else if (step === 2 && validateStep2()) {
  // Generate a fresh idempotency key for this booking attempt
  idempotencyKeyRef.current = generateId()
+ step3EnteredAtRef.current = Date.now()
  setStep(3)
+ if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
  }
  }
 
@@ -206,20 +210,25 @@ function BookWizard() {
  if (step > 1) {
  setStep(step - 1)
  setErrors({})
+ if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
  }
  }
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault()
- if (submitting) return
+ const handleFinalBooking = () => {
+ // Arming lock: Ignore any accidental/ghost clicks within 500ms of entering Step 3
+ if (Date.now() - step3EnteredAtRef.current < 500) return
+ if (submitting || loading) return
 
- if (step === 3) {
  if (drops < 1) {
  setErrors({ general: 'Insufficient Drops to book a trip.' })
  return
  }
  confirmBooking()
  }
+
+ const handleSubmit = (e: React.FormEvent) => {
+ e.preventDefault()
+ // Explicitly prevent auto-submission on Enter or form triggers
  }
 
  const confirmBooking = async () => {
@@ -690,6 +699,7 @@ function BookWizard() {
  <div className="mt-auto pt-6 flex items-center gap-3">
  {step > 1 && (
  <Button 
+ key="btn-wizard-back"
  type="button" 
  variant="outline" 
  size="lg" 
@@ -703,6 +713,7 @@ function BookWizard() {
  
  {step < 3 ? (
  <Button 
+ key={`btn-wizard-step-${step}`}
  type="button" 
  size="lg" 
  onClick={handleNextStep} 
@@ -714,6 +725,7 @@ function BookWizard() {
  ) : (
  (!loading && drops < 1) ? (
  <Button
+ key="btn-wizard-buy-drops"
  type="button"
  size="lg"
  onClick={() => router.push('/dashboard/buy-drops')}
@@ -724,8 +736,10 @@ function BookWizard() {
  </Button>
  ) : (
  <Button
- type="submit"
+ key="btn-wizard-confirm-booking"
+ type="button"
  size="lg"
+ onClick={handleFinalBooking}
  disabled={submitting || loading}
  className="flex-1 text-white font-semibold shadow-md transition-all hover:brightness-105 active:scale-[0.99]"
  style={{ backgroundColor: 'var(--orange-brand)' }}
