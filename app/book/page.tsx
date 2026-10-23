@@ -94,6 +94,8 @@ function BookWizard() {
  const [noteStr, setNoteStr] = useState<string>('')
  const [showConfirm, setShowConfirm] = useState<boolean>(false)
  const idempotencyKeyRef = useRef<string>(generateId())
+ const initializedRef = useRef<boolean>(false)
+ const prevIsScheduledRef = useRef<boolean>(false)
  
  // Wizard state
  const [step, setStep] = useState<number>(1)
@@ -102,6 +104,9 @@ function BookWizard() {
 
  // Set default date/time to now on mount, and prefill destination from URL
  useEffect(() => {
+ if (initializedRef.current) return
+ initializedRef.current = true
+
  setQuickTime(0)
  
  const urlDest = searchParams.get('destination')
@@ -130,6 +135,9 @@ function BookWizard() {
 
  // Effect to update time automatically if leaving now vs scheduled
  useEffect(() => {
+ if (prevIsScheduledRef.current === isScheduled) return
+ prevIsScheduledRef.current = isScheduled
+
  if (!isScheduled) {
  setQuickTime(0)
  } else {

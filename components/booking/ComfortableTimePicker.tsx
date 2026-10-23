@@ -128,9 +128,16 @@ export function ComfortableTimePicker({
     if (isNaN(selected.getTime())) return { isValid: false, message: 'Invalid time' }
 
     const minAllowedDate = new Date(now.getTime() + minHoursAhead * 60 * 60 * 1000)
+    const isToday = dateStr === quickDays[0]?.key
 
     if (selected < now) {
-      return { isValid: false, message: 'Selected time has already passed.' }
+      return { 
+        isValid: false, 
+        isPastToday: isToday,
+        message: isToday 
+          ? `${formatTimeFriendly(timeStr)} has already passed today. Need this ride tomorrow?` 
+          : 'Selected time has already passed.' 
+      }
     }
     if (selected < minAllowedDate) {
       const earliestStr = `${earliestAllowed.hour % 12 || 12}:${String(earliestAllowed.minute).padStart(2, '0')} ${earliestAllowed.hour >= 12 ? 'PM' : 'AM'}`
@@ -151,7 +158,7 @@ export function ComfortableTimePicker({
     if (!diffText) diffText = 'shortly'
 
     return { isValid: true, diffText: `in ~${diffText}` }
-  }, [dateStr, timeStr, minHoursAhead, earliestAllowed])
+  }, [dateStr, timeStr, minHoursAhead, earliestAllowed, quickDays])
 
   // Automatically adjust default period when switching date
   useEffect(() => {
@@ -170,37 +177,32 @@ export function ComfortableTimePicker({
     const now = new Date()
     const earliest = new Date(now.getTime() + minHoursAhead * 60 * 60 * 1000)
     let m = Math.ceil(earliest.getMinutes() / 15) * 15
-    let h = earliest.getHours()
     if (m >= 60) {
-      h += 1
+      earliest.setHours(earliest.getHours() + 1)
       m = 0
     }
-    if (h >= 24) {
-      // Moves to tomorrow
-      const tomorrow = quickDays[1].key
-      onDateChange(tomorrow)
-      onTimeChange(`08:00`)
-    } else {
-      const todayStr = quickDays[0].key
-      onDateChange(todayStr)
-      onTimeChange(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
-    }
+    earliest.setMinutes(m)
+    const yyyy = earliest.getFullYear()
+    const mm = String(earliest.getMonth() + 1).padStart(2, '0')
+    const dd = String(earliest.getDate()).padStart(2, '0')
+    onDateChange(`${yyyy}-${mm}-${dd}`)
+    onTimeChange(`${String(earliest.getHours()).padStart(2, '0')}:${String(earliest.getMinutes()).padStart(2, '0')}`)
   }
 
   const handlePickOffsetHours = (hours: number) => {
     const now = new Date()
     const target = new Date(now.getTime() + hours * 60 * 60 * 1000)
     let m = Math.round(target.getMinutes() / 15) * 15
-    let h = target.getHours()
     if (m >= 60) {
-      h += 1
+      target.setHours(target.getHours() + 1)
       m = 0
     }
+    target.setMinutes(m)
     const yyyy = target.getFullYear()
     const mm = String(target.getMonth() + 1).padStart(2, '0')
     const dd = String(target.getDate()).padStart(2, '0')
     onDateChange(`${yyyy}-${mm}-${dd}`)
-    onTimeChange(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`)
+    onTimeChange(`${String(target.getHours()).padStart(2, '0')}:${String(target.getMinutes()).padStart(2, '0')}`)
   }
 
   // Pre-generated time slot arrays for each time of day
@@ -229,9 +231,10 @@ export function ComfortableTimePicker({
     }
   }, [])
 
+  const isToday = dateStr === quickDays[0]?.key
+
   // Helper to test if a slot is disabled for the selected date
   const isSlotDisabled = (h: number, m: number) => {
-    const isToday = dateStr === quickDays[0]?.key
     if (!isToday) return false // All daytime slots allowed for future days
     if (h < earliestAllowed.hour) return true
     if (h === earliestAllowed.hour && m < earliestAllowed.minute) return true
@@ -335,23 +338,17 @@ export function ComfortableTimePicker({
           </button>
           <button
             type="button"
-            onClick={() => {
-              onTimeChange('15:00')
-              setActivePeriod('afternoon')
-            }}
+            onClick={() => handlePickOffsetHours(8)}
             className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-foreground border border-border-subtle hover:border-border-default transition-all cursor-pointer"
           >
-            3:00 PM
+            +8 Hours
           </button>
           <button
             type="button"
-            onClick={() => {
-              onTimeChange('18:00')
-              setActivePeriod('evening')
-            }}
-            className="text-xs font-medium px-3 py-1.5 rounded-full bg-surface-elevated text-muted-foreground hover:text-foreground border border-border-subtle hover:border-border-default transition-all cursor-pointer"
+            onClick={() => handlePickOffsetHours(12)}
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-[var(--orange-brand)]/10 hover:bg-[var(--orange-brand)]/20 text-[var(--orange-brand)] border border-[var(--orange-brand)]/30 transition-all flex items-center gap-1 cursor-pointer"
           >
-            6:00 PM
+            🌙 In 12 Hours
           </button>
         </div>
       </div>
@@ -433,26 +430,59 @@ export function ComfortableTimePicker({
               </button>
             </div>
 
+            {/* Helpful banner if all slots in activePeriod have passed for today */}
+            {isToday && slotsByPeriod[activePeriod].every((s) => isSlotDisabled(s.hour, s.minute)) && (
+              <div className="p-3 rounded-xl bg-[var(--orange-brand)]/10 border border-[var(--orange-brand)]/20 flex items-center justify-between gap-2 text-xs">
+                <div className="flex items-center gap-1.5 text-[var(--orange-brand)] font-medium">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{activePeriod.charAt(0).toUpperCase() + activePeriod.slice(1)} slots have passed for today.</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const tomorrow = quickDays[1]?.key
+                    if (tomorrow) onDateChange(tomorrow)
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-[var(--orange-brand)] text-white font-bold hover:opacity-90 transition-opacity text-xs cursor-pointer shadow-xs shrink-0"
+                >
+                  Book for Tomorrow ➔
+                </button>
+              </div>
+            )}
+
             {/* Slots Grid */}
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-[220px] overflow-y-auto p-1 pr-1.5">
               {slotsByPeriod[activePeriod].map((slot) => {
                 const disabled = isSlotDisabled(slot.hour, slot.minute)
                 const isSelected = timeStr === slot.time24
+                const isPassedToday = isToday && disabled
+
                 return (
                   <button
                     type="button"
                     key={slot.time24}
-                    disabled={disabled}
-                    onClick={() => onTimeChange(slot.time24)}
+                    onClick={() => {
+                      if (isPassedToday) {
+                        const tomorrow = quickDays[1]?.key
+                        if (tomorrow) onDateChange(tomorrow)
+                        onTimeChange(slot.time24)
+                        return
+                      }
+                      onTimeChange(slot.time24)
+                    }}
+                    title={isPassedToday ? `Click to book for Tomorrow at ${slot.label}` : slot.label}
                     className={`py-2 px-2.5 rounded-xl text-xs font-semibold text-center border transition-all cursor-pointer ${
-                      disabled
-                        ? 'opacity-30 border-border/40 text-muted-foreground cursor-not-allowed bg-muted/20 line-through'
-                        : isSelected
+                      isSelected
                         ? 'bg-[var(--orange-brand)] text-white border-[var(--orange-brand)] shadow-sm ring-2 ring-[var(--orange-brand)]/30 scale-[1.02]'
+                        : isPassedToday
+                        ? 'opacity-65 border-dashed border-border/80 text-muted-foreground hover:border-[var(--orange-brand)] hover:text-[var(--orange-brand)] hover:bg-[var(--orange-brand)]/5'
                         : 'bg-background border-border hover:border-[var(--orange-brand)]/60 text-foreground'
                     }`}
                   >
-                    {slot.label}
+                    <span>{slot.label}</span>
+                    {isPassedToday && (
+                      <span className="block text-[9px] font-normal text-muted-foreground/80 mt-0.5">Tomorrow</span>
+                    )}
                   </button>
                 )
               })}
@@ -587,6 +617,17 @@ export function ComfortableTimePicker({
                 <Check className="w-3.5 h-3.5" />
                 Valid ({validity.diffText})
               </span>
+            ) : validity.isPastToday ? (
+              <button
+                type="button"
+                onClick={() => {
+                  const tomorrow = quickDays[1]?.key
+                  if (tomorrow) onDateChange(tomorrow)
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full bg-[var(--orange-brand)] text-white hover:opacity-90 transition-opacity self-start sm:self-auto cursor-pointer shadow-xs"
+              >
+                👉 Move to Tomorrow ({formatTimeFriendly(timeStr)})
+              </button>
             ) : (
               <button
                 type="button"

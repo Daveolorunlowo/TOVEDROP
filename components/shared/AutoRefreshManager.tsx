@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { pusherClient } from '@/lib/pusher-client'
 import { Car, MapPin, CheckCircle2, X, Navigation, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
@@ -46,10 +46,14 @@ function playTone(freqs: number[], duration = 0.4) {
 export function AutoRefreshManager() {
   const { data: session } = useSession()
   const router = useRouter()
+  const pathname = usePathname()
   const [activeToast, setActiveToast] = useState<TripToast | null>(null)
   const lastRefreshRef = useRef<number>(Date.now())
 
   const triggerRefresh = () => {
+    // Never interrupt users while filling forms or booking
+    if (pathname?.startsWith('/book')) return
+
     // Throttle router.refresh to max once every 2 seconds
     const now = Date.now()
     if (now - lastRefreshRef.current < 2000) return
