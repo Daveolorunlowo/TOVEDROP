@@ -1,5 +1,4 @@
 import { PrismaClient } from '../generated/prisma/client'
-import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 
 const prismaClientSingleton = () => {
@@ -14,8 +13,7 @@ const prismaClientSingleton = () => {
     connectionString = connectionString.replace('sslmode=require', 'uselibpqcompat=true&sslmode=require')
   }
 
-  const pool = new Pool({ connectionString, ssl: { rejectUnauthorized: false } })
-  const adapter = new PrismaPg(pool)
+  const adapter = new PrismaPg({ connectionString, ssl: { rejectUnauthorized: false } })
   return new PrismaClient({ adapter })
 }
 
