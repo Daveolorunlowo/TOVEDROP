@@ -21,23 +21,30 @@ export const POST = withValidation(registerSchema, async (req: NextRequest, data
  return NextResponse.json({ message: "Too many registration attempts. Please try again later." }, { status: 429 })
  }
 
- const { name, email, university, password } = data
+    const name = data.name.trim()
+    const email = data.email.trim().toLowerCase()
+    const { university, password } = data
 
- const exists = await prisma.user.findUnique({
- where: { email }
- })
+    const exists = await prisma.user.findFirst({
+      where: {
+        email: {
+          equals: email,
+          mode: 'insensitive'
+        }
+      }
+    })
 
- if (exists) {
- if (!exists.password) {
- const hashedPassword = await bcrypt.hash(password, 10)
- await prisma.user.update({
- where: { email },
- data: { password: hashedPassword, name }
- })
- return NextResponse.json({ message: "Password set for existing account" }, { status: 201 })
- }
- return NextResponse.json({ message: "User already exists" }, { status: 400 })
- }
+    if (exists) {
+      if (!exists.password) {
+        const hashedPassword = await bcrypt.hash(password, 10)
+        await prisma.user.update({
+          where: { id: exists.id },
+          data: { password: hashedPassword, name }
+        })
+        return NextResponse.json({ message: "Password set for existing account" }, { status: 201 })
+      }
+      return NextResponse.json({ message: "An account with this email already exists. Please log in instead." }, { status: 400 })
+    }
 
  const hashedPassword = await bcrypt.hash(password, 10)
 

@@ -88,12 +88,15 @@ function AuthForm() {
     const form = e.target as HTMLFormElement;
     const newErrors: Record<string, string> = {};
 
-    const email = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+    const rawEmail = (form.elements.namedItem('email') as HTMLInputElement)?.value;
+    const email = rawEmail ? rawEmail.trim().toLowerCase() : '';
     const password = (form.elements.namedItem('password') as HTMLInputElement)?.value;
+    let name = '';
 
     if (tab === 'signup') {
-      const name = (form.elements.namedItem('name') as HTMLInputElement)?.value;
-      if (!name || name.trim().length < 2) newErrors.name = 'Please enter your full name.';
+      const rawName = (form.elements.namedItem('name') as HTMLInputElement)?.value;
+      name = rawName ? rawName.trim() : '';
+      if (!name || name.length < 2) newErrors.name = 'Please enter your full name.';
       const confirmPassword = (form.elements.namedItem('confirmPassword') as HTMLInputElement)?.value;
       if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match.';
     }
@@ -113,7 +116,7 @@ function AuthForm() {
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: (form.elements.namedItem('name') as HTMLInputElement)?.value, email, password }),
+          body: JSON.stringify({ name, email, password }),
         });
         if (res.ok) {
           const signInRes = await signIn('credentials', { email, password, redirect: false });
