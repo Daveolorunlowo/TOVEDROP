@@ -4,7 +4,7 @@ const { Pool } = require('pg');
 const webpush = require('web-push');
 const fs = require('fs');
 
-const rawUrl = "postgresql://neondb_owner:npg_v5LAkEz6rGcM@ep-summer-moon-ay1fb9vh-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require";
+const rawUrl = "postgresql://neondb_owner:npg_v5LAkEz6rGcM@ep-summer-moon-ay1fb9vh-pooler.c-5.us-east-2.aws.neon.tech/neondb?uselibpqcompat=true&sslmode=require";
 const pool = new Pool({ connectionString: rawUrl, ssl: { rejectUnauthorized: false } });
 
 // Clean key helper
