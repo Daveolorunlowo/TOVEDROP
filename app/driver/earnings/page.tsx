@@ -7,6 +7,7 @@ import { ArrowLeft, Wallet, Building2, Banknote, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { WithdrawModal } from '@/components/driver/WithdrawModal'
 
 export default function EarningsPage() {
  const router = useRouter()
@@ -246,47 +247,15 @@ export default function EarningsPage() {
  </div>
 
  {/* Withdraw Modal */}
- {showWithdrawModal && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
- <div className="w-full max-w-sm rounded-lg p-6" style={{ background: 'var(--card)', border: '1px solid var(--border-subtle)' }}>
- <h2 className="text-lg font-bold text-foreground mb-1">Request Withdrawal</h2>
- <p className="text-xs text-muted-foreground mb-6">Enter the amount you wish to withdraw to {bankName}.</p>
- 
- <form onSubmit={handleWithdraw} className="space-y-4">
- <div>
- <Label style={{ color: 'var(--muted-foreground)', fontSize: '11px', textTransform: 'uppercase' }}>Amount (₦)</Label>
- <Input 
- type="number"
- value={withdrawAmount}
- onChange={e => setWithdrawAmount(e.target.value)}
- placeholder={`Max: ₦${walletBalance}`}
- max={walletBalance}
- style={{ background: 'var(--background)', border: '1px solid var(--border-subtle)', color: 'var(--foreground)' }}
+ <WithdrawModal
+   isOpen={showWithdrawModal}
+   onClose={() => setShowWithdrawModal(false)}
+   walletBalance={walletBalance}
+   driverProfile={data}
+   onSuccess={() => {
+     fetchProfile()
+   }}
  />
- </div>
- <div className="flex gap-3 pt-2">
- <Button 
- type="button" 
- variant="outline" 
- className="flex-1"
- onClick={() => setShowWithdrawModal(false)}
- style={{ background: 'transparent', borderColor: 'var(--border-subtle)', color: 'var(--muted-foreground)' }}
- >
- Cancel
- </Button>
- <Button 
- type="submit" 
- disabled={withdrawing || !withdrawAmount || Number(withdrawAmount) > walletBalance}
- className="flex-1"
- style={{ background: 'var(--orange-brand)', color: 'var(--foreground)' }}
- >
- {withdrawing ? 'Processing...' : 'Withdraw'}
- </Button>
- </div>
- </form>
- </div>
- </div>
- )}
  </div>
  )
 }

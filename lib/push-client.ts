@@ -228,3 +228,6 @@ export function showNotificationDeniedAlert() {
     `After enabling notifications, tap the notification toggle again.`
   )
 }
+
+export { subscribeToPushNotifications as subscribeUserToPush }
+

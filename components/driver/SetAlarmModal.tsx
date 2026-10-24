@@ -14,10 +14,12 @@ import {
   Loader2,
   MapPin,
   Sparkles,
-  Calendar
+  Calendar,
+  BellRing
 } from 'lucide-react'
 import { startContinuousAlarm, stopAllAlarms } from '@/lib/alarm-sounds'
 import { formatTripSchedule } from '@/lib/trip-schedule'
+import { subscribeUserToPush } from '@/lib/push-client'
 
 interface SetAlarmModalProps {
   trip: any
@@ -60,6 +62,32 @@ export function SetAlarmModal({
   const [error, setError] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
   const [existingReminder, setExistingReminder] = useState<any | null>(null)
+  const [pushPermission, setPushPermission] = useState<string>('default')
+  const [enablingPush, setEnablingPush] = useState<boolean>(false)
+
+  // Check current browser push permission
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'Notification' in window) {
+      setPushPermission(Notification.permission)
+    }
+  }, [isOpen])
+
+  const handleEnablePush = async () => {
+    try {
+      setEnablingPush(true)
+      const success = await subscribeUserToPush()
+      if (typeof window !== 'undefined' && 'Notification' in window) {
+        setPushPermission(Notification.permission)
+      }
+      if (success) {
+        setSuccessMsg('Background alarm notifications enabled!')
+      }
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setEnablingPush(false)
+    }
+  }
 
   // Stop any preview sound when modal closes or unmounts
   useEffect(() => {
@@ -175,6 +203,15 @@ export function SetAlarmModal({
       setLoading(true)
       setError(null)
       setSuccessMsg(null)
+
+      // Ensure push subscription is active so device can ring in background
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission !== 'denied') {
+        try {
+          await subscribeUserToPush()
+        } catch (e) {
+          // non-blocking
+        }
+      }
 
       const res = await fetch(`/api/driver/trips/${trip.id}/alarm`, {
         method: 'POST',
@@ -292,6 +329,34 @@ export function SetAlarmModal({
             <span className="truncate">{trip.pickup}</span>
           </div>
         </div>
+
+        {/* Background Alarm Permission Banner (if not yet granted) */}
+        {pushPermission !== 'granted' && (
+          <div className="p-3.5 rounded-2xl bg-amber-500/15 border-2 border-amber-500/40 text-xs space-y-2">
+            <div className="flex items-start gap-2.5">
+              <div className="p-1.5 rounded-lg bg-amber-500 text-black shrink-0 mt-0.5">
+                <BellRing className="w-4 h-4 animate-pulse" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-black text-amber-500 uppercase tracking-wider text-[11px]">
+                  Turn on alarms when phone is locked
+                </p>
+                <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
+                  Allow notifications so your device can ring and vibrate loudly even when TOVEDROP is closed.
+                </p>
+              </div>
+            </div>
+            <button
+              type="button"
+              disabled={enablingPush}
+              onClick={handleEnablePush}
+              className="w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-black font-black text-xs shadow-md flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+            >
+              {enablingPush ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Bell className="w-3.5 h-3.5 fill-black" />}
+              <span>Enable Background Alarm Alert 🔔</span>
+            </button>
+          </div>
+        )}
 
         {/* Existing Active Alarm Pill if already set */}
         {existingReminder && (

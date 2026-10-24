@@ -10,8 +10,10 @@ export async function GET(req: Request) {
   // Security check: ensure this is called by Vercel Cron or authorized request
   const authHeader = req.headers.get('authorization');
   const cronSecret = process.env.CRON_SECRET;
+  const { searchParams } = new URL(req.url);
+  const keyParam = searchParams.get('key');
   
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}` && keyParam !== cronSecret) {
     return new NextResponse('Unauthorized', { status: 401 });
   }
 
@@ -42,10 +44,12 @@ export async function GET(req: Request) {
       }
 
       await sendPushNotification(reminder.trip.driverId, {
-        title: `Trip Reminder: ${reminder.type}`,
-        body: `You have a trip departing ${reminder.type === 'EXACT' ? 'now' : `in ${reminder.type}`} from ${reminder.trip.pickup}.`,
+        title: `⏰ TRIP ALARM: Pickup in ${reminder.type}!`,
+        body: `Upcoming ride from ${reminder.trip.pickup}. Tap immediately to view trip & start moving!`,
         url: `/driver/trips/${reminder.trip.id}`,
-        type: 'REMINDER'
+        type: 'REMINDER_URGENT',
+        isAlarm: true,
+        tripId: reminder.trip.id
       });
 
       await prisma.tripReminder.update({

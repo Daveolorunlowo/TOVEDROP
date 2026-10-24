@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import {
   MapPin, Calendar, Clock, Star, Car,
-  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle, BellRing, Volume2, VolumeX
+  CheckCircle, XCircle, Loader2, Check, MessageCircle, Settings, Navigation, ExternalLink, AlertTriangle, BellRing, Volume2, VolumeX, Banknote
 } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { SkeletonStatCard, SkeletonTripCard } from '@/components/shared/SkeletonVariants'
@@ -19,6 +19,7 @@ import { AlarmModal } from '@/components/driver/AlarmModal'
 import { HighVisibilityTripCard } from '@/components/driver/HighVisibilityTripCard'
 import { TripCommitmentModal } from '@/components/driver/TripCommitmentModal'
 import { SetAlarmModal } from '@/components/driver/SetAlarmModal'
+import { WithdrawModal } from '@/components/driver/WithdrawModal'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg var(--background) / surface var(--surface-card) / border var(--border-default) / divider var(--border)
@@ -79,6 +80,7 @@ export default function DriverDashboardPage() {
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
   const [tripForCommitment, setTripForCommitment] = useState<any | null>(null)
   const [alarmTrip, setAlarmTrip] = useState<any | null>(null)
+  const [showWithdrawModal, setShowWithdrawModal] = useState<boolean>(false)
   const [voiceAnnounce, setVoiceAnnounce] = useState<boolean>(true)
   const prevRequestIdsRef = useRef<string[]>([])
 
@@ -792,10 +794,22 @@ export default function DriverDashboardPage() {
               <p className="text-[11px] leading-relaxed" style={{ color: 'var(--muted-foreground)' }}>
                 This is a bonus <strong>from TOVEDROP</strong>. It is separate from and in addition to the transport fare riders pay you directly for the ride.
               </p>
-              <div className="mt-6 p-3 rounded" style={{ background: 'var(--background)', border: '1px dashed var(--border-subtle)' }}>
-                <p className="text-[11px]" style={{ color: 'var(--muted-foreground)' }}>
-                  Withdrawal requests coming soon. Your balance is being tracked accurately in the meantime.
-                </p>
+              <div className="mt-6 flex flex-col gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowWithdrawModal(true)}
+                  disabled={(driverProfile.walletBalance || 0) < 100}
+                  className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white font-extrabold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Banknote className="w-4 h-4" />
+                  <span>Request Payout / Withdraw 💸</span>
+                </button>
+                <Link
+                  href="/driver/earnings"
+                  className="text-center text-xs text-muted-foreground hover:text-foreground underline pt-1 cursor-pointer"
+                >
+                  Manage Bank Details & Payout History →
+                </Link>
               </div>
             </div>
             
@@ -975,6 +989,15 @@ export default function DriverDashboardPage() {
         isOpen={!!alarmTrip}
         onClose={() => setAlarmTrip(null)}
         onAlarmSaved={fetchData}
+      />
+
+      {/* ── Driver Payout Withdrawal Modal ── */}
+      <WithdrawModal
+        isOpen={showWithdrawModal}
+        onClose={() => setShowWithdrawModal(false)}
+        walletBalance={driverProfile.walletBalance || 0}
+        driverProfile={driverProfile}
+        onSuccess={fetchData}
       />
 
       {activeChatTrip && (

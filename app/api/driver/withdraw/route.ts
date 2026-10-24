@@ -79,3 +79,30 @@ export const POST = withValidation(withdrawSchema, async (req: NextRequest, { am
  return NextResponse.json({ message: "Error processing withdrawal request", error: error.message }, { status: 500 })
  }
 })
+
+export async function GET(req: Request) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user || session.user.role !== 'DRIVER') {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    }
+
+    const profile = await prisma.driverProfile.findUnique({
+      where: { userId: session.user.id }
+    })
+
+    if (!profile) {
+      return NextResponse.json({ message: "Driver profile not found" }, { status: 404 })
+    }
+
+    const requests = await prisma.withdrawalRequest.findMany({
+      where: { driverId: profile.id },
+      orderBy: { createdAt: 'desc' },
+      take: 20
+    })
+
+    return NextResponse.json({ requests, walletBalance: profile.walletBalance }, { status: 200 })
+  } catch (error: any) {
+    return NextResponse.json({ message: "Error fetching withdrawal requests", error: error.message }, { status: 500 })
+  }
+}

@@ -10,17 +10,24 @@ self.addEventListener('push', function (event) {
     const title = data.title || 'TOVEDROP'
     const body = data.message || data.body || 'You have a new update.'
     const url = data.url || '/'
+    const isAlarm = !!(data.isAlarm || data.type === 'REMINDER_URGENT' || (title && (title.includes('ALARM') || title.includes('Alarm'))))
 
     event.waitUntil(
       self.registration.showNotification(title, {
         body,
         icon: data.icon || '/icon-192x192.png',
         badge: data.badge || '/icon-192x192.png',
-        requireInteraction: true,
-        vibrate: [200, 100, 200, 100, 200],
-        tag: data.tag || 'tovedrop-alert-' + Date.now(),
+        requireInteraction: true, // Keep notification awake until dismissed
+        vibrate: isAlarm
+          ? [600, 200, 600, 200, 600, 200, 1000, 300, 600, 200, 600]
+          : [200, 100, 200, 100, 200],
+        tag: isAlarm ? 'tovedrop-alarm-' + (data.tripId || 'alert') : (data.tag || 'tovedrop-alert-' + Date.now()),
         renotify: true,
-        data: { url }
+        actions: [
+          { action: 'open', title: 'Open Trip 🚗' },
+          { action: 'dismiss', title: 'Dismiss' }
+        ],
+        data: { url, isAlarm, tripId: data.tripId }
       })
     )
   }
@@ -28,23 +35,27 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close()
-  if (event.notification.data && event.notification.data.url) {
-    event.waitUntil(
-      self.clients.matchAll({ type: 'window' }).then((windowClients) => {
-        // Check if there is already a window/tab open with the target URL
-        for (let i = 0; i < windowClients.length; i++) {
-          const client = windowClients[i]
-          if (client.url === event.notification.data.url && 'focus' in client) {
-            return client.focus()
-          }
-        }
-        // If not, open a new window
-        if (self.clients.openWindow) {
-          return self.clients.openWindow(event.notification.data.url)
-        }
-      })
-    )
+
+  if (event.action === 'dismiss') {
+    return
   }
+
+  const targetUrl = event.notification.data?.url || '/driver'
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
+      // Check if there is already a window/tab open with the target URL
+      for (let i = 0; i < windowClients.length; i++) {
+        const client = windowClients[i]
+        if (client.url.includes(targetUrl) && 'focus' in client) {
+          return client.focus()
+        }
+      }
+      // If not, open a new window
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl)
+      }
+    })
+  )
 })
 
 // ----------------------------------------------------------------------

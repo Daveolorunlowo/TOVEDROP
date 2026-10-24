@@ -26,7 +26,7 @@ export interface PushResult {
 
 export async function sendPushNotification(
   userId: string,
-  payload: { title: string; body?: string; message?: string; icon?: string; url?: string; type?: string }
+  payload: { title: string; body?: string; message?: string; icon?: string; url?: string; type?: string; isAlarm?: boolean; tripId?: string }
 ): Promise<PushResult> {
   const result: PushResult = { sent: 0, failed: 0, pruned: 0, errors: [] }
 
@@ -47,6 +47,8 @@ export async function sendPushNotification(
       badge: '/icon-192x192.png',
       url: payload.url || '/',
       type: payload.type || 'NOTIFICATION',
+      isAlarm: !!payload.isAlarm,
+      tripId: payload.tripId || undefined
     }
 
     const jsonPayload = JSON.stringify(normalizedPayload)
