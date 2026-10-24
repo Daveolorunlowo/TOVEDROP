@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { MapPin, Navigation, Clock, AlertTriangle, Check, Volume2, User, ExternalLink, MessageCircle } from 'lucide-react'
+import { MapPin, Navigation, Clock, AlertTriangle, Check, Volume2, User, ExternalLink, MessageCircle, Bell } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import Link from 'next/link'
 import { formatTripSchedule } from '@/lib/trip-schedule'
@@ -17,6 +17,7 @@ interface HighVisibilityTripCardProps {
   onDepart?: (tripId: string) => void
   onComplete?: (tripId: string) => void
   onOpenChat?: (trip: any) => void
+  onSetAlarm?: (trip: any) => void
 }
 
 function getCountdownBadge(dateStr: string, timeStr: string, isScheduled: boolean) {
@@ -59,7 +60,8 @@ export function HighVisibilityTripCard({
   onArrive,
   onDepart,
   onComplete,
-  onOpenChat
+  onOpenChat,
+  onSetAlarm
 }: HighVisibilityTripCardProps) {
   const countdown = getCountdownBadge(trip.date, trip.time, trip.isScheduled)
   const schedule = formatTripSchedule(trip)
@@ -254,6 +256,30 @@ export function HighVisibilityTripCard({
                   <ExternalLink className="w-3.5 h-3.5 text-[var(--orange-brand)]" />
                   Live Portal
                 </Link>
+
+                {onSetAlarm && (
+                  <button
+                    type="button"
+                    onClick={() => onSetAlarm(trip)}
+                    className={`px-3 py-1.5 rounded-lg border text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      trip.tripReminders && trip.tripReminders.length > 0
+                        ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500/25 shadow-xs'
+                        : 'bg-surface-elevated border-border hover:border-amber-500/40 text-muted-foreground hover:text-foreground'
+                    }`}
+                    title={
+                      trip.tripReminders && trip.tripReminders.length > 0
+                        ? `Alarm active: ${trip.tripReminders[0].type} before pickup. Tap to adjust or cancel.`
+                        : 'Set an alarm a few minutes before pickup'
+                    }
+                  >
+                    <Bell className={`w-3.5 h-3.5 ${trip.tripReminders && trip.tripReminders.length > 0 ? 'text-amber-400 animate-pulse' : ''}`} />
+                    <span>
+                      {trip.tripReminders && trip.tripReminders.length > 0
+                        ? `${trip.tripReminders[0].type} Alarm`
+                        : 'Set Alarm'}
+                    </span>
+                  </button>
+                )}
 
                 {onOpenChat && (
                   <button

@@ -1,13 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { stopAllAlarms } from '@/lib/alarm-sounds';
 
 export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
   const [activeAlarm, setActiveAlarm] = useState<any>(null);
+  const activeAlarmRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!alarmPrefs?.alarmEnabled || !driverTrips?.length) return;
+    activeAlarmRef.current = activeAlarm;
+  }, [activeAlarm]);
+
+  useEffect(() => {
+    if (!driverTrips?.length) return;
 
     const check = async () => {
+      // Don't trigger another alarm if one is currently ringing on screen
+      if (activeAlarmRef.current) return;
+
       const now = new Date();
 
       for (const trip of driverTrips) {
@@ -23,13 +31,36 @@ export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
         if (isNaN(scheduledAt.getTime())) continue;
 
         const minsUntil = (scheduledAt.getTime() - now.getTime()) / 60000;
-        const thresholds = Array.isArray(alarmPrefs.alarmTimes)
-          ? alarmPrefs.alarmTimes
-          : [30, 10, 2];
+
+        // 1. Gather trip-specific custom reminder thresholds
+        const tripReminders = trip.tripReminders || [];
+        const customThresholds: number[] = [];
+        for (const reminder of tripReminders) {
+          if (reminder.sent) continue;
+          const parsed = parseInt(reminder.type, 10);
+          if (!isNaN(parsed) && parsed > 0) {
+            customThresholds.push(parsed);
+          }
+        }
+
+        // 2. Determine applicable thresholds for this trip
+        let thresholds: number[] = [];
+        if (customThresholds.length > 0) {
+          // Explicitly set by driver for this ride
+          thresholds = customThresholds;
+        } else if (alarmPrefs?.alarmEnabled !== false) {
+          // Fall back to driver's global alarm settings (default: 30, 10, 2 mins)
+          thresholds = Array.isArray(alarmPrefs?.alarmTimes) && alarmPrefs.alarmTimes.length > 0
+            ? alarmPrefs.alarmTimes
+            : [30, 10, 2];
+        }
+
+        // Sort descending so the earliest alert checks first
+        thresholds.sort((a, b) => b - a);
 
         for (const threshold of thresholds) {
-          // Check if we're within a 45-second window of this threshold
-          if (minsUntil <= threshold && minsUntil > threshold - 0.75) {
+          // Trigger if we are at or past the threshold, but not past 5 mins after pickup time
+          if (minsUntil <= threshold && minsUntil >= -5) {
             try {
               const res = await fetch(
                 `/api/alarms/check?tripId=${trip.id}&minutes=${threshold}`
@@ -45,6 +76,7 @@ export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
                     minutesBefore: threshold
                   })
                 });
+
                 setActiveAlarm({ trip, minutesBefore: threshold });
                 return; // Stop checking to avoid overlapping modals immediately
               }
@@ -56,9 +88,22 @@ export function useDriverAlarms(driverTrips: any[], alarmPrefs: any) {
       }
     };
 
-    const interval = setInterval(check, 15000); // Check every 15s for precision
+    const interval = setInterval(check, 10000); // Check every 10s for precision
     check(); // run immediately on mount
-    return () => clearInterval(interval);
+
+    const handleFocus = () => check();
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') check();
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
   }, [driverTrips, alarmPrefs]);
 
   const triggerTestAlarm = () => {

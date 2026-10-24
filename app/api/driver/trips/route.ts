@@ -43,7 +43,13 @@ export async function GET(req: Request) {
  // Get trips accepted by this driver
  const confirmedTrips = await prisma.trip.findMany({
  where: { driverId: session.user.id, status: "CONFIRMED" },
- include: { rider: true },
+ include: { 
+   rider: true,
+   tripReminders: {
+     where: { driverId: session.user.id, sent: false },
+     orderBy: { remindAt: 'asc' }
+   }
+ },
  orderBy: { createdAt: "desc" }
  })
 

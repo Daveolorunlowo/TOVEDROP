@@ -33,6 +33,10 @@ export default async function DriverTripDetailPage({ params }: { params: Promise
       },
       messages: {
         orderBy: { createdAt: 'asc' }
+      },
+      tripReminders: {
+        where: { driverId: session.user.id, sent: false },
+        orderBy: { remindAt: 'asc' }
       }
     }
   })

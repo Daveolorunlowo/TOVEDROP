@@ -21,12 +21,16 @@ import {
   Check,
   Star,
   Gift,
-  AlertTriangle
+  AlertTriangle,
+  Bell
 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { pusherClient } from '@/lib/pusher-client'
 import { SosModal } from '@/components/dashboard/SosModal'
 import { TripProgressStepper } from '@/components/trip/TripProgressStepper'
+import { SetAlarmModal } from '@/components/driver/SetAlarmModal'
+import { AlarmModal } from '@/components/driver/AlarmModal'
+import { useDriverAlarms } from '@/hooks/useDriverAlarms'
 
 interface Message {
   id: string
@@ -75,6 +79,8 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const [driverArrivedNotice, setDriverArrivedNotice] = useState(!!initialTrip.driverArrivedAt)
   const [driverDepartedNotice, setDriverDepartedNotice] = useState(!!initialTrip.driverDepartedAt)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [alarmModalOpen, setAlarmModalOpen] = useState(false)
+  const [tripReminders, setTripReminders] = useState<any[]>(initialTrip.tripReminders || [])
 
   const quickMessages = [
     "I'm waiting outside 📍",
@@ -94,6 +100,11 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const riderPhone = rider?.phoneNumber || ''
   const contactPhone = isRider ? driverPhone : riderPhone
   const contactLabel = isRider ? 'Driver' : 'Rider'
+
+  const { activeAlarm, dismissAlarm } = useDriverAlarms(
+    !isRider ? [{ ...trip, tripReminders }] : [],
+    driverProfile || { alarmEnabled: true, alarmTimes: [30, 10, 2], alarmSound: 'loud', alarmVibrate: true }
+  )
 
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/track/${trip.shareToken || trip.id}` : ''
 
@@ -589,6 +600,22 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
               </div>
 
               <div className="flex flex-wrap items-center gap-2.5">
+                {!driverDepartedNotice && (
+                  <button
+                    type="button"
+                    onClick={() => setAlarmModalOpen(true)}
+                    className={`px-3.5 py-2.5 rounded-xl border text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm cursor-pointer ${
+                      tripReminders.length > 0
+                        ? 'bg-amber-500/15 border-amber-500/40 text-amber-400 hover:bg-amber-500/25'
+                        : 'bg-surface-elevated border-border hover:border-amber-500/40 text-foreground'
+                    }`}
+                    title="Set an alarm a few minutes before pickup"
+                  >
+                    <Bell className={`w-3.5 h-3.5 ${tripReminders.length > 0 ? 'text-amber-400 animate-pulse' : ''}`} />
+                    <span>{tripReminders.length > 0 ? `${tripReminders[0].type} Alarm Active` : 'Set Alarm ⏰'}</span>
+                  </button>
+                )}
+
                 {!driverArrivedNotice && (
                   <button
                     type="button"
@@ -1034,6 +1061,34 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
       {/* ── Emergency SOS Siren Modal (Rider Only) ── */}
       {isRider && activeSos && (
         <SosModal trip={trip} onClose={() => setActiveSos(false)} />
+      )}
+
+      {/* ── Driver Set Pickup Alarm Modal ── */}
+      {!isRider && (
+        <SetAlarmModal
+          trip={{ ...trip, tripReminders }}
+          isOpen={alarmModalOpen}
+          onClose={() => setAlarmModalOpen(false)}
+          onAlarmSaved={(savedReminder) => {
+            if (savedReminder) {
+              setTripReminders([savedReminder])
+            } else {
+              setTripReminders([])
+            }
+          }}
+        />
+      )}
+
+      {/* ── Driver Inbuilt Ringing Alarm Modal ── */}
+      {!isRider && activeAlarm && (
+        <AlarmModal
+          trip={activeAlarm.trip}
+          minutesBefore={activeAlarm.minutesBefore}
+          alarmSound={driverProfile?.alarmSound || 'loud'}
+          alarmVibrate={driverProfile?.alarmVibrate ?? true}
+          alarmDuration={60}
+          onDismiss={dismissAlarm}
+        />
       )}
     </div>
   )

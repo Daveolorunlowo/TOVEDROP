@@ -18,6 +18,7 @@ import { useDriverAlarms } from '@/hooks/useDriverAlarms'
 import { AlarmModal } from '@/components/driver/AlarmModal'
 import { HighVisibilityTripCard } from '@/components/driver/HighVisibilityTripCard'
 import { TripCommitmentModal } from '@/components/driver/TripCommitmentModal'
+import { SetAlarmModal } from '@/components/driver/SetAlarmModal'
 
 // ─── Design tokens ─────────────────────────────────────
 // bg var(--background) / surface var(--surface-card) / border var(--border-default) / divider var(--border)
@@ -77,6 +78,7 @@ export default function DriverDashboardPage() {
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
   const [tripForCommitment, setTripForCommitment] = useState<any | null>(null)
+  const [alarmTrip, setAlarmTrip] = useState<any | null>(null)
   const [voiceAnnounce, setVoiceAnnounce] = useState<boolean>(true)
   const prevRequestIdsRef = useRef<string[]>([])
 
@@ -950,6 +952,7 @@ export default function DriverDashboardPage() {
                   onDepart={handleDepart}
                   onComplete={handleComplete}
                   onOpenChat={(t) => setActiveChatTrip(t)}
+                  onSetAlarm={(t) => setAlarmTrip(t)}
                 />
               ))}
             </div>
@@ -964,6 +967,14 @@ export default function DriverDashboardPage() {
         isLoading={!!processing}
         onConfirm={handleConfirmCommitment}
         onCancel={() => setTripForCommitment(null)}
+      />
+
+      {/* ── Driver Set Pickup Alarm Modal ── */}
+      <SetAlarmModal
+        trip={alarmTrip}
+        isOpen={!!alarmTrip}
+        onClose={() => setAlarmTrip(null)}
+        onAlarmSaved={fetchData}
       />
 
       {activeChatTrip && (
