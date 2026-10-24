@@ -56,12 +56,16 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
 
   // Fetch the active server VAPID public key dynamically
   let vapidPublicKey = cleanKey(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || '')
+  let hasServerSubscription: boolean | null = null
   try {
     const keyRes = await fetch('/api/user/push/vapid-key')
     if (keyRes.ok) {
       const keyData = await keyRes.json()
       if (keyData.publicKey) {
         vapidPublicKey = cleanKey(keyData.publicKey)
+      }
+      if (typeof keyData.hasSubscription === 'boolean') {
+        hasServerSubscription = keyData.hasSubscription
       }
     }
   } catch (err) {
@@ -106,31 +110,36 @@ export async function subscribeToPushNotifications(options?: { force?: boolean }
         }
       }
 
-      // If user requested force resubscribe OR key does not match active server key
-      if (options?.force || !keyMatches) {
-        console.info('Outdated or mismatched push subscription detected. Unsubscribing...')
+      // If user requested force resubscribe, OR key does not match active server key,
+      // OR server reports 0 subscriptions on file for this user (pruned/expired),
+      // we must unsubscribe the dead subscription and request a fresh token from FCM.
+      const needsFreshSubscription = options?.force || !keyMatches || (hasServerSubscription === false)
+
+      if (needsFreshSubscription) {
+        console.info('[PUSH] Outdated, pruned or mismatched push subscription detected. Re-subscribing...')
         try {
           await existingSubscription.unsubscribe()
           // Brief pause for browser and FCM push service to flush old registration
           await new Promise((r) => setTimeout(r, 250))
         } catch (e) {
-          console.warn('Failed to unsubscribe old push subscription:', e)
+          console.warn('[PUSH] Failed to unsubscribe old push subscription:', e)
         }
         existingSubscription = null
       } else {
-        // Key matches — ensure subscription is synced with server
+        // Key matches and server has subscription on file — ensure synced
         await sendSubscriptionToBackend(existingSubscription)
         return true
       }
     }
 
-    // Subscribe with current VAPID public key
+    // Subscribe with current active VAPID public key
     const subscription = await registration.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: convertedVapidKey,
     })
 
     await sendSubscriptionToBackend(subscription)
+    console.info('[PUSH] Successfully subscribed device and synced token with backend.')
     return true
   } catch (error) {
     console.warn('Push subscription failed:', error)

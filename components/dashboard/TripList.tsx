@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { X, Star, Car, TrendingUp, MessageCircle, ChevronDown, ChevronUp, Calendar, ShieldAlert, Share2, ArrowRight } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -110,8 +110,61 @@ export function TripList({
   const [processing, setProcessing] = useState<string | null>(null)
   const [activeChatTrip, setActiveChatTrip] = useState<any>(null)
   const [activeSosTrip, setActiveSosTrip] = useState<any>(null)
-  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false)  
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false)
+  const [justAcceptedTrip, setJustAcceptedTrip] = useState<any | null>(null)
+  const prevTripsRef = useRef<any[]>(initialUpcoming)
+
   useEffect(() => {
+    // Detect if any previously PENDING trip was just accepted by a driver
+    const previouslyPendingIds = new Set(
+      prevTripsRef.current.filter((t: any) => t.status === 'PENDING').map((t: any) => t.id)
+    )
+
+    const newlyAccepted = initialUpcoming.find(
+      (t: any) => t.status === 'CONFIRMED' && previouslyPendingIds.has(t.id)
+    )
+
+    if (newlyAccepted) {
+      setJustAcceptedTrip(newlyAccepted)
+
+      // 1. Play celebratory acceptance chime
+      try {
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+        if (AudioContextClass) {
+          const ctx = new AudioContextClass()
+          const notes = [523.25, 659.25, 783.99, 1046.5] // C5, E5, G5, C6 arpeggio
+          notes.forEach((freq, i) => {
+            const osc = ctx.createOscillator()
+            const gain = ctx.createGain()
+            osc.frequency.value = freq
+            osc.type = 'sine'
+            const startTime = ctx.currentTime + i * 0.12
+            gain.gain.setValueAtTime(0, startTime)
+            gain.gain.linearRampToValueAtTime(0.25, startTime + 0.03)
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.4)
+            osc.connect(gain)
+            gain.connect(ctx.destination)
+            osc.start(startTime)
+            osc.stop(startTime + 0.42)
+          })
+        }
+      } catch (e) {}
+
+      // 2. Trigger native OS notification if user is on another tab
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+        if (document.hidden) {
+          try {
+            new Notification('Ride Request Accepted! 🎉', {
+              body: `${newlyAccepted.driver?.name || 'Your driver'} is on the way to ${newlyAccepted.pickup}!`,
+              icon: '/icon-192x192.png',
+              tag: `accepted-${newlyAccepted.id}`
+            })
+          } catch (e) {}
+        }
+      }
+    }
+
+    prevTripsRef.current = initialUpcoming
     setUpcomingTrips(initialUpcoming)
     setPastTrips(initialPast)
   }, [initialUpcoming, initialPast])
@@ -221,6 +274,50 @@ export function TripList({
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
       {/* Upcoming Trips */}
       <div className="lg:col-span-2">
+        {justAcceptedTrip && (
+          <div 
+            className="rounded-2xl p-4 sm:p-5 mb-5 border-2 shadow-xl backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-3 duration-300"
+            style={{ 
+              background: 'rgba(34, 197, 94, 0.12)', 
+              borderColor: '#22c55e',
+              boxShadow: '0 10px 25px rgba(34,197,94,0.15)' 
+            }}
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0 text-xl">
+                🎉
+              </div>
+              <div>
+                <h4 className="text-sm font-extrabold text-foreground flex items-center gap-2">
+                  <span>Ride Accepted!</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white uppercase tracking-wider">
+                    Confirmed
+                  </span>
+                </h4>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  <strong className="text-foreground">{justAcceptedTrip.driver?.name || 'Your driver'}</strong> has accepted your ride request to <strong className="text-foreground">{justAcceptedTrip.destination}</strong>.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href={`/dashboard/trips/${justAcceptedTrip.id}`}
+                className="px-4 py-2 rounded-xl text-xs font-black text-white shadow-sm transition-all hover:opacity-90 active:scale-95"
+                style={{ background: 'var(--orange-brand)' }}
+              >
+                View Live Ride
+              </Link>
+              <button
+                onClick={() => setJustAcceptedTrip(null)}
+                className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition cursor-pointer"
+                aria-label="Dismiss banner"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center justify-between mb-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
             Upcoming Trips

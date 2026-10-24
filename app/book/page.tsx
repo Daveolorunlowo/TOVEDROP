@@ -275,14 +275,14 @@ function BookWizard() {
  body: JSON.stringify(payload)
  })
  
- if (res.ok) {
- // 200 (idempotent hit) or 201 (newly created) — both are success
- if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'default') {
- subscribeToPushNotifications({ force: false }).catch(() => {})
- }
- router.push('/dashboard')
- return
- }
+  if (res.ok) {
+    // 200 (idempotent hit) or 201 (newly created) — both are success
+    if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission !== 'denied') {
+      subscribeToPushNotifications({ force: false }).catch(() => {})
+    }
+    router.push('/dashboard')
+    return
+  }
 
  const data = await res.json()
 
