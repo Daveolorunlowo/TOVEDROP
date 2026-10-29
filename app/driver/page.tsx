@@ -84,6 +84,46 @@ export default function DriverDashboardPage() {
   const [voiceAnnounce, setVoiceAnnounce] = useState<boolean>(true)
   const prevRequestIdsRef = useRef<string[]>([])
 
+  const getDriverStorageKey = (driverId?: string) =>
+    driverId ? `tovedrop_declined_trips_${driverId}` : 'tovedrop_declined_trips'
+
+  // Persistently load declined trips across browser refreshes
+  useEffect(() => {
+    try {
+      const driverId = data?.driverProfile?.userId
+      const specificKey = getDriverStorageKey(driverId)
+      const stored = (typeof window !== 'undefined' && localStorage.getItem(specificKey)) ||
+                     (typeof window !== 'undefined' && localStorage.getItem('tovedrop_declined_trips'))
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        if (Array.isArray(parsed)) {
+          setDeclined(prev => Array.from(new Set([...prev, ...parsed])))
+        }
+      }
+    } catch (e) {
+      console.warn('Could not read declined trips from localStorage', e)
+    }
+  }, [data?.driverProfile?.userId])
+
+  const handleDecline = (tripId: string) => {
+    setDeclined(prev => {
+      if (prev.includes(tripId)) return prev
+      const next = [...prev, tripId]
+      try {
+        const driverId = data?.driverProfile?.userId
+        const specificKey = getDriverStorageKey(driverId)
+        const limited = next.slice(-200)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem(specificKey, JSON.stringify(limited))
+          localStorage.setItem('tovedrop_declined_trips', JSON.stringify(limited))
+        }
+      } catch (e) {
+        console.warn('Could not persist declined trips to localStorage', e)
+      }
+      return next
+    })
+  }
+
   const { activeAlarm, dismissAlarm, triggerTestAlarm } = useDriverAlarms(
     data?.confirmedTrips || [],
     data?.driverProfile || { alarmEnabled: true, alarmTimes: [30, 10, 2], alarmSound: 'loud', alarmVibrate: true }
@@ -536,7 +576,7 @@ export default function DriverDashboardPage() {
                     </button>
                     <button
                       disabled={processing === req.id}
-                      onClick={() => setDeclined(d => [...d, req.id])}
+                      onClick={() => handleDecline(req.id)}
                       className="text-[11px] font-semibold px-2.5 py-1"
                       style={{ background: 'var(--border)', color: 'var(--muted-foreground)', borderRadius: '4px' }}
                     >
@@ -929,7 +969,7 @@ export default function DriverDashboardPage() {
                     processing={processing === req.id}
                     clashInfo={clashInfo}
                     onAccept={handleOpenCommitment}
-                    onDecline={(id) => setDeclined(d => [...d, id])}
+                    onDecline={(id) => handleDecline(id)}
                   />
                 )
               })}

@@ -81,6 +81,13 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [alarmModalOpen, setAlarmModalOpen] = useState(false)
   const [tripReminders, setTripReminders] = useState<any[]>(initialTrip.tripReminders || [])
+  const [expiredNotice, setExpiredNotice] = useState<string | null>(
+    initialTrip.status === 'CANCELLED' && !initialTrip.driverId
+      ? (initialTrip.notes?.includes('Expired')
+          ? 'No driver was able to accept your ride request before the pickup time passed. Your 1 Drop has been automatically refunded to your wallet.'
+          : 'This ride request was cancelled. Your Drop has been refunded.')
+      : null
+  )
 
   const quickMessages = [
     "I'm waiting outside 📍",
@@ -190,10 +197,27 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
         }
       })
 
-      channel.bind('trip-cancelled', () => {
+      channel.bind('trip-expired-unaccepted', (data: any) => {
         if (!mounted) return
-        alert('This trip was cancelled.')
-        router.push(isRider ? '/dashboard' : '/driver')
+        setExpiredNotice(
+          data?.message ||
+          'No driver was able to accept your ride request before the pickup time passed. Your 1 Drop has been automatically refunded to your wallet.'
+        )
+        playChime()
+      })
+
+      channel.bind('trip-cancelled', (data: any) => {
+        if (!mounted) return
+        if (data?.reason === 'EXPIRED_NO_DRIVER' || (!trip.driverId && !data?.driverId)) {
+          setExpiredNotice(
+            data?.message ||
+            'No driver was able to accept your ride request before the pickup time passed. Your 1 Drop has been automatically refunded to your wallet.'
+          )
+          playChime()
+        } else {
+          alert('This trip was cancelled.')
+          router.push(isRider ? '/dashboard' : '/driver')
+        }
       })
     }
 
@@ -212,6 +236,14 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
             }
             if (tripData.trip.driverDepartedAt && !driverDepartedNotice) {
               setDriverDepartedNotice(true)
+            }
+            if (tripData.trip.status === 'CANCELLED' && !tripData.trip.driverId) {
+              setExpiredNotice(
+                tripData.trip.notes?.includes('Expired')
+                  ? 'No driver was able to accept your ride request before the pickup time passed. Your 1 Drop has been automatically refunded to your wallet.'
+                  : 'This ride request was cancelled. Your Drop has been refunded.'
+              )
+              return
             }
             if (tripData.trip.status === 'COMPLETED' && isRider) {
               router.push(`/rate/${trip.id}`)
@@ -1089,6 +1121,38 @@ export function TripLiveClient({ initialTrip, currentUserId }: TripLiveClientPro
           alarmDuration={60}
           onDismiss={dismissAlarm}
         />
+      )}
+
+      {/* ── Expired / Unaccepted Trip Modal ── */}
+      {expiredNotice && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-md rounded-2xl bg-card border border-border p-6 shadow-2xl flex flex-col items-center text-center">
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-3xl mb-4">
+              ⏰
+            </div>
+            <h3 className="text-lg font-black text-foreground mb-2">
+              Pickup Time Passed
+            </h3>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+              {expiredNotice}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2.5 w-full">
+              <Link
+                href="/book"
+                className="flex-1 py-3 px-4 rounded-xl text-xs font-black text-white text-center shadow-sm transition-all hover:opacity-90 active:scale-95"
+                style={{ background: 'var(--orange-brand)' }}
+              >
+                Book a New Ride 🚗
+              </Link>
+              <Link
+                href="/dashboard"
+                className="py-3 px-4 rounded-xl text-xs font-bold text-muted-foreground hover:text-foreground border border-border text-center transition-all hover:bg-muted"
+              >
+                Back to Dashboard
+              </Link>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )

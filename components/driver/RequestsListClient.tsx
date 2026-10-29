@@ -33,7 +33,7 @@ export function RequestsListClient({
 
  useEffect(() => {
  try {
- const stored = localStorage.getItem(`tovedrop_declined_trips_${driverId}`)
+ const stored = localStorage.getItem(`tovedrop_declined_trips_${driverId}`) || localStorage.getItem('tovedrop_declined_trips')
  if (stored) {
  setDeclined(JSON.parse(stored))
  }
@@ -53,6 +53,7 @@ export function RequestsListClient({
  // Keep last 100 to avoid localStorage bloat
  const limited = newDeclined.slice(-100)
  localStorage.setItem(`tovedrop_declined_trips_${driverId}`, JSON.stringify(limited))
+ localStorage.setItem('tovedrop_declined_trips', JSON.stringify(limited))
  return limited
  } catch (e) {
  console.warn('Could not write declined trips to local storage')

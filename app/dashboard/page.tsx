@@ -26,6 +26,14 @@ export default async function DashboardPage() {
   if (!session?.user) redirect('/auth')
 
   // Note: role-based redirect is handled in layout.tsx — no duplicate check needed here
+  // Proactively check and expire any pending trips whose pickup time has passed without driver acceptance
+  try {
+    const { expireAllPendingTripsPastPickup } = await import('@/lib/trip-expiration')
+    await expireAllPendingTripsPastPickup({ riderId: session.user.id })
+  } catch (expErr) {
+    console.error("[DashboardPage] Error running trip expiration:", expErr)
+  }
+
   const user = await prisma.user.findUnique({ where: { id: session.user.id } })
   if (!user) redirect('/clear')
 

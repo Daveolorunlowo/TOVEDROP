@@ -33,6 +33,14 @@ export async function GET(req: Request) {
     })
   }
 
+  // Proactively clean up any pending trips whose pickup time has passed
+  try {
+    const { expireAllPendingTripsPastPickup } = await import('@/lib/trip-expiration')
+    await expireAllPendingTripsPastPickup()
+  } catch (expErr) {
+    console.error("[driver/trips] Error running trip expiration:", expErr)
+  }
+
  // Get all pending trips (available for anyone to accept)
  const pendingTrips = await prisma.trip.findMany({
  where: { status: "PENDING" },

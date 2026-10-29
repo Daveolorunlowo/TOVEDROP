@@ -23,7 +23,16 @@ function StatusDot({ status }: { status: string }) {
   )
 }
 
-function StatusChip({ status, driverDepartedAt, driverArrivedAt }: { status: string; driverDepartedAt?: any; driverArrivedAt?: any }) {
+function StatusChip({ status, driverDepartedAt, driverArrivedAt, notes }: { status: string; driverDepartedAt?: any; driverArrivedAt?: any; notes?: string }) {
+  if (status === 'CANCELLED' && notes?.includes('Expired')) {
+    return (
+      <span
+        className="inline-flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wide px-2 py-0.5 rounded-md text-amber-500 bg-amber-500/10 border border-amber-500/20"
+      >
+        Expired · Refunded
+      </span>
+    )
+  }
   if (status === 'CONFIRMED' && driverDepartedAt) {
     return (
       <span
@@ -112,6 +121,7 @@ export function TripList({
   const [activeSosTrip, setActiveSosTrip] = useState<any>(null)
   const [isHistoryExpanded, setIsHistoryExpanded] = useState(false)
   const [justAcceptedTrip, setJustAcceptedTrip] = useState<any | null>(null)
+  const [expiredTripNotice, setExpiredTripNotice] = useState<any | null>(null)
   const prevTripsRef = useRef<any[]>(initialUpcoming)
 
   useEffect(() => {
@@ -158,6 +168,29 @@ export function TripList({
               body: `${newlyAccepted.driver?.name || 'Your driver'} is on the way to ${newlyAccepted.pickup}!`,
               icon: '/icon-192x192.png',
               tag: `accepted-${newlyAccepted.id}`
+            })
+          } catch (e) {}
+        }
+      }
+    }
+
+    // Detect if any previously PENDING trip expired/cancelled without a driver
+    const newlyExpired = initialPast.find(
+      (t: any) =>
+        t.status === 'CANCELLED' &&
+        previouslyPendingIds.has(t.id) &&
+        !t.driverId
+    )
+
+    if (newlyExpired) {
+      setExpiredTripNotice(newlyExpired)
+      if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+        if (document.hidden) {
+          try {
+            new Notification('Ride Request Expired ⏰', {
+              body: `No driver accepted your request to ${newlyExpired.destination}. Your Drop has been refunded.`,
+              icon: '/icon-192x192.png',
+              tag: `expired-${newlyExpired.id}`
             })
           } catch (e) {}
         }
@@ -318,6 +351,50 @@ export function TripList({
           </div>
         )}
 
+        {expiredTripNotice && (
+          <div 
+            className="rounded-2xl p-4 sm:p-5 mb-5 border-2 shadow-xl backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 animate-in slide-in-from-top-3 duration-300"
+            style={{ 
+              background: 'rgba(245, 158, 11, 0.12)', 
+              borderColor: 'var(--orange-brand)',
+              boxShadow: '0 10px 25px rgba(245,158,11,0.15)' 
+            }}
+          >
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0 text-xl">
+                ⏰
+              </div>
+              <div>
+                <h4 className="text-sm font-extrabold text-foreground flex items-center gap-2">
+                  <span>Pickup Time Passed — No Driver Available</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-white uppercase tracking-wider">
+                    Refunded
+                  </span>
+                </h4>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  No driver accepted your ride request to <strong className="text-foreground">{expiredTripNotice.destination}</strong> before the pickup time passed. Your 1 Drop has been refunded to your wallet.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Link
+                href="/book"
+                className="px-4 py-2 rounded-xl text-xs font-black text-white shadow-sm transition-all hover:opacity-90 active:scale-95"
+                style={{ background: 'var(--orange-brand)' }}
+              >
+                Book Again
+              </Link>
+              <button
+                onClick={() => setExpiredTripNotice(null)}
+                className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground transition cursor-pointer"
+                aria-label="Dismiss banner"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center justify-between mb-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.05em]" style={{ color: 'var(--muted-foreground)' }}>
             Upcoming Trips
@@ -385,7 +462,7 @@ export function TripList({
                           <h4 className="text-sm font-extrabold truncate" style={{ color: 'var(--foreground)' }}>
                             {isConfirmed ? (trip.driver?.name ?? 'Assigned Driver') : 'Searching for Available Driver...'}
                           </h4>
-                          <StatusChip status={trip.status} driverDepartedAt={trip.driverDepartedAt} driverArrivedAt={trip.driverArrivedAt} />
+                          <StatusChip status={trip.status} driverDepartedAt={trip.driverDepartedAt} driverArrivedAt={trip.driverArrivedAt} notes={trip.notes} />
                         </div>
 
                         <p className="text-xs truncate font-medium" style={{ color: 'var(--muted-foreground)' }}>
@@ -493,7 +570,7 @@ export function TripList({
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <p className={`text-xs font-medium truncate ${trip.status === 'CANCELLED' ? 'line-through decoration-white/20' : ''}`} style={{ color: 'var(--muted-foreground)' }}>
-                        {trip.driver?.name ?? 'Unknown'}
+                        {trip.driver ? trip.driver.name : (trip.notes?.includes('Expired') ? 'No Driver Accepted' : 'No Driver Assigned')}
                       </p>
                       <p className="text-[11px] truncate" style={{ color: 'var(--muted-foreground)' }}>
                         {trip.pickup} &rarr; {trip.destination}
@@ -508,7 +585,7 @@ export function TripList({
                         <Star className="w-2.5 h-2.5" /> Rate
                       </Link>
                     ) : (
-                      <StatusChip status={trip.status} />
+                      <StatusChip status={trip.status} notes={trip.notes} />
                     )}
                   </div>
                 ))}

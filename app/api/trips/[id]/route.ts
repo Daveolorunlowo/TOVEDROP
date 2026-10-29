@@ -45,6 +45,42 @@ export async function GET(req: Request, context: { params: Promise<{ id: string 
       return NextResponse.json({ message: "Forbidden" }, { status: 403 })
     }
 
+    // Proactive check: If trip is PENDING and pickup time has passed without driver acceptance, expire & refund it
+    if (trip.status === 'PENDING' && !trip.driverId) {
+      const { expireAllPendingTripsPastPickup } = await import('@/lib/trip-expiration')
+      const expiredCount = await expireAllPendingTripsPastPickup({ tripId: trip.id })
+      if (expiredCount > 0) {
+        const refreshedTrip = await prisma.trip.findUnique({
+          where: { id: params.id },
+          include: {
+            driver: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                phoneNumber: true,
+                driverProfile: true
+              }
+            },
+            rider: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+                phoneNumber: true
+              }
+            },
+            review: true
+          }
+        })
+        if (refreshedTrip) {
+          return NextResponse.json({ trip: refreshedTrip })
+        }
+      }
+    }
+
     // Proactive check: If trip is overdue and uncompensated, process it immediately
     if (trip.status === 'CONFIRMED' && !trip.driverArrivedAt && !trip.driverDepartedAt && !trip.riderCompensatedAt) {
       const { checkTripOverdue } = await import('@/lib/trip-schedule')
